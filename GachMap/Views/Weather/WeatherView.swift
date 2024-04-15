@@ -43,16 +43,14 @@ struct WeatherView: View {
                         .lineSpacing(5)
                         .font(.system(size: 15))
                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 0))
-                        
-                        
-//                    Text("\(time)시 기준")
-
-                    
                 }
                
             }
-            .shadow(radius: 7, x: 2, y: 2)
             .frame(width: 137, height: 258)
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 7, x: 2, y: 2) // 그림자를 적용할 부모 뷰에 그림자 추가
+            
             
             RoundedRectangle(cornerRadius: 15, style: .continuous)
                 .fill(.blue)
