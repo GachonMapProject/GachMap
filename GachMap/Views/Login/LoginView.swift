@@ -196,46 +196,56 @@
 //        if let encoded = try? JSONEncoder().encode(loginInfo) {
 //            UserDefaults.standard.set(encoded, forKey: "loginInfo")
 //        }
-//    }
-//        
-//    // 저장된 정보 불러오기
-//    private func printLoginInfo() {
-//            if let savedData = UserDefaults.standard.data(forKey: "loginInfo") {
-//                if let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
-//                    print("userID: \(loginInfo.userId)")
-//                }
-//            } else {
-//                print("Login Info not found in UserDefaults")
-//            }
-//        }
-//    
-//    // POST 함수
-//    private func postData(parameter : LoginRequest) {
-//            // API 요청을 보낼 URL 생성
-//            guard let url = URL(string: "https://a065-58-143-1-4.ngrok-free.app/saveTime") else {
-//                print("Invalid URL")
-//                return
-//            }
-//            
-//            // Alamofire를 사용하여 POST 요청 생성
-//            AF.request(url, method: .post, parameters: parameter, encoder: JSONParameterEncoder.default).responseString { response in
-//                // 에러 처리
-//                switch response.result {
-//                case .success(let value):
-//                    value.data
-//                    let a = LoginInfo(userId: userId, isStudent: true)
-//                    // 성공적인 응답 처리
-//    //                self.responseData = value
-//                    print("서버로 데이터 전송 성공")
-//                case .failure(let error):
-//                    // 에러 응답 처리
-//                    print("Error: \(error.localizedDescription)")
-//                } // end of switch
-//            } // end of AF.request
-//        } // end of postData()
-//    
-//} // end of View struct
-//
-//#Preview {
-//    LoginView()
-//}
+
+//    } // end of checkLogin func
+    
+    // 기기에 저장
+    private func saveLoginInfo() {
+            // UserDefaults를 사용하여 사용자가 입력한 정보를 저장
+       // let loginInfo = LoginInfo(userId: userId)
+        if let encoded = try? JSONEncoder().encode(loginInfo) {
+            UserDefaults.standard.set(encoded, forKey: "loginInfo")
+        }
+    }
+        
+    // 저장된 정보 불러오기
+    private func printLoginInfo() {
+            if let savedData = UserDefaults.standard.data(forKey: "loginInfo") {
+                if let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
+                    // print("userID: \(loginInfo.userId)")
+                }
+            } else {
+                print("Login Info not found in UserDefaults")
+            }
+        }
+    
+    // POST 함수
+    private func postData(parameter : LoginRequest) {
+            // API 요청을 보낼 URL 생성
+            guard let url = URL(string: "https://a065-58-143-1-4.ngrok-free.app/saveTime") else {
+                print("Invalid URL")
+                return
+            }
+            
+            // Alamofire를 사용하여 POST 요청 생성
+            AF.request(url, method: .post, parameters: parameter, encoder: JSONParameterEncoder.default).responseString { response in
+                // 에러 처리
+                switch response.result {
+                case .success(let value):
+                    
+                    // 성공적인 응답 처리
+    //                self.responseData = value
+                    print("서버로 데이터 전송 성공")
+                case .failure(let error):
+                    // 에러 응답 처리
+                    print("Error: \(error.localizedDescription)")
+                } // end of switch
+            } // end of AF.request
+        } // end of postData()
+    
+} // end of View struct
+
+#Preview {
+    LoginView()
+}
+
