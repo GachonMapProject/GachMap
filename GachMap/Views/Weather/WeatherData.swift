@@ -7,8 +7,6 @@ class WeatherData : ObservableObject {
     let date = Date()
     let dateFormatter = DateFormatter()
     
-    @State var beforeBaseTime = true
-    
     var baseDate: String {
         dateFormatter.dateFormat = "yyyyMMdd"
         return dateFormatter.string(from: date)
@@ -23,10 +21,8 @@ class WeatherData : ObservableObject {
         let roundedHour: Int
         if minute < 45 {
             roundedHour = hour - 1
-            beforeBaseTime = true
         } else {
             roundedHour = hour
-            beforeBaseTime = false
         }
         
         // 조정된 시간을 문자열로 변환하여 반환
@@ -36,7 +32,7 @@ class WeatherData : ObservableObject {
     var latXlngY = convertGRID_GPS(mode: 0, lat_X: 37.455086, lng_Y: 127.133315)
     
     var requestURL : String {
-        "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=\(key)&pageNo=1&numOfRows=10&base_date=\(baseDate)&base_time=\(baseTime)&nx=\(latXlngY.x)&ny=\(latXlngY.y)"
+        "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=\(key)&pageNo=1&numOfRows=60&base_date=\(baseDate)&base_time=\(baseTime)&nx=\(latXlngY.x)&ny=\(latXlngY.y)"
     }
     
     func WeatherDataRequest(completion: @escaping (Weather?) -> Void){
@@ -63,7 +59,7 @@ class WeatherData : ObservableObject {
                 
                     let delegate = MyXMLParserDelegate(completion: { items in
                         for (key, value) in items {
-                            if key == "TMP" {
+                            if key == "T1H" {
                                 if let doubleValue = Double(value) {
                                     temp = doubleValue
                                 }
@@ -84,7 +80,9 @@ class WeatherData : ObservableObject {
                                     default : precipitationForm = "없음"
                                 }
                             }  else if key == "RN1" {
-                                if let doubleValue = Double(value) {
+                                let newValue = String(value.dropLast(3))
+                                print(newValue) // 출력: "1"
+                                if let doubleValue = Double(newValue) {
                                     precipitation = doubleValue
                                 }
                             }
