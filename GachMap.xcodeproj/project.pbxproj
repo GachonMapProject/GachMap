@@ -44,6 +44,7 @@
 		8B831C432BCCF60C00A85973 /* BeantownButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C292BCCF60C00A85973 /* BeantownButtons.swift */; };
 		8B831C442BCCF60C00A85973 /* BottomSheetHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C2A2BCCF60C00A85973 /* BottomSheetHelper.swift */; };
 		8B831C452BCCF60C00A85973 /* MapTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C2B2BCCF60C00A85973 /* MapTestView.swift */; };
+		A34506E4E7DFA2C6F58F6EBE /* Pods_GachMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE0964287E09D08847B86CA /* Pods_GachMap.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +88,7 @@
 		8B831C2A2BCCF60C00A85973 /* BottomSheetHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetHelper.swift; sourceTree = "<group>"; };
 		8B831C2B2BCCF60C00A85973 /* MapTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTestView.swift; sourceTree = "<group>"; };
 		E0202EBB66AC85F899D763AC /* Pods-GachMap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GachMap.release.xcconfig"; path = "Target Support Files/Pods-GachMap/Pods-GachMap.release.xcconfig"; sourceTree = "<group>"; };
+		EEE0964287E09D08847B86CA /* Pods_GachMap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GachMap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,18 +96,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A34506E4E7DFA2C6F58F6EBE /* Pods_GachMap.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8A3547320EF5309FB3120374 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EEE0964287E09D08847B86CA /* Pods_GachMap.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8B831BD12BCCEFF600A85973 = {
 			isa = PBXGroup;
 			children = (
 				8B831BDC2BCCEFF600A85973 /* GachMap */,
 				8B831BDB2BCCEFF600A85973 /* Products */,
 				CBA6DDB830B7246611E0ED24 /* Pods */,
+				8A3547320EF5309FB3120374 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -517,11 +529,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
+				DEVELOPMENT_TEAM = XW6H6BYJ53;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "카메라 권한";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "위치 권한";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 권한";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 권한";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -550,11 +563,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
+				DEVELOPMENT_TEAM = XW6H6BYJ53;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "카메라 권한";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "위치 권한";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 권한";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 권한";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
