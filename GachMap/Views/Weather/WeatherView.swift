@@ -13,7 +13,8 @@ struct WeatherView: View {
     @State var image = "☀️"
     @State var time = "00"
     @State var AMPM = "오전"
-    
+    let sky_image = ["맑음" : "☀️", "구름많음" : "🌥️", "흐림" : "☁️", "비" : "☔️", "비/눈" : "🌨️", "눈" : "❄️"]
+    let weatherData = WeatherData()
     
     var body: some View {
         HStack{
@@ -50,6 +51,7 @@ struct WeatherView: View {
                 }
                
             }
+            .shadow(radius: 7, x: 2, y: 2)
             .frame(width: 137, height: 258)
             
             RoundedRectangle(cornerRadius: 15, style: .continuous)
@@ -59,10 +61,29 @@ struct WeatherView: View {
 
         }
         .onAppear(){
-            WeatherData().WeatherDataRequest { newWeather in
+            weatherData.WeatherDataRequest { newWeather in
                 if let newWeather = newWeather {
                     print("weather: \(newWeather)")
+                    self.temp = Int(newWeather.temp)
+                    if newWeather.precipitationForm == "없음" {
+                        self.sky = newWeather.sky
+                    }
+                    else {
+                        self.sky = newWeather.precipitationForm
+                    }
+                    
+                    self.image = sky_image[newWeather.sky] ?? "☀️"
                 }
+                let time = Int(String(weatherData.baseTime.dropLast(2))) ?? 0
+                if time < 13 {
+                    self.time = String(time)
+                    self.AMPM = "오전"
+                }
+                else{
+                    self.time = String(time - 12)
+                    self.AMPM = "오후"
+                }
+               
             }
 
         }

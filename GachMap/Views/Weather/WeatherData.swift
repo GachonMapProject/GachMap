@@ -1,7 +1,7 @@
 import Alamofire
 import SwiftUI
 
-class WeatherData : ObservableObject {
+class WeatherData {
     
     let key = "Q1UlVchU%2BjoTRx0JMz1%2F9P4x%2BVVo5o%2FpfmTSLmb3ubV9Kk%2FtFcpTI7J%2Fy4bfoXpra17LrAVL5nMR%2Br6UVv8VNg%3D%3D"
     let date = Date()
