@@ -9,14 +9,14 @@ import Foundation
 import CoreLocation
 class Path {
     let ITtoGachon : [Node] = [
-//        Node(name: "반도체 대학 정문", location: CLLocation(coordinate: CLLocationCoordinate2D(
-//            latitude: 37.4508817,
-//            longitude: 127.1274769),
-//            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-//        Node(name: "반도체대학 코너", location: CLLocation(coordinate: CLLocationCoordinate2D(
-//            latitude: 37.4506271,
-//            longitude: 127.1274554),
-//            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+        Node(name: "반도체 대학 정문", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.4508817,
+            longitude: 127.1274769),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+        Node(name: "반도체대학 코너", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.4506271,
+            longitude: 127.1274554),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         Node(name: "반도체대학 앞 동산 횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.45062308,
             longitude: 127.1276374),

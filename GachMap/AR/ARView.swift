@@ -113,10 +113,10 @@ struct ARViewContainer: UIViewRepresentable {
 //            DispatchQueue.main.async {
 //                sourcePosition = SCNVector3(x: 0, y: 0, z: 0)
 //                nodePositions = []  // node의 상대적 위치 초기화
-//                
+//
 //                context.coordinator.oldBestVerticalAccuracy = bestVerticalAccuracy
 //                context.coordinator.oldBestHorizontalAccuracy = bestHorizontalAccuracy
-//                
+//
 //                // 이전에 추가된 경로 노드를 모두 제거 후 새로 로드
 //                arView.scene.rootNode.enumerateChildNodes { (node, _) in
 //                    node.removeFromParentNode()
@@ -182,7 +182,7 @@ struct ARViewContainer: UIViewRepresentable {
     
 //    func addDistanceTextNode(arView : ARSCNView, distance : Double){
 //        print("addDistanceTextNode - distance : \(distance)")
-//        
+//
 //        let distanceTextNode = placeDirectionText(textPosition: nodePositions[nextNodeObject.nextIndex], text: "\(distance)", isMiddle: false)
 //        arView.scene.rootNode.addChildNode(distanceTextNode)
 //    }
@@ -226,7 +226,7 @@ struct ARViewContainer: UIViewRepresentable {
 //        if nextNodeObject.nextIndex == 0 {
 //            // 사용자 고도를 노드의 첫번째 위치와 같게 설정?
 //             source = CLLocation(coordinate: location.coordinate, altitude: path.first?.location.altitude ?? 0, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, timestamp: location.timestamp)
-//            
+//
 //        } else {
 //            // 첫번째 노드의 범위 내로 들어오면 그 위치 기준 다시 경로 렌더링
 //            source = path[nextNodeObject.nextIndex - 1].location
@@ -292,39 +292,32 @@ struct ARViewContainer: UIViewRepresentable {
     
 //    목적지 노드를 AR 환경에 배치
     private func placeMiddleNode(arView : ARSCNView, source: CLLocation, start :CLLocation, end: CLLocation, next : CLLocation, nodeName: String) {
-        // 도착지와 다음 노드 사이의 거리를 구함
-        let nextDistance = distanceBetweenCoordinate(source: end, destination: next)
         
-        // 다음 노드의 상대 좌표를 구함
+        // 다음 노드 상대 좌표
+        let nextDistance = distanceBetweenCoordinate(source: source, destination: next)
         let nextTransformationMatrix = transformMatrix(source: source, destination: next, distance: nextDistance)
         let nextNode = SCNNode()
         nextNode.transform = nextTransformationMatrix
         
-        // 도착 노드 상대좌표
+        // 현재 노드 상대좌표
         let distance = distanceBetweenCoordinate(source: source, destination: end)
         let transformationMatrix = transformMatrix(source: source, destination: end, distance: distance)
         let endNode = SCNNode()
         endNode.transform = transformationMatrix
+    
         
         // 1번 노드에서 2번 노드로 향하는 방향 벡터
-        let firstToSecondVector = simd_float3(endNode.position.x - sourcePosition.x,
-                                               endNode.position.y - sourcePosition.y,
+        let sourceToEndVector = simd_float2(endNode.position.x - sourcePosition.x,
                                                endNode.position.z - sourcePosition.z)
 
-        // 2번 노드에서 3번 노드로 향하는 방향 벡터
-        let secondToThirdVector = simd_float3(nextNode.position.x - endNode.position.x,
-                                               nextNode.position.y - endNode.position.y,
-                                               nextNode.position.z - endNode.position.z)
-
-        // 두 벡터 간의 각도 계산 (라디안 단위)
-        let angleBetweenVectors = acos(simd_dot(firstToSecondVector, secondToThirdVector) / (simd_length(firstToSecondVector) * simd_length(secondToThirdVector)))
-
-        // 각도를 도 단위로 변환
-        let angleInDegrees = angleBetweenVectors * 180 / Float.pi
+        // 1번 노드에서 3번 노드로 향하는 방향 벡터
+        let sourceToNextVector = simd_float2(nextNode.position.x - sourcePosition.x,
+                                             nextNode.position.z - sourcePosition.z)
+        let angleInDegrees = sourceToEndVector.x * sourceToNextVector.y - sourceToEndVector.y * sourceToNextVector.x
+        print("angleInDegrees : \(angleInDegrees)")
 
         
-        print("회전 : \(angleInDegrees)")
-        let fileName = angleInDegrees < -30 ? "MuhanPointLeft" : angleInDegrees > 30 ? "MuhanPointRight" : "MuhanMiddle"
+        let fileName = angleInDegrees < -300 ? "MuhanPointLeft" : angleInDegrees > 300 ? "MuhanPointRight" : "MuhanMiddle"
         
        
         let middleNode = makePngNode(fileName: fileName)
@@ -485,7 +478,7 @@ struct ARViewContainer: UIViewRepresentable {
 //                else {
 //                    child.eulerAngles.y = .pi / 2
 //                }
-//                
+//
 //                node.addChildNode(child)
 //            }
 //        }
@@ -516,26 +509,26 @@ struct ARViewContainer: UIViewRepresentable {
 
 
 //func createArrowNode(arView : ARSCNView, source : CLLocation, firstLocation : CLLocation, secondLocation : CLLocation, text : String){
-//    
+//
 //    // 현재 위치부터 시작 노드까지의 거리와 상대 좌표
 //    let firstDistance = distanceBetweenCoordinate(source: source, destination: firstLocation)
 //    let firstTransformation = transformMatrix(source: source, destination: firstLocation, distance: firstDistance)
 //    let firstNode = makeUsdzNode(fileName: "threeArrows", scale: 0.05, middle : false)
 //    firstNode.transform = firstTransformation
 //    let firstPosition = firstNode.position
-//    
+//
 //    // 현재 위치부터 다음 노드까지의 거리와 상대 좌표
 //    let secondDistance = distanceBetweenCoordinate(source: source, destination: secondLocation)
 //    let secondTransformation = transformMatrix(source: source, destination: secondLocation, distance: secondDistance)
 //    let secondNode = makeUsdzNode(fileName: "threeArrows", scale: 0.05, middle: false)
 //    secondNode.transform = secondTransformation
 //    let secondPosition = secondNode.position
-//    
+//
 //    // 두 노드 사이의 방향 벡터 계산
 //    let dirVector = SCNVector3Make(secondPosition.x - firstPosition.x,
 //                                   secondPosition.y - firstPosition.y,
 //                                   secondPosition.z - firstPosition.z)
-//    
+//
 //    // 공통 회전각 - 각 화살표 노드의 오일러 회전 y 값
 //    let yAngle = atan(dirVector.x / dirVector.z)
 //
