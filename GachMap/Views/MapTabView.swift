@@ -273,6 +273,7 @@ struct MapTabView: View {
                             let manager = CLLocationManager()
                             manager.desiredAccuracy = kCLLocationAccuracyBest
                             manager.requestWhenInUseAuthorization()
+                            manager.startUpdatingLocation()
                             
                             let latitude = manager.location?.coordinate.latitude
                             let longitude = manager.location?.coordinate.longitude

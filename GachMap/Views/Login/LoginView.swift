@@ -202,7 +202,7 @@ struct LoginView: View {
     private func printLoginInfo() {
             if let savedData = UserDefaults.standard.data(forKey: "loginInfo") {
                 if let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
-                    print("userID: \(loginInfo.userId)")
+                    // print("userID: \(loginInfo.userId)")
                 }
             } else {
                 print("Login Info not found in UserDefaults")
@@ -222,8 +222,7 @@ struct LoginView: View {
                 // 에러 처리
                 switch response.result {
                 case .success(let value):
-                    value.data
-                    let a = LoginInfo(userId: userId, isStudent: true)
+                    
                     // 성공적인 응답 처리
     //                self.responseData = value
                     print("서버로 데이터 전송 성공")
