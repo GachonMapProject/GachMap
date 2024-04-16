@@ -11,7 +11,7 @@ import SwiftUI
 struct GachMapApp: App {
     var body: some Scene {
         WindowGroup {
-            PrimaryView()
+            BackMapTest()
         }
     }
 }
