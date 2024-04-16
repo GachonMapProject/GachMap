@@ -60,14 +60,7 @@ struct GuestDashboardView: View {
                         Text("AR 길찾기")
                     }
                     Spacer()
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .fill(.blue)
-                            .shadow(radius: 7, x: 2, y: 2)
-                            .frame(width: 137, height: 258)
-                        
-                        Text("제목")
-                    }
+                    WeatherView()
                 } // H3
                 
                 Spacer()

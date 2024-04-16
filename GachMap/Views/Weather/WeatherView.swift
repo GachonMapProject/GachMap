@@ -17,47 +17,38 @@ struct WeatherView: View {
     let weatherData = WeatherData()
     
     var body: some View {
-        HStack{
-            VStack{
-                VStack(alignment: .leading){
-                    Text("🌡️ 날씨")
-                        .font(.system(size: 20))
-                        .bold()
-                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 0))
-                    Spacer()
-                    VStack{
-                        Text(image)
-                            .font(.system(size: 80))
-                            .padding(.bottom, 10)
-                        HStack{
-                            Text("\(temp)°")
-                                .font(.system(size: 25))
-                            Text(sky)
-                                .font(.system(size: 25))
-                        }
-                        .bold()
+        VStack{
+            VStack(alignment: .leading){
+                Text("🌡️ 날씨")
+                    .font(.system(size: 20))
+                    .bold()
+                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 0))
+                Spacer()
+                VStack{
+                    Text(image)
+                        .font(.system(size: 80))
+                        .padding(.bottom, 10)
+                    HStack{
+                        Text("\(temp)°")
+                        .font(.system(size: 25))
+                        Text(sky)
+                            .font(.system(size: 25))
                     }
-                    .frame(width: 137)
-                    Spacer()
-                    Text("📍 복정동 \n  \(AMPM) \(time)시 기준")
-                        .lineSpacing(5)
-                        .font(.system(size: 15))
-                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 0))
+                    .bold()
                 }
-               
+                .frame(width: 137)
+                Spacer()
+                Text("📍 복정동 \n  \(AMPM) \(time)시 기준")
+                    .lineSpacing(5)
+                    .font(.system(size: 15))
+                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 0))
             }
-            .frame(width: 137, height: 258)
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(radius: 7, x: 2, y: 2) // 그림자를 적용할 부모 뷰에 그림자 추가
-            
-            
-            RoundedRectangle(cornerRadius: 15, style: .continuous)
-                .fill(.blue)
-                .shadow(radius: 7, x: 2, y: 2)
-                .frame(width: 137, height: 258)
-
+           
         }
+        .frame(width: 137, height: 258)
+        .background(Color.white)
+        .cornerRadius(15)
+        .shadow(radius: 7, x: 2, y: 2) // 그림자를 적용할 부모 뷰에 그림자 추가
         .onAppear(){
             weatherData.WeatherDataRequest { newWeather in
                 if let newWeather = newWeather {
@@ -73,14 +64,21 @@ struct WeatherView: View {
                     self.image = sky_image[newWeather.sky] ?? "☀️"
                 }
                 let time = Int(String(weatherData.baseTime.dropLast(2))) ?? 0
-                if time < 13 {
-                    self.time = String(time)
+                if time < 12 {
                     self.AMPM = "오전"
+                    self.time = String(time)
+                    
                 }
-                else{
+                else if time == 12{
+                    self.AMPM = "오후"
+                    self.time = String(time)
+                    
+                }
+                else {
                     self.time = String(time - 12)
                     self.AMPM = "오후"
                 }
+
                
             }
 
