@@ -9,14 +9,18 @@ import SwiftUI
 
 struct ContentView: View {
   
-  @State private var showSheet: Bool = false
-  @State private var selectedTab = 1
+    @State private var showSheet: Bool = false
+    @State private var selectedTab = 1
+    @State private var showMainView = false
+    
+    @State private var loginInfo: LoginInfo? = nil
     
     init() {
         UITabBar.appearance().scrollEdgeAppearance = .init()
     }
   
   var body: some View {
+      
       TabView(selection: $selectedTab) {
           MapTabView()
               .tabItem {
@@ -24,6 +28,8 @@ struct ContentView: View {
                   Text("지도")
               }.tag(1)
               .onAppear() {
+                  loginInfo = getLoginInfo()
+                  
                   if selectedTab == 1 {
                       showSheet = true
                   } else {
@@ -69,19 +75,19 @@ struct ContentView: View {
                       showSheet = false
                   }
               }
+          
     }
-//    .onAppear() {
-//      if selectedTab == 1 {
-//        showSheet = true
-//      } else {
-//        showSheet = false
-//      }
-//    }
     .ignoresSafeArea()
     .sheet(isPresented: $showSheet) {
       ScrollView(.vertical, content: {
         VStack(alignment: .leading, spacing: 15, content: {
-          DashboardView()
+          // DashboardView()
+            
+            if let loginInfo = loginInfo?.userCode {
+                    StudentDashboardView()
+                } else {
+                    GuestDashboardView()
+                }
         })
         .padding()
       })
@@ -92,8 +98,36 @@ struct ContentView: View {
       .presentationBackgroundInteraction(.enabled(upThrough: .large))
       .interactiveDismissDisabled()
       .bottomMaskForSheet()
-    }
-  }
+    } // end of .sheet
+      
+      // 스플래시 화면 작동
+//      ZStack {
+//          if showMainView {
+//              
+//          } else {
+//              SplashScreen()
+//                  .onAppear {
+//                      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                          withAnimation {
+//                              showMainView = true
+//                          }
+//                      }
+//                  }
+//          }
+//      } // end of ZStack
+      
+  } // end of View
+    
+    // LoginInfo의 정보 가져오기, 필요없나?
+    private func getLoginInfo() -> LoginInfo? {
+            if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
+               let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
+                return loginInfo
+            } else {
+                print("Login Info not found in UserDefaults")
+                return nil
+            }
+        }
 }
 
 #Preview {

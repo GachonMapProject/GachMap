@@ -44,6 +44,11 @@
 		8B831C432BCCF60C00A85973 /* BeantownButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C292BCCF60C00A85973 /* BeantownButtons.swift */; };
 		8B831C442BCCF60C00A85973 /* BottomSheetHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C2A2BCCF60C00A85973 /* BottomSheetHelper.swift */; };
 		8B831C452BCCF60C00A85973 /* MapTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C2B2BCCF60C00A85973 /* MapTestView.swift */; };
+		8B831C472BCD1B5C00A85973 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C462BCD1B5C00A85973 /* UserInfo.swift */; };
+		8B831C492BCD3F4D00A85973 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C482BCD3F4D00A85973 /* SplashScreen.swift */; };
+		8B831C4B2BCD46DF00A85973 /* PrimaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C4A2BCD46DF00A85973 /* PrimaryView.swift */; };
+		8B831C712BCE0A9200A85973 /* GuestDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */; };
+		8B831C732BCE0AB300A85973 /* StudentDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */; };
 		A34506E4E7DFA2C6F58F6EBE /* Pods_GachMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE0964287E09D08847B86CA /* Pods_GachMap.framework */; };
 		CB4CE38E2BCD2F0D00E0611B /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4CE38D2BCD2F0D00E0611B /* WeatherView.swift */; };
 		CB4CE3912BCD3F4600E0611B /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4CE3902BCD3F4600E0611B /* WeatherData.swift */; };
@@ -92,12 +97,20 @@
 		8B831C292BCCF60C00A85973 /* BeantownButtons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeantownButtons.swift; sourceTree = "<group>"; };
 		8B831C2A2BCCF60C00A85973 /* BottomSheetHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetHelper.swift; sourceTree = "<group>"; };
 		8B831C2B2BCCF60C00A85973 /* MapTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTestView.swift; sourceTree = "<group>"; };
+
+		8B831C462BCD1B5C00A85973 /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
+		8B831C482BCD3F4D00A85973 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
+		8B831C4A2BCD46DF00A85973 /* PrimaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryView.swift; sourceTree = "<group>"; };
+		8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestDashboardView.swift; sourceTree = "<group>"; };
+		8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentDashboardView.swift; sourceTree = "<group>"; };
+
 		CB4CE38D2BCD2F0D00E0611B /* WeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
 		CB4CE3902BCD3F4600E0611B /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		CB4CE3922BCD3F9C00E0611B /* ConvertGrid_GPS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertGrid_GPS.swift; sourceTree = "<group>"; };
 		CB4CE3942BCD3FA500E0611B /* MyXMLParserDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyXMLParserDelegate.swift; sourceTree = "<group>"; };
 		CB4CE3962BCD421A00E0611B /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		CB4CE3982BCD4DDB00E0611B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+
 		E0202EBB66AC85F899D763AC /* Pods-GachMap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GachMap.release.xcconfig"; path = "Target Support Files/Pods-GachMap/Pods-GachMap.release.xcconfig"; sourceTree = "<group>"; };
 		EEE0964287E09D08847B86CA /* Pods_GachMap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GachMap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -145,6 +158,7 @@
 			children = (
 				CB4CE3982BCD4DDB00E0611B /* Info.plist */,
 				8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */,
+				8B831C4A2BCD46DF00A85973 /* PrimaryView.swift */,
 				8B831BDF2BCCEFF600A85973 /* ContentView.swift */,
 				8B831C282BCCF60C00A85973 /* AR */,
 				8B831C2C2BCCF60C00A85973 /* Helpers */,
@@ -168,9 +182,9 @@
 		8B831C002BCCF57700A85973 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				8B831BFD2BCCF57700A85973 /* GuestInfoInputView.swift */,
 				8B831BFE2BCCF57700A85973 /* LoginView.swift */,
 				8B831BFF2BCCF57700A85973 /* UserInfoInputView.swift */,
+				8B831BFD2BCCF57700A85973 /* GuestInfoInputView.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -178,10 +192,16 @@
 		8B831C062BCCF57700A85973 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+
+				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
+
 				CB4CE38F2BCD3F3500E0611B /* Weather */,
+
 				8B831C002BCCF57700A85973 /* Login */,
 				8B831C012BCCF57700A85973 /* BuildingTabView.swift */,
 				8B831C022BCCF57700A85973 /* DashboardView.swift */,
+				8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */,
+				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
 				8B831C032BCCF57700A85973 /* EventTabView.swift */,
 				8B831C042BCCF57700A85973 /* MapTabView.swift */,
 				8B831C052BCCF57700A85973 /* ProfileTabView.swift */,
@@ -193,6 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				8B831C0F2BCCF60C00A85973 /* LoginInfo.swift */,
+				8B831C462BCD1B5C00A85973 /* UserInfo.swift */,
 			);
 			path = Struct;
 			sourceTree = "<group>";
@@ -200,12 +221,12 @@
 		8B831C172BCCF60C00A85973 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				8B831C112BCCF60C00A85973 /* GuestDashboardResponse.swift */,
 				8B831C122BCCF60C00A85973 /* LoginRequest.swift */,
 				8B831C132BCCF60C00A85973 /* LoginResponse.swift */,
-				8B831C142BCCF60C00A85973 /* UserDashboardResponse.swift */,
 				8B831C152BCCF60C00A85973 /* UserInfoRequest.swift */,
 				8B831C162BCCF60C00A85973 /* UserInfoResponse.swift */,
+				8B831C142BCCF60C00A85973 /* UserDashboardResponse.swift */,
+				8B831C112BCCF60C00A85973 /* GuestDashboardResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -396,9 +417,12 @@
 				CB4CE3972BCD421A00E0611B /* Weather.swift in Sources */,
 				8B831C3C2BCCF60C00A85973 /* CoreLocation.swift in Sources */,
 				8B831C402BCCF60C00A85973 /* Node.swift in Sources */,
+				8B831C492BCD3F4D00A85973 /* SplashScreen.swift in Sources */,
 				8B831C3E2BCCF60C00A85973 /* GetIntermediateCoordinate.swift in Sources */,
+				8B831C712BCE0A9200A85973 /* GuestDashboardView.swift in Sources */,
 				8B831C0D2BCCF57700A85973 /* MapTabView.swift in Sources */,
 				8B831C0C2BCCF57700A85973 /* EventTabView.swift in Sources */,
+				8B831C732BCE0AB300A85973 /* StudentDashboardView.swift in Sources */,
 				8B831C3A2BCCF60C00A85973 /* ARView.swift in Sources */,
 				8B831C322BCCF60C00A85973 /* UserInfoRequest.swift in Sources */,
 				8B831C072BCCF57700A85973 /* GuestInfoInputView.swift in Sources */,
@@ -412,6 +436,8 @@
 				8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */,
 				8B831C3B2BCCF60C00A85973 /* Constant.swift in Sources */,
 				8B831C0A2BCCF57700A85973 /* BuildingTabView.swift in Sources */,
+				8B831C4B2BCD46DF00A85973 /* PrimaryView.swift in Sources */,
+				8B831C472BCD1B5C00A85973 /* UserInfo.swift in Sources */,
 				8B831C442BCCF60C00A85973 /* BottomSheetHelper.swift in Sources */,
 				8B831C092BCCF57700A85973 /* UserInfoInputView.swift in Sources */,
 				8B831C432BCCF60C00A85973 /* BeantownButtons.swift in Sources */,

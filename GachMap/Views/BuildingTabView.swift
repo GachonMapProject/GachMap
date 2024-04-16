@@ -65,7 +65,7 @@ struct BuildingTabView: View {
                     }
                 }
             }
-            .navigationTitle("캠퍼스맵")
+            .navigationTitle("캠퍼스 맵")
         } // end of NavigationStack
         .searchable(
             text: $searchText,

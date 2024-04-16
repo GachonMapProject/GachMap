@@ -50,7 +50,7 @@ struct UserInfoInputView: View {
     
     let gender = ["남성", "여성"]
     let speed = ["빠름", "보통", "느림"]
-    let dept = ["컴퓨터공학과", "소프트웨어학과", "전자공학과", "전기공학과", "스마트보안학과"]
+    let dept = ["컴퓨터공학과", "소프트웨어학과", "전자공학과", "전기공학과", "스마트보안학과"] // 서버에서 받아오기
     
     @State private var selectedGender = ""
     @State private var selectedWalkSpeed = ""
@@ -69,15 +69,15 @@ struct UserInfoInputView: View {
     
     var body: some View {
         ZStack {
-            ScrollViewReader { proxy in
-                ScrollView(.vertical) {
+            ScrollView(.vertical) {
                     VStack { // 입력 필드용 VStack
                         HStack { // 메인 이미지 시작
                             Image("gach1000")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .padding(.leading)
-                                .padding(.trailing)
+                                .frame(width: UIScreen.main.bounds.width - 25)
+//                                .padding(.leading)
+//                                .padding(.trailing)
                         }
                         .padding(.top)
                         // end of main Image
@@ -278,10 +278,11 @@ struct UserInfoInputView: View {
                         
                         // Spacer()
                         
-                    } // end of 전체 내용 VStack
+                    }
+                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 90)
+                    // end of 전체 내용 VStack
                     
                 } // end of ScrollView
-            } // end of ScrollViewReader
             
             Spacer()
             
