@@ -11,10 +11,14 @@ struct GuestDashboardResponse: Decodable {
     var success: Bool
     var message: String
     var property: Int
-    var data: [Data]
+    var data: GuestDashboardData
     var eventId: Int
     var eventName: String
     var temperature: Double
     var rainPrecipitation: Double
     var rainPrecipitationProbability: Double
+}
+
+struct GuestDashboardData: Decodable {
+    
 }

@@ -11,7 +11,7 @@ struct UserDashboardResponse: Decodable {
     var success: Bool
     var message: String
     var property: Int
-    var data: [Data]
+    var data: UserDashboardData
     var userCode: Int64
     var userNickname: String
     var eventId: Int
@@ -19,4 +19,8 @@ struct UserDashboardResponse: Decodable {
     var temperature: Double
     var rainPrecipitation: Double
     var rainPrecipitationProbability: Double
+}
+
+struct UserDashboardData: Decodable {
+    
 }

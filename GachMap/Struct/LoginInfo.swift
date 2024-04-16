@@ -10,5 +10,4 @@ import Foundation
 struct LoginInfo: Codable {
     var userCode: Int64?
     var guestCode: Int64?
-    var isStudent: Bool
 }

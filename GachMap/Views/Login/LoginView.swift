@@ -15,6 +15,8 @@ extension View {
     }
 }
 
+// 정보 입력 뷰로 갔다가 돌아오면 입력 아이디, 비밀번호 초기화
+
 struct LoginView: View {
     
     @State private var username: String = ""
@@ -24,6 +26,7 @@ struct LoginView: View {
     @State private var isFull: Bool = false
     @State private var isActive: Bool = false // 계정 정보 확인 후 일치 시 다른 뷰로 넘어갈 때 사용
     @State private var notCorrectLogin: Bool = false
+    @State private var showAlert: Bool = false
     
     var body: some View {
         
@@ -107,25 +110,17 @@ struct LoginView: View {
                             // LoginRequest 객체 생성
                             let param = LoginRequest(username: username, password: password)
                             
-                            postData(parameter: param)
+                            postLoginData(parameter: param)
                             
-                            getData()
-                            
-                            
-                            // Response success 값이 true면 notCorrectLogin == false -> 로그인 성공
-                            // else -> 로그인 실패 alert 띄우기
-                            
-                            if notCorrectLogin == false {
-                                print("로그인 성공")
-                                isActive = true
-                            }
+                            username = ""
+                            password = ""
                         }, label: {
                             HStack {
                                 Text("로그인")
                                     .font(.system(size: 20, weight: .bold))
                                     .foregroundColor(Color(.white))
                             }
-                            .alert(isPresented: $notCorrectLogin) {
+                            .alert(isPresented: $showAlert) {
                                 Alert(title: Text("오류"), message: Text("아이디 또는 비밀번호가\n일치하지 않습니다."),
                                       dismissButton: .default(Text("확인")))
                             }
@@ -176,7 +171,7 @@ struct LoginView: View {
     // 기기에 저장
     private func setLoginInfo(userCode: Int64?, guestCode: Int64?) {
         // 기존에 저장된 LoginInfo 정보 가져오기
-        var loginInfo = LoginInfo(userCode: nil, guestCode: nil, isStudent: false)
+        var loginInfo = LoginInfo(userCode: nil, guestCode: nil)
         
         if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
            let savedLoginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
@@ -186,26 +181,21 @@ struct LoginView: View {
         // userCode가 전달되었다면
         if let userCode = userCode {
             loginInfo.userCode = userCode
-            loginInfo.isStudent = true
             
             print("userCode 저장 성공: \(userCode)")
-            print("학생 정보 저장 성공: \(loginInfo.isStudent)")
         }
         
         // guestCode가 전달되었다면
         if let guestCode = guestCode {
             loginInfo.guestCode = guestCode
-            loginInfo.isStudent = false
             
             print("guestCode 저장 성공: \(guestCode)")
-            print("학생 정보 저장 성공: \(loginInfo.isStudent)")
         }
         
         // 수정된 LoginInfo를 UserDefaults에 저장
         if let encoded = try? JSONEncoder().encode(loginInfo) {
             UserDefaults.standard.set(encoded, forKey: "loginInfo")
         }
-
     } // end of saveLoginInfo func
 
     // LoginInfo에 저장된 정보 불러오기
@@ -225,36 +215,14 @@ struct LoginView: View {
                 } else {
                     print("guestCode: Not set")
                 }
-                
-                // isStudent 값 출력
-                print("isStudent: \(loginInfo.isStudent)")
             }
         } else {
             print("Login Info not found in UserDefaults")
         }
     }
     
-    // getData 함수
-    private func getData() {
-        guard let url = URL(string: "http://")
-        else {
-            print("Invalid URL")
-            return
-        }
-        
-        // Alamofire를 사용하여 GET 요청 생성
-        AF.request(url, method: .get).responseString { response in
-            switch response.result {
-            case .success(let value):
-                print(value)
-            case .failure(let error):
-                print("Error: \(error.localizedDescription)")
-            }
-        }
-    } // end of getData()
-    
     // postData 함수
-    private func postData(parameter : LoginRequest) {
+    private func postLoginData(parameter : LoginRequest) {
         // API 요청을 보낼 URL 생성
         guard let url = URL(string: "https://821b-58-121-110-235.ngrok-free.app/user/login")
         else {
@@ -263,14 +231,42 @@ struct LoginView: View {
         }
             
         // Alamofire를 사용하여 POST 요청 생성
-        AF.request(url, method: .post, parameters: parameter, encoder: JSONParameterEncoder.default).responseString { response in
-            // 에러 처리
+        AF.request(url, method: .post, parameters: parameter, encoder: JSONParameterEncoder.default)
+            .validate()
+            .responseDecodable(of: LoginResponse.self) { response in
+            // 서버 연결 여부
             switch response.result {
                 case .success(let value):
                     print(value)
-                    // 성공적인 응답 처리
-    //                self.responseData = value
-                    print("서버로 데이터 전송 성공")
+                   // 로그인 성공 유무
+                    if (value.success == true) {
+                        print("로그인 성공")
+                        
+                        isActive = true
+                        
+                        let userCode = Int64(value.data.userId)
+                        let loginInfo = LoginInfo(userCode: userCode, guestCode: nil)
+                        if let encoded = try? JSONEncoder().encode(loginInfo) {
+                            UserDefaults.standard.set(encoded, forKey: "loginInfo")
+                        }
+                        print("userCode 저장 성공, userCode: \(userCode)")
+                        
+                        if (value.property == 200) {
+                            print("기존 회원 정보가 존재하는 회원")
+                            NavigationLink(destination: ContentView()) {
+                                EmptyView()
+                            }
+                        } else {
+                            print("기존 회원 정보가 존재하지 않는 회원")
+                            NavigationLink(destination: UserInfoInputView()) {
+                                EmptyView()
+                            }
+                        }
+                    } else {
+                        print("ID/PW 불일치, 로그인 실패")
+                        showAlert = true
+                    }
+                
                 case .failure(let error):
                     // 에러 응답 처리
                     print("Error: \(error.localizedDescription)")
