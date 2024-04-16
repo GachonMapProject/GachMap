@@ -13,7 +13,7 @@ struct ContentView: View {
     @State private var selectedTab = 1
     @State private var showMainView = false
     
-    @State private var loginInfo: LoginInfo? = getLoginInfo()
+    @State private var loginInfo: LoginInfo? = nil
     
     init() {
         UITabBar.appearance().scrollEdgeAppearance = .init()
