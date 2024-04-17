@@ -51,9 +51,9 @@ struct LoginView: View {
                             .padding(.leading)
                         
                         TextField("Gach.가자 ID", text: $username)
-                            .keyboardType(.default)
+                            .keyboardType(.asciiCapable)
                             .autocapitalization(.none) // 대문자 설정 지우기
-                            .disableAutocorrection(false) // 자동 수정 해제
+                            .disableAutocorrection(true) // 자동 수정 해제
                             .font(.title3)
                             .foregroundColor(Color(.gray))
                         
@@ -77,6 +77,8 @@ struct LoginView: View {
                         
                         SecureField("Gach.가자 비밀번호", text: $password)
                             .font(.title3)
+                            .autocapitalization(.none) // 대문자 설정 지우기
+                            .disableAutocorrection(true) // 자동 수정 해제
                             .foregroundColor(Color(.gray))
                         
                         Spacer()
@@ -155,6 +157,7 @@ struct LoginView: View {
             .onTapGesture { self.endTextEditing() }
 
         } // end of NavigationStack
+        .onTapGesture { self.endTextEditing() }
         .toolbar(.hidden, for: .navigationBar)
         // .navigationBarHidden(true)
     } // end of body
