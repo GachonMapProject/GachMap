@@ -26,10 +26,15 @@ struct BuildingDetailView: View {
                         .frame(height: 300)
                         .allowsHitTesting(false)
 //                        .interactionModes(.nonInteractive)
-                    
-                    CircleImage(image: Image(imageName))
-                                   .offset(y: -130)
-                                   .padding(.bottom, -130)
+                    if let uiImage = UIImage(named: imageName) {
+                        CircleImage(image: Image(uiImage: uiImage))
+                            .offset(y: -130)
+                            .padding(.bottom, -130)
+                    } else {
+                        Text("이미지를 찾을 수 없습니다.")
+                            .foregroundColor(.red)
+                    }
+                                   
                     VStack(alignment : .leading){
                         Spacer()
                         Text(BuildingName)

@@ -14,7 +14,7 @@ struct Building: Identifiable, Hashable {
 }
 
 private var globalBuilding = [
-    Building(name: "가천관", imageName: "gachonGuan"),
+    Building(name: "가천관", imageName: "gachonMark"),
     Building(name: "AI관", imageName: "gachonMark"),
     Building(name: "비전타워", imageName: "gachonMark"),
     Building(name: "법과대학", imageName: "gachonMark"),

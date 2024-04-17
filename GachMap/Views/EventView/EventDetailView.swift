@@ -62,45 +62,14 @@ struct EventDetailView: View {
                        
                     }
                     
-//                    Map(coordinateRegion: $region, annotationItems: eventCoordinate) { coordinate in
-//                        MapAnnotation(coordinate: coordinate.coordinate) {
-//                            Button {
-//                                region = MKCoordinateRegion(center: coordinate.coordinate,
-//                                                            latitudinalMeters: 150,
-//                                                            longitudinalMeters: 150)
-//                                destination = coordinate
-//                           } label: {
-//                               VStack {
-//                                   // 핀 선택 시 도착지 설정할 때 보낼 장소를 지정해줘야 됨
-//                                   ZStack{
-//                                       Circle()
-//                                           .frame(width: 30, height: 30)
-//                                           .foregroundColor(.red)
-//                                           
-//                                       Image(systemName: "party.popper.fill")
-//                                           .resizable()
-//                                           .scaledToFit()
-//                                           .frame(width: 15, height: 15)
-//                                           .foregroundColor(.white)
-//                                   }
-//                                   Text(coordinate.placeName)
-//                                       .font(.system(size: 12))
-//                                       .foregroundColor(.black)
-//                                       .bold()
-//                               }
-//                           }
-//
-//                       }
-//                    } // end of Map
-//                    .edgesIgnoringSafeArea(.bottom)
-                    
                     HStack{
                         VStack{
                             Image(.gachonMark)
                                 .resizable()
+                                .scaledToFit()
                                 .padding()
                         }
-                        .frame(width: 66, height: 55)
+                        .frame(width: 60, height: 60)
                        
                         
                         Text(destination.placeName)
