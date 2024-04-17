@@ -13,9 +13,9 @@ struct EventTabView: View {
     var screenWidth = UIScreen.main.bounds.width
     var screenHeight = UIScreen.main.bounds.height
     var eventList = [
-        EventList(eventId: 0, eventName: "", eventLink: "", eventInfo: "", imageData: Data(userId: 0)),
-        EventList(eventId: 0, eventName: "", eventLink: "", eventInfo: "", imageData: Data(userId: 0)),
-        EventList(eventId: 0, eventName: "", eventLink: "", eventInfo: "", imageData: Data(userId: 0)),
+        EventList(eventId: 0, eventName: "", eventLink: "", eventInfo: "", imageData: Data()),
+        EventList(eventId: 0, eventName: "", eventLink: "", eventInfo: "", imageData: Data()),
+        EventList(eventId: 0, eventName: "", eventLink: "", eventInfo: "", imageData: Data()),
     ]
     
     var body: some View {
