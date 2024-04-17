@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// 여기서 로그인 정보 받아와서 회원/비회원 구분하고 분기
+
 struct DashboardView: View {
     var body: some View {
         VStack() {

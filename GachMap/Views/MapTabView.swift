@@ -159,7 +159,7 @@ struct MapTabView: View {
                                     )
                             }
                             .frame(height: 30)
-                            .contentShape(.capsule)
+                            //.contentShape(.capsule)
                             .background(
                                 Capsule()
                                     .fill(Color(UIColor.systemBackground))

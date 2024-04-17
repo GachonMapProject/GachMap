@@ -13,7 +13,7 @@ struct ContentView: View {
     @State private var selectedTab = 1
     @State private var showMainView = false
     
-    @State private var loginInfo: LoginInfo? = nil
+    // @State private var loginInfo: LoginInfo? = nil
     
     init() {
         UITabBar.appearance().scrollEdgeAppearance = .init()
@@ -28,8 +28,6 @@ struct ContentView: View {
                   Text("지도")
               }.tag(1)
               .onAppear() {
-                  loginInfo = getLoginInfo()
-                  
                   if selectedTab == 1 {
                       showSheet = true
                   } else {
@@ -81,13 +79,7 @@ struct ContentView: View {
     .sheet(isPresented: $showSheet) {
       ScrollView(.vertical, content: {
         VStack(alignment: .leading, spacing: 15, content: {
-          // DashboardView()
-            
-            if let loginInfo = loginInfo?.userCode {
-                    StudentDashboardView()
-                } else {
-                    GuestDashboardView()
-                }
+          DashboardView()
         })
         .padding()
       })
