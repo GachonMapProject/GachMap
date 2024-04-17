@@ -30,8 +30,9 @@ struct BackgroundMapView : View {
     var category : String
     var locations : [IdentifiableLocation]
     @ObservedObject var coreLocation : CoreLocationEx
-    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700,
-                                           longitudinalMeters: 700)
+
+    @State var region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
+
     
     // category에 따라 바꿔줘야 됨
     @State var pinImage : String
@@ -53,41 +54,19 @@ struct BackgroundMapView : View {
               self.pinColor = Color.blue // 기본 색상
        }
         
+        
     }
     
     var body: some View {
         ZStack(alignment : .bottomTrailing){
-            Map(coordinateRegion: $region, showsUserLocation: true,  annotationItems: locations) { location in
-                MapAnnotation(coordinate: location.coordinate) {
-                    Button {
-                        region = MKCoordinateRegion(center: location.coordinate,
-                                                    latitudinalMeters: 150,
-                                                    longitudinalMeters: 150)
-                        // 카드 뷰 띄우는 함수 추가해야 함
-                   } label: {
-                       VStack {
-                           ZStack{
-                               Circle()
-                                   .frame(width: 20, height: 20)
-                                   .foregroundColor(pinColor)
-                                   
-                               Image(systemName: pinImage)
-                                   .resizable()
-                                   .scaledToFit()
-                                   .frame(width: 10, height: 10)
-                                   .foregroundColor(.white)
-                           }
-    //                       Text(location.categoryData.placeName)
-    //                           .font(.system(size: 12))
-    //                           .foregroundColor(.black)
-    //                           .bold()
-                       }
-                   }
+            Map(position: $region){
+                UserAnnotation() // 사용자 현재 위치
+                ForEach(locations){ location in
+                    Marker(location.categoryData.placeName, systemImage: pinImage, coordinate: location.coordinate)
+                        .tint(pinColor)
+                }
+            }
 
-               }
-            } // end of Map
-            .edgesIgnoringSafeArea(.bottom)
-            
             VStack(spacing: 0){
                 Button(action: {
                     // AR 캠퍼스 둘러보기 기능 추가해야 함
@@ -120,7 +99,8 @@ struct BackgroundMapView : View {
     func setRegionToUserLocation() {
         if let userLocation = coreLocation.location {
             let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
-            self.region = region
+            
+            self.region = MapCameraPosition.region(region)
         }
     }
 }
