@@ -22,7 +22,7 @@ struct GuestInfoInputView: View {
     @State private var walkSpeed = ""
     
     var body: some View {
-        ZStack {
+        VStack {
             ScrollView(.vertical) {
                 VStack {
                     HStack {
