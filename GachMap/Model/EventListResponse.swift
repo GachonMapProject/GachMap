@@ -11,7 +11,7 @@ struct EventListResponse : Decodable {
     var success: Bool
     var message: String
     var property: Int
-    var data: EventList
+    var data: [EventList]
 }
 
 struct EventList: Decodable {

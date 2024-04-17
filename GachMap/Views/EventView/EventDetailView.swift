@@ -10,7 +10,7 @@ import MapKit
 
 // CLLocationCoordinate2D를 감싸는 IdentifiableCoordinate 구조체 정의
 struct IdentifiableCoordinate: Identifiable {
-    var id = UUID()
+    var id = UUID().uuidString
     var coordinate: CLLocationCoordinate2D
     var placeName : String
 }
@@ -21,8 +21,9 @@ struct EventDetailView: View {
     let eventCoordinate : [IdentifiableCoordinate] // 행사 위치의 좌표들
     @State var destination : IdentifiableCoordinate
     
-    @State private var region: MKCoordinateRegion
+    @State var region : MapCameraPosition
     @State var isSearch = false
+    @State var selectedItem : String? // 마커 선택시 id
     
     init(eventDetail : EventDetail){
         self.eventDetail = eventDetail
@@ -32,55 +33,43 @@ struct EventDetailView: View {
         }
         self.destination = eventCoordinate[0]
  
-        
-        region = MKCoordinateRegion(center: eventCoordinate[0].coordinate,
-                                    latitudinalMeters: 200,
-                                    longitudinalMeters: 200)
+        let region = MKCoordinateRegion(center: eventCoordinate[0].coordinate,
+                                         latitudinalMeters: 200,
+                                         longitudinalMeters: 200)
+        self.region = MapCameraPosition.region(region)
     }
 
     var body: some View {
         NavigationStack {
             VStack{
                 ZStack(alignment : .top){
-                    Map(coordinateRegion: $region, annotationItems: eventCoordinate) { coordinate in
-                        MapAnnotation(coordinate: coordinate.coordinate) {
-                            Button {
-                                region = MKCoordinateRegion(center: coordinate.coordinate,
-                                                            latitudinalMeters: 150,
-                                                            longitudinalMeters: 150)
-                                destination = coordinate
-                           } label: {
-                               VStack {
-                                   // 핀 선택 시 도착지 설정할 때 보낼 장소를 지정해줘야 됨
-                                   ZStack{
-                                       Circle()
-                                           .frame(width: 30, height: 30)
-                                           .foregroundColor(.red)
-                                           
-                                       Image(systemName: "party.popper.fill")
-                                           .resizable()
-                                           .scaledToFit()
-                                           .frame(width: 15, height: 15)
-                                           .foregroundColor(.white)
-                                   }
-                                   Text(coordinate.placeName)
-                                       .font(.system(size: 12))
-                                       .foregroundColor(.black)
-                                       .bold()
-                               }
-                           }
-
-                       }
-                    } // end of Map
-                    .edgesIgnoringSafeArea(.bottom)
+                    Map(position: $region, selection: $selectedItem){
+                        ForEach(eventCoordinate){ event in
+                            Marker(event.placeName, systemImage: "party.popper.fill", coordinate: event.coordinate)
+                                .tint(.red)
+                        }
+                    }
+                    .onChange(of: selectedItem){
+                        if  !eventCoordinate.filter({$0.id == selectedItem}).isEmpty {
+                            let event = eventCoordinate.filter{$0.id == selectedItem}[0]
+                            let region = MKCoordinateRegion(center: event.coordinate,
+                                                             latitudinalMeters: 200,
+                                                             longitudinalMeters: 200)
+                            self.region = MapCameraPosition.region(region)
+                            destination = event
+                        }
+                        
+                       
+                    }
                     
                     HStack{
                         VStack{
                             Image(.gachonMark)
                                 .resizable()
+                                .scaledToFit()
                                 .padding()
                         }
-                        .frame(width: 66, height: 55)
+                        .frame(width: 60, height: 60)
                        
                         
                         Text(destination.placeName)
