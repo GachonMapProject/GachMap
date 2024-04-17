@@ -16,6 +16,8 @@ struct EventCardView : View {
     var event : EventList
     @State var eventDetail : EventDetail    // 이미지 선택 후 DetailView 가기 전에 변경해줘야 함
     
+
+    
     init(event: EventList) {
         self.event = event
         self.eventDetail = EventDetail(eventDto: EventDto(eventId: event.eventId, eventName: event.eventName, eventStartDate: Date(), eventEndate: Date(), eventLink: event.eventLink, eventInfo: event.eventInfo, imageData: Data()), eventLocationDto: [

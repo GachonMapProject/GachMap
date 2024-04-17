@@ -211,9 +211,9 @@
 			children = (
 				CB4EF61B2BCFA06600BDC73A /* BuildingView */,
 				CB0D26F82BCE8EA200800459 /* EventView */,
-				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
 				CB4CE38F2BCD3F3500E0611B /* Weather */,
 				8B831C002BCCF57700A85973 /* Login */,
+				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
 				8B831C022BCCF57700A85973 /* DashboardView.swift */,
 				8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */,
 				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,

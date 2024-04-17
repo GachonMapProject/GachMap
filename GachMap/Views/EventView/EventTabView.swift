@@ -12,7 +12,7 @@ struct EventTabView: View {
     var tabBarHeight = UITabBarController().tabBar.frame.size.height
     var screenWidth = UIScreen.main.bounds.width
     var screenHeight = UIScreen.main.bounds.height
-    
+
     @State var apiConnection = false
     
     @State var eventList = [
@@ -20,6 +20,9 @@ struct EventTabView: View {
         EventList(eventId: 1, eventName: "google", eventLink: "https://www.google.com", eventInfo: "2번", imageData: Data()),
         EventList(eventId: 2, eventName: "gachon", eventLink: "https://www.gachon.ac.kr", eventInfo: "3번", imageData: Data()),
     ]
+    
+    @State var currentIndex : Int = 0   // 현재 행사의 인덱스 번호 (위에 바 중 색 변경할 인덱스)
+
     
     var body: some View {
         if !apiConnection {
@@ -31,25 +34,53 @@ struct EventTabView: View {
         }
         else{
             NavigationStack {
-                
-                ScrollView(.horizontal) { // 수평 스크롤로 설정
-                    LazyHStack {
-                        ForEach(eventList.indices) { index in
-                            EventCardView(event: eventList[index])
-                                .frame(width: screenWidth)
-                                .scrollTransition(.animated, axis: .horizontal) { content, phase in
-                                    content
-                                        .opacity(phase.isIdentity ? 1.0 : 0.8)
-                                        .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
-                                }
+                VStack{
+                    HStack{
+                        ForEach(1...eventList.count, id: \.self){index in
+                            Rectangle()
+                                .cornerRadius(10)
+                                .frame(height: index == currentIndex ? 6 : 3)
+                                .foregroundColor(index == currentIndex ? .blue : .gray)
+                                .animation(.easeInOut)  // 애니메이션 적용
                         }
                     }
-                    .scrollTargetLayout()
+                    .padding(EdgeInsets(top: 5, leading: 10, bottom: 0, trailing: 10))
+                    
+                    ScrollView(.horizontal) { // 수평 스크롤로 설정
+                        ZStack(alignment : .leading){
+                            LazyHStack {
+                                ForEach(eventList.indices) { index in
+                                    EventCardView(event: eventList[index])
+                                        .frame(width: screenWidth)
+                                        .scrollTransition(.animated, axis: .horizontal) { content, phase in
+                                            content
+                                                .opacity(phase.isIdentity ? 1.0 : 0.8)
+                                                .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+                                            
+                                        }
+                                }
+                            } 
+                            .scrollTargetLayout()
+                            
+                            
+                            GeometryReader { proxy in
+                                let offset = proxy.frame(in: .named("scroll")).origin.x
+                                Color.clear.preference(key: ViewOffsetKey.self, value: offset)
+                            }
+                            .frame(height : 0)
+                            
+                        }
+                    }
+                    .scrollTargetBehavior(.viewAligned)
+                    .coordinateSpace(name: "scroll")
+                    .onPreferenceChange(ViewOffsetKey.self) { value in
+                        currentIndex = Int(value / screenWidth * -1 + 1)
+                    }
+                    
+                    
+                    .navigationTitle("교내 행사")
                 }
-                .scrollTargetBehavior(.viewAligned)
-                
-                
-                .navigationTitle("교내 행사")
+               
             } // end of NavigationStack
         }
     }
@@ -91,7 +122,14 @@ struct EventTabView: View {
 
 }
     
-      
+// scrollView offset 가져오기 
+struct ViewOffsetKey: PreferenceKey {
+    typealias Value = CGFloat
+    static var defaultValue = CGFloat.zero
+    static func reduce(value: inout Value, nextValue: () -> Value) {
+        value += nextValue()
+    }
+}
 
 #Preview {
     EventTabView()
