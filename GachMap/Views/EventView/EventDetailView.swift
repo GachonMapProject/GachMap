@@ -50,12 +50,16 @@ struct EventDetailView: View {
                         }
                     }
                     .onChange(of: selectedItem){
-                        let event = eventCoordinate.filter{$0.id == selectedItem}[0]
-                        let region = MKCoordinateRegion(center: event.coordinate,
-                                                         latitudinalMeters: 200,
-                                                         longitudinalMeters: 200)
-                        self.region = MapCameraPosition.region(region)
-                        destination = event
+                        if  !eventCoordinate.filter({$0.id == selectedItem}).isEmpty {
+                            let event = eventCoordinate.filter{$0.id == selectedItem}[0]
+                            let region = MKCoordinateRegion(center: event.coordinate,
+                                                             latitudinalMeters: 200,
+                                                             longitudinalMeters: 200)
+                            self.region = MapCameraPosition.region(region)
+                            destination = event
+                        }
+                        
+                       
                     }
                     
 //                    Map(coordinateRegion: $region, annotationItems: eventCoordinate) { coordinate in

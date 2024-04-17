@@ -22,13 +22,21 @@ struct EventTabView: View {
         NavigationStack {
             
             ScrollView(.horizontal) { // 수평 스크롤로 설정
-                HStack {
+                LazyHStack {
                     ForEach(eventList.indices) { index in
                         EventCardView(event: eventList[index])
                             .frame(width: screenWidth)
+                            .scrollTransition(.animated, axis: .horizontal) { content, phase in
+                                content
+                                    .opacity(phase.isIdentity ? 1.0 : 0.8)
+                                    .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+                            }
                     }
                 }
+                .scrollTargetLayout()
             }
+            .scrollTargetBehavior(.viewAligned)
+            
             
             .navigationTitle("교내 행사")
         } // end of NavigationStack
@@ -48,6 +56,12 @@ struct EventCardView : View {
     var screenWidth = UIScreen.main.bounds.width
     var screenHeight = UIScreen.main.bounds.height
     var event : EventList
+    @State var eventDetail : EventDetail = EventDetail(eventDto: EventDto(eventId: 1, eventName: "가천대학교 축구 리그", eventStartDate: Date(), eventEndate: Date(), eventLink: "www.naver.com", eventInfo: "가천대에서 축구 리그가 열려요", imageData: Data()), eventLocationDto: [
+        EventLocationDto(eventPlaceName: "반도체 대학 정문", eventLatitiude: 37.4508817, eventLongitude: 127.1274769, eventAltitude: 50.23912),
+        EventLocationDto(eventPlaceName: "광장계단 근처", eventLatitiude: 37.45048746, eventLongitude: 127.1280814, eventAltitude: 50.23912),
+        EventLocationDto(eventPlaceName: "반도체대학 코너", eventLatitiude: 37.4506271, eventLongitude: 127.1274554, eventAltitude: 50.23912)])
+    
+    
 //    var image: Image {
 //        guard let uiImage = UIImage(data: event.imageData) else {
 //            return Image(systemName: "photo") // 이미지 데이터가 없을 경우 기본 이미지 사용
@@ -63,17 +77,19 @@ struct EventCardView : View {
                     //eventImage로 변경
                     Button(action: {
                         // 행사 디테일 API 통신 함수 추가하고 넘어온 데이터 보고 위치 데이터 있는지 없는지 판단해서 뷰 이동 혹은 알림 띄우기
+                        // getEventDetail()
                         haveLocationData = true
+                        
                     }, label: {
                         Image("festival")
                             .resizable()
                             .frame(width: screenWidth)
                             .scaledToFit()
                     })
-//                    
-//                    NavigationLink(destination: EventDetailView(eventId: event.eventId), isActive: $touchButton) {
-//                        EmptyView()
-//                    }
+                    
+                    NavigationLink(destination: EventDetailView(eventDetail: eventDetail), isActive: $haveLocationData) {
+                        EmptyView()
+                    }
                     
                     HStack{
                         Image(systemName:"lessthan.circle.fill")
