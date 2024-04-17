@@ -30,10 +30,6 @@ struct EventTabView: View {
                 }
             }
             
-            Text("TabBar 위치")
-                .frame(width: screenWidth, height: tabBarHeight)
-                .background(.blue)
-            
             .navigationTitle("교내 행사")
         } // end of NavigationStack
         .onAppear(){
