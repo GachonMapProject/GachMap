@@ -127,7 +127,7 @@ struct MapTabView: View {
                 .padding(.top, 10)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack() { // scrollable 하게 변경하기 -> 완료
+                    HStack() {
                         // 버튼 1
                         Button(action: {}, label: {
                             HStack {

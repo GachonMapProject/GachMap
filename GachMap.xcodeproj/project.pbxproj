@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B3159D12BCFE7190049CB5F /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D02BCFE7190049CB5F /* SignUpView.swift */; };
 		8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */; };
 		8B831BE02BCCEFF600A85973 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDF2BCCEFF600A85973 /* ContentView.swift */; };
 		8B831BE22BCCEFF700A85973 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B831BE12BCCEFF700A85973 /* Assets.xcassets */; };
@@ -49,6 +50,8 @@
 		8B831C4B2BCD46DF00A85973 /* PrimaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C4A2BCD46DF00A85973 /* PrimaryView.swift */; };
 		8B831C712BCE0A9200A85973 /* GuestDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */; };
 		8B831C732BCE0AB300A85973 /* StudentDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */; };
+		8BA84B602BCF8DD000ACD5E2 /* InfoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84B5F2BCF8DD000ACD5E2 /* InfoInputView.swift */; };
+		8BA84B622BCF964800ACD5E2 /* SegmentedControlHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84B612BCF964800ACD5E2 /* SegmentedControlHelper.swift */; };
 		A34506E4E7DFA2C6F58F6EBE /* Pods_GachMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE0964287E09D08847B86CA /* Pods_GachMap.framework */; };
 		CB0D26F72BCE681F00800459 /* EventListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26F62BCE681F00800459 /* EventListResponse.swift */; };
 		CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26FB2BCE8EE500800459 /* EventDetailView.swift */; };
@@ -69,6 +72,7 @@
 
 /* Begin PBXFileReference section */
 		65239D12FC5FBC7B8F89AA67 /* Pods-GachMap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GachMap.debug.xcconfig"; path = "Target Support Files/Pods-GachMap/Pods-GachMap.debug.xcconfig"; sourceTree = "<group>"; };
+		8B3159D02BCFE7190049CB5F /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		8B831BDA2BCCEFF600A85973 /* GachMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GachMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GachMapApp.swift; sourceTree = "<group>"; };
 		8B831BDF2BCCEFF600A85973 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -112,6 +116,8 @@
 		8B831C4A2BCD46DF00A85973 /* PrimaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryView.swift; sourceTree = "<group>"; };
 		8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestDashboardView.swift; sourceTree = "<group>"; };
 		8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentDashboardView.swift; sourceTree = "<group>"; };
+		8BA84B5F2BCF8DD000ACD5E2 /* InfoInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoInputView.swift; sourceTree = "<group>"; };
+		8BA84B612BCF964800ACD5E2 /* SegmentedControlHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlHelper.swift; sourceTree = "<group>"; };
 		CB0D26F62BCE681F00800459 /* EventListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListResponse.swift; sourceTree = "<group>"; };
 		CB0D26FB2BCE8EE500800459 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		CB0D26FD2BCE8F8300800459 /* EventDetailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailResponse.swift; sourceTree = "<group>"; };
@@ -200,6 +206,8 @@
 			isa = PBXGroup;
 			children = (
 				8B831BFE2BCCF57700A85973 /* LoginView.swift */,
+				8B3159D02BCFE7190049CB5F /* SignUpView.swift */,
+				8BA84B5F2BCF8DD000ACD5E2 /* InfoInputView.swift */,
 				8B831BFF2BCCF57700A85973 /* UserInfoInputView.swift */,
 				8B831BFD2BCCF57700A85973 /* GuestInfoInputView.swift */,
 			);
@@ -288,6 +296,7 @@
 				8B831C292BCCF60C00A85973 /* BeantownButtons.swift */,
 				8B831C2A2BCCF60C00A85973 /* BottomSheetHelper.swift */,
 				8B831C2B2BCCF60C00A85973 /* MapTestView.swift */,
+				8BA84B612BCF964800ACD5E2 /* SegmentedControlHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -457,6 +466,7 @@
 				8B831C2F2BCCF60C00A85973 /* LoginRequest.swift in Sources */,
 				CB4CE3972BCD421A00E0611B /* Weather.swift in Sources */,
 				CB4EF6212BCFD5C000BDC73A /* BuildingDetailResponse.swift in Sources */,
+				8BA84B602BCF8DD000ACD5E2 /* InfoInputView.swift in Sources */,
 				CB0D26F72BCE681F00800459 /* EventListResponse.swift in Sources */,
 				8B831C3C2BCCF60C00A85973 /* CoreLocation.swift in Sources */,
 				CBDDC9162BCEBF6100019FAB /* BackMapTest.swift in Sources */,
@@ -468,6 +478,7 @@
 				CB0D26FE2BCE8F8300800459 /* EventDetailResponse.swift in Sources */,
 				8B831C0C2BCCF57700A85973 /* EventTabView.swift in Sources */,
 				CB4EF61D2BCFA07C00BDC73A /* BuildingDetailView.swift in Sources */,
+				8B3159D12BCFE7190049CB5F /* SignUpView.swift in Sources */,
 				8B831C732BCE0AB300A85973 /* StudentDashboardView.swift in Sources */,
 				8B831C3A2BCCF60C00A85973 /* ARView.swift in Sources */,
 				CBDDC9142BCEB6CB00019FAB /* PlaceCategoryResponse.swift in Sources */,
@@ -480,6 +491,7 @@
 				CB4CE3912BCD3F4600E0611B /* WeatherData.swift in Sources */,
 				8B831C0E2BCCF57700A85973 /* ProfileTabView.swift in Sources */,
 				CB4CE3932BCD3F9C00E0611B /* ConvertGrid_GPS.swift in Sources */,
+				8BA84B622BCF964800ACD5E2 /* SegmentedControlHelper.swift in Sources */,
 				8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */,
 				8B831C3B2BCCF60C00A85973 /* Constant.swift in Sources */,
 				CB4EF61F2BCFD4C800BDC73A /* BuildingListResponse.swift in Sources */,
@@ -647,6 +659,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -682,6 +695,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

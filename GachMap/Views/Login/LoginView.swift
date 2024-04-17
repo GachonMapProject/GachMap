@@ -36,19 +36,10 @@ struct LoginView: View {
                 
                 Spacer()
                 
-                HStack() {
-                    Image("gach1000")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: UIScreen.main.bounds.width - 50, height: UIScreen.main.bounds.height * 0.2)
-//                        .padding(.leading)
-//                        .padding(.trailing)
-                    
-                    //Spacer()
-                }
-                //.padding(.top, 150) // end ot Title HStack
-                
-                // Spacer()
+                Image("gach1000")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: UIScreen.main.bounds.width - 50, height: UIScreen.main.bounds.height * 0.2)
                 
                 VStack() {
                     // ID 입력
@@ -59,8 +50,10 @@ struct LoginView: View {
                             .frame(width: 33, height: 24, alignment: .leading)
                             .padding(.leading)
                         
-                        TextField("가천대 포털 ID", text: $username)
+                        TextField("Gach.가자 ID", text: $username)
                             .keyboardType(.default)
+                            .autocapitalization(.none) // 대문자 설정 지우기
+                            .disableAutocorrection(false) // 자동 수정 해제
                             .font(.title3)
                             .foregroundColor(Color(.gray))
                         
@@ -82,7 +75,7 @@ struct LoginView: View {
                             .frame(width: 33, height: 24, alignment: .leading)
                             .padding(.leading)
                         
-                        SecureField("가천대 포털 비밀번호", text: $password)
+                        SecureField("Gach.가자 비밀번호", text: $password)
                             .font(.title3)
                             .foregroundColor(Color(.gray))
                         
@@ -138,26 +131,24 @@ struct LoginView: View {
                     NavigationLink(destination: UserInfoInputView(), isActive: $isActive) {
                         EmptyView()
                     }
-                    
-                    // 비회원 정보 입력 화면 이동 버튼
-                    NavigationLink(destination: GuestInfoInputView()) {
-                        Text("비회원으로 이용하기")
-                            .padding(.top, 15)
-                            .font(.system(size: 16))
-                            .foregroundColor(.gray)
-                    }
-                    
-                    // Spacer()
-                    
+                        
                 } // end of Login Section VStack
-                .padding(.top, 50)
                 
-                Spacer()
-            
-                Text("로그인은 가천대 아이디로만 가능하며\n외부인의 회원가입은 제한됩니다.")
-                    .foregroundColor(Color(.systemGray))
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom, 50)
+                // 회원가입 화면 이동 버튼
+                NavigationLink(destination: SignUpView()){
+                    Text("회원가입")
+                        .font(.system(size: 16))
+                        .foregroundColor(.gray)
+                }
+                .padding(.top, 15)
+                
+                // 비회원 정보 입력 화면 이동 버튼
+                NavigationLink(destination: GuestInfoInputView()) {
+                    Text("비회원으로 이용하기")
+                        .font(.system(size: 16))
+                        .foregroundColor(.gray)
+                }
+                .padding(.top, 5)
                 
                 Spacer()
             } // end of entier VStack

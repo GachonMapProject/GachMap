@@ -19,6 +19,7 @@ struct EventTabView: View {
         EventList(eventId: 0, eventName: "naver", eventLink: "https://www.naver.com", eventInfo: "1번", imageData: Data()),
         EventList(eventId: 1, eventName: "google", eventLink: "https://www.google.com", eventInfo: "2번", imageData: Data()),
         EventList(eventId: 2, eventName: "gachon", eventLink: "https://www.gachon.ac.kr", eventInfo: "3번", imageData: Data()),
+
     ]
     
     @State var currentIndex : Int = 0   // 현재 행사의 인덱스 번호 (위에 바 중 색 변경할 인덱스)
