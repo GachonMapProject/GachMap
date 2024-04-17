@@ -18,7 +18,7 @@ struct BuildingDetailView: View {
     @State var imageName = "festival"
     @State var region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4503713, longitude: 127.1299376), latitudinalMeters: 250, longitudinalMeters: 250))
     
-    @State var getSuccess = false   // API 연결 완료 되면 true로 설정
+    @State var apiConnection = false   // API 연결 완료 되면 true로 설정
 //    @State var buildingName : String?
 //    @State var buildingSummary : String?
 //    @State var floor : [String?]
@@ -36,7 +36,7 @@ struct BuildingDetailView: View {
     var body: some View {
         
         // API를 통해 데이터 가져오기 전 Progress() 띄우고 가져오면 진짜 뷰 띄우기
-        if !getSuccess {
+        if !apiConnection {
             ProgressView()
                 .onAppear(){
                     getBuildingDetail(buildingCode: buildingCode)
@@ -119,7 +119,7 @@ struct BuildingDetailView: View {
         // image
         region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: buildingDetailData!.placeLatitude, longitude: buildingDetailData!.placeLongitude), latitudinalMeters: 250, longitudinalMeters: 250))
         
-        getSuccess = true
+        apiConnection = true
         
         
         guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/map/building-floor/\(buildingCode)")
@@ -148,7 +148,7 @@ struct BuildingDetailView: View {
                         // image
                         region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: data.placeLatitude, longitude: data.placeLongitude), latitudinalMeters: 250, longitudinalMeters: 250))
                     
-                        getSuccess = true
+                    apiConnection = true
 
                     case .failure(let error):
                         // 에러 응답 처리

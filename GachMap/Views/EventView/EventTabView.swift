@@ -9,9 +9,12 @@ import SwiftUI
 import Alamofire
 
 struct EventTabView: View {
-    @State var tabBarHeight = UITabBarController().tabBar.frame.size.height
+    var tabBarHeight = UITabBarController().tabBar.frame.size.height
     var screenWidth = UIScreen.main.bounds.width
     var screenHeight = UIScreen.main.bounds.height
+    
+    @State var apiConnection = false
+    
     @State var eventList = [
         EventList(eventId: 0, eventName: "naver", eventLink: "https://www.naver.com", eventInfo: "1번", imageData: Data()),
         EventList(eventId: 1, eventName: "google", eventLink: "https://www.google.com", eventInfo: "2번", imageData: Data()),
@@ -19,36 +22,43 @@ struct EventTabView: View {
     ]
     
     var body: some View {
-        NavigationStack {
-            
-            ScrollView(.horizontal) { // 수평 스크롤로 설정
-                LazyHStack {
-                    ForEach(eventList.indices) { index in
-                        EventCardView(event: eventList[index])
-                            .frame(width: screenWidth)
-                            .scrollTransition(.animated, axis: .horizontal) { content, phase in
-                                content
-                                    .opacity(phase.isIdentity ? 1.0 : 0.8)
-                                    .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
-                            }
-                    }
+        if !apiConnection {
+            ProgressView()
+                .onAppear(){
+                    // API 연결 (eventList 초기화)
+                    getEventList()
                 }
-                .scrollTargetLayout()
-            }
-            .scrollTargetBehavior(.viewAligned)
-            
-            
-            .navigationTitle("교내 행사")
-        } // end of NavigationStack
-        .onAppear(){
-            // API 연결 (eventList 초기화)
-            getEventList()
-            
+        }
+        else{
+            NavigationStack {
+                
+                ScrollView(.horizontal) { // 수평 스크롤로 설정
+                    LazyHStack {
+                        ForEach(eventList.indices) { index in
+                            EventCardView(event: eventList[index])
+                                .frame(width: screenWidth)
+                                .scrollTransition(.animated, axis: .horizontal) { content, phase in
+                                    content
+                                        .opacity(phase.isIdentity ? 1.0 : 0.8)
+                                        .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+                                }
+                        }
+                    }
+                    .scrollTargetLayout()
+                }
+                .scrollTargetBehavior(.viewAligned)
+                
+                
+                .navigationTitle("교내 행사")
+            } // end of NavigationStack
         }
     }
+       
     
     // 행사 리스트 가져오기
     func getEventList() {
+        // api 연결되면 지워야 함
+        apiConnection = true
         guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/event/list")
         else {
             print("Invalid URL")
@@ -68,7 +78,7 @@ struct EventTabView: View {
                         print("getEventList() - 행사 리스트 정보 가져오기 성공")
                     
                         eventList = data
-                    
+                        apiConnection = true
                     
                             
                         
