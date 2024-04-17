@@ -11,7 +11,7 @@ struct BuildingDetailResponse : Decodable {
     var success: Bool
     var message: String
     var property: Int
-    var data: [BuildingDetailData]
+    var data: BuildingDetailData
 }
 
 struct BuildingDetailData : Decodable {

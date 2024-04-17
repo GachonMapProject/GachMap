@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Alamofire
 
 struct Building: Identifiable, Hashable {
     let name: String
@@ -41,27 +42,49 @@ private var globalBuilding = [
 struct BuildingTabView: View {
     
     @State private var searchText = ""
+    @State var buildingList : [BuildingListData] = [
+        BuildingListData(buildingCode: 1, buildingName: "가천관"),
+        BuildingListData(buildingCode: 2, buildingName: "비전타워"),
+        BuildingListData(buildingCode: 3, buildingName: "학생회관"),
+    ]
+
+    @State private var selection: UUID? // 리스트 선택
+//    @State var buildingCode = 0
     
     var body: some View {
         
         let titles = ["글로벌캠퍼스", "메디컬캠퍼스"]
-        let data = [globalBuilding]
+//        let data = [globalBuilding]
         
         NavigationStack {
-            List {
-                ForEach(data.indices) { index in
-                    Section(header: Text(titles[index])) {
-                        ForEach(data[index], id: \.id) { building in
+            List(selection: $selection){
+                Section(header: Text(titles[0])) {
+                    ForEach(buildingList.indices) { index in
+                        
+                        NavigationLink(destination: BuildingDetailView(buildingCode: buildingList[index].buildingCode), label:{
                             HStack {
-                                Image(building.imageName)
+                                Image("gachonMark")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 30, height: 30)
                                     .padding(.trailing, 8)
                                 
-                                Text(building.name)
+                                Text(buildingList[index].buildingName)
                             }
-                        }
+                        })
+                        
+//                        ForEach(buildingList[index], id: \.id) { building in
+//                            HStack {
+////                                Image(building.imageName)
+//                                Image("gachonMark")
+//                                    .resizable()
+//                                    .aspectRatio(contentMode: .fit)
+//                                    .frame(width: 30, height: 30)
+//                                    .padding(.trailing, 8)
+//                                
+//                                Text(building.buildingName)
+//                            }
+//                        }
                     }
                 }
             }
@@ -78,6 +101,10 @@ struct BuildingTabView: View {
                         }
                 } // end of ForEach
             } // end of .searchable
+        
+        .onAppear(){
+            getBuildingList()
+        }
     } // end of body
     
     var searchResults: [Building] {
@@ -86,6 +113,35 @@ struct BuildingTabView: View {
         } else {
             return globalBuilding.filter { $0.name.localizedStandardContains(searchText) }
         }
+    }
+    
+    // 건물 정보 가져오는 함수
+    func getBuildingList(){
+        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/map/building-info/list")
+        else {
+            print("Invalid URL")
+            return
+        }
+            
+        // Alamofire를 사용하여 Get 요청 생성
+        AF.request(url, method: .get)
+            .validate()
+            .responseDecodable(of: BuildingListResponse.self) { response in
+                // 에러 처리
+                switch response.result {
+                    case .success(let value):
+                        // 성공적인 응답 처리
+                        let data = value.data
+                        print(data)
+                        print("getBuildingList() - 건물 리스트 정보 가져오기 성공")
+                    
+                        buildingList = data
+
+                    case .failure(let error):
+                        // 에러 응답 처리
+                        print("Error: \(error.localizedDescription)")
+                } // end of switch
+        } // end of AF.request
     }
     
 } // end of View
