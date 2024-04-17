@@ -10,7 +10,7 @@ import MapKit
 
 // CLLocationCoordinate2D를 감싸는 IdentifiableCoordinate 구조체 정의
 struct IdentifiableLocation: Identifiable {
-    var id = UUID()
+    var id = UUID().uuidString
     var coordinate: CLLocationCoordinate2D
     var categoryData : CategoryData
 }
@@ -38,6 +38,8 @@ struct BackgroundMapView : View {
     @State var pinImage : String
     @State var pinColor : Color
     
+    @State var selectedItem : String? // 마커 선택시 id
+    
     @State var isARStart = false    // AR 캠퍼스 둘러보기 버튼 실행 유무
     
     init(category : String, locations: [CategoryData], coreLocation: CoreLocationEx) {
@@ -58,40 +60,52 @@ struct BackgroundMapView : View {
     }
     
     var body: some View {
-        ZStack(alignment : .bottomTrailing){
-            Map(position: $region){
+        ZStack(alignment : .topTrailing){
+            Map(position: $region, selection: $selectedItem){
                 UserAnnotation() // 사용자 현재 위치
                 ForEach(locations){ location in
                     Marker(location.categoryData.placeName, systemImage: pinImage, coordinate: location.coordinate)
                         .tint(pinColor)
                 }
             }
-
-            VStack(spacing: 0){
-                Button(action: {
-                    // AR 캠퍼스 둘러보기 기능 추가해야 함
-                    isARStart.toggle()
-                },
-                       label: {Text("AR")})
-                .frame(width: 45, height: 50)
-                .foregroundColor(.gray)
-                .bold()
-                
-                Divider().background(.gray) // 중앙선
-
-                Button(action: {
-                    // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
-                    setRegionToUserLocation()
-                }, label: {Image(systemName: "location")})
-                .frame(width: 45, height: 50)
-                .foregroundColor(.gray)
-                .bold()
-                
+            .onChange(of: selectedItem){
+                let location = locations.filter{$0.id == selectedItem}[0]
+                let region = MKCoordinateRegion(center: location.coordinate,
+                                                latitudinalMeters: 200,
+                                                longitudinalMeters: 200)
+                self.region = MapCameraPosition.region(region)
             }
-            .frame(width: 45, height: 100)
-            .background(.white)
-            .cornerRadius(15)
-            .padding(EdgeInsets(top: 0, leading: 0, bottom: 40, trailing: 20)) // bottomTrailing 마진 추가
+            
+            VStack{
+//                Spacer()
+                VStack(spacing: 0){
+                    Button(action: {
+                        // AR 캠퍼스 둘러보기 기능 추가해야 함
+                        isARStart.toggle()
+                    },
+                           label: {Text("AR")})
+                    .frame(width: 45, height: 50)
+                    .foregroundColor(.gray)
+                    .bold()
+                    
+                    Divider().background(.gray) // 중앙선
+
+                    Button(action: {
+                        // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
+                        setRegionToUserLocation()
+                    }, label: {Image(systemName: "location")})
+                    .frame(width: 45, height: 50)
+                    .foregroundColor(.gray)
+                    .bold()
+                    
+                }
+                .frame(width: 45, height: 100)
+                .background(.white)
+                .cornerRadius(15)
+                .padding(EdgeInsets(top: 200, leading: 0, bottom: 0, trailing: 20))  // bottomTrailing 마진 추가
+                Spacer()
+            }
+           
         }
         
     }

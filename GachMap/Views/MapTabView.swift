@@ -10,86 +10,98 @@ import MapKit
 import CoreLocation
 
 struct MapTabView: View {
-
-    @State private var region: MKCoordinateRegion = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045),
-        span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
-    )
+//
+//    @State private var region: MKCoordinateRegion = MKCoordinateRegion(
+//        center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045),
+//        span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
+//    )
+//    
+//    @State private var myLocation: CLLocationCoordinate2D =
+//    CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045)
+//    
+    // CoreLocationEx, Category, [CategoryData]을 받아야 함
     
-    @State private var myLocation: CLLocationCoordinate2D =
-    CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045)
+    @ObservedObject var coreLocation = CoreLocationEx()
+    var category = "흡연구역"
+    var locations = [CategoryData(placeId: 1, placeName: "1-1", placeLatitude: 37.4508817, placeLongitude: 127.1274769, placeSummary: "Sum"),
+                        CategoryData(placeId: 2, placeName: "1-2", placeLatitude: 37.4506271, placeLongitude: 127.1274554, placeSummary: "Sum"),
+                        CategoryData(placeId: 3, placeName: "1-3", placeLatitude: 37.45062308, placeLongitude: 127.1276374, placeSummary: "Sum"),
+                        CategoryData(placeId: 4, placeName: "1-4", placeLatitude: 37.45048746, placeLongitude: 127.1280814, placeSummary: "Sum")
+    ]
     
     var body: some View {
         
         ZStack() {
+            BackgroundMapView(category: category, locations: locations, coreLocation: coreLocation)
+                .ignoresSafeArea()
             /// 지도
             /// (coordinateRegion: $region, showsUserLocation: true)
-            Map {
-                Marker("가천관", systemImage: "building.fill", coordinate: .gachon)
-                    .tint(.blue)
-                Marker("비전타워", systemImage: "building.fill", coordinate: .visiontower)
-                    .tint(.blue)
-                Marker("법과대학", systemImage: "building.fill", coordinate: .law)
-                    .tint(.blue)
-                Marker("공과대학1", systemImage: "building.fill", coordinate: .eng1)
-                    .tint(.blue)
-                Marker("공과대학2", systemImage: "building.fill", coordinate: .eng2)
-                    .tint(.blue)
-                Marker("한의과대학", systemImage: "building.fill", coordinate: .kmed)
-                    .tint(.blue)
-                Marker("예술･체육대학1", systemImage: "building.fill", coordinate: .ape1)
-                    .tint(.blue)
-                Marker("예술･체육대학2", systemImage: "building.fill", coordinate: .ape2)
-                    .tint(.blue)
-                Marker("AI관", systemImage: "building.fill", coordinate: .ai)
-                    .tint(.blue)
-                Marker("바이오나노대학", systemImage: "building.fill", coordinate: .bionano)
-                    .tint(.blue)
-                Marker("중앙도서관", systemImage: "building.fill", coordinate: .mainlib)
-                    .tint(.blue)
-                Marker("전자정보도서관", systemImage: "building.fill", coordinate: .eilib)
-                    .tint(.blue)
-                Marker("대학원･(원격)평생교육원", systemImage: "building.fill", coordinate: .gschool)
-                    .tint(.blue)
-                Marker("교육대학원", systemImage: "building.fill", coordinate: .eduschool)
-                    .tint(.blue)
-                Marker("바이오나노연구원", systemImage: "building.fill", coordinate: .bnresearch)
-                    .tint(.blue)
-                Marker("산학협력관1", systemImage: "building.fill", coordinate: .industry)
-                    .tint(.blue)
-                Marker("학생회관", systemImage: "building.fill", coordinate: .hak)
-                    .tint(.blue)
-                Marker("반도체대학", systemImage: "building.fill", coordinate: .su)
-                    .tint(.blue)
-                Marker("제1학생생활관", systemImage: "building.fill", coordinate: .dorm1)
-                    .tint(.blue)
-                Marker("제2학생생활관", systemImage: "building.fill", coordinate: .dorm2)
-                    .tint(.blue)
-                Marker("제3학생생활관", systemImage: "building.fill", coordinate: .dorm3)
-                    .tint(.blue)
-                Marker("글로벌센터", systemImage: "building.fill", coordinate: .global)
-                    .tint(.blue)
-                
-                Marker("반도체대학 흡연구역", systemImage: "skis.fill", coordinate: .ITskz1)
-                    .tint(.green)
-                Marker("글로벌센터 흡연구역", systemImage: "skis.fill", coordinate: .ITskz2)
-                    .tint(.green)
-                Marker("공과대학2 흡연구역", systemImage: "skis.fill", coordinate: .GDskz)
-                    .tint(.green)
-                Marker("예술･체육대학2 흡연구역", systemImage: "skis.fill", coordinate: .ARTskz)
-                    .tint(.green)
-                Marker("산학협력관1 흡연구역", systemImage: "skis.fill", coordinate: .SHskz)
-                    .tint(.green)
-                Marker("중앙도서관 흡연구역", systemImage: "skis.fill", coordinate: .LIBskz)
-                    .tint(.green)
-                Marker("AI관 흡연구역", systemImage: "skis.fill", coordinate: .AIskz)
-                    .tint(.green)
-                Marker("운동장 흡연구역", systemImage: "skis.fill", coordinate: .GRskz)
-                    .tint(.green)
-                Marker("제1학생생활관 흡연구역", systemImage: "skis.fill", coordinate: .DORskz)
-                    .tint(.green)
-            }
-            .ignoresSafeArea()
+//            Map {
+//                Marker("가천관", systemImage: "building.fill", coordinate: .gachon)
+//                    .tint(.blue)
+//                Marker("비전타워", systemImage: "building.fill", coordinate: .visiontower)
+//                    .tint(.blue)
+//                Marker("법과대학", systemImage: "building.fill", coordinate: .law)
+//                    .tint(.blue)
+//                Marker("공과대학1", systemImage: "building.fill", coordinate: .eng1)
+//                    .tint(.blue)
+//                Marker("공과대학2", systemImage: "building.fill", coordinate: .eng2)
+//                    .tint(.blue)
+//                Marker("한의과대학", systemImage: "building.fill", coordinate: .kmed)
+//                    .tint(.blue)
+//                Marker("예술･체육대학1", systemImage: "building.fill", coordinate: .ape1)
+//                    .tint(.blue)
+//                Marker("예술･체육대학2", systemImage: "building.fill", coordinate: .ape2)
+//                    .tint(.blue)
+//                Marker("AI관", systemImage: "building.fill", coordinate: .ai)
+//                    .tint(.blue)
+//                Marker("바이오나노대학", systemImage: "building.fill", coordinate: .bionano)
+//                    .tint(.blue)
+//                Marker("중앙도서관", systemImage: "building.fill", coordinate: .mainlib)
+//                    .tint(.blue)
+//                Marker("전자정보도서관", systemImage: "building.fill", coordinate: .eilib)
+//                    .tint(.blue)
+//                Marker("대학원･(원격)평생교육원", systemImage: "building.fill", coordinate: .gschool)
+//                    .tint(.blue)
+//                Marker("교육대학원", systemImage: "building.fill", coordinate: .eduschool)
+//                    .tint(.blue)
+//                Marker("바이오나노연구원", systemImage: "building.fill", coordinate: .bnresearch)
+//                    .tint(.blue)
+//                Marker("산학협력관1", systemImage: "building.fill", coordinate: .industry)
+//                    .tint(.blue)
+//                Marker("학생회관", systemImage: "building.fill", coordinate: .hak)
+//                    .tint(.blue)
+//                Marker("반도체대학", systemImage: "building.fill", coordinate: .su)
+//                    .tint(.blue)
+//                Marker("제1학생생활관", systemImage: "building.fill", coordinate: .dorm1)
+//                    .tint(.blue)
+//                Marker("제2학생생활관", systemImage: "building.fill", coordinate: .dorm2)
+//                    .tint(.blue)
+//                Marker("제3학생생활관", systemImage: "building.fill", coordinate: .dorm3)
+//                    .tint(.blue)
+//                Marker("글로벌센터", systemImage: "building.fill", coordinate: .global)
+//                    .tint(.blue)
+//                
+//                Marker("반도체대학 흡연구역", systemImage: "skis.fill", coordinate: .ITskz1)
+//                    .tint(.green)
+//                Marker("글로벌센터 흡연구역", systemImage: "skis.fill", coordinate: .ITskz2)
+//                    .tint(.green)
+//                Marker("공과대학2 흡연구역", systemImage: "skis.fill", coordinate: .GDskz)
+//                    .tint(.green)
+//                Marker("예술･체육대학2 흡연구역", systemImage: "skis.fill", coordinate: .ARTskz)
+//                    .tint(.green)
+//                Marker("산학협력관1 흡연구역", systemImage: "skis.fill", coordinate: .SHskz)
+//                    .tint(.green)
+//                Marker("중앙도서관 흡연구역", systemImage: "skis.fill", coordinate: .LIBskz)
+//                    .tint(.green)
+//                Marker("AI관 흡연구역", systemImage: "skis.fill", coordinate: .AIskz)
+//                    .tint(.green)
+//                Marker("운동장 흡연구역", systemImage: "skis.fill", coordinate: .GRskz)
+//                    .tint(.green)
+//                Marker("제1학생생활관 흡연구역", systemImage: "skis.fill", coordinate: .DORskz)
+//                    .tint(.green)
+//            }
+//            .ignoresSafeArea()
             
             VStack {
                 // 검색창
@@ -252,49 +264,49 @@ struct MapTabView: View {
                 }
                 
                 
-                // AR, 현재 위치 버튼
-                HStack {
-                    Spacer()
-                    VStack {
-                        Spacer()
-                        
-                        Button("AR") {
-                            
-                        }
-                        // end of AR Button
-                        
-                        Spacer()
-                        
-                        Divider()
-                        
-                        Spacer()
-                        
-                        Button("위치") {
-                            let manager = CLLocationManager()
-                            manager.desiredAccuracy = kCLLocationAccuracyBest
-                            manager.requestWhenInUseAuthorization()
-                            manager.startUpdatingLocation()
-                            
-                            let latitude = manager.location?.coordinate.latitude
-                            let longitude = manager.location?.coordinate.longitude
-                            
-                            region = MKCoordinateRegion (
-                                center: CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!),
-                                span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
-                            )
-                        } // end of location Button
-                        
-                        Spacer()
-                    }
-                    .frame(width: 49.0, height: UIScreen.main.bounds.width - 290)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(UIColor.systemBackground))
-                            .shadow(radius: 7, x: 2, y: 2)
-                    )
-                    .padding(.top)
-                    .padding(.trailing)
-                } // end of HStack (AR, 현재 위치 버튼)
+//                // AR, 현재 위치 버튼
+//                HStack {
+//                    Spacer()
+//                    VStack {
+//                        Spacer()
+//                        
+//                        Button("AR") {
+//                            
+//                        }
+//                        // end of AR Button
+//                        
+//                        Spacer()
+//                        
+//                        Divider()
+//                        
+//                        Spacer()
+//                        
+//                        Button("위치") {
+//                            let manager = CLLocationManager()
+//                            manager.desiredAccuracy = kCLLocationAccuracyBest
+//                            manager.requestWhenInUseAuthorization()
+//                            manager.startUpdatingLocation()
+//                            
+//                            let latitude = manager.location?.coordinate.latitude
+//                            let longitude = manager.location?.coordinate.longitude
+//                            
+//                            region = MKCoordinateRegion (
+//                                center: CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!),
+//                                span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
+//                            )
+//                        } // end of location Button
+//                        
+//                        Spacer()
+//                    }
+//                    .frame(width: 49.0, height: UIScreen.main.bounds.width - 290)
+//                    .background(
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .fill(Color(UIColor.systemBackground))
+//                            .shadow(radius: 7, x: 2, y: 2)
+//                    )
+//                    .padding(.top)
+//                    .padding(.trailing)
+//                } // end of HStack (AR, 현재 위치 버튼)
                 
                 Spacer()
                 

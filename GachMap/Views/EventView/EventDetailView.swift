@@ -23,7 +23,7 @@ struct EventDetailView: View {
     
     @State var region : MapCameraPosition
     @State var isSearch = false
-    @State var selectedItem : String?
+    @State var selectedItem : String? // 마커 선택시 id
     
     init(eventDetail : EventDetail){
         self.eventDetail = eventDetail
