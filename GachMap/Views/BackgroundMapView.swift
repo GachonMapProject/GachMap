@@ -102,7 +102,9 @@ struct BackgroundMapView : View {
                     
                     Button(action: {
                         // 버튼을 누를 때 기존 지도 중심으로 설정
-                        region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
+                        withAnimation(.easeInOut(duration: 1.0)){
+                            region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
+                        }
                     }, label: {Image(systemName: "location")})
                     .frame(width: 45, height: 50)
                     .foregroundColor(.gray)
@@ -122,9 +124,12 @@ struct BackgroundMapView : View {
     // 현재 위치를 기반으로 지도의 중심을 설정하는 함수
     func setRegionToUserLocation() {
         if let userLocation = coreLocation.location {
-            let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+            let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 400, longitudinalMeters: 400)
             
-            self.region = MapCameraPosition.region(region)
+            // 애니메이션 추가 
+            withAnimation(.easeInOut(duration: 1.0)){
+                self.region = MapCameraPosition.region(region)
+            }
         }
     }
 }
