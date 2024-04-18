@@ -7,26 +7,30 @@
 
 import SwiftUI
 import Alamofire
-
-// 빈 공간 터치 시 키보드 숨기기
-extension View {
-    func endTextEditing() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
-}
-
-// 정보 입력 뷰로 갔다가 돌아오면 입력 아이디, 비밀번호 초기화
+import CryptoKit
 
 struct LoginView: View {
     
     @State private var username: String = ""
     @State private var password: String = ""
+    @State private var hashedPassword: String = ""
     
     @State private var loginStatus: Bool = false
     @State private var isFull: Bool = false
     @State private var isActive: Bool = false // 계정 정보 확인 후 일치 시 다른 뷰로 넘어갈 때 사용
     @State private var notCorrectLogin: Bool = false
+    
+    @State private var alertMessage: String = ""
     @State private var showAlert: Bool = false
+    
+    // SHA-256 해시 생성 함수
+    func sha256(_ string: String) -> String {
+        if let stringData = string.data(using: .utf8) {
+            let hash = SHA256.hash(data: stringData)
+            return hash.compactMap { String(format: "%02x", $0) }.joined()
+        }
+        return ""
+    }
     
     var body: some View {
         
@@ -80,6 +84,13 @@ struct LoginView: View {
                             .autocapitalization(.none) // 대문자 설정 지우기
                             .disableAutocorrection(true) // 자동 수정 해제
                             .foregroundColor(Color(.gray))
+                            .onChange(of: password, perform: { value in
+    //                            if password.count > 20 {
+    //                                password = String(password.prefix(20))
+    //                            }
+                                
+                                hashedPassword = sha256(value)
+                            })
                         
                         Spacer()
                     }
@@ -97,18 +108,19 @@ struct LoginView: View {
                             
                             print("입력 ID: \(self.username)")
                             print("입력 PW: \(self.password)")
+                            print("hashedPW: \(self.hashedPassword)")
                             
                             if username != "" && password != "" {
                                 isFull.toggle()
                             }
                             
                             // LoginRequest 객체 생성
-                            let param = LoginRequest(username: username, password: password)
+                            let param = LoginRequest(username: username, password: hashedPassword)
                             
                             postLoginData(parameter: param)
                             
-//                            username = ""
-//                            password = ""
+                            username = ""
+                            password = ""
                         }, label: {
                             HStack {
                                 Text("로그인")
@@ -116,7 +128,7 @@ struct LoginView: View {
                                     .foregroundColor(Color(.white))
                             }
                             .alert(isPresented: $showAlert) {
-                                Alert(title: Text("오류"), message: Text("아이디 또는 비밀번호가\n일치하지 않습니다."),
+                                Alert(title: Text("오류"), message: Text(alertMessage),
                                       dismissButton: .default(Text("확인")))
                             }
                             .frame(width: UIScreen.main.bounds.width - 200, height: 45)
@@ -128,11 +140,8 @@ struct LoginView: View {
                             .padding(.top, 20)
                         })
                         .disabled(username.isEmpty || password.isEmpty)
+                        
                     } // end of Login Button
-                    
-                    NavigationLink(destination: UserInfoInputView(), isActive: $isActive) {
-                        EmptyView()
-                    }
                         
                 } // end of Login Section VStack
                 
@@ -235,34 +244,38 @@ struct LoginView: View {
                    // 로그인 성공 유무
                     if (value.success == true) {
                         print("로그인 성공")
+                        print("value.success: \(value.success)")
                         
                         isActive = true
                         
-                        let userCode = Int64(value.data.userId)
-                        let loginInfo = LoginInfo(userCode: userCode, guestCode: nil)
-                        if let encoded = try? JSONEncoder().encode(loginInfo) {
-                            UserDefaults.standard.set(encoded, forKey: "loginInfo")
+                        if let value = value.data {
+                            let userCode = Int64(value.userId)
+                            let loginInfo = LoginInfo(userCode: userCode, guestCode: nil)
+                            if let encoded = try? JSONEncoder().encode(loginInfo) {
+                                UserDefaults.standard.set(encoded, forKey: "loginInfo")
+                            }
+                            print("userId 저장 성공, userId: \(userCode)")
                         }
-                        print("userCode 저장 성공, userCode: \(userCode)")
+                       
                         
-                        if (value.property == 200) {
-                            print("기존 회원 정보가 존재하는 회원")
-                            NavigationLink(destination: ContentView()) {
-                                EmptyView()
-                            }
-                        } else {
-                            print("기존 회원 정보가 존재하지 않는 회원")
-                            NavigationLink(destination: UserInfoInputView()) {
-                                EmptyView()
-                            }
-                        }
+//                        NavigationLink(destination: ContentView(), isActive: $isActive) {
+//                            EmptyView()
+//                        }
+                        
                     } else {
-                        print("ID/PW 불일치, 로그인 실패")
+                        print("로그인 실패")
+                        print("value.success: \(value.success)")
+
+                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
                         showAlert = true
+                        
+                        print("showAlert: \(showAlert)")
                     }
                 
                 case .failure(let error):
                     // 에러 응답 처리
+                alertMessage = "서버 연결에 실패했습니다."
+                showAlert = true
                     print("Error: \(error.localizedDescription)")
             } // end of switch
         } // end of AF.request

@@ -10,8 +10,8 @@ import SwiftUI
 struct InfoInputView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-//    @Binding private var username: String
-//    @Binding private var hashedPassword: String
+    @Binding var userId: String
+    @Binding var hashedPassword: String
     
     let gender = ["남성", "여성"]
     let speed = ["빠름", "보통", "느림"]
@@ -259,12 +259,14 @@ struct InfoInputView: View {
                 
                 // 같이 가기 Button
                 Button(action: {
-                    print(self.userNickname)
-                    print(self.userBirth)
-                    print(self.selectedGender)
-                    print(self.userHeight)
-                    print(self.userWeight)
-                    print(self.selectedWalkSpeed)
+                    print("ID: \(self.userId)")
+                    print("hasedPW: \(self.hashedPassword)")
+                    print("닉네임: \(self.userNickname)")
+                    print("출생년도: \(self.userBirth)")
+                    print("성별: \(self.selectedGender)")
+                    print("키: \(self.userHeight)")
+                    print("몸무게: \(self.userWeight)")
+                    print("선택 속도: \(self.selectedWalkSpeed)")
                     
                     showEndAlert = true
                 }, label: {
@@ -336,5 +338,5 @@ struct InfoInputView: View {
 } // end of View
 
 #Preview {
-    InfoInputView()
+    InfoInputView(userId: Binding.constant("전달받은 ID"), hashedPassword: Binding.constant("전달받은 암호화된 비밀번호"))
 }

@@ -8,6 +8,6 @@
 import Foundation
 
 struct LoginInfo: Codable {
-    var userCode: Int64?
+    var userCode: Int64? // userCode == userId
     var guestCode: Int64?
 }
