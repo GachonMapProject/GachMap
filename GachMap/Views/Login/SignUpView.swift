@@ -34,6 +34,7 @@ struct SignUpView: View {
     @State private var isOnAll: Bool = false
     @State private var isOn1: Bool = false
     @State private var isOn2: Bool = false
+    @State private var isOn3: Bool = false
     
     @State private var isSpecialCharacterIncluded: Bool = false     // 특수문자 사용
     @State private var isAlphabeticCharacterIncluded: Bool = false  // 영어 사용
@@ -81,6 +82,10 @@ struct SignUpView: View {
         }
         return ""
     }
+    
+//    func updateIsOnAll() {
+//        isOnAll = isOn1 && isOn2
+//    }
     
     var body: some View {
         NavigationStack {
@@ -148,10 +153,10 @@ struct SignUpView: View {
                                 self.showAlert = true
                                 
                                 // 중복이 아닐 경우
-                                // self.activeAlert = .valid
+                                self.activeAlert = .valid
                                 
                                 // 중복인 경우
-                                // self.activeAlert = .invalid
+                                //self.activeAlert = .invalid
                             }, label: {
                                 Text("중복 확인")
                                     .font(.system(size: 15, weight: .bold))
@@ -297,7 +302,10 @@ struct SignUpView: View {
                                 if rePassword.count > 20 {
                                     rePassword = String(rePassword.prefix(20))
                                 }
+                                
+                                hashedPassword = sha256(value)
                             })
+                        
                         HStack {
                             if (password == rePassword && isPasswordCount) {
                                 checkMark()
@@ -381,9 +389,11 @@ struct SignUpView: View {
                                     }
                             })
                         }
+                        
+                        
                     }
                     .padding(.top, 10)
-                    .padding(.bottom, 10)
+                    .padding(.bottom, 20)
                     .onChange(of: isOnAll) { newValue in
                         if newValue {
                             isOn1 = true
@@ -407,7 +417,7 @@ struct SignUpView: View {
                             isOnAll = false
                         }
                     }
-     
+
                 } // end of ScrollView
             } // end of 내용 입력 부분 VStack
             .padding(.leading)
@@ -417,12 +427,14 @@ struct SignUpView: View {
             // 하단 버튼 Stack
             HStack {
                 Button(action: {
-                    print(self.userId + self.password + self.rePassword)
+                    print("ID: \(self.userId)")
+                    print("PW: \(self.password)")
+                    print("재입력 PW: \(self.rePassword)")
+                    print("hashedPW: \(self.hashedPassword)")
                     
                     if userId != "" && password != "" && rePassword != "" {
                         isFull.toggle()
                     }
-                    // 다음 뷰로 ID, PW 바인딩
                     
                     isActive = true
                     
@@ -442,7 +454,7 @@ struct SignUpView: View {
                 })
                 .disabled(!isButtonEnabled())
                 
-                NavigationLink(destination: InfoInputView(), isActive: $isActive) {
+                NavigationLink(destination: InfoInputView(userId: $userId, hashedPassword: $hashedPassword), isActive: $isActive) {
                     EmptyView()
                 }
             }

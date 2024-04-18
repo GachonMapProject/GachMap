@@ -14,6 +14,13 @@ extension UISegmentedControl {
     }
 }
 
+// 빈 공간 터치 시 키보드 숨기기
+extension View {
+    func endTextEditing() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
 struct CheckboxToggleStyle: ToggleStyle {
   @Environment(\.isEnabled) var isEnabled
   let style: Style // custom param

@@ -10,6 +10,8 @@
 		8B3159D12BCFE7190049CB5F /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D02BCFE7190049CB5F /* SignUpView.swift */; };
 		8B3159D52BD041500049CB5F /* ServiceTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D42BD041500049CB5F /* ServiceTermsView.swift */; };
 		8B3159D72BD0419A0049CB5F /* PrivacyTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D62BD0419A0049CB5F /* PrivacyTermsView.swift */; };
+		8B3159DA2BD0F8510049CB5F /* ProfileModifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D92BD0F8510049CB5F /* ProfileModifyView.swift */; };
+		8B3159DC2BD16C570049CB5F /* DeleteUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159DB2BD16C570049CB5F /* DeleteUserResponse.swift */; };
 		8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */; };
 		8B831BE02BCCEFF600A85973 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDF2BCCEFF600A85973 /* ContentView.swift */; };
 		8B831BE22BCCEFF700A85973 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B831BE12BCCEFF700A85973 /* Assets.xcassets */; };
@@ -77,6 +79,8 @@
 		8B3159D02BCFE7190049CB5F /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		8B3159D42BD041500049CB5F /* ServiceTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceTermsView.swift; sourceTree = "<group>"; };
 		8B3159D62BD0419A0049CB5F /* PrivacyTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyTermsView.swift; sourceTree = "<group>"; };
+		8B3159D92BD0F8510049CB5F /* ProfileModifyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModifyView.swift; sourceTree = "<group>"; };
+		8B3159DB2BD16C570049CB5F /* DeleteUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteUserResponse.swift; sourceTree = "<group>"; };
 		8B831BDA2BCCEFF600A85973 /* GachMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GachMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GachMapApp.swift; sourceTree = "<group>"; };
 		8B831BDF2BCCEFF600A85973 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -162,6 +166,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		8B3159D82BD0F53F0049CB5F /* MyPage */ = {
+			isa = PBXGroup;
+			children = (
+				8B831C052BCCF57700A85973 /* ProfileTabView.swift */,
+				8B3159D92BD0F8510049CB5F /* ProfileModifyView.swift */,
+			);
+			path = MyPage;
+			sourceTree = "<group>";
+		};
 		8B831BD12BCCEFF600A85973 = {
 			isa = PBXGroup;
 			children = (
@@ -232,9 +245,9 @@
 				8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */,
 				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
 				8B831C042BCCF57700A85973 /* MapTabView.swift */,
-				8B831C052BCCF57700A85973 /* ProfileTabView.swift */,
 				CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */,
 				CBDDC9152BCEBF6100019FAB /* BackMapTest.swift */,
+				8B3159D82BD0F53F0049CB5F /* MyPage */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -262,6 +275,7 @@
 				CBDDC9132BCEB6CB00019FAB /* PlaceCategoryResponse.swift */,
 				CB4EF61E2BCFD4C800BDC73A /* BuildingListResponse.swift */,
 				CB4EF6202BCFD5C000BDC73A /* BuildingDetailResponse.swift */,
+				8B3159DB2BD16C570049CB5F /* DeleteUserResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -479,6 +493,7 @@
 				8B831C402BCCF60C00A85973 /* Node.swift in Sources */,
 				8B831C492BCD3F4D00A85973 /* SplashScreen.swift in Sources */,
 				8B831C3E2BCCF60C00A85973 /* GetIntermediateCoordinate.swift in Sources */,
+				8B3159DC2BD16C570049CB5F /* DeleteUserResponse.swift in Sources */,
 				8B831C712BCE0A9200A85973 /* GuestDashboardView.swift in Sources */,
 				8B831C0D2BCCF57700A85973 /* MapTabView.swift in Sources */,
 				CB0D26FE2BCE8F8300800459 /* EventDetailResponse.swift in Sources */,
@@ -505,6 +520,7 @@
 				8B831C0A2BCCF57700A85973 /* BuildingTabView.swift in Sources */,
 				8B831C4B2BCD46DF00A85973 /* PrimaryView.swift in Sources */,
 				8B831C472BCD1B5C00A85973 /* UserInfo.swift in Sources */,
+				8B3159DA2BD0F8510049CB5F /* ProfileModifyView.swift in Sources */,
 				8B831C442BCCF60C00A85973 /* BottomSheetHelper.swift in Sources */,
 				8B831C092BCCF57700A85973 /* UserInfoInputView.swift in Sources */,
 				CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */,

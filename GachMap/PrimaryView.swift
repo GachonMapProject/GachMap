@@ -17,6 +17,8 @@ struct PrimaryView: View {
                     loginInfo = getLoginInfo()
                 }
                 
+                // 뷰를 분기할 때 userCode부터 보기
+                
                 NavigationLink(destination: ContentView(), isActive: Binding(
                     get: { loginInfo?.userCode != nil || loginInfo?.guestCode != nil },
                     set: { _ in }
