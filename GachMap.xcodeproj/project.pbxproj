@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8B3159D12BCFE7190049CB5F /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D02BCFE7190049CB5F /* SignUpView.swift */; };
+		8B3159D52BD041500049CB5F /* ServiceTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D42BD041500049CB5F /* ServiceTermsView.swift */; };
+		8B3159D72BD0419A0049CB5F /* PrivacyTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D62BD0419A0049CB5F /* PrivacyTermsView.swift */; };
 		8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */; };
 		8B831BE02BCCEFF600A85973 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDF2BCCEFF600A85973 /* ContentView.swift */; };
 		8B831BE22BCCEFF700A85973 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B831BE12BCCEFF700A85973 /* Assets.xcassets */; };
@@ -73,6 +75,8 @@
 /* Begin PBXFileReference section */
 		65239D12FC5FBC7B8F89AA67 /* Pods-GachMap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GachMap.debug.xcconfig"; path = "Target Support Files/Pods-GachMap/Pods-GachMap.debug.xcconfig"; sourceTree = "<group>"; };
 		8B3159D02BCFE7190049CB5F /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		8B3159D42BD041500049CB5F /* ServiceTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceTermsView.swift; sourceTree = "<group>"; };
+		8B3159D62BD0419A0049CB5F /* PrivacyTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyTermsView.swift; sourceTree = "<group>"; };
 		8B831BDA2BCCEFF600A85973 /* GachMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GachMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GachMapApp.swift; sourceTree = "<group>"; };
 		8B831BDF2BCCEFF600A85973 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -210,6 +214,8 @@
 				8BA84B5F2BCF8DD000ACD5E2 /* InfoInputView.swift */,
 				8B831BFF2BCCF57700A85973 /* UserInfoInputView.swift */,
 				8B831BFD2BCCF57700A85973 /* GuestInfoInputView.swift */,
+				8B3159D62BD0419A0049CB5F /* PrivacyTermsView.swift */,
+				8B3159D42BD041500049CB5F /* ServiceTermsView.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -504,10 +510,12 @@
 				CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */,
 				8B831C432BCCF60C00A85973 /* BeantownButtons.swift in Sources */,
 				CB4CE38E2BCD2F0D00E0611B /* WeatherView.swift in Sources */,
+				8B3159D72BD0419A0049CB5F /* PrivacyTermsView.swift in Sources */,
 				8B831C382BCCF60C00A85973 /* AppleMap.swift in Sources */,
 				CB4CE3952BCD3FA500E0611B /* MyXMLParserDelegate.swift in Sources */,
 				8B831C452BCCF60C00A85973 /* MapTestView.swift in Sources */,
 				8B831C392BCCF60C00A85973 /* ARMainView.swift in Sources */,
+				8B3159D52BD041500049CB5F /* ServiceTermsView.swift in Sources */,
 				8B831C312BCCF60C00A85973 /* UserDashboardResponse.swift in Sources */,
 				8B831C2D2BCCF60C00A85973 /* LoginInfo.swift in Sources */,
 				8B831C412BCCF60C00A85973 /* Path.swift in Sources */,
