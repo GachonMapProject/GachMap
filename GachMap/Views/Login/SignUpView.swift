@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import CryptoKit
 
 enum ActiveAlert {
     case valid, invalid
@@ -20,12 +21,19 @@ struct SignUpView: View {
     @State private var userId = ""
     @State private var password = ""
     @State private var rePassword = ""
+    @State private var hashedPassword = ""
     @State private var isFull: Bool = false
     @State private var isActive: Bool = false // 뷰 이동 용
     
     @State private var isIdValid: Bool = false
     @State private var showAlert: Bool = false
     @State private var activeAlert: ActiveAlert = .valid
+    
+    @State private var showServiceTermsModal: Bool = false
+    @State private var showPrivacyTermsModal: Bool = false
+    @State private var isOnAll: Bool = false
+    @State private var isOn1: Bool = false
+    @State private var isOn2: Bool = false
     
     @State private var isSpecialCharacterIncluded: Bool = false     // 특수문자 사용
     @State private var isAlphabeticCharacterIncluded: Bool = false  // 영어 사용
@@ -62,17 +70,26 @@ struct SignUpView: View {
     
     // 하단 버튼 활성화용 함수
     func isButtonEnabled() -> Bool {
-        return isIdValid && isValidPassword && isValidRePassword
+        return isIdValid && isValidPassword && isValidRePassword && isOnAll
+    }
+    
+    // SHA-256 해시 생성 함수
+    func sha256(_ string: String) -> String {
+        if let stringData = string.data(using: .utf8) {
+            let hash = SHA256.hash(data: stringData)
+            return hash.compactMap { String(format: "%02x", $0) }.joined()
+        }
+        return ""
     }
     
     var body: some View {
         NavigationStack {
             // 상단 이미지, 프로그레스 바
             VStack {
-                Image("gach1000")
+                Image("gach1200")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(height: UIScreen.main.bounds.height * 0.13)
+                    .frame(height: UIScreen.main.bounds.height * 0.08)
                     //.padding(.top, 15)
                 
                 HStack {
@@ -91,12 +108,12 @@ struct SignUpView: View {
             
             // 내용 입력 부분
             VStack {
-                ScrollView {
+                ScrollView(.vertical, showsIndicators: false) {
                     // 첫 번째 줄
                     VStack {
                         HStack {
                             Text("아이디")
-                                .font(.system(size: 18, weight: .bold))
+                                .font(.system(size: 20, weight: .bold))
                             Text("필수")
                                 .font(.system(size: 13, weight: .bold))
                                 .foregroundColor(.red)
@@ -172,18 +189,18 @@ struct SignUpView: View {
                     VStack {
                         HStack {
                             Text("비밀번호")
-                                .font(.system(size: 18, weight: .bold))
+                                .font(.system(size: 20, weight: .bold))
                             Text("필수")
                                 .font(.system(size: 13, weight: .bold))
                                 .foregroundColor(.red)
                             Spacer()
                         }
+                        .padding(.bottom, 1)
                         
                         Text("8~20자리의 영문, 숫자, 특수문자 필수 입력")
                             .font(.system(size: 15))
                             .foregroundColor(.gray)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.top, 1)
                         
                         VStack {
                             SecureField("비밀번호 입력", text: $password)
@@ -296,6 +313,101 @@ struct SignUpView: View {
                     .padding(.top, 10)
                     // end of 두번째 줄
                     
+                    // 세 번째 줄 (약관 동의)
+                    VStack {
+                        HStack {
+                            Text("약관 동의")
+                                .font(.system(size: 20, weight: .bold))
+                            Spacer()
+                        }
+                        
+                        Spacer()
+                        
+                        HStack {
+                            Toggle("", isOn: $isOnAll)
+                                .toggleStyle(CheckboxToggleStyle(style: .circle))
+                                .foregroundColor(.blue)
+                            
+                            Text("전체 약관에 동의합니다.")
+                                .bold()
+                            
+                            Spacer()
+                        }
+                        
+                        Spacer()
+                        
+                        HStack {
+                            Toggle("", isOn: $isOn1)
+                                .toggleStyle(CheckboxToggleStyle(style: .circle))
+                                .foregroundColor(.blue)
+                            
+                            Text("서비스 이용 약관 (필수)")
+                                //.font(.system(size: 15))
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                self.showServiceTermsModal = true
+                            }, label: {
+                                Text("보기")
+                                    .foregroundColor(.gray)
+                                    .sheet(isPresented: $showServiceTermsModal) {
+                                        ServiceTermsView()
+                                            //.presentationBackground(.thinMaterial)
+                                    }
+                            })
+                        }
+                        
+                        Spacer()
+                        
+                        HStack {
+                            Toggle("", isOn: $isOn2)
+                                .toggleStyle(CheckboxToggleStyle(style: .circle))
+                                .foregroundColor(.blue)
+                            
+                            Text("개인정보 수집 및 이용 동의 (필수)")
+                                //.font(.system(size: 15))
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                self.showPrivacyTermsModal = true
+                            }, label: {
+                                Text("보기")
+                                    .foregroundColor(.gray)
+                                    .sheet(isPresented: $showPrivacyTermsModal) {
+                                        PrivacyTermsView()
+                                            //.presentationBackground(.thinMaterial)
+                                    }
+                            })
+                        }
+                    }
+                    .padding(.top, 10)
+                    .padding(.bottom, 10)
+                    .onChange(of: isOnAll) { newValue in
+                        if newValue {
+                            isOn1 = true
+                            isOn2 = true
+                        } else if !newValue {
+                            isOn1 = false
+                            isOn2 = false
+                        }
+                    }
+                    .onChange(of: isOn1) { newValue in
+                        if newValue && isOn2 {
+                            isOnAll = true
+                        } else if !newValue || !isOn2 {
+                            isOnAll = false
+                        }
+                    }
+                    .onChange(of: isOn2) { newValue in
+                        if newValue && isOn1 {
+                            isOnAll = true
+                        } else if !newValue || !isOn1 {
+                            isOnAll = false
+                        }
+                    }
+     
                 } // end of ScrollView
             } // end of 내용 입력 부분 VStack
             .padding(.leading)
@@ -334,7 +446,7 @@ struct SignUpView: View {
                     EmptyView()
                 }
             }
-            .background(Color.white.opacity(0.0))
+            .background(Color.clear)
             .padding(.leading)
             .padding(.trailing)
             // end of 하단 버튼 Stack
@@ -352,14 +464,15 @@ struct SignUpView: View {
                                 .frame(width: 35, height: 35)
                         )
                 })
+                .padding(.trailing, 8)
                 .alert(isPresented: $showEscapeAlert) {
                     Alert(title: Text("경고"), message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { isLoginViewActive = true}), secondaryButton: .cancel(Text("취소"))
                           )
                 }
-                
-                NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
-                    EmptyView()
-                }
+            }
+            
+            NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
+                EmptyView()
             }
         }
         .onTapGesture { self.endTextEditing() }

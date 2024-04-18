@@ -107,8 +107,8 @@ struct LoginView: View {
                             
                             postLoginData(parameter: param)
                             
-                            username = ""
-                            password = ""
+//                            username = ""
+//                            password = ""
                         }, label: {
                             HStack {
                                 Text("로그인")
@@ -218,7 +218,7 @@ struct LoginView: View {
     // postData 함수
     private func postLoginData(parameter : LoginRequest) {
         // API 요청을 보낼 URL 생성
-        guard let url = URL(string: "https://821b-58-121-110-235.ngrok-free.app/user/login")
+        guard let url = URL(string: "https://525d-58-121-110-235.ngrok-free.app/user/login")
         else {
             print("Invalid URL")
             return

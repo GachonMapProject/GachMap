@@ -10,6 +10,9 @@ import SwiftUI
 struct InfoInputView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
+//    @Binding private var username: String
+//    @Binding private var hashedPassword: String
+    
     let gender = ["남성", "여성"]
     let speed = ["빠름", "보통", "느림"]
     let dept = ["컴퓨터공학과", "소프트웨어학과"]
@@ -50,10 +53,10 @@ struct InfoInputView: View {
         NavigationStack {
             // 상단 이미지, 프로그레스 바
             VStack {
-                Image("gach1000")
+                Image("gach1200")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(height: UIScreen.main.bounds.height * 0.13)
+                    .frame(height: UIScreen.main.bounds.height * 0.08)
                     //.padding(.top, 15)
                 
                 HStack {
@@ -308,6 +311,7 @@ struct InfoInputView: View {
                                 .frame(width: 35, height: 35)
                         )
                 }
+                .padding(.trailing, 8)
                 .alert(isPresented: $showEscapeAlert) {
                     Alert(
                         title: Text("경고"),
@@ -318,12 +322,12 @@ struct InfoInputView: View {
                         secondaryButton: .cancel(Text("취소"))
                     )
                 }
-                
-                
-                NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
-                    EmptyView()
-                }
             }
+            
+            NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
+                EmptyView()
+            }
+            
         } // end of NavigationStack
         
         .navigationBarBackButtonHidden()
