@@ -57,22 +57,6 @@ struct EventCardView : View {
                         EmptyView()
                     }
                     
-                    HStack{
-                        Image(systemName:"lessthan.circle.fill")
-                            .font(.system(size: 35))
-                            .foregroundColor(.gray)
-                            .opacity(0.8)
-                            .padding(.leading, 15)
-                        
-                        Spacer() // 가운데 여백 추가
-                        
-                        Image(systemName:"greaterthan.circle.fill")
-                            .font(.system(size: 35))
-                            .foregroundColor(.gray)
-                            .opacity(0.8)
-                            .padding(.trailing, 15)
-                    }
-                    .frame(width: screenWidth)
                     VStack{
                         Spacer()
                         ZStack(alignment : .bottom){
@@ -167,3 +151,25 @@ struct EventCardView : View {
         } // end of AF.request
     }
 }
+
+
+
+
+
+// 중앙 슬라이드 이미지 
+//                    HStack{
+//                        Image(systemName:"lessthan.circle.fill")
+//                            .font(.system(size: 35))
+//                            .foregroundColor(.gray)
+//                            .opacity(0.8)
+//                            .padding(.leading, 15)
+//
+//                        Spacer() // 가운데 여백 추가
+//
+//                        Image(systemName:"greaterthan.circle.fill")
+//                            .font(.system(size: 35))
+//                            .foregroundColor(.gray)
+//                            .opacity(0.8)
+//                            .padding(.trailing, 15)
+//                    }
+//                    .frame(width: screenWidth)
