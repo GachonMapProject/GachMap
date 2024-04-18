@@ -41,7 +41,7 @@ struct EventTabView: View {
                             Rectangle()
                                 .cornerRadius(10)
                                 .frame(height: index == currentIndex ? 6 : 3)
-                                .foregroundColor(index == currentIndex ? .blue : .gray)
+                                .foregroundColor(index == currentIndex ? .gachonBlue : .gray)
                                 .animation(.easeInOut)  // 애니메이션 적용
                         }
                     }

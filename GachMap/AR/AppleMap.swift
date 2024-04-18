@@ -6,7 +6,6 @@ class CustomAnnotation: NSObject, MKAnnotation, Identifiable{
     var customImage : UIImage
     var coordinate : CLLocationCoordinate2D
     var reuseIdentifier: String  // 추가
-
     init(customImage : UIImage, coordinate : CLLocationCoordinate2D, reuseIdentifier : String){
         self.customImage = customImage
         self.coordinate = coordinate
@@ -106,11 +105,21 @@ struct AppleMap: UIViewRepresentable {
         mapView.addOverlay(polyline)
 
         // 출발지 표시 마커 추가
-        if let destinationImage = UIImage(named: "Start3") {
-            let resizedImage = destinationImage.resize(targetSize: CGSize(width: 100, height: 60))
-            let destinationAnnotation = CustomAnnotation(customImage: resizedImage, coordinate: lineCoordinates.first!, reuseIdentifier: "start")
-            mapView.addAnnotation(destinationAnnotation)
+        if let startImage = UIImage(named: "Start3") {
+            let resizedImage = startImage.resize(targetSize: CGSize(width: 100, height: 60))
+            let startAnnotation = CustomAnnotation(customImage: resizedImage, coordinate: lineCoordinates.first!, reuseIdentifier: "start")
+            mapView.addAnnotation(startAnnotation)
         }
+        
+        // 경로 중간 노드 표시 (출발, 도착 제외)
+        if let middleImage = UIImage(systemName: "circlebadge"){
+            for i in 1..<lineCoordinates.count - 1{
+                let resizedImage = middleImage.resize(targetSize: CGSize(width: 10, height: 10))
+                let middleAnnotation = CustomAnnotation(customImage: resizedImage, coordinate: lineCoordinates[i], reuseIdentifier: "middle")
+                mapView.addAnnotation(middleAnnotation)
+            }
+        }
+      
         
         // 도착지 표시 마커 추가
         if let destinationImage = UIImage(systemName: "flag.fill") {
@@ -191,28 +200,38 @@ class Coordinator: NSObject, MKMapViewDelegate {
             return annotationView
         }
         else if let customAnnotation = annotation as? CustomAnnotation {
-                // CustomAnnotation 객체인 경우
-                if customAnnotation.reuseIdentifier == "start" {
-                    // 출발지 어노테이션일 때
-                    if let startImage = UIImage(named: "Start3") {
-                        let resizedImage = startImage.resize(targetSize: CGSize(width: 100, height: 60))
-                        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "start")
-                        annotationView.image = resizedImage
-                        annotationView.frame.size = CGSize(width: 30, height: 30)
-                        return annotationView
-                    }
-                } else if customAnnotation.reuseIdentifier == "destination" {
-                    // 도착지 어노테이션일 때
-                    if let destinationImage = UIImage(systemName: "flag.fill") {
-                        let coloredImage = destinationImage.withTintColor(.red)
-                        let resizedImage = coloredImage.resize(targetSize: CGSize(width: 40, height: 40))
-                        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "destination")
-                        annotationView.image = resizedImage
-                        annotationView.frame.size = CGSize(width: 30, height: 30)
-                        return annotationView
-                    }
+            // CustomAnnotation 객체인 경우
+            if customAnnotation.reuseIdentifier == "middle" {
+                // 중간 노드 어노테이션일 때
+                if let middleImage = UIImage(named: "middleNode"){
+                    let resizedImage = middleImage.resize(targetSize: CGSize(width: 100, height: 100))
+                    let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "middle")
+                    annotationView.image = resizedImage
+                    annotationView.frame.size = CGSize(width: 15, height: 15)
+                    return annotationView
+                }
+            } else if customAnnotation.reuseIdentifier == "start" {
+                // 출발지 어노테이션일 때
+                if let startImage = UIImage(named: "Start3") {
+                    let resizedImage = startImage.resize(targetSize: CGSize(width: 100, height: 40))
+                    let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "start")
+                    annotationView.image = resizedImage
+                    annotationView.frame.size = CGSize(width: 30, height: 30)
+                    return annotationView
+                }
+            } else if customAnnotation.reuseIdentifier == "destination" {
+                // 도착지 어노테이션일 때
+                if let destinationImage = UIImage(systemName: "flag.fill") {
+                    let coloredImage = destinationImage.withTintColor(.red)
+                    let resizedImage = coloredImage.resize(targetSize: CGSize(width: 40, height: 40))
+                    let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "destination")
+                    annotationView.image = resizedImage
+                    annotationView.frame.size = CGSize(width: 30, height: 30)
+                    return annotationView
                 }
             }
+        }
+
         return nil
     }
     
@@ -230,29 +249,50 @@ class Coordinator: NSObject, MKMapViewDelegate {
 //            }
       }
     
-//    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-//        
-//        // 현재 지도의 확대/축소 수준을 추정합니다.
-//        print("mapView.camera.altitude : \(mapView.camera.altitude)")
-//        
-//        // 마커의 새로운 크기를 계산합니다.
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        
+        // 현재 지도의 확대/축소 수준을 추정합니다.
+        print("mapView.camera.altitude : \(mapView.camera.altitude)")
+        
+        // 마커의 새로운 크기를 계산합니다.
+//        let altitude = mapView.camera.altitude
+//        let normalizedAltitude = max(min(altitude / 1000.0, 1.0), 0.0) // 카메라 고도를 0~1 범위로 정규화합니다.
 //        let markerSize: CGSize
-//        switch mapView.camera.altitude {
-//        case 0..<350:
-//            markerSize = CGSize(width: 30, height: 30) // 확대 수준에 따라 마커 크기를 조정합니다.
-//        case 350..<1000:
-//            markerSize = CGSize(width: 25, height: 25) // 다른 확대 수준에 대한 마커 크기를 지정합니다.
-//        default:
-//            markerSize = CGSize(width: 20, height: 20) // 기본 마커 크기
+//
+//        if normalizedAltitude == 1.0 {
+//            markerSize = CGSize(width: 25, height: 25) // 카메라 고도가 1000 이상인 경우 크기를 25로 설정합니다.
+//        } else {
+//            // 카메라 고도에 따라 크기를 보간합니다. (40에서 25까지)
+//            let size = 40 - (normalizedAltitude * 15)
+//            markerSize = CGSize(width: size, height: size)
 //        }
-//        
-//        // 모든 마커에 대해 크기를 조정합니다.
-//        mapView.annotations.forEach { annotation in
-//            if let annotationView = mapView.view(for: annotation) {
-//                annotationView.frame.size = markerSize
-//            }
-//        }
-//    }
+        var markerSize = CGSize()
+        switch mapView.camera.altitude {
+        // 확대 수준에 따라 마커 크기를 조정
+        case 0..<300:
+            markerSize = CGSize(width: 40, height: 40)
+        case 300..<500:
+            markerSize = CGSize(width: 36, height: 36)
+        case 500..<700:
+            markerSize = CGSize(width: 33, height: 33)
+        case 700..<1000:
+            markerSize = CGSize(width: 30, height: 30) //
+        default:
+            markerSize = CGSize(width: 25, height: 25) // 기본 마커 크기
+        }
+        
+        // 모든 마커에 대해 크기를 조정합니다.
+        mapView.annotations.forEach { annotation in
+            if let annotationView = mapView.view(for: annotation) {
+                if let customAnnotation = annotation as? CustomAnnotation {
+                    if customAnnotation.reuseIdentifier != "middle" {
+                        annotationView.frame.size = markerSize
+                    }
+                }
+            }
+           
+        }
+    }
 
 
 }
@@ -271,4 +311,6 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return newImage!
     }
+    
+    
 }
