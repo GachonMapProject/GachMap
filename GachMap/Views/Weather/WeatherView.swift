@@ -13,7 +13,7 @@ struct WeatherView: View {
     @State var image = "☀️"
     @State var time = "00"
     @State var AMPM = "오전"
-    let sky_image = ["맑음" : "☀️", "구름많음" : "🌥️", "흐림" : "☁️", "비" : "☔️", "비/눈" : "🌨️", "눈" : "❄️"]
+    let sky_image = ["맑음" : "☀️", "구름 많음" : "🌥️", "흐림" : "☁️", "비" : "☔️", "비/눈" : "🌨️", "눈" : "❄️"]
     let weatherData = WeatherData()
     
     var body: some View {
@@ -30,9 +30,9 @@ struct WeatherView: View {
                         .padding(.bottom, 10)
                     HStack{
                         Text("\(temp)°")
-                        .font(.system(size: 25))
+                            .font(.system(size: sky == "구름 많음" ? 22 : 25))
                         Text(sky)
-                            .font(.system(size: 25))
+                            .font(.system(size: sky == "구름 많음" ? 22 : 25))
                     }
                     .bold()
                 }
