@@ -43,10 +43,10 @@ struct BuildingTabView: View {
     
     @State var apiConnection = false
     @State private var searchText = ""
-    @State var buildingList : [BuildingListData] = [
-        BuildingListData(buildingCode: 1, buildingName: "가천관"),
-        BuildingListData(buildingCode: 2, buildingName: "비전타워"),
-        BuildingListData(buildingCode: 3, buildingName: "학생회관"),
+    @State var buildingList : [BuildingList] = [
+       BuildingList(placeId: 0, placeName: "가천관", thumbnailImagePath: ""),
+//        BuildingListData(buildingCode: 2, buildingName: "비전타워"),
+//        BuildingListData(buildingCode: 3, buildingName: "학생회관"),
     ]
 
     @State private var selection: UUID? // 리스트 선택
@@ -68,7 +68,7 @@ struct BuildingTabView: View {
                     Section(header: Text(titles[0])) {
                         ForEach(buildingList.indices) { index in
                             
-                            NavigationLink(destination: BuildingDetailView(buildingCode: buildingList[index].buildingCode), label:{
+                            NavigationLink(destination: BuildingDetailView(buildingCode: buildingList[index].placeId), label:{
                                 HStack {
                                     Image("gachonMark")
                                         .resizable()
@@ -76,7 +76,7 @@ struct BuildingTabView: View {
                                         .frame(width: 30, height: 30)
                                         .padding(.trailing, 8)
                                     
-                                    Text(buildingList[index].buildingName)
+                                    Text(buildingList[index].placeName)
                                 }
                             })
                             
@@ -97,39 +97,41 @@ struct BuildingTabView: View {
                 }
                 .navigationTitle("캠퍼스 맵")
             } // end of NavigationStack
-            .searchable(
-                text: $searchText,
-                placement: .navigationBarDrawer,
-                prompt: "검색")  {
-                    ForEach(searchResults, id: \.self.id) { building in
-                        Text(building.name)
-                            .onTapGesture {
-                                print("선택한 건물: \(building.name)")
-                            }
-                    } // end of ForEach
-                } // end of .searchable
+//            .searchable(
+//                text: $searchText,
+//                placement: .navigationBarDrawer,
+//                prompt: "검색")  {
+//                    ForEach(searchResults, id: \.self.id) { building in
+//                        Text(building.name)
+//                            .onTapGesture {
+//                                print("선택한 건물: \(building.name)")
+//                            }
+//                    } // end of ForEach
+//                } // end of .searchable
         }
       
     } // end of body
     
-    var searchResults: [Building] {
-        if searchText.isEmpty {
-            return globalBuilding
-        } else {
-            return globalBuilding.filter { $0.name.localizedStandardContains(searchText) }
-        }
-    }
+//    var searchResults: [Building] {
+//        if searchText.isEmpty {
+//            return globalBuilding
+//        } else {
+//            return globalBuilding.filter { $0.name.localizedStandardContains(searchText) }
+//        }
+//    }
     
     // 건물 정보 가져오는 함수
     func getBuildingList(){
         
         // API 연결 후 지워야 함
-        apiConnection = true
+//        apiConnection = true
         
-        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/map/building-info/list")
+//        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/map/building-info/list")
+        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/map/building-info/list")
         else {
             print("Invalid URL")
             return
+            
         }
             
         // Alamofire를 사용하여 Get 요청 생성
@@ -140,18 +142,21 @@ struct BuildingTabView: View {
                 switch response.result {
                     case .success(let value):
                         // 성공적인 응답 처리
-                        let data = value.data
+                    guard let data = value.data else {return}
                         print(data)
                         print("getBuildingList() - 건물 리스트 정보 가져오기 성공")
                     
-                        buildingList = data
+                        
+                        buildingList = data.buildingList
                         apiConnection = true
                     
                     case .failure(let error):
                         // 에러 응답 처리
+                        print("서버 통신 실패")
                         print("Error: \(error.localizedDescription)")
                 } // end of switch
         } // end of AF.request
+    
     }
     
 } // end of View

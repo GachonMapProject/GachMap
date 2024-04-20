@@ -17,7 +17,7 @@ struct IdentifiableCoordinate: Identifiable {
 
 
 struct EventDetailView: View {
-    let eventDetail : EventDetail
+    let eventDetail : [EventDetail]
     let eventCoordinate : [IdentifiableCoordinate] // 행사 위치의 좌표들
     @State var destination : IdentifiableCoordinate
     
@@ -25,10 +25,10 @@ struct EventDetailView: View {
     @State var isSearch = false
     @State var selectedItem : String? // 마커 선택시 id
     
-    init(eventDetail : EventDetail){
+    init(eventDetail : [EventDetail]){
         self.eventDetail = eventDetail
-        self.eventCoordinate = eventDetail.eventLocationDto.map{
-            IdentifiableCoordinate(coordinate: CLLocationCoordinate2D(latitude: $0.eventLatitiude, longitude: $0.eventLongitude),
+        self.eventCoordinate = eventDetail.map{
+            IdentifiableCoordinate(coordinate: CLLocationCoordinate2D(latitude: $0.eventLatitude, longitude: $0.eventLongitude),
                                    placeName: $0.eventPlaceName)
         }
         self.destination = eventCoordinate[0]
@@ -106,7 +106,7 @@ struct EventDetailView: View {
                 
             }
          
-            .navigationTitle(eventDetail.eventDto.eventName)
+            .navigationTitle(eventDetail[0].eventName)
             
             
             // 검색창으로 넘길 때, destination의 정보를 같이 넘겨줘야 됨
@@ -118,11 +118,11 @@ struct EventDetailView: View {
 }
 
 
-#Preview {
-
-    EventDetailView(eventDetail: EventDetail(eventDto: EventDto(eventId: 1, eventName: "가천대학교 축구 리그", eventStartDate: Date(), eventEndate: Date(), eventLink: "www.naver.com", eventInfo: "가천대에서 축구 리그가 열려요", imageData: Data()), eventLocationDto: [
-        EventLocationDto(eventPlaceName: "반도체 대학 정문", eventLatitiude: 37.4508817, eventLongitude: 127.1274769, eventAltitude: 50.23912),
-        EventLocationDto(eventPlaceName: "광장계단 근처", eventLatitiude: 37.45048746, eventLongitude: 127.1280814, eventAltitude: 50.23912),
-        EventLocationDto(eventPlaceName: "반도체대학 코너", eventLatitiude: 37.4506271, eventLongitude: 127.1274554, eventAltitude: 50.23912)
-    ]))
-}
+//#Preview {
+//
+//    EventDetailView(eventDetail: EventDetail(eventDto: EventDto(eventId: 1, eventName: "가천대학교 축구 리그", eventStartDate: Date(), eventEndate: Date(), eventLink: "www.naver.com", eventInfo: "가천대에서 축구 리그가 열려요", imageData: Data()), eventLocationDto: [
+//        EventLocationDto(eventPlaceName: "반도체 대학 정문", eventLatitiude: 37.4508817, eventLongitude: 127.1274769, eventAltitude: 50.23912),
+//        EventLocationDto(eventPlaceName: "광장계단 근처", eventLatitiude: 37.45048746, eventLongitude: 127.1280814, eventAltitude: 50.23912),
+//        EventLocationDto(eventPlaceName: "반도체대학 코너", eventLatitiude: 37.4506271, eventLongitude: 127.1274554, eventAltitude: 50.23912)
+//    ]))
+//}

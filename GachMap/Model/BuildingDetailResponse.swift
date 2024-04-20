@@ -9,9 +9,9 @@ import Foundation
 
 struct BuildingDetailResponse : Decodable {
     var success: Bool
-    var message: String
     var property: Int
-    var data: BuildingDetailData
+    var message: String
+    var data: BuildingDetailData?
 }
 
 struct BuildingDetailData : Decodable {
@@ -19,13 +19,51 @@ struct BuildingDetailData : Decodable {
     var placeSummary : String
     var placeLongitude : Double
     var placeLatitude : Double
-    var floorInfo : [FloorInfo]
+    var mainImagePath : String
+    var buildingFloors : [buildingFloors]
 }
 
-struct FloorInfo : Decodable {
-    var floor : String
-    var floorInfo : String
+struct buildingFloors : Decodable {
+    var buildingFloor : String
+    var buildingFloorInfo : String
 }
+
+
+
+//{
+//    "success": true,
+//    "property": 200,
+//    "message": "요청 성공",
+//    "data": {
+//        "placeName": "가천관",
+//        "placeSummary": "가천관 요약 샘플 데이터 입니다.",
+//        "placeLatitude": 37.45050583, //Double
+//        "placeLongitude": 127.1296082, //Double
+//        "mainImagePath": "http://localhost:60002/images/mainImageSample.png",
+//        "buildingFloors": [
+//            {
+//                "buildingFloor": "12F",
+//                "buildingFloorInfo": "총장실"
+//            },
+//            {
+//                "buildingFloor": "11F",
+//                "buildingFloorInfo": "대학본부"
+//            },
+//            {
+//                "buildingFloor": "11F",
+//                "buildingFloorInfo": "산학협력단"
+//            }
+//        ]
+//    }
+//}
+//
+//
+//{
+//    "success": false,
+//    "property": 404,
+//    "message": "찾을 수 없음",
+//    "data": null
+//}
 
 
 
