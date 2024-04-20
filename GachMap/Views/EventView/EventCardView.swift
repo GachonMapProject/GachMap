@@ -58,10 +58,11 @@ struct EventCardView : View {
                                 ProgressView()
                         }
                     })
-                    .alert(isPresented: $serverAlert) {
-                        Alert(title: Text("서버 통신에 실패했습니다."))
+                    .alert("알림", isPresented: $serverAlert) {
+                        Button("확인") {}
+                    } message: {
+                        Text("서버 통신에 실패했습니다.")
                     }
-                    
                     
                     NavigationLink(destination: EventDetailView(eventDetail: eventDetail), isActive: $haveLocationData) {
                         EmptyView()
@@ -117,8 +118,10 @@ struct EventCardView : View {
                             
                         }
                         .frame(height: screenHeight / 2.5)
-                        .alert(isPresented: $locationAlert) {
-                            Alert(title: Text("행사 위치 정보가 없습니다."))
+                        .alert("알림", isPresented: $locationAlert) {
+                            Button("확인") {}
+                        } message: {
+                            Text("행사 위치 정보가 없습니다.")
                         }
                         
                     }

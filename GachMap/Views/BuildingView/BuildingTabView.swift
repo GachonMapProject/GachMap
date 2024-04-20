@@ -63,8 +63,10 @@ struct BuildingTabView: View {
                     .onAppear(){
                         getBuildingList()
                     }
-                    .alert(isPresented: $serverAlert) {
-                        Alert(title: Text("서버 통신에 실패했습니다."))
+                    .alert("알림", isPresented: $serverAlert) {
+                        Button("확인") {}
+                    } message: {
+                        Text("서버 통신에 실패했습니다.")
                     }
             }
             else{
