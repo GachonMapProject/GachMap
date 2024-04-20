@@ -80,18 +80,6 @@ struct BuildingTabView: View {
                                 }
                             })
                             
-    //                        ForEach(buildingList[index], id: \.id) { building in
-    //                            HStack {
-    ////                                Image(building.imageName)
-    //                                Image("gachonMark")
-    //                                    .resizable()
-    //                                    .aspectRatio(contentMode: .fit)
-    //                                    .frame(width: 30, height: 30)
-    //                                    .padding(.trailing, 8)
-    //
-    //                                Text(building.buildingName)
-    //                            }
-    //                        }
                         }
                     }
                 }
@@ -122,9 +110,6 @@ struct BuildingTabView: View {
     
     // 건물 정보 가져오는 함수
     func getBuildingList(){
-        
-        // API 연결 후 지워야 함
-//        apiConnection = true
         
 //        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/map/building-info/list")
         guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/map/building-info/list")

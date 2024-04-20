@@ -44,10 +44,17 @@ struct EventCardView : View {
 //                        haveLocationData = true
                         
                     }, label: {
-                        Image("festival")
-                            .resizable()
-                            .frame(width: screenWidth)
-                            .scaledToFit()
+//                        Image("festival")
+//                            .resizable()
+//                            .frame(width: screenWidth)
+//                            .scaledToFit()
+                        AsyncImage(url: URL(string: event.eventImagePath)) { image in
+                            image.resizable()
+                                .frame(width: screenWidth)
+                                .scaledToFit()
+                            } placeholder: {
+                                ProgressView()
+                        }
                     })
                     
                     NavigationLink(destination: EventDetailView(eventDetail: eventDetail), isActive: $haveLocationData) {

@@ -13,7 +13,6 @@ import MapKit
 struct BuildingDetailView: View {
     @State var buildingName = "가천관"
     @State var buildingSummary = "가천대학교의 본관"
-//    @State var mainImagePath = ""
     @State var buildingFloor = ["1F", "2F", "3F", "4F", "5F", "6F", "7F"]
     @State var buildingFloorInfo = ["1층입니다.", "2층입니다.", "3층입니다.", "4층입니다.", "5층입니다.", "6층입니다.", "7층입니다."]
     @State var mainImagePath = "festival"
@@ -54,9 +53,19 @@ struct BuildingDetailView: View {
                         
 //                        if let uiImage = UIImage(resource: mainImagePath) {
 //                            CircleImage(image: Image(uiImage: uiImage))
-                            CircleImage(image: Image("https://af0b-58-121-110-235.ngrok-free.app/images/mainImageSample.png"))
-                                .offset(y: -130)
-                                .padding(.bottom, -130)
+//                        AsyncImage(url: mainImagePath){
+                        AsyncImage(url: URL(string: "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQgByBT5IiAT_a2x9pUVb4VMoOrlzHH7Jrzj-HB5jzHlR4lNLMS")!) { phase in
+                            switch phase {
+                            case .success(let image):
+                                CircleImage(image: image)
+                                    .offset(y: -130)
+                                    .padding(.bottom, -130)
+                            default:
+                                // 실패했을 때 보여줄 뷰 또는 처리할 내용
+                                ProgressView()
+                            }
+                        }
+                                
 //                        } else {
 //                            Text("이미지를 찾을 수 없습니다.")
 //                                .foregroundColor(.red)
@@ -89,15 +98,12 @@ struct BuildingDetailView: View {
 
                         }
                         .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
-                        
-                        //
                     }
                 }
               
                 
             }
             .navigationTitle(buildingName)
-    //        .navigationTitle("\(buildingCode)")
             .onAppear(){
                
             }
