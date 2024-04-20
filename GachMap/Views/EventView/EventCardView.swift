@@ -16,6 +16,8 @@ struct EventCardView : View {
     
     var event : EventList
     @State var eventDetail : [EventDetail]    // 이미지 선택 후 DetailView 가기 전에 변경해줘야 함
+    @State var locationAlert = false
+    @State var serverAlert = false  // 서버 통신 실패 알림
     
 
     
@@ -48,7 +50,7 @@ struct EventCardView : View {
 //                            .resizable()
 //                            .frame(width: screenWidth)
 //                            .scaledToFit()
-                        AsyncImage(url: URL(string: event.eventImagePath)) { image in
+                        AsyncImage(url: URL(string: "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQgByBT5IiAT_a2x9pUVb4VMoOrlzHH7Jrzj-HB5jzHlR4lNLMS")) { image in
                             image.resizable()
                                 .frame(width: screenWidth)
                                 .scaledToFit()
@@ -56,6 +58,10 @@ struct EventCardView : View {
                                 ProgressView()
                         }
                     })
+                    .alert(isPresented: $serverAlert) {
+                        Alert(title: Text("서버 통신에 실패했습니다."))
+                    }
+                    
                     
                     NavigationLink(destination: EventDetailView(eventDetail: eventDetail), isActive: $haveLocationData) {
                         EmptyView()
@@ -111,6 +117,9 @@ struct EventCardView : View {
                             
                         }
                         .frame(height: screenHeight / 2.5)
+                        .alert(isPresented: $locationAlert) {
+                            Alert(title: Text("행사 위치 정보가 없습니다."))
+                        }
                         
                     }
                 }
@@ -135,16 +144,22 @@ struct EventCardView : View {
                 // 에러 처리
                 switch response.result {
                     case .success(let value):
-                    print("getEventDetail() 성공")
-                        
-                    guard let data = value.data else {return}
-                    eventDetail = data
-                    haveLocationData = true // 행사 위치 뷰 이동
+                        print("getEventDetail() 성공")
+                            
+                        // 데이터가 nil이 아닐 때
+                        if let data = value.data {
+                            eventDetail = data
+                            haveLocationData = true // 행사 위치 뷰 이동
+                        }
+                        else {
+                            locationAlert = true
+                            print("위치 없는 행사")
+                        }
 
-                    
                     case .failure(let error):
                         // 에러 응답 처리
                         print("Error: \(error.localizedDescription)")
+                        serverAlert = true
                 } // end of switch
         } // end of AF.request
     }
