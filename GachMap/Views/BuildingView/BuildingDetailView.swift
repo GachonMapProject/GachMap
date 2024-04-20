@@ -13,13 +13,15 @@ import MapKit
 struct BuildingDetailView: View {
     @State var buildingName = "가천관"
     @State var buildingSummary = "가천대학교의 본관"
-//    @State var mainImagePath = ""
     @State var buildingFloor = ["1F", "2F", "3F", "4F", "5F", "6F", "7F"]
     @State var buildingFloorInfo = ["1층입니다.", "2층입니다.", "3층입니다.", "4층입니다.", "5층입니다.", "6층입니다.", "7층입니다."]
     @State var mainImagePath = "festival"
     @State var region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4503713, longitude: 127.1299376), latitudinalMeters: 250, longitudinalMeters: 250))
+    @State var buildingFloorInfoDict = [String: [String]]()
     
     @State var apiConnection = false   // API 연결 완료 되면 true로 설정
+    @State var serverAlert = false  // 서버 통신 실패 알림
+    
 //    @State var buildingName : String?
 //    @State var buildingSummary : String?
 //    @State var floor : [String?]
@@ -36,16 +38,21 @@ struct BuildingDetailView: View {
     
     var body: some View {
         
-        // API를 통해 데이터 가져오기 전 Progress() 띄우고 가져오면 진짜 뷰 띄우기
-        if !apiConnection {
-            ProgressView()
-                .onAppear(){
-                    getBuildingDetail(buildingCode: buildingCode)
-                }
-        }
-     
-        else {
-            NavigationStack {
+        NavigationView {
+            // API를 통해 데이터 가져오기 전 Progress() 띄우고 가져오면 진짜 뷰 띄우기
+            if !apiConnection {
+                ProgressView()
+                    .onAppear(){
+                        getBuildingDetail(buildingCode: buildingCode)
+                    }
+                    .alert("알림", isPresented: $serverAlert) {
+                        Button("확인") {}
+                    } message: {
+                        Text("서버 통신에 실패했습니다.")
+                    }
+            } // end of if
+            
+            else {
                 ScrollView{
                     VStack{
                         Map(position: $region)
@@ -54,9 +61,19 @@ struct BuildingDetailView: View {
                         
 //                        if let uiImage = UIImage(resource: mainImagePath) {
 //                            CircleImage(image: Image(uiImage: uiImage))
-                            CircleImage(image: Image("https://af0b-58-121-110-235.ngrok-free.app/images/mainImageSample.png"))
-                                .offset(y: -130)
-                                .padding(.bottom, -130)
+//                        AsyncImage(url: mainImagePath){
+                        AsyncImage(url: URL(string: "https://af0b-58-121-110-235.ngrok-free.app/images/gachonguan.png")!) { phase in
+                            switch phase {
+                            case .success(let image):
+                                CircleImage(image: image)
+                                    .offset(y: -130)
+                                    .padding(.bottom, -130)
+                            default:
+                                // 실패했을 때 보여줄 뷰 또는 처리할 내용
+                                ProgressView()
+                            }
+                        }
+                                
 //                        } else {
 //                            Text("이미지를 찾을 수 없습니다.")
 //                                .foregroundColor(.red)
@@ -76,12 +93,12 @@ struct BuildingDetailView: View {
                                 .bold()
                                 .padding(.top, 10)
                             
-                            ForEach((1...buildingFloor.count).reversed(), id: \.self){ floor in
-                                VStack(alignment : .leading){
-                                    Text(buildingFloor[floor - 1])
+                            ForEach(Array(buildingFloorInfoDict.keys.sorted(by: >)), id: \.self) { floor in
+                                VStack(alignment: .leading) {
+                                    Text(floor)
                                         .font(.system(size: 17))
                                         .bold()
-                                    Text(buildingFloorInfo[floor - 1])
+                                    Text(buildingFloorInfoDict[floor]?.joined(separator: ", ") ?? "")
                                 }
                                 .padding(.top, 10)
                                
@@ -89,24 +106,12 @@ struct BuildingDetailView: View {
 
                         }
                         .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
-                        
-                        //
                     }
-                }
-              
-                
-            }
-            .navigationTitle(buildingName)
-    //        .navigationTitle("\(buildingCode)")
-            .onAppear(){
-               
-            }
-        }
-            
-        
-        
-
-    }
+                } // end of ScrollView
+                .navigationTitle(buildingName)
+            } // end of else
+        } // end of NavigationView
+    }   // end of body
     
     // 건물 세부 정보 가져오는 API
     func getBuildingDetail(buildingCode : Int){
@@ -146,8 +151,18 @@ struct BuildingDetailView: View {
                         buildingDetailData = data
                         buildingName = data.placeName
                         buildingSummary = data.placeSummary
-                        buildingFloor = data.buildingFloors.map{$0.buildingFloor}
-                        buildingFloorInfo = data.buildingFloors.map{$0.buildingFloorInfo}
+                        for floor in data.buildingFloors {
+                            if var floors = buildingFloorInfoDict[floor.buildingFloor] {
+                                // 이미 해당 층수에 대한 정보가 있는 경우
+                                if !floors.contains(floor.buildingFloorInfo) {
+                                    floors.append(floor.buildingFloorInfo)
+                                }
+                                buildingFloorInfoDict[floor.buildingFloor] = floors
+                            } else {
+                                // 해당 층수에 대한 정보가 없는 경우
+                                buildingFloorInfoDict[floor.buildingFloor] = [floor.buildingFloorInfo]
+                            }
+                        }
                         mainImagePath = data.mainImagePath
                         region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: data.placeLatitude, longitude: data.placeLongitude), latitudinalMeters: 250, longitudinalMeters: 250))
                     
@@ -156,6 +171,8 @@ struct BuildingDetailView: View {
                     case .failure(let error):
                         // 에러 응답 처리
                         print("Error: \(error.localizedDescription)")
+                        serverAlert = true
+                    
                 } // end of switch
         } // end of AF.request
     }
@@ -181,6 +198,6 @@ struct CircleImage: View {
 }
 
 
-//#Preview {
-//    BuildingDetailView(buildingCode: 2)
-//}
+#Preview {
+    BuildingDetailView(buildingCode: 2)
+}

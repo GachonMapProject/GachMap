@@ -52,18 +52,24 @@ struct BuildingTabView: View {
     @State private var selection: UUID? // 리스트 선택
     //        let data = [globalBuilding]
     let titles = ["글로벌캠퍼스", "메디컬캠퍼스"]
-//    @State var buildingCode = 0
+
+    @State var serverAlert = false  // 서버 통신 실패 알림
     
     var body: some View {
         
-        if !apiConnection{
-            ProgressView()
-                .onAppear(){
-                    getBuildingList()
-                }
-        }
-        else{
-            NavigationStack {
+        NavigationView {
+            if !apiConnection{
+                ProgressView()
+                    .onAppear(){
+                        getBuildingList()
+                    }
+                    .alert("알림", isPresented: $serverAlert) {
+                        Button("확인") {}
+                    } message: {
+                        Text("서버 통신에 실패했습니다.")
+                    }
+            }
+            else{
                 List(selection: $selection){
                     Section(header: Text(titles[0])) {
                         ForEach(buildingList.indices) { index in
@@ -80,23 +86,14 @@ struct BuildingTabView: View {
                                 }
                             })
                             
-    //                        ForEach(buildingList[index], id: \.id) { building in
-    //                            HStack {
-    ////                                Image(building.imageName)
-    //                                Image("gachonMark")
-    //                                    .resizable()
-    //                                    .aspectRatio(contentMode: .fit)
-    //                                    .frame(width: 30, height: 30)
-    //                                    .padding(.trailing, 8)
-    //
-    //                                Text(building.buildingName)
-    //                            }
-    //                        }
                         }
                     }
                 }
                 .navigationTitle("캠퍼스 맵")
-            } // end of NavigationStack
+            }
+        } // end of NavigationStack
+            
+            
 //            .searchable(
 //                text: $searchText,
 //                placement: .navigationBarDrawer,
@@ -108,7 +105,7 @@ struct BuildingTabView: View {
 //                            }
 //                    } // end of ForEach
 //                } // end of .searchable
-        }
+        
       
     } // end of body
     
@@ -122,9 +119,6 @@ struct BuildingTabView: View {
     
     // 건물 정보 가져오는 함수
     func getBuildingList(){
-        
-        // API 연결 후 지워야 함
-//        apiConnection = true
         
 //        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/map/building-info/list")
         guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/map/building-info/list")
@@ -142,18 +136,24 @@ struct BuildingTabView: View {
                 switch response.result {
                     case .success(let value):
                         // 성공적인 응답 처리
-                    guard let data = value.data else {return}
+                    if let data = value.data {
                         print(data)
                         print("getBuildingList() - 건물 리스트 정보 가져오기 성공")
-                    
+                        
                         
                         buildingList = data.buildingList
                         apiConnection = true
+                    }
+                    else {
+                        // 데이터 없음 
+                    }
                     
                     case .failure(let error):
                         // 에러 응답 처리
                         print("서버 통신 실패")
                         print("Error: \(error.localizedDescription)")
+                        serverAlert = true
+                    
                 } // end of switch
         } // end of AF.request
     

@@ -56,12 +56,14 @@ struct WeatherView: View {
                     self.temp = Int(newWeather.temp)
                     if newWeather.precipitationForm == "없음" {
                         self.sky = newWeather.sky
+                        self.image = sky_image[newWeather.sky] ?? "☀️"
                     }
                     else {
                         self.sky = newWeather.precipitationForm
+                        self.image = sky_image[newWeather.precipitationForm] ?? "☀️"
                     }
                     
-                    self.image = sky_image[newWeather.sky] ?? "☀️"
+                    
                 }
                 let time = Int(String(weatherData.baseTime.dropLast(2))) ?? 0
                 if time < 12 {

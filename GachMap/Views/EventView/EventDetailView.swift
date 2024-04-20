@@ -40,7 +40,7 @@ struct EventDetailView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationView {
             VStack{
                 ZStack(alignment : .top){
                     Map(position: $region, selection: $selectedItem){
@@ -58,8 +58,6 @@ struct EventDetailView: View {
                             self.region = MapCameraPosition.region(region)
                             destination = event
                         }
-                        
-                       
                     }
                     
                     HStack{
@@ -102,18 +100,16 @@ struct EventDetailView: View {
                         .shadow(radius: 7, x: 2, y: 2)
                         .padding()
                     }
-                }
+                } // end of ZStack
                 
-            }
-         
-            .navigationTitle(eventDetail[0].eventName)
-            
-            
+            } // end of VStack
+        
             // 검색창으로 넘길 때, destination의 정보를 같이 넘겨줘야 됨
             NavigationLink(destination: Text("검색뷰 : \(destination.placeName)"), isActive: $isSearch) {
                 EmptyView()
             }
-        }
+//            .navigationTitle(eventDetail[0].eventName)
+        } // end of NavigationView
     }
 }
 
