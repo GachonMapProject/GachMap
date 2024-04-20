@@ -6,166 +6,330 @@
 //
 
 import SwiftUI
+import Alamofire
+
+enum ActiveGuestInfoInputAlert {
+    case ok, error
+}
 
 struct GuestInfoInputView: View {
     
-    let gender = ["남성", "여성"]
-    let speed = ["빠름", "보통", "느림"]
+    let gender = ["남", "여"]
+    let speed = ["FAST", "NORMAL", "SLOW"]
     
     @State private var selectedGender = ""
     @State private var selectedWalkSpeed = ""
     
-    @State private var userBirth = ""
+    @State private var userBirth = 0
     @State private var userGender = ""
-    @State private var userHeight = ""
-    @State private var userWeight = ""
+    @State private var userHeight = 0
+    @State private var userWeight = 0
     @State private var walkSpeed = ""
     
+    @State private var showEndAlert: Bool = false
+    @State private var isEnd: Bool = false
+    @State private var showEscapeAlert: Bool = false
+    @State private var isLoginViewActive: Bool = false
+    @State private var alertMessage: String = ""
+    @State private var activeGuestInfoInputAlert: ActiveGuestInfoInputAlert = .ok
+    
+    @State private var isActive: Bool = false
+    
+    @State private var showServiceTermsModal: Bool = false
+    @State private var showPrivacyTermsModal: Bool = false
+    @State private var isOnAll: Bool = false
+    @State private var isOn1: Bool = false
+    @State private var isOn2: Bool = false
+    @State private var isOn3: Bool = false
+    
+    // 하단 버튼 활성화용 함수
+    func isButtonEnabled() -> Bool {
+        return userBirth != 0 &&
+        userHeight != 0 &&
+        userWeight != 0 &&
+        !selectedGender.isEmpty &&
+        !selectedWalkSpeed.isEmpty &&
+        isOnAll
+    }
+    
     var body: some View {
-        VStack {
-            ScrollView(.vertical) {
-                VStack {
-                    HStack {
-                        Image("gach1000")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(.leading)
-                            .padding(.trailing)
-                    }
-                    .padding(.top)
-                    // end of main Image
-                    
-                    VStack { // 첫번째 줄 시작 (출생년도)
+        NavigationStack {
+            // 상단 이미지
+            VStack {
+                Image("gach1200")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(height: UIScreen.main.bounds.height * 0.08)
+                
+                HStack {
+                    Rectangle()
+                        .fill(.gachonBlue)
+                        .frame(height: 3)
+                }
+                .padding(.top, 20)
+            }
+            .padding(.leading)
+            .padding(.trailing)
+            // end of 상단 이미지
+            
+            VStack {
+                ScrollView {
+                    // 첫 번째 줄
+                    VStack {
+                        // 출생년도
                         HStack {
                             Text("출생년도")
                                 .font(.system(size: 18, weight: .bold))
-                            //.padding(.leading)
+                            Text("필수")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(.red)
                             Spacer()
                         }
                         
-                        HStack {
-                            TextField("", text: $userBirth)
-                                .padding(.leading)
+                        Picker("출생년도", selection: $userBirth) {
+                            ForEach((1900...2024).reversed(), id: \.self) {
+                                Text("\(String($0))년")
+                            }
                         }
+                        .pickerStyle(.automatic)
+                        .frame(maxWidth: .infinity)
                         .frame(height: 45)
                         .background(
                             RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(.systemGray6))
+                            .fill(Color(.systemGray6))
                         )
-                    } // 첫번째 줄 끝 (출생년도)
-                    .padding(.leading)
-                    .padding(.trailing)
+                    }
+                    .padding(.top, 20)
                     
-                    Spacer()
-                    
-                    HStack(spacing: 5) { // 두번째 줄 시작 (키, 몸무게)
+                    // 두 번째 줄
+                    HStack(spacing: 5) {
+                        // 키
                         VStack {
                             HStack {
                                 Text("키")
                                     .font(.system(size: 18, weight: .bold))
-                                //.padding(.leading)
+                                Text("필수")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundColor(.red)
                                 Spacer()
                             }
                             
-                            HStack {
-                                TextField("", text: $userHeight)
-                                    .padding(.leading)
+                            Picker("키", selection: $userHeight) {
+                                ForEach(120..<250, id: \.self) { height in
+                                    Text("\(height)cm")
+                                }
                             }
+                            .pickerStyle(.automatic)
+                            .frame(maxWidth: .infinity)
                             .frame(height: 45)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color(.systemGray6))
+                                .fill(Color(.systemGray6))
                             )
                         }
-                        .padding(.leading)
                         
                         Spacer()
                         
+                        // 몸무게
                         VStack {
                             HStack {
                                 Text("몸무게")
                                     .font(.system(size: 18, weight: .bold))
-                                //.padding(.leading)
+                                Text("필수")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundColor(.red)
                                 Spacer()
                             }
                             
-                            HStack {
-                                TextField("", text: $userWeight)
-                                    .padding(.leading)
+                            Picker("몸무게", selection: $userWeight) {
+                                ForEach(30..<150, id: \.self) { weight in
+                                    Text("\(weight)kg")
+                                }
                             }
+                            .pickerStyle(.automatic)
+                            .frame(maxWidth: .infinity)
                             .frame(height: 45)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color(.systemGray6))
+                                .fill(Color(.systemGray6))
                             )
-                            
                         }
-                        .padding(.trailing)
-                        
-                    } // 두번째 줄 끝 (키, 몸무게)
+                    }
+                    .padding(.top, 10)
                     
-                    Spacer()
-                    
-                    VStack { // 세번째 줄 시작 (성별)
+                    // 세 번째 줄
+                    VStack {
                         HStack {
                             Text("성별")
                                 .font(.system(size: 18, weight: .bold))
-                            //.padding(.leading)
+                            Text("필수")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(.red)
                             Spacer()
                         }
                         
-                        HStack {
-                            Picker("성별을 선택하세요.", selection: $selectedGender) {
-                                ForEach(gender, id: \.self) {
-                                    Text($0)
-                                }
+                        Picker("걸음 속도", selection: $selectedGender) {
+                            ForEach(gender, id: \.self) {
+                                Text($0)
                             }
-                            .pickerStyle(SegmentedPickerStyle())
                         }
+                        .pickerStyle(SegmentedPickerStyle())
                         .frame(height: 30)
-                        
-                    } // 세번째 줄 끝 (성별)
-                    .padding(.leading)
-                    .padding(.trailing)
+                    }
+                    .padding(.top, 10)
                     
-                    Spacer()
-                    
-                    VStack { // 네번째 줄 시작 (걸음 속도)
+                    // 네 번째 줄
+                    VStack {
                         HStack {
                             Text("걸음 속도")
                                 .font(.system(size: 18, weight: .bold))
-                            //.padding(.leading)
+                            Text("필수")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(.red)
                             Spacer()
                         }
                         
-                        HStack {
-                            Picker("걸음 속도를 선택하세요.", selection: $selectedWalkSpeed) {
-                                ForEach(speed, id: \.self) {
-                                    Text($0)
-                                }
+                        Picker("걸음 속도", selection: $selectedWalkSpeed) {
+                            ForEach(speed, id: \.self) {
+                                Text($0)
                             }
-                            .pickerStyle(SegmentedPickerStyle())
                         }
+                        .pickerStyle(SegmentedPickerStyle())
                         .frame(height: 30)
+                    }
+                    .padding(.top, 10)
+                    
+                    // 약관 동의
+                    VStack {
+                        HStack {
+                            Text("약관 동의")
+                                .font(.system(size: 20, weight: .bold))
+                            Spacer()
+                        }
                         
-                    } // 네번째 줄 끝 (걸음 속도)
-                    .padding(.leading)
-                    .padding(.trailing)
+                        Spacer()
+                        
+                        // 토글 1 (전체 동의)
+                        HStack {
+                            Toggle("", isOn: $isOn1)
+                                .toggleStyle(CheckboxToggleStyle(style: .circle))
+                                .foregroundColor(.blue)
+                            
+                            Text("전체 약관에 동의합니다.")
+                                .bold()
+                            
+                            Spacer()
+                        }
+                        // end of 토글 1
+                        
+                        Spacer()
+                        
+                        // 토글 2 (서비스 이용 약관 동의)
+                        HStack {
+                            Toggle("", isOn: $isOn2)
+                                .toggleStyle(CheckboxToggleStyle(style: .circle))
+                                .foregroundColor(.blue)
+                            
+                            Text("서비스 이용 약관 (필수)")
+                            //.font(.system(size: 15))
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                self.showServiceTermsModal = true
+                            }, label: {
+                                Text("보기")
+                                    .foregroundColor(.gray)
+                                    .sheet(isPresented: $showServiceTermsModal) {
+                                        ServiceTermsView()
+                                        //.presentationBackground(.thinMaterial)
+                                    }
+                            })
+                        }
+                        // end of 토글 2
+                        
+                        Spacer()
+                        
+                        // 토글 3 (개인정보 이용 동의)
+                        HStack {
+                            Toggle("", isOn: $isOn3)
+                                .toggleStyle(CheckboxToggleStyle(style: .circle))
+                                .foregroundColor(.blue)
+                            
+                            Text("개인정보 수집 및 이용 동의 (필수)")
+                            //.font(.system(size: 15))
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                self.showPrivacyTermsModal = true
+                            }, label: {
+                                Text("보기")
+                                    .foregroundColor(.gray)
+                                    .sheet(isPresented: $showPrivacyTermsModal) {
+                                        PrivacyTermsView()
+                                        //.presentationBackground(.thinMaterial)
+                                    }
+                            })
+                        }
+                        // end of 토글 3
+                        
+                    }
+                    .padding(.top, 10)
+                    .padding(.bottom, 20)
+                    .onChange(of: isOn1) { newValue in
+                        if newValue {
+                            isOnAll = true
+                            isOn2 = true
+                            isOn3 = true
+                        } else if !newValue && isOn2 && isOn3 {
+                            isOn2 = false
+                            isOn3 = false
+                            isOnAll = false
+                        } else if !newValue && isOn2 {
+                            isOn3 = false
+                            isOnAll = false
+                        } else if !newValue && isOn3 {
+                            isOn2 = false
+                            isOnAll = false
+                        }
+                    }
+                    .onChange(of: isOn2) { newValue in
+                        if newValue && isOn3 {
+                            isOn1 = true
+                            isOnAll = true
+                        } else if !newValue {
+                            isOn1 = false
+                            isOnAll = false
+                        }
+                    }
+                    .onChange(of: isOn3) { newValue in
+                        if newValue && isOn2 {
+                            isOn1 = true
+                            isOnAll = true
+                        } else if !newValue {
+                            isOn1 = false
+                            isOnAll = false
+                        }
+                    }
                     
-                    Spacer()
-                    
-                    
-                } // end of VStack (본문 입력 필드용)
-                
-                // Spacer()
-                
-            } // end of ScrollView
+                } // end of ScrollView
+            } // end of 내용 입력 VStack
+            .padding(.leading)
+            .padding(.trailing)
             
             VStack {
-                Spacer()
-                
                 // 같이 가기 Button
                 Button(action: {
+                    print("출생년도: \(self.userBirth)")
+                    print("성별: \(self.selectedGender)")
+                    print("키: \(self.userHeight)")
+                    print("몸무게: \(self.userWeight)")
+                    print("선택 속도: \(self.selectedWalkSpeed)")
+                    
+                    let param = GuestInfoRequest(guestSpeed: selectedWalkSpeed, gusetGender: selectedGender, guestBirth: userBirth, guestHeight: userHeight, guestWeight: userWeight)
+                    
+                    postGuestInfoData(parameter: param)
                     
                 }, label: {
                     HStack {
@@ -176,19 +340,115 @@ struct GuestInfoInputView: View {
                     .frame(width: UIScreen.main.bounds.width - 25, height: 50)
                     .background(
                         RoundedRectangle(cornerRadius: 15)
-                        //.fill(Color(.systemBlue))
+                            .fill(isButtonEnabled() ? Color.gachonBlue : Color(UIColor.systemGray4))
                             .shadow(radius: 5, x: 2, y: 2)
                     )
                     .padding(.bottom, 20)
                 })
-                // .disabled(username.isEmpty || password.isEmpty)
+                .disabled(!isButtonEnabled())
+                .alert(isPresented: $showEndAlert) {
+                    switch activeGuestInfoInputAlert {
+                    case .ok:
+                        return Alert(title: Text("알림"), message: Text(alertMessage),
+                                     dismissButton: .default(Text("확인"), action: { isEnd = true }))
+                        
+                    case .error:
+                        return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
+                    }
+                    
+                }
                 // end of 같이 가기 Button
                 
+                NavigationLink(destination: PrimaryView(), isActive: $isEnd) {
+                    EmptyView()
+                }
             } // end of VStack (버튼용)
-                
-        } // end of ZStack
             
+            .toolbar {
+                Button(action: {
+                    showEscapeAlert = true
+                }) {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundColor(.white)
+                        .background(
+                            Circle()
+                                .fill(Color.gray)
+                                .opacity(0.7)
+                                .frame(width: 35, height: 35)
+                        )
+                }
+                .padding(.trailing, 8)
+                .alert(isPresented: $showEscapeAlert) {
+                    Alert(
+                        title: Text("경고"),
+                        message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."),
+                        primaryButton: .default(Text("확인"), action: {
+                            isLoginViewActive = true
+                        }),
+                        secondaryButton: .cancel(Text("취소"))
+                    )
+                }
+            }
+            
+            NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
+                EmptyView()
+            }
+            
+        } // end of NavigationStack
+        .navigationBarBackButtonHidden()
     } // end of body
+    
+    // postGuestInfoData 함수
+    private func postGuestInfoData(parameter: GuestInfoRequest) {
+        guard let url = URL(string: "https://0807-58-121-110-235.ngrok-free.app/user/guest")
+        else {
+            print("Invalid URL")
+            return
+        }
+        
+        AF.request(url, method: .post, parameters: parameter, encoder: JSONParameterEncoder.default)
+            .validate()
+            .responseDecodable(of: GuestInfoResponse.self) { response in
+                // 서버 연결 여부
+                switch response.result {
+                case .success(let value):
+                    print(value)
+                    
+                    if(value.success == true) {
+                        print("비회원 정보 전달 성공")
+                        
+                        if let guestCode = value.data.guestId as? Int64 {
+                            let loginInfo = LoginInfo(userCode: nil, guestCode: guestCode)
+                            if let encoded = try? JSONEncoder().encode(loginInfo) {
+                                UserDefaults.standard.set(encoded, forKey: "loginInfo")
+                            }
+                            print("guestId 저장 성공, guestId: \(guestCode)")
+                        }
+                        
+                        alertMessage = value.message
+                        showEndAlert = true
+                        activeGuestInfoInputAlert = .ok
+                        
+                    } else {
+                        print("비회원 정보 전달 실패")
+                        
+                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        showEndAlert = true
+                        activeGuestInfoInputAlert = .error
+                    }
+                    
+                case .failure(let error):
+                    print("서버 연결 실패")
+                    alertMessage = "서버 연결에 실패했습니다."
+                    showEndAlert = true
+                    activeGuestInfoInputAlert = .error
+                    
+                    print("Error: \(error.localizedDescription)")
+                }
+            }
+    }
+    
 } // end of View
 
     #Preview {

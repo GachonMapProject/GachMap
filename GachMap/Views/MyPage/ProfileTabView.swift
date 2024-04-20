@@ -8,14 +8,20 @@
 import SwiftUI
 import Alamofire
 
+enum ActiveExitAlert {
+    case exitok, exiterror
+}
+
 struct ProfileTabView: View {
     
     @State private var loginInfo: LoginInfo? = nil
     @State private var isLoginViewMove: Bool = false
     @State private var isModifyInfoMove: Bool = false
-    
-    @State private var alertMessage: String = ""
-    @State private var showAlert: Bool = false
+ 
+    @State private var showLogoutAlert: Bool = false
+    @State private var showExitAlert: Bool = false
+    @State private var exitAlertMessage: String = ""
+    @State private var activeExitAlert: ActiveExitAlert = .exitok
     
     // LoginInfo에 저장된 userCode 가져오기
     func getUserCodeFromUserDefaults() -> String? {
@@ -51,12 +57,14 @@ struct ProfileTabView: View {
                 EmptyView()
             }
             
-            
+            // 로그아웃 Button
             Button(action: {
                 // 로그아웃 버튼을 누르면 LoginInfo에 연결된 userCode 삭제
+                getUserCodeFromUserDefaults()
+                    
                 UserDefaults.standard.removeObject(forKey: "loginInfo")
                 
-                isLoginViewMove = true
+                showLogoutAlert = true
             }, label: {
                 HStack {
                     Text("로그아웃")
@@ -71,6 +79,12 @@ struct ProfileTabView: View {
                 )
                 .padding(.top, 20)
             })
+            .alert(isPresented: $showLogoutAlert) {
+                Alert(title: Text("알림"), message: Text("로그아웃 하시겠습니까?"), primaryButton: .default(Text("예"), action: {
+                    isLoginViewMove = true
+                }), secondaryButton: .cancel(Text("아니오")))
+            }
+            // end of 로그아웃 버튼
             
             NavigationLink(destination: LoginView(), isActive: $isLoginViewMove) {
                 EmptyView()
@@ -79,7 +93,6 @@ struct ProfileTabView: View {
             // 회원 탈퇴 Button
             Button(action: {
                 deleteUserRequest()
-                
             }, label: {
                 HStack {
                     Text("회원 탈퇴하기")
@@ -94,6 +107,26 @@ struct ProfileTabView: View {
                 )
                 .padding(.top, 20)
             })
+            .alert(isPresented: $showExitAlert) {
+                switch activeExitAlert {
+                    case .exitok:
+                        return Alert(title: Text("알림"), message: Text(exitAlertMessage), primaryButton: .default(Text("예"), action: {
+                            isLoginViewMove = true
+                        }), secondaryButton: .cancel(Text("아니오")))
+                
+                    case .exiterror:
+                        return Alert(title: Text("경고"), message: Text(exitAlertMessage), dismissButton: .default(Text("확인")))
+                }
+                
+                
+                Alert(title: Text("알림"), message: Text(exitAlertMessage), primaryButton: .default(Text("예"), action: {
+                    isLoginViewMove = true
+                }), secondaryButton: .cancel(Text("아니오")))
+            }
+            
+//            NavigationLink() {
+//                EmptyView()
+//            }
             
             
             .navigationTitle("마이 페이지")
@@ -103,20 +136,17 @@ struct ProfileTabView: View {
     // deleteUserRequest() 함수
     private func deleteUserRequest() {
         // API 요청을 보낼 URL 생성
-        guard let url = URL(string: "https://525d-58-121-110-235.ngrok-free.app/user/login")
+        guard let userCode = getUserCodeFromUserDefaults(),
+              let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userCode)")
         else {
             print("Invalid URL")
             return
         }
-        
-        var headers: HTTPHeaders = [:]
-        
-        if let userCode = getUserCodeFromUserDefaults() {
-            headers["userId"] = userCode
-        }
+
+        let parameter: [String: String] = ["userCode": userCode]
             
         // Alamofire를 사용하여 DELETE 요청 생성
-        AF.request(url, method: .delete, headers: headers)
+        AF.request(url, method: .delete, parameters: parameter, headers: nil)
             .validate()
             .responseDecodable(of: DeleteUserResponse.self) { response in
             // 서버 연결 여부
@@ -127,21 +157,26 @@ struct ProfileTabView: View {
                     if (value.success == true) {
                         print("회원 탈퇴 성공")
                         print("value.success: \(value.success)")
+                        
+                        exitAlertMessage = value.message
+                        showExitAlert = true
+                        activeExitAlert = .exitok
 
                     } else {
                         print("회원 탈퇴 실패")
                         print("value.success: \(value.success)")
 
-                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
-                        showAlert = true
-                        
-                        print("showAlert: \(showAlert)")
+                        exitAlertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        showExitAlert = true
+                        activeExitAlert = .exiterror
                     }
                 
                 case .failure(let error):
                     // 에러 응답 처리
-                alertMessage = "서버 연결에 실패했습니다."
-                showAlert = true
+                    print("url: \(url)")
+                    exitAlertMessage = "서버 연결에 실패했습니다."
+                    showExitAlert = true
+                    activeExitAlert = .exiterror
                     print("Error: \(error.localizedDescription)")
             } // end of switch
         } // end of AF.request

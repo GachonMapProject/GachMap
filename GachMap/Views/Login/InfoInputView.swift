@@ -6,20 +6,23 @@
 //
 
 import SwiftUI
+import Alamofire
+
+enum ActiveInfoInputAlert {
+    case ok, error
+}
 
 struct InfoInputView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @Binding var userId: String
+    @Binding var username: String
     @Binding var hashedPassword: String
     
-    let gender = ["남성", "여성"]
-    let speed = ["빠름", "보통", "느림"]
-    let dept = ["컴퓨터공학과", "소프트웨어학과"]
+    let gender = ["남", "여"]
+    let speed = ["FAST", "NORMAL", "SLOW"]
     
     @State private var selectedGender = ""
     @State private var selectedWalkSpeed = ""
-    @State private var selectedDepartment = ""
     
     @State private var userNickname = ""
     @State private var userBirth = 0
@@ -27,10 +30,12 @@ struct InfoInputView: View {
     @State private var userHeight = 0
     @State private var userWeight = 0
     @State private var walkSpeed = ""
-    @State private var userDepartment = ""
     
     @State private var showEndAlert: Bool = false
     @State private var isEnd: Bool = false
+    @State private var alertMessage: String = ""
+    
+    @State private var activeInfoInputAlert: ActiveInfoInputAlert = .ok
     
     @State private var showEscapeAlert: Bool = false
     @State private var isLoginViewActive = false
@@ -259,7 +264,7 @@ struct InfoInputView: View {
                 
                 // 같이 가기 Button
                 Button(action: {
-                    print("ID: \(self.userId)")
+                    print("ID: \(self.username)")
                     print("hasedPW: \(self.hashedPassword)")
                     print("닉네임: \(self.userNickname)")
                     print("출생년도: \(self.userBirth)")
@@ -268,7 +273,11 @@ struct InfoInputView: View {
                     print("몸무게: \(self.userWeight)")
                     print("선택 속도: \(self.selectedWalkSpeed)")
                     
-                    showEndAlert = true
+                    // UserInfoRequest 객체 생성
+                    let param = UserInfoRequest(username: username, password: hashedPassword, userNickname: userNickname, userSpeed: selectedWalkSpeed, userGender: selectedGender, userBirth: userBirth, userHeight: userHeight, userWeight: userWeight)
+                    
+                    postUserInfoData(parameter: param)
+                    
                 }, label: {
                     HStack {
                         Text("같이 가기")
@@ -287,7 +296,15 @@ struct InfoInputView: View {
                 })
                 .disabled(!isButtonEnabled())
                 .alert(isPresented: $showEndAlert) {
-                    Alert(title: Text("알림"), message: Text("회원 가입에 성공했습니다.\n입력한 아이디와 비밀번호로 로그인해주세요."), dismissButton: .default(Text("확인"), action: { isEnd = true }))
+                    switch activeInfoInputAlert {
+                    case .ok:
+                        return Alert(title: Text("알림"), message: Text(alertMessage),
+                                     dismissButton: .default(Text("확인"), action: { isEnd = true }))
+                        
+                    case .error:
+                        return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
+                    }
+                    
                 }
                 // end of 같이 가기 Button
                 
@@ -335,8 +352,66 @@ struct InfoInputView: View {
         .navigationBarBackButtonHidden()
 
     } // end of body
+    
+    // postUserInfoData 함수
+    private func postUserInfoData(parameter : UserInfoRequest) {
+        // API 요청을 보낼 URL 생성
+        guard let url = URL(string: "https://0807-58-121-110-235.ngrok-free.app/user/signup")
+        else {
+            print("Invalid URL")
+            return
+        }
+            
+        // Alamofire를 사용하여 POST 요청 생성
+        AF.request(url, method: .post, parameters: parameter, encoder: JSONParameterEncoder.default)
+            .validate()
+            .responseDecodable(of: UserInfoResponse.self) { response in
+            // 서버 연결 여부
+            switch response.result {
+                case .success(let value):
+                    print(value)
+                   // 회원가입 및 정보 전달 성공 유무
+                    if (value.success == true) {
+                        print("회원가입 및 정보 전달 성공")
+                        print("value.success: \(value.success)")
+                        
+                        if let userCode = value.data.userId as? Int64 {
+                            let loginInfo = LoginInfo(userCode: userCode, guestCode: nil)
+                            if let encoded = try? JSONEncoder().encode(loginInfo) {
+                                UserDefaults.standard.set(encoded, forKey: "loginInfo")
+                            }
+                            print("userId 저장 성공, userId: \(userCode)")
+                        }
+                        
+                        alertMessage = value.message
+                        showEndAlert = true
+                        activeInfoInputAlert = .ok
+                        
+                    } else {
+                        print("회원가입 및 정보 전달 실패")
+                        print("value.success: \(value.success)")
+
+                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        showEndAlert = true
+                        activeInfoInputAlert = .error
+                    }
+                
+                case .failure(let error):
+                    // 에러 응답 처리
+                if let statusCode = response.response?.statusCode {
+                                print("HTTP Status Code: \(statusCode)")
+                            }
+                
+                    alertMessage = "서버 연결에 실패했습니다."
+                    showEndAlert = true
+                    activeInfoInputAlert = .error
+                    print("Error: \(error.localizedDescription)")
+            } // end of switch
+        } // end of AF.request
+    } // end of postData()
+    
 } // end of View
 
 #Preview {
-    InfoInputView(userId: Binding.constant("전달받은 ID"), hashedPassword: Binding.constant("전달받은 암호화된 비밀번호"))
+    InfoInputView(username: Binding.constant("전달받은 ID"), hashedPassword: Binding.constant("전달받은 암호화된 비밀번호"))
 }
