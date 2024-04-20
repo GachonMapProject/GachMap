@@ -2,7 +2,7 @@
 //  EventTabView.swift
 //  GachonMap
 //
-//  Created by 원웅주 on 4/9/24.
+//  Created by 원웅주 on 4/9/24. 
 //
 
 import SwiftUI
@@ -15,12 +15,7 @@ struct EventTabView: View {
 
     @State var apiConnection = false
     
-    @State var eventList = [
-        EventList(eventId: 0, eventName: "naver", eventLink: "https://www.naver.com", eventInfo: "1번", imageData: Data()),
-        EventList(eventId: 1, eventName: "google", eventLink: "https://www.google.com", eventInfo: "2번", imageData: Data()),
-        EventList(eventId: 2, eventName: "gachon", eventLink: "https://www.gachon.ac.kr", eventInfo: "3번", imageData: Data()),
-
-    ]
+    @State var eventList = [EventList]()
     
     @State var currentIndex : Int = 0   // 현재 행사의 인덱스 번호 (위에 바 중 색 변경할 인덱스)
 
@@ -90,8 +85,9 @@ struct EventTabView: View {
     // 행사 리스트 가져오기
     func getEventList() {
         // api 연결되면 지워야 함
-        apiConnection = true
-        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/event/list")
+//        apiConnection = true
+//        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/event/list")
+        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/event/list")
         else {
             print("Invalid URL")
             return
@@ -105,11 +101,11 @@ struct EventTabView: View {
                 switch response.result {
                     case .success(let value):
                         // 성공적인 응답 처리
-                        let data = value.data
-                        print(data)
+                    guard let data = value.data else {return}
+                        print(data.eventList)
                         print("getEventList() - 행사 리스트 정보 가져오기 성공")
                     
-                        eventList = data
+                        eventList = data.eventList
                         apiConnection = true
                     
                             

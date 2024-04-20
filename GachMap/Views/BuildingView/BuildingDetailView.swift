@@ -13,9 +13,10 @@ import MapKit
 struct BuildingDetailView: View {
     @State var buildingName = "가천관"
     @State var buildingSummary = "가천대학교의 본관"
-    @State var floor = ["1F", "2F", "3F", "4F", "5F", "6F", "7F"]
-    @State var floorInfo = ["1층입니다.", "2층입니다.", "3층입니다.", "4층입니다.", "5층입니다.", "6층입니다.", "7층입니다."]
-    @State var imageName = "festival"
+//    @State var mainImagePath = ""
+    @State var buildingFloor = ["1F", "2F", "3F", "4F", "5F", "6F", "7F"]
+    @State var buildingFloorInfo = ["1층입니다.", "2층입니다.", "3층입니다.", "4층입니다.", "5층입니다.", "6층입니다.", "7층입니다."]
+    @State var mainImagePath = "festival"
     @State var region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4503713, longitude: 127.1299376), latitudinalMeters: 250, longitudinalMeters: 250))
     
     @State var apiConnection = false   // API 연결 완료 되면 true로 설정
@@ -51,14 +52,15 @@ struct BuildingDetailView: View {
                             .frame(height: 300)
                             .allowsHitTesting(false)
                         
-                        if let uiImage = UIImage(named: imageName) {
-                            CircleImage(image: Image(uiImage: uiImage))
+//                        if let uiImage = UIImage(resource: mainImagePath) {
+//                            CircleImage(image: Image(uiImage: uiImage))
+                            CircleImage(image: Image("https://af0b-58-121-110-235.ngrok-free.app/images/mainImageSample.png"))
                                 .offset(y: -130)
                                 .padding(.bottom, -130)
-                        } else {
-                            Text("이미지를 찾을 수 없습니다.")
-                                .foregroundColor(.red)
-                        }
+//                        } else {
+//                            Text("이미지를 찾을 수 없습니다.")
+//                                .foregroundColor(.red)
+//                        }
                                        
                         VStack(alignment : .leading){
                             Spacer()
@@ -74,12 +76,12 @@ struct BuildingDetailView: View {
                                 .bold()
                                 .padding(.top, 10)
                             
-                            ForEach((1...floor.count).reversed(), id: \.self){ floor in
+                            ForEach((1...buildingFloor.count).reversed(), id: \.self){ floor in
                                 VStack(alignment : .leading){
-                                    Text("\(floor)F")
+                                    Text(buildingFloor[floor - 1])
                                         .font(.system(size: 17))
                                         .bold()
-                                    Text(floorInfo[floor - 1])
+                                    Text(buildingFloorInfo[floor - 1])
                                 }
                                 .padding(.top, 10)
                                
@@ -111,19 +113,20 @@ struct BuildingDetailView: View {
         
         // 이건 아직 서버 연결이 안 돼서 직접 적어놓은 거임
         // 서버 연결되면 지우면 됨
-        buildingDetailData = BuildingDetailData(placeName: "AI공학관", placeSummary: "기술의 진보 그 집합체", placeLongitude: 34.15253, placeLatitude: 157.12524, floorInfo: [FloorInfo(floor: "1F", floorInfo: "학생회실")])
-        buildingName = buildingDetailData!.placeName
-        buildingSummary = buildingDetailData!.placeSummary
-        floor = buildingDetailData!.floorInfo.map{$0.floor}
-        floorInfo = buildingDetailData!.floorInfo.map{$0.floorInfo}
-        // image
-        region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: buildingDetailData!.placeLatitude, longitude: buildingDetailData!.placeLongitude), latitudinalMeters: 250, longitudinalMeters: 250))
+//        buildingDetailData = BuildingDetailData(placeName: "AI공학관", placeSummary: "기술의 진보 그 집합체", placeLongitude: 34.15253, placeLatitude: 157.12524, buildingFloors: [buildingFloors(floor: "1F", floorInfo: "학생회실")])
+//        buildingName = buildingDetailData!.placeName
+//        buildingSummary = buildingDetailData!.placeSummary
+//        floor = buildingDetailData!.buildingFloors.map{$0.floor}
+//        floorInfo = buildingDetailData!.buildingFloors.map{$0.floorInfo}
+//        // image
+//        region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: buildingDetailData!.placeLatitude, longitude: buildingDetailData!.placeLongitude), latitudinalMeters: 250, longitudinalMeters: 250))
+//        
+//        apiConnection = true
         
-        apiConnection = true
         
-        
-        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/map/building-floor/\(buildingCode)")
-        else {
+//        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/map/building-floor/\(buildingCode)")
+        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/map/building-floor/\(buildingCode)")
+            else {
             print("Invalid URL")
             return
         }
@@ -136,19 +139,19 @@ struct BuildingDetailView: View {
                 switch response.result {
                     case .success(let value):
                         // 성공적인 응답 처리
-                        let data = value.data
+                        guard let data = value.data else { return } // 알림 설정
                         print(data)
                         print("getBuildingDetail() - 건물 세부 정보 가져오기 성공")
                     
                         buildingDetailData = data
                         buildingName = data.placeName
                         buildingSummary = data.placeSummary
-                        floor = data.floorInfo.map{$0.floor}
-                        floorInfo = data.floorInfo.map{$0.floorInfo}
-                        // image
+                        buildingFloor = data.buildingFloors.map{$0.buildingFloor}
+                        buildingFloorInfo = data.buildingFloors.map{$0.buildingFloorInfo}
+                        mainImagePath = data.mainImagePath
                         region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: data.placeLatitude, longitude: data.placeLongitude), latitudinalMeters: 250, longitudinalMeters: 250))
                     
-                    apiConnection = true
+                        apiConnection = true
 
                     case .failure(let error):
                         // 에러 응답 처리

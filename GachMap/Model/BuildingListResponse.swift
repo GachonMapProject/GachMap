@@ -7,19 +7,36 @@
 
 import Foundation
 
-struct BuildingListResponse : Decodable {
+struct BuildingListResponse: Decodable {
     var success: Bool
-    var message: String
     var property: Int
-    var data: [BuildingListData]
-    
+    var message: String
+    var data: BuildingData?
 }
 
-struct BuildingListData : Decodable {
-    var buildingCode : Int
-    var buildingName : String
+struct BuildingData: Decodable {
+    var buildingList: [BuildingList]
 }
 
+struct BuildingList: Decodable {
+    var placeId: Int
+    var placeName: String
+    var thumbnailImagePath: String
+}
+//{
+//    "success": true,
+//    "property": 200,
+//    "message": "요청 성공",
+//    "data": {
+//        "buildingList": [
+//            {
+//                "placeId": 1,
+//                "placeName": "가천관",
+//                "thumbnailImagePath": "http://localhost:60002/images/guachonguan.png"
+//          }
+//        ]
+//    }
+//}
 
 //전송방향 : OUT
 //{
