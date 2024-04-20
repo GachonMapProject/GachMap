@@ -9,11 +9,11 @@ import Foundation
 
 struct UserInfoResponse: Decodable {
     var success: Bool
-    var message: String
     var property: Int
+    var message: String
     var data: UserData
 }
 
 struct UserData: Decodable {
-    var userCode: Int64
+    var userId: Int64
 }

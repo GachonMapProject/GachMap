@@ -7,7 +7,7 @@
 
 import Foundation
 
-// 가천대 회원 로그인 요청
+// 학과 서버로 로그인 요청
 struct LoginRequest: Encodable {
     var username: String
     var password: String

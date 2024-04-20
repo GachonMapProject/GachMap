@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Alamofire
 import Combine
 import CryptoKit
 
@@ -17,8 +18,8 @@ struct SignUpView: View {
     
     @State private var showEscapeAlert: Bool = false
     @State private var isLoginViewActive: Bool = false
-
-    @State private var userId = ""
+    
+    @State private var username = ""
     @State private var password = ""
     @State private var rePassword = ""
     @State private var hashedPassword = ""
@@ -28,6 +29,7 @@ struct SignUpView: View {
     @State private var isIdValid: Bool = false
     @State private var showAlert: Bool = false
     @State private var activeAlert: ActiveAlert = .valid
+    @State private var alertMessage: String = ""
     
     @State private var showServiceTermsModal: Bool = false
     @State private var showPrivacyTermsModal: Bool = false
@@ -83,9 +85,9 @@ struct SignUpView: View {
         return ""
     }
     
-//    func updateIsOnAll() {
-//        isOnAll = isOn1 && isOn2
-//    }
+    //    func updateIsOnAll() {
+    //        isOnAll = isOn1 && isOn2
+    //    }
     
     var body: some View {
         NavigationStack {
@@ -95,7 +97,7 @@ struct SignUpView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(height: UIScreen.main.bounds.height * 0.08)
-                    //.padding(.top, 15)
+                //.padding(.top, 15)
                 
                 HStack {
                     Rectangle()
@@ -126,7 +128,7 @@ struct SignUpView: View {
                         }
                         
                         HStack {
-                            TextField("6~12자리의 영문, 숫자", text: $userId)
+                            TextField("6~12자리의 영문, 숫자", text: $username)
                                 .disabled(isIdValid)
                                 .padding(.leading)
                                 .textContentType(.username)
@@ -136,27 +138,21 @@ struct SignUpView: View {
                                 .frame(height: 45)
                                 .background(
                                     RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color(.systemGray6))
+                                        .fill(Color(.systemGray6))
                                 )
-                                .onChange(of: userId, perform: { value in
+                                .onChange(of: username, perform: { value in
                                     // 1. 6~12자
-                                    if userId.count > 12 {
-                                        userId = String(userId.prefix(12))
+                                    if username.count > 12 {
+                                        username = String(username.prefix(12))
                                     }
                                     
                                     // 2. 영문과 숫자만 사용 가능
-                                    userId = String(userId.filter {$0.isLetter || $0.isNumber})
+                                    username = String(username.filter {$0.isLetter || $0.isNumber})
                                     
                                 })
                             
                             Button(action: {
-                                self.showAlert = true
-                                
-                                // 중복이 아닐 경우
-                                self.activeAlert = .valid
-                                
-                                // 중복인 경우
-                                //self.activeAlert = .invalid
+                                idDuplicationCheck()
                             }, label: {
                                 Text("중복 확인")
                                     .font(.system(size: 15, weight: .bold))
@@ -164,15 +160,15 @@ struct SignUpView: View {
                                     .frame(width: 80, height: 45)
                                     .background(
                                         RoundedRectangle(cornerRadius: 10)
-                                            .fill(userId.count < 6 || isIdValid ? Color(UIColor.systemGray4) : Color.gachonBlue)
+                                            .fill(username.count < 6 || isIdValid ? Color(UIColor.systemGray4) : Color.gachonBlue)
                                     )
                             })
-                            .disabled(userId.count < 6 || isIdValid)
+                            .disabled(username.count < 6 || isIdValid)
                             .alert(isPresented: $showAlert) {
                                 switch activeAlert {
                                     // 중복 X (사용 가능)
                                 case .valid:
-                                    return Alert(title: Text("알림"), message: Text("사용 가능한 아이디입니다.\n사용하시겠습니까?"), primaryButton: .default(Text("사용"), action: {
+                                    return Alert(title: Text("알림"), message: Text(alertMessage), primaryButton: .default(Text("사용"), action: {
                                         isIdValid = true
                                     }), secondaryButton: .cancel(Text("취소"), action: {
                                         isIdValid = false
@@ -180,11 +176,11 @@ struct SignUpView: View {
                                     
                                     // 중복 O (사용 불가능)
                                 case .invalid:
-                                    return Alert(title: Text("경고"), message: Text("중복된 아이디입니다.\n다른 아이디를 입력해주세요."), dismissButton: .default(Text("확인")))
+                                    return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
                                 }
-  
+                                
                             }
-
+                            
                         }
                     }
                     .padding(.top, 20)
@@ -215,7 +211,7 @@ struct SignUpView: View {
                                 .frame(height: 45)
                                 .background(
                                     RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color(.systemGray6))
+                                        .fill(Color(.systemGray6))
                                 )
                                 .onChange(of: password, perform: { value in
                                     self.isPasswordCount = password.count >= 8
@@ -225,12 +221,12 @@ struct SignUpView: View {
                                     }
                                 })
                             
-//                            Text(passwordStrengthText)
-//                                .padding()
-//                                .foregroundColor(passwordStrengthForegroundColor)
-//                                .background(passwordStrengthColor)
-//                                .cornerRadius(10)
-//                                .padding()
+                            //                            Text(passwordStrengthText)
+                            //                                .padding()
+                            //                                .foregroundColor(passwordStrengthForegroundColor)
+                            //                                .background(passwordStrengthColor)
+                            //                                .cornerRadius(10)
+                            //                                .padding()
                             
                             VStack(alignment: .leading) {
                                 HStack {
@@ -296,7 +292,7 @@ struct SignUpView: View {
                             .frame(height: 45)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(.systemGray6))
+                                    .fill(Color(.systemGray6))
                             )
                             .onChange(of: rePassword, perform: { value in
                                 if rePassword.count > 20 {
@@ -331,8 +327,9 @@ struct SignUpView: View {
                         
                         Spacer()
                         
+                        // 토글 1 (전체 동의)
                         HStack {
-                            Toggle("", isOn: $isOnAll)
+                            Toggle("", isOn: $isOn1)
                                 .toggleStyle(CheckboxToggleStyle(style: .circle))
                                 .foregroundColor(.blue)
                             
@@ -341,16 +338,18 @@ struct SignUpView: View {
                             
                             Spacer()
                         }
+                        // end of 토글 1
                         
                         Spacer()
                         
+                        // 토글 2 (서비스 이용 약관 동의)
                         HStack {
-                            Toggle("", isOn: $isOn1)
+                            Toggle("", isOn: $isOn2)
                                 .toggleStyle(CheckboxToggleStyle(style: .circle))
                                 .foregroundColor(.blue)
                             
                             Text("서비스 이용 약관 (필수)")
-                                //.font(.system(size: 15))
+                            //.font(.system(size: 15))
                             
                             Spacer()
                             
@@ -361,20 +360,22 @@ struct SignUpView: View {
                                     .foregroundColor(.gray)
                                     .sheet(isPresented: $showServiceTermsModal) {
                                         ServiceTermsView()
-                                            //.presentationBackground(.thinMaterial)
+                                        //.presentationBackground(.thinMaterial)
                                     }
                             })
                         }
+                        // end of 토글 2
                         
                         Spacer()
                         
+                        // 토글 3 (개인정보 이용 동의)
                         HStack {
-                            Toggle("", isOn: $isOn2)
+                            Toggle("", isOn: $isOn3)
                                 .toggleStyle(CheckboxToggleStyle(style: .circle))
                                 .foregroundColor(.blue)
                             
                             Text("개인정보 수집 및 이용 동의 (필수)")
-                                //.font(.system(size: 15))
+                            //.font(.system(size: 15))
                             
                             Spacer()
                             
@@ -385,136 +386,205 @@ struct SignUpView: View {
                                     .foregroundColor(.gray)
                                     .sheet(isPresented: $showPrivacyTermsModal) {
                                         PrivacyTermsView()
-                                            //.presentationBackground(.thinMaterial)
+                                        //.presentationBackground(.thinMaterial)
                                     }
                             })
                         }
-                        
+                        // end of 토글 3
                         
                     }
                     .padding(.top, 10)
                     .padding(.bottom, 20)
-                    .onChange(of: isOnAll) { newValue in
-                        if newValue {
-                            isOn1 = true
-                            isOn2 = true
-                        } else if !newValue {
-                            isOn1 = false
-                            isOn2 = false
-                        }
-                    }
                     .onChange(of: isOn1) { newValue in
-                        if newValue && isOn2 {
+                        if newValue {
                             isOnAll = true
-                        } else if !newValue || !isOn2 {
+                            isOn2 = true
+                            isOn3 = true
+                        } else if !newValue && isOn2 && isOn3 {
+                            isOn2 = false
+                            isOn3 = false
+                            isOnAll = false
+                        } else if !newValue && isOn2 {
+                            isOn3 = false
+                            isOnAll = false
+                        } else if !newValue && isOn3 {
+                            isOn2 = false
                             isOnAll = false
                         }
                     }
                     .onChange(of: isOn2) { newValue in
-                        if newValue && isOn1 {
+                        if newValue && isOn3 {
+                            isOn1 = true
                             isOnAll = true
-                        } else if !newValue || !isOn1 {
+                        } else if !newValue {
+                            isOn1 = false
                             isOnAll = false
                         }
                     }
-
-                } // end of ScrollView
-            } // end of 내용 입력 부분 VStack
-            .padding(.leading)
-            .padding(.trailing)
-            // end of 내용 입력 부분
-            
-            // 하단 버튼 Stack
-            HStack {
-                Button(action: {
-                    print("ID: \(self.userId)")
-                    print("PW: \(self.password)")
-                    print("재입력 PW: \(self.rePassword)")
-                    print("hashedPW: \(self.hashedPassword)")
-                    
-                    if userId != "" && password != "" && rePassword != "" {
-                        isFull.toggle()
+                    .onChange(of: isOn3) { newValue in
+                        if newValue && isOn2 {
+                            isOn1 = true
+                            isOnAll = true
+                        } else if !newValue {
+                            isOn1 = false
+                            isOnAll = false
+                        }
                     }
                     
-                    isActive = true
-                    
-                }, label: {
-                    Text("다음")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(Color.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(
-                            RoundedRectangle(cornerRadius: 15)
-                                .fill(isButtonEnabled() ? Color.gachonBlue : Color(UIColor.systemGray4))
-                                .shadow(radius: 5, x: 2, y: 2)
-                            )
-                        .padding(.bottom, 20)
-                        .padding(.top, 15)
-                })
-                .disabled(!isButtonEnabled())
+                    // end of 세 번째 줄 (약관 동의)
+                        
+                    } // end of ScrollView
+                } // end of 내용 입력 부분 VStack
+                .padding(.leading)
+                .padding(.trailing)
+                // end of 내용 입력 부분
                 
-                NavigationLink(destination: InfoInputView(userId: $userId, hashedPassword: $hashedPassword), isActive: $isActive) {
+                // 하단 버튼 Stack
+                HStack {
+                    Button(action: {
+                        print("ID: \(self.username)")
+                        print("PW: \(self.password)")
+                        print("재입력 PW: \(self.rePassword)")
+                        print("hashedPW: \(self.hashedPassword)")
+                        
+                        if username != "" && password != "" && rePassword != "" {
+                            isFull.toggle()
+                        }
+                        
+                        isActive = true
+                        
+                    }, label: {
+                        Text("다음")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(Color.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .fill(isButtonEnabled() ? Color.gachonBlue : Color(UIColor.systemGray4))
+                                    .shadow(radius: 5, x: 2, y: 2)
+                            )
+                            .padding(.bottom, 20)
+                            .padding(.top, 15)
+                    })
+                    .disabled(!isButtonEnabled())
+                    
+                    NavigationLink(destination: InfoInputView(username: $username, hashedPassword: $hashedPassword), isActive: $isActive) {
+                        EmptyView()
+                    }
+                }
+                .background(Color.clear)
+                .padding(.leading)
+                .padding(.trailing)
+                // end of 하단 버튼 Stack
+                .toolbar {
+                    Button(action: {
+                        showEscapeAlert = true
+                    }, label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundColor(.white)
+                            .background(
+                                Circle()
+                                    .fill(Color.gray)
+                                    .opacity(0.7)
+                                    .frame(width: 35, height: 35)
+                            )
+                    })
+                    .padding(.trailing, 8)
+                    .alert(isPresented: $showEscapeAlert) {
+                        Alert(title: Text("경고"), message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { isLoginViewActive = true}), secondaryButton: .cancel(Text("취소"))
+                        )
+                    }
+                }
+                
+                NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
                     EmptyView()
                 }
             }
-            .background(Color.clear)
-            .padding(.leading)
-            .padding(.trailing)
-            // end of 하단 버튼 Stack
-            .toolbar {
-                Button(action: {
-                    showEscapeAlert = true
-                }, label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundColor(.white)
-                        .background(
-                            Circle()
-                                .fill(Color.gray)
-                                .opacity(0.7)
-                                .frame(width: 35, height: 35)
-                        )
-                })
-                .padding(.trailing, 8)
-                .alert(isPresented: $showEscapeAlert) {
-                    Alert(title: Text("경고"), message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { isLoginViewActive = true}), secondaryButton: .cancel(Text("취소"))
-                          )
-                }
-            }
+            .onTapGesture { self.endTextEditing() }
+            .navigationBarBackButtonHidden()
             
-            NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
-                EmptyView()
-            }
-        }
-        .onTapGesture { self.endTextEditing() }
-        .navigationBarBackButtonHidden()
-        
     } // end of body
+    
+    // ID 중복 체크 통신용 함수
+    private func idDuplicationCheck() {
+        // 입력받은 username을 URL 인코딩
+            guard let encodedUsername = username.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+                print("Failed to encode username")
+                return
+            }
+        
+        // API 요청을 보낼 URL 생성
+        guard let url = URL(string: "https://0807-58-121-110-235.ngrok-free.app/user/signup?username=\(encodedUsername)")
+        else {
+            print("Invalid URL")
+            return
+        }
+        
+//        let parameter: [String: Any] = ["username": username]
+        
+        // Alamofire를 사용하여 GET 요청 생성
+        AF.request(url, method: .get, parameters: nil, headers: nil)
+            .validate()
+            .responseDecodable(of: IdDuplicationResponse.self) { response in
+            // 서버 연결 여부
+            switch response.result {
+                case .success(let value):
+                    print(value)
+                   // 아이디 중복 유무
+                    if (value.success == true) {
+                        print("아이디 중복 X")
+                        print("value.success: \(value.success)")
+                        
+                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        showAlert = true
+                        activeAlert = .valid
+                        
+                    } else if (value.success == false) {
+                        print("아이디 중복 O")
+                        print("value.success: \(value.success)")
+
+                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        showAlert = true
+                        activeAlert = .invalid
+                    }
+                
+                case .failure(let error):
+                    // 에러 응답 처리
+                    print("url: \(url)")
+                    alertMessage = "서버 연결에 실패했습니다."
+                    showAlert = true
+                    activeAlert = .invalid
+                    print("Error: \(error.localizedDescription)")
+            } // end of switch
+        } // end of AF.request
+    } // end of postData()
+    
 } // end of View
-
-struct xMark : View {
-    var body: some View {
-        Image(systemName: "xmark.circle.fill")
-            .foregroundColor(.red)
+    
+    struct xMark : View {
+        var body: some View {
+            Image(systemName: "xmark.circle.fill")
+                .foregroundColor(.red)
+        }
+    }
+    
+    struct checkMark : View {
+        var body: some View {
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundColor(.green)
     }
 }
 
-struct checkMark : View {
-    var body: some View {
-        Image(systemName: "checkmark.circle.fill")
-            .foregroundColor(.green)
+    
+    #Preview {
+        SignUpView()
     }
-}
-
-#Preview {
-    SignUpView()
-}
-
-// 특수문자 키
-extension CharacterSet {
-    static var specialCharacters: CharacterSet {
-        return CharacterSet(charactersIn: "!@#$%^&*()-_=+[{]}|;:'\",<.>/?")
+    
+    // 특수문자 키
+    extension CharacterSet {
+        static var specialCharacters: CharacterSet {
+            return CharacterSet(charactersIn: "!@#$%^&*()-_=+[{]}|;:'\",<.>/?")
+        }
     }
-}
-

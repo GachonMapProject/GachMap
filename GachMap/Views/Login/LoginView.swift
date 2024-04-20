@@ -168,7 +168,7 @@ struct LoginView: View {
         } // end of NavigationStack
         .onTapGesture { self.endTextEditing() }
         .toolbar(.hidden, for: .navigationBar)
-        // .navigationBarHidden(true)
+        .toolbar(.hidden, for: .tabBar)
     } // end of body
     
     // 기기에 저장
@@ -227,7 +227,7 @@ struct LoginView: View {
     // postData 함수
     private func postLoginData(parameter : LoginRequest) {
         // API 요청을 보낼 URL 생성
-        guard let url = URL(string: "https://525d-58-121-110-235.ngrok-free.app/user/login")
+        guard let url = URL(string: "https://0807-58-121-110-235.ngrok-free.app/user/login")
         else {
             print("Invalid URL")
             return

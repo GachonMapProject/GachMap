@@ -1,14 +1,13 @@
 //
-//  UserInfoRequest.swift
-//  GachonMap
+//  UserInfoModifyRequest.swift
+//  GachMap
 //
-//  Created by 원웅주 on 4/12/24.
+//  Created by 원웅주 on 4/20/24.
 //
 
 import Foundation
 
-struct UserInfoRequest: Encodable {
-    var username: String
+struct UserInfoModifyRequest: Encodable {
     var password: String
     var userNickname: String
     var userSpeed: String
