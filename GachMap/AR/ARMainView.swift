@@ -36,8 +36,9 @@ struct ARMainView: View {
                     if !isEnd {
                         ZStack(alignment: .topTrailing){
                             VStack{
-                                ARView(coreLocation: coreLocation, nextNodeObject: nextNodeObject, bestHorizontalAccuracy: coreLocation.location!.horizontalAccuracy, bestVerticalAccuracy: coreLocation.location!.verticalAccuracy, 
-                                       location : coreLocation.location!, path: path)
+//                                ARView(coreLocation: coreLocation, nextNodeObject: nextNodeObject, bestHorizontalAccuracy: coreLocation.location!.horizontalAccuracy, bestVerticalAccuracy: coreLocation.location!.verticalAccuracy, 
+//                                       location : coreLocation.location!, path: path)
+                                ARCLViewControllerWrapper(path: path, coreLocation: coreLocation)
                                 
                                 AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible)
                             }.edgesIgnoringSafeArea(.bottom)
