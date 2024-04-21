@@ -11,7 +11,7 @@ import CoreLocation
 struct ARCLViewControllerWrapper: UIViewControllerRepresentable {
     
     var path : [Node]
-    var coreLocation : CoreLocationEx
+    @ObservedObject var coreLocation : CoreLocationEx
     
     
     func makeUIViewController(context: Context) -> ARCLViewController {
@@ -19,6 +19,6 @@ struct ARCLViewControllerWrapper: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: ARCLViewController, context: Context) {
-        // Update code if needed
+//        uiViewController.addNodes(path: path)
     }
 }

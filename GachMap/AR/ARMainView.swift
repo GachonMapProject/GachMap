@@ -16,7 +16,7 @@ struct ARMainView: View {
     @ObservedObject var nextNodeObject = NextNodeObject()
     @State private var isARViewVisible = true // ARView의 on/off 상태 변수
     @State private var isEnd = false // 안내 종료 상태 변수
-    @State private var isARViewReady = false    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
+    @State private var isARViewReady = true    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
     
 
 

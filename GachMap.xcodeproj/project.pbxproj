@@ -321,21 +321,16 @@
 		8B831C282BCCF60C00A85973 /* AR */ = {
 			isa = PBXGroup;
 			children = (
+				CB2E457C2BD4F46C009DB796 /* AR-Model */,
 				CB2E45732BD4E146009DB796 /* Extension */,
 				8B831C1C2BCCF60C00A85973 /* Usdz */,
 				8B831C1D2BCCF60C00A85973 /* AppleMap.swift */,
 				8B831C1E2BCCF60C00A85973 /* ARMainView.swift */,
 				8B831C1F2BCCF60C00A85973 /* ARView.swift */,
 				8B831C202BCCF60C00A85973 /* Constant.swift */,
-				8B831C212BCCF60C00A85973 /* CoreLocation.swift */,
-				8B831C232BCCF60C00A85973 /* GetIntermediateCoordinate.swift */,
-				8B831C242BCCF60C00A85973 /* NextNode.swift */,
-				8B831C252BCCF60C00A85973 /* Node.swift */,
-				8B831C262BCCF60C00A85973 /* Path.swift */,
 				8B831C272BCCF60C00A85973 /* StartView.swift */,
 				CB2E456D2BD4DF38009DB796 /* ARCLViewController.swift */,
 				CB2E457A2BD4E28F009DB796 /* ARCLViewControllerWrapper.swift */,
-				CB2E456F2BD4DF70009DB796 /* LocationAnnotationNode.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -370,6 +365,19 @@
 				CB2E45782BD4E1B6009DB796 /* Double+Extension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		CB2E457C2BD4F46C009DB796 /* AR-Model */ = {
+			isa = PBXGroup;
+			children = (
+				CB2E456F2BD4DF70009DB796 /* LocationAnnotationNode.swift */,
+				8B831C212BCCF60C00A85973 /* CoreLocation.swift */,
+				8B831C232BCCF60C00A85973 /* GetIntermediateCoordinate.swift */,
+				8B831C242BCCF60C00A85973 /* NextNode.swift */,
+				8B831C252BCCF60C00A85973 /* Node.swift */,
+				8B831C262BCCF60C00A85973 /* Path.swift */,
+			);
+			path = "AR-Model";
 			sourceTree = "<group>";
 		};
 		CB4CE38F2BCD3F3500E0611B /* Weather */ = {
