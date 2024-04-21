@@ -142,7 +142,7 @@ struct AppleMap: UIViewRepresentable {
 //      view.setUserTrackingMode(.followWithHeading, animated: true)
       if isCameraFixed {
           
-          print("updateUIView - isCameraFixed (true)")
+//          print("updateUIView - isCameraFixed (true)")
           if let userLocation = coreLocation.location {
               let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
               view.setRegion(region, animated: true)
@@ -252,7 +252,7 @@ class Coordinator: NSObject, MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         
         // 현재 지도의 확대/축소 수준을 추정합니다.
-        print("mapView.camera.altitude : \(mapView.camera.altitude)")
+//        print("mapView.camera.altitude : \(mapView.camera.altitude)")
         
         var markerSize = CGSize()
         switch mapView.camera.altitude {

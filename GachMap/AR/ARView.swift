@@ -88,6 +88,7 @@ struct ARViewContainer: UIViewRepresentable {
         config.worldAlignment = .gravityAndHeading // y축은 중력과 평행하게 정렬되고 z축과 x축은 나침반 방향으로 정렬
         
         config.planeDetection = [.horizontal, .vertical]
+        arView.autoenablesDefaultLighting = true // 입체감 (자동 조명)
         
         
         // 4.
@@ -328,10 +329,6 @@ struct ARViewContainer: UIViewRepresentable {
 
         let cylinder = placeCylinder(source: sourcePosition, destination: middleNode.position, altitudeDifference : Float(start.altitude - end.altitude))
         
-
-        
-        // 화살표 노드 방향 설정
-//        middleNode.eulerAngles.y = rotateArrowImage(cylinder.eulerAngles.y, middleNode, nextNode.position)
         
         // 텍스트
         let directionTextNode = placeDirectionText(textPosition: middleNode.position, text: "\(String(format: "%.1f", distance))m", isMiddle: true)
@@ -352,9 +349,9 @@ struct ARViewContainer: UIViewRepresentable {
    private func placeCylinder(source: SCNVector3, destination: SCNVector3, altitudeDifference: Float) -> SCNNode{
        let height = source.distance(receiver: destination)
        
-       let cylinder = SCNBox(width: 1, height: 0.5, length: CGFloat(height), chamferRadius: 0)
+       let cylinder = SCNBox(width: 1, height: 0.2, length: CGFloat(height), chamferRadius: 0)
        
-       cylinder.firstMaterial?.diffuse.contents = UIColor.blue
+       cylinder.firstMaterial?.diffuse.contents = UIColor.gachonSky
        cylinder.firstMaterial?.transparency = 0.9 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
        let node = SCNNode(geometry: cylinder)
 
@@ -373,6 +370,7 @@ struct ARViewContainer: UIViewRepresentable {
        // 출발지와 목적지 사이의 회전각을 구함
        let dirVector = SCNVector3Make(destination.x - source.x, destination.y - source.y, destination.z - source.z)
        let yAngle = atan(dirVector.x / dirVector.z)
+       print(yAngle)
        
        node.eulerAngles.y = yAngle
 

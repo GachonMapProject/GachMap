@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import Alamofire
+import SafariServices
 
 
 struct EventCardView : View {
@@ -14,17 +15,15 @@ struct EventCardView : View {
     var screenHeight = UIScreen.main.bounds.height
     
     var event : EventList
-    @State var eventDetail : EventDetail    // 이미지 선택 후 DetailView 가기 전에 변경해줘야 함
+    @State var eventDetail : [EventDetail]    // 이미지 선택 후 DetailView 가기 전에 변경해줘야 함
+    @State var locationAlert = false
+    @State var serverAlert = false  // 서버 통신 실패 알림
     
 
     
     init(event: EventList) {
         self.event = event
-        self.eventDetail = EventDetail(eventDto: EventDto(eventId: event.eventId, eventName: event.eventName, eventStartDate: Date(), eventEndate: Date(), eventLink: event.eventLink, eventInfo: event.eventInfo, imageData: Data()), eventLocationDto: [
-            EventLocationDto(eventPlaceName: "반도체 대학 정문", eventLatitiude: 37.4508817, eventLongitude: 127.1274769, eventAltitude: 50.23912),
-            EventLocationDto(eventPlaceName: "광장계단 근처", eventLatitiude: 37.45048746, eventLongitude: 127.1280814, eventAltitude: 50.23912),
-            EventLocationDto(eventPlaceName: "반도체대학 코너", eventLatitiude: 37.4506271, eventLongitude: 127.1274554, eventAltitude: 50.23912)])
-        
+        self.eventDetail = [EventDetail(eventInfoId: 0, eventCode: 0, eventName: "", eventPlaceName: "", eventLatitude: 0, eventLongitude: 0, eventAltitude: 0)]
     }
     
     
@@ -44,14 +43,26 @@ struct EventCardView : View {
                     Button(action: {
                         // 행사 디테일 API 통신 함수 추가하고 넘어온 데이터 보고 위치 데이터 있는지 없는지 판단해서 뷰 이동 혹은 알림 띄우기
                         getEventDetail(eventId: event.eventId)
-                        haveLocationData = true
+//                        haveLocationData = true
                         
                     }, label: {
-                        Image("festival")
-                            .resizable()
-                            .frame(width: screenWidth)
-                            .scaledToFit()
+//                        Image("festival")
+//                            .resizable()
+//                            .frame(width: screenWidth)
+//                            .scaledToFit()
+                        AsyncImage(url: URL(string: "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQgByBT5IiAT_a2x9pUVb4VMoOrlzHH7Jrzj-HB5jzHlR4lNLMS")) { image in
+                            image.resizable()
+                                .frame(width: screenWidth)
+                                .scaledToFit()
+                            } placeholder: {
+                                ProgressView()
+                        }
                     })
+                    .alert("알림", isPresented: $serverAlert) {
+                        Button("확인") {}
+                    } message: {
+                        Text("서버 통신에 실패했습니다.")
+                    }
                     
                     NavigationLink(destination: EventDetailView(eventDetail: eventDetail), isActive: $haveLocationData) {
                         EmptyView()
@@ -107,6 +118,11 @@ struct EventCardView : View {
                             
                         }
                         .frame(height: screenHeight / 2.5)
+                        .alert("알림", isPresented: $locationAlert) {
+                            Button("확인") {}
+                        } message: {
+                            Text("행사 위치 정보가 없습니다.")
+                        }
                         
                     }
                 }
@@ -117,12 +133,13 @@ struct EventCardView : View {
     func getEventDetail(eventId : Int){
         // API 요청을 보낼 URL 생성
 //        /src/admin/event/{eventId}
-        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/admin/event/\(eventId)")
+//        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/admin/event/\(eventId)")
+        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/event/\(eventId)")
         else {
             print("Invalid URL")
             return
         }
-            
+        print(url)
         // Alamofire를 사용하여 Get 요청 생성
         AF.request(url, method: .get)
             .validate()
@@ -131,22 +148,21 @@ struct EventCardView : View {
                 switch response.result {
                     case .success(let value):
                         print("getEventDetail() 성공")
-                        
-                        // 성공적인 응답 처리 (행사 위치 정보가 있을 때) -> 위치 정보 없으면 property == 203
-                        if value.property == 200, let data = value.data{
-                            print("행사 위치 정보 있음(\(value.property)) : \(data)")
+                            
+                        // 데이터가 nil이 아닐 때
+                        if let data = value.data {
                             eventDetail = data
                             haveLocationData = true // 행사 위치 뷰 이동
                         }
                         else {
-                            // Alert : "행사 정보가 없습니다"
-                            print("행사 위치 정보 없음(\(value.property)")
+                            locationAlert = true
+                            print("위치 없는 행사")
                         }
 
-                    
                     case .failure(let error):
                         // 에러 응답 처리
                         print("Error: \(error.localizedDescription)")
+                        serverAlert = true
                 } // end of switch
         } // end of AF.request
     }
