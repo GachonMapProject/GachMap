@@ -19,13 +19,15 @@
 		8B5368FB2BD2BF73007B8984 /* UserInquiryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5368FA2BD2BF73007B8984 /* UserInquiryResponse.swift */; };
 		8B5368FD2BD2C019007B8984 /* UserInfoModifyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5368FC2BD2C019007B8984 /* UserInfoModifyRequest.swift */; };
 		8B5368FF2BD2C026007B8984 /* UserInfoModifyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5368FE2BD2C025007B8984 /* UserInfoModifyResponse.swift */; };
+		8B5369012BD37F5C007B8984 /* UserPasswordCheckRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369002BD37F5C007B8984 /* UserPasswordCheckRequest.swift */; };
+		8B5369032BD37F6D007B8984 /* UserPasswordCheckResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369022BD37F6D007B8984 /* UserPasswordCheckResponse.swift */; };
+		8B5369072BD38B55007B8984 /* UserIdInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369062BD38B55007B8984 /* UserIdInjection.swift */; };
 		8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */; };
 		8B831BE02BCCEFF600A85973 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDF2BCCEFF600A85973 /* ContentView.swift */; };
 		8B831BE22BCCEFF700A85973 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B831BE12BCCEFF700A85973 /* Assets.xcassets */; };
 		8B831BE52BCCEFF700A85973 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B831BE42BCCEFF700A85973 /* Preview Assets.xcassets */; };
 		8B831C072BCCF57700A85973 /* GuestInfoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BFD2BCCF57700A85973 /* GuestInfoInputView.swift */; };
 		8B831C082BCCF57700A85973 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BFE2BCCF57700A85973 /* LoginView.swift */; };
-		8B831C092BCCF57700A85973 /* UserInfoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BFF2BCCF57700A85973 /* UserInfoInputView.swift */; };
 		8B831C0A2BCCF57700A85973 /* BuildingTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C012BCCF57700A85973 /* BuildingTabView.swift */; };
 		8B831C0B2BCCF57700A85973 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C022BCCF57700A85973 /* DashboardView.swift */; };
 		8B831C0C2BCCF57700A85973 /* EventTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C032BCCF57700A85973 /* EventTabView.swift */; };
@@ -93,6 +95,9 @@
 		8B5368FA2BD2BF73007B8984 /* UserInquiryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInquiryResponse.swift; sourceTree = "<group>"; };
 		8B5368FC2BD2C019007B8984 /* UserInfoModifyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoModifyRequest.swift; sourceTree = "<group>"; };
 		8B5368FE2BD2C025007B8984 /* UserInfoModifyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoModifyResponse.swift; sourceTree = "<group>"; };
+		8B5369002BD37F5C007B8984 /* UserPasswordCheckRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordCheckRequest.swift; sourceTree = "<group>"; };
+		8B5369022BD37F6D007B8984 /* UserPasswordCheckResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordCheckResponse.swift; sourceTree = "<group>"; };
+		8B5369062BD38B55007B8984 /* UserIdInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdInjection.swift; sourceTree = "<group>"; };
 		8B831BDA2BCCEFF600A85973 /* GachMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GachMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GachMapApp.swift; sourceTree = "<group>"; };
 		8B831BDF2BCCEFF600A85973 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -100,7 +105,6 @@
 		8B831BE42BCCEFF700A85973 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8B831BFD2BCCF57700A85973 /* GuestInfoInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuestInfoInputView.swift; sourceTree = "<group>"; };
 		8B831BFE2BCCF57700A85973 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		8B831BFF2BCCF57700A85973 /* UserInfoInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoInputView.swift; sourceTree = "<group>"; };
 		8B831C012BCCF57700A85973 /* BuildingTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildingTabView.swift; sourceTree = "<group>"; };
 		8B831C022BCCF57700A85973 /* DashboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		8B831C032BCCF57700A85973 /* EventTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTabView.swift; sourceTree = "<group>"; };
@@ -209,6 +213,7 @@
 			children = (
 				CB4CE3982BCD4DDB00E0611B /* Info.plist */,
 				8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */,
+				8B5369062BD38B55007B8984 /* UserIdInjection.swift */,
 				8B831C4A2BCD46DF00A85973 /* PrimaryView.swift */,
 				8B831BDF2BCCEFF600A85973 /* ContentView.swift */,
 				8B831C282BCCF60C00A85973 /* AR */,
@@ -237,7 +242,6 @@
 				8B3159D02BCFE7190049CB5F /* SignUpView.swift */,
 				8BA84B5F2BCF8DD000ACD5E2 /* InfoInputView.swift */,
 				8B831BFD2BCCF57700A85973 /* GuestInfoInputView.swift */,
-				8B831BFF2BCCF57700A85973 /* UserInfoInputView.swift */,
 				8B3159D62BD0419A0049CB5F /* PrivacyTermsView.swift */,
 				8B3159D42BD041500049CB5F /* ServiceTermsView.swift */,
 			);
@@ -282,6 +286,8 @@
 				8B831C162BCCF60C00A85973 /* UserInfoResponse.swift */,
 				8B5368F42BD2B59D007B8984 /* GuestInfoRequest.swift */,
 				8B5368F62BD2B5A9007B8984 /* GuestInfoResponse.swift */,
+				8B5369002BD37F5C007B8984 /* UserPasswordCheckRequest.swift */,
+				8B5369022BD37F6D007B8984 /* UserPasswordCheckResponse.swift */,
 				8B5368FA2BD2BF73007B8984 /* UserInquiryResponse.swift */,
 				8B5368FC2BD2C019007B8984 /* UserInfoModifyRequest.swift */,
 				8B5368FE2BD2C025007B8984 /* UserInfoModifyResponse.swift */,
@@ -505,6 +511,7 @@
 				CB0D26F72BCE681F00800459 /* EventListResponse.swift in Sources */,
 				8B831C3C2BCCF60C00A85973 /* CoreLocation.swift in Sources */,
 				CBDDC9162BCEBF6100019FAB /* BackMapTest.swift in Sources */,
+				8B5369072BD38B55007B8984 /* UserIdInjection.swift in Sources */,
 				8B831C402BCCF60C00A85973 /* Node.swift in Sources */,
 				8B831C492BCD3F4D00A85973 /* SplashScreen.swift in Sources */,
 				8B831C3E2BCCF60C00A85973 /* GetIntermediateCoordinate.swift in Sources */,
@@ -516,6 +523,7 @@
 				8B831C0C2BCCF57700A85973 /* EventTabView.swift in Sources */,
 				CB4EF61D2BCFA07C00BDC73A /* BuildingDetailView.swift in Sources */,
 				8B5368F92BD2BD8D007B8984 /* PasswordCheckView.swift in Sources */,
+				8B5369032BD37F6D007B8984 /* UserPasswordCheckResponse.swift in Sources */,
 				8B3159D12BCFE7190049CB5F /* SignUpView.swift in Sources */,
 				8B831C732BCE0AB300A85973 /* StudentDashboardView.swift in Sources */,
 				8B5368FB2BD2BF73007B8984 /* UserInquiryResponse.swift in Sources */,
@@ -541,9 +549,9 @@
 				8B3159DA2BD0F8510049CB5F /* ProfileModifyView.swift in Sources */,
 				8B5368F72BD2B5A9007B8984 /* GuestInfoResponse.swift in Sources */,
 				8B831C442BCCF60C00A85973 /* BottomSheetHelper.swift in Sources */,
-				8B831C092BCCF57700A85973 /* UserInfoInputView.swift in Sources */,
 				CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */,
 				8B831C432BCCF60C00A85973 /* BeantownButtons.swift in Sources */,
+				8B5369012BD37F5C007B8984 /* UserPasswordCheckRequest.swift in Sources */,
 				CB4CE38E2BCD2F0D00E0611B /* WeatherView.swift in Sources */,
 				8B3159D72BD0419A0049CB5F /* PrivacyTermsView.swift in Sources */,
 				8B831C382BCCF60C00A85973 /* AppleMap.swift in Sources */,

@@ -142,6 +142,10 @@ struct LoginView: View {
                         .disabled(username.isEmpty || password.isEmpty)
                         
                     } // end of Login Button
+                    
+                    NavigationLink(destination: ContentView(), isActive: $isActive) {
+                        EmptyView()
+                    }
                         
                 } // end of Login Section VStack
                 
@@ -227,7 +231,7 @@ struct LoginView: View {
     // postData 함수
     private func postLoginData(parameter : LoginRequest) {
         // API 요청을 보낼 URL 생성
-        guard let url = URL(string: "https://0807-58-121-110-235.ngrok-free.app/user/login")
+        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/user/login")
         else {
             print("Invalid URL")
             return
@@ -256,12 +260,7 @@ struct LoginView: View {
                             }
                             print("userId 저장 성공, userId: \(userCode)")
                         }
-                       
-                        
-//                        NavigationLink(destination: ContentView(), isActive: $isActive) {
-//                            EmptyView()
-//                        }
-                        
+   
                     } else {
                         print("로그인 실패")
                         print("value.success: \(value.success)")
@@ -274,8 +273,8 @@ struct LoginView: View {
                 
                 case .failure(let error):
                     // 에러 응답 처리
-                alertMessage = "서버 연결에 실패했습니다."
-                showAlert = true
+                    alertMessage = "서버 연결에 실패했습니다."
+                    showAlert = true
                     print("Error: \(error.localizedDescription)")
             } // end of switch
         } // end of AF.request

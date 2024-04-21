@@ -15,8 +15,9 @@ enum ActiveExitAlert {
 struct ProfileTabView: View {
     
     @State private var loginInfo: LoginInfo? = nil
-    @State private var isLoginViewMove: Bool = false
-    @State private var isModifyInfoMove: Bool = false
+    @State private var isLogout: Bool = false
+    @State private var isWithdraw: Bool = false
+    @State private var isPasswordCheckMove: Bool = false
  
     @State private var showLogoutAlert: Bool = false
     @State private var showExitAlert: Bool = false
@@ -35,8 +36,9 @@ struct ProfileTabView: View {
     
     var body: some View {
         NavigationStack {
+            // 내 정보 수정 Button
             Button(action: {
-                isModifyInfoMove = true
+                isPasswordCheckMove = true
             }, label: {
                 HStack {
                     Text("내 정보 수정")
@@ -53,9 +55,10 @@ struct ProfileTabView: View {
                 .padding(.top, 20)
             })
             
-            NavigationLink(destination: ProfileModifyView(), isActive: $isModifyInfoMove) {
+            NavigationLink(destination: PasswordCheckView(), isActive: $isPasswordCheckMove) {
                 EmptyView()
             }
+            // end of 내 정보 수정 Button
             
             // 로그아웃 Button
             Button(action: {
@@ -81,14 +84,14 @@ struct ProfileTabView: View {
             })
             .alert(isPresented: $showLogoutAlert) {
                 Alert(title: Text("알림"), message: Text("로그아웃 하시겠습니까?"), primaryButton: .default(Text("예"), action: {
-                    isLoginViewMove = true
+                    isLogout = true
                 }), secondaryButton: .cancel(Text("아니오")))
             }
-            // end of 로그아웃 버튼
             
-            NavigationLink(destination: LoginView(), isActive: $isLoginViewMove) {
+            NavigationLink(destination: LoginView(), isActive: $isLogout) {
                 EmptyView()
             }
+            // end of 로그아웃 버튼
             
             // 회원 탈퇴 Button
             Button(action: {
@@ -111,7 +114,7 @@ struct ProfileTabView: View {
                 switch activeExitAlert {
                     case .exitok:
                         return Alert(title: Text("알림"), message: Text(exitAlertMessage), primaryButton: .default(Text("예"), action: {
-                            isLoginViewMove = true
+                            isWithdraw = true
                         }), secondaryButton: .cancel(Text("아니오")))
                 
                     case .exiterror:
@@ -120,16 +123,17 @@ struct ProfileTabView: View {
                 
                 
                 Alert(title: Text("알림"), message: Text(exitAlertMessage), primaryButton: .default(Text("예"), action: {
-                    isLoginViewMove = true
+                    isWithdraw = true
                 }), secondaryButton: .cancel(Text("아니오")))
             }
             
-//            NavigationLink() {
-//                EmptyView()
-//            }
-            
+            NavigationLink(destination: LoginView(), isActive: $isWithdraw) {
+                EmptyView()
+            }
+            // end of 회원 탈퇴 Button
             
             .navigationTitle("마이 페이지")
+            
         }
     } // end of body
     
@@ -137,7 +141,7 @@ struct ProfileTabView: View {
     private func deleteUserRequest() {
         // API 요청을 보낼 URL 생성
         guard let userCode = getUserCodeFromUserDefaults(),
-              let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userCode)")
+              let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/user/\(userCode)")
         else {
             print("Invalid URL")
             return
