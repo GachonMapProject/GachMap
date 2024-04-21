@@ -60,6 +60,7 @@ struct GuestInfoInputView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(height: UIScreen.main.bounds.height * 0.08)
+                    .padding(.top, 15)
                 
                 HStack {
                     Rectangle()
@@ -365,31 +366,33 @@ struct GuestInfoInputView: View {
             } // end of VStack (버튼용)
             
             .toolbar {
-                Button(action: {
-                    showEscapeAlert = true
-                }) {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundColor(.white)
-                        .background(
-                            Circle()
-                                .fill(Color.gray)
-                                .opacity(0.7)
-                                .frame(width: 35, height: 35)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("비회원 정보입력")
+                        .font(.system(size: 23, weight: .bold))
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showEscapeAlert = true
+                    }, label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(.white)
+                            .background(
+                                Circle()
+                                    .fill(Color.gray)
+                                    .opacity(0.7)
+                                    .frame(width: 30, height: 30)
+                            )
+                    })
+                    .padding(.trailing, 8)
+                    .alert(isPresented: $showEscapeAlert) {
+                        Alert(title: Text("경고"), message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { isLoginViewActive = true}), secondaryButton: .cancel(Text("취소"))
                         )
+                    } // end of X Button
                 }
-                .padding(.trailing, 8)
-                .alert(isPresented: $showEscapeAlert) {
-                    Alert(
-                        title: Text("경고"),
-                        message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."),
-                        primaryButton: .default(Text("확인"), action: {
-                            isLoginViewActive = true
-                        }),
-                        secondaryButton: .cancel(Text("취소"))
-                    )
-                }
-            }
+                
+            } // end of .toolbar
             
             NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
                 EmptyView()
@@ -401,7 +404,7 @@ struct GuestInfoInputView: View {
     
     // postGuestInfoData 함수
     private func postGuestInfoData(parameter: GuestInfoRequest) {
-        guard let url = URL(string: "https://0807-58-121-110-235.ngrok-free.app/user/guest")
+        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/user/guest")
         else {
             print("Invalid URL")
             return

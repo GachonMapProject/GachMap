@@ -97,7 +97,7 @@ struct SignUpView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(height: UIScreen.main.bounds.height * 0.08)
-                //.padding(.top, 15)
+                    .padding(.top, 15)
                 
                 HStack {
                     Rectangle()
@@ -477,31 +477,41 @@ struct SignUpView: View {
                 .padding(.leading)
                 .padding(.trailing)
                 // end of 하단 버튼 Stack
+            
                 .toolbar {
-                    Button(action: {
-                        showEscapeAlert = true
-                    }, label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundColor(.white)
-                            .background(
-                                Circle()
-                                    .fill(Color.gray)
-                                    .opacity(0.7)
-                                    .frame(width: 35, height: 35)
-                            )
-                    })
-                    .padding(.trailing, 8)
-                    .alert(isPresented: $showEscapeAlert) {
-                        Alert(title: Text("경고"), message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { isLoginViewActive = true}), secondaryButton: .cancel(Text("취소"))
-                        )
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Text("회원가입")
+                            .font(.system(size: 23, weight: .bold))
                     }
-                }
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            showEscapeAlert = true
+                        }, label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.white)
+                                .background(
+                                    Circle()
+                                        .fill(Color.gray)
+                                        .opacity(0.7)
+                                        .frame(width: 30, height: 30)
+                                )
+                        })
+                        .padding(.trailing, 8)
+                        .alert(isPresented: $showEscapeAlert) {
+                            Alert(title: Text("경고"), message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { isLoginViewActive = true}), secondaryButton: .cancel(Text("취소"))
+                            )
+                        } // end of X Button
+                    }
+                    
+                } // end of .toolbar
                 
                 NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
                     EmptyView()
                 }
-            }
+            
+            } // end of NavigationStack
             .onTapGesture { self.endTextEditing() }
             .navigationBarBackButtonHidden()
             
@@ -516,13 +526,11 @@ struct SignUpView: View {
             }
         
         // API 요청을 보낼 URL 생성
-        guard let url = URL(string: "https://0807-58-121-110-235.ngrok-free.app/user/signup?username=\(encodedUsername)")
+        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/user/signup?username=\(encodedUsername)")
         else {
             print("Invalid URL")
             return
         }
-        
-//        let parameter: [String: Any] = ["username": username]
         
         // Alamofire를 사용하여 GET 요청 생성
         AF.request(url, method: .get, parameters: nil, headers: nil)
@@ -559,7 +567,7 @@ struct SignUpView: View {
                     print("Error: \(error.localizedDescription)")
             } // end of switch
         } // end of AF.request
-    } // end of postData()
+    } // end of idDuplicationCheck()
     
 } // end of View
     

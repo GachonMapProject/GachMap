@@ -10,36 +10,45 @@ import Alamofire
 import CryptoKit
 import Combine
 
+enum ActiveInfoModifyAlert {
+    case ok, error
+}
+
 struct ProfileModifyView: View {
     
-    @State private var showModifyAlert: Bool = false
+    let gender = ["남", "여"]
+    let speed = ["FAST", "NORMAL", "SLOW"]
     
-    let gender = ["남성", "여성"]
-    let speed = ["빠름", "보통", "느림"]
-    let dept = ["컴퓨터공학과", "소프트웨어학과"]
+    @State private var userInfo: UserInquiryResponse?
+    @State private var isLoading: Bool = false
     
     // 받아온 유저 정보 적용
     @State private var selectedGender = ""
     @State private var selectedWalkSpeed = ""
-    @State private var selectedDepartment = ""
     
-    @State private var userNickname = "ㅇㅇ"
+    @State private var username = ""
+    @State private var userNickname = ""
     @State private var userBirth = 0
     @State private var userGender = ""
     @State private var userHeight = 0
     @State private var userWeight = 0
     @State private var walkSpeed = ""
-    @State private var userDepartment = ""
     
     @State private var isSpecialCharacterIncluded: Bool = false     // 특수문자 사용
     @State private var isAlphabeticCharacterIncluded: Bool = false  // 영어 사용
     @State private var isNumericCharacterIncluded: Bool = false     // 숫자 사용
     @State private var isPasswordCount: Bool = false                // 8~20자리 만족
     
-    @State private var userId = "MyId"
+    @State private var userId = ""
     @State private var modifyPassword = ""
     @State private var reModifyPassword = ""
-    @State private var hashedModifyPassword = ""
+    @State private var hashedModifyPassword: String? = ""
+    
+    @State private var alertMessage: String = ""
+    @State private var showEndAlert: Bool = false
+    @State private var activeInfoModifyAlert: ActiveInfoModifyAlert = .ok
+    @State private var isEnd: Bool = false
+    @State private var showErrorAlert: Bool = false
     
     private var isValidReModifyPassword: Bool {
         return modifyPassword == reModifyPassword
@@ -76,7 +85,8 @@ struct ProfileModifyView: View {
         !selectedGender.isEmpty &&
         userHeight != 0 &&
         userWeight != 0 &&
-        !selectedWalkSpeed.isEmpty
+        !selectedWalkSpeed.isEmpty &&
+        isValidReModifyPassword
     }
     
     // SHA-256 해시 생성 함수
@@ -87,6 +97,46 @@ struct ProfileModifyView: View {
         }
         return ""
     }
+    
+    // 서버에 저장된 사용자 정보 가져오기
+    private func getUserInfoInquiry() {
+        isLoading = true
+        
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userId)")
+        else {
+            print("Invalid URL")
+            return
+        }
+        
+        AF.request(url, method: .get, parameters: nil, headers: nil)
+            .validate()
+            .responseDecodable(of: UserInquiryResponse.self) { response in
+                isLoading = false
+                
+                switch response.result {
+                case .success(let value):
+                    if (value.success == true) {
+                        print("회원 정보 요청 성공")
+                        self.userInfo = value
+                        
+//                        self.username = value.data.username ?? ""
+                        self.userNickname = value.data.userNickname ?? ""
+                        self.userBirth = value.data.userBirth ?? 0
+                        self.selectedGender = value.data.userGender ?? ""
+                        self.userHeight = value.data.userHeight ?? 0
+                        self.userWeight = value.data.userWeight ?? 0
+                        self.selectedWalkSpeed = value.data.userSpeed ?? ""
+                        
+                    } else {
+                        print("회원 정보 요청 실패")
+                            showErrorAlert = true
+                    }
+                    
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                }
+            }
+    } // end of getUserInfoInquiry()
     
     var body: some View {
         NavigationStack {
@@ -247,20 +297,25 @@ struct ProfileModifyView: View {
                             .foregroundColor(.gray)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        TextField("", text: $userNickname)
-                            .padding(.leading)
-                            .frame(height: 45)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(.systemGray6))
-                            )
-                            .onChange(of: userNickname, perform: { value in
-                                // 10자 이내로 제한
-                                if userNickname.count > 10 {
-                                    userNickname = String(userNickname.prefix(12))
+                        if let userInfo = userInfo {
+                            TextField("", text: $userNickname)
+                                .padding(.leading)
+                                .frame(height: 45)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color(.systemGray6))
+                                )
+                                .onChange(of: userNickname, perform: { value in
+                                    // 10자 이내로 제한
+                                    if userNickname.count > 10 {
+                                        userNickname = String(userNickname.prefix(12))
+                                    }
+                                })
+                                .onAppear {
+                                    userNickname = userInfo.data.userNickname
                                 }
-                                
-                            })
+
+                        }
                     }
                     .padding(.top, 10)
                     // end of 세 번째 줄
@@ -386,7 +441,11 @@ struct ProfileModifyView: View {
                 } // end of ScrollView
                 
                 Button(action: {
-                    showModifyAlert = true
+                    
+                    let param = UserInfoModifyRequest(password: hashedModifyPassword, userNickname: userNickname, userSpeed: selectedWalkSpeed, userGender: selectedGender, userBirth: userBirth, userHeight: userHeight, userWeight: userWeight)
+                    
+                    postUserInfoModifyData(parameter: param)
+                    
                 }, label: {
                     Text("같이 가기")
                         .font(.system(size: 20, weight: .bold))
@@ -402,14 +461,81 @@ struct ProfileModifyView: View {
                         //.padding(.top, 10)
                 })
                 .disabled(!isButtonEnabled())
+                .alert(isPresented: $showEndAlert) {
+                    switch activeInfoModifyAlert {
+                    case .ok:
+                        return Alert(title: Text("알림"), message: Text(alertMessage), dismissButton: .default(Text("확인"), action: { isEnd = true }))
+                        
+                    case .error:
+                        return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
+                    }
+                }
+                
+                NavigationLink(destination: ProfileTabView(), isActive: $isEnd) {
+                    EmptyView()
+                }
             } // end of Entire VStack
             .padding(.leading)
             .padding(.trailing)
             
-            .navigationBarTitle("내 정보 수정", displayMode: .inline)
+            .navigationBarTitle("개인정보 수정", displayMode: .inline)
+            .navigationBarBackButtonHidden()
         } // end of NavigationStack
-        
+        .onAppear {
+            getUserInfoInquiry()
+        }
     } // end of body
+        
+    
+    // postUserInfoModifyData 함수
+    private func postUserInfoModifyData(parameter : UserInfoModifyRequest) {
+        // API 요청을 보낼 URL 생성
+        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/user/signup")
+        else {
+            print("Invalid URL")
+            return
+        }
+            
+        // Alamofire를 사용하여 POST 요청 생성
+        AF.request(url, method: .post, parameters: parameter, encoder: JSONParameterEncoder.default)
+            .validate()
+            .responseDecodable(of: UserInfoModifyResponse.self) { response in
+            // 서버 연결 여부
+            switch response.result {
+                case .success(let value):
+                    print(value)
+                   // 개인정보 수정 내용 전달 성공 유무
+                    if (value.success == true) {
+                        print("개인정보 수정 성공")
+                        print("value.success: \(value.success)")
+                        
+                        alertMessage = value.message
+                        showEndAlert = true
+                        activeInfoModifyAlert = .ok
+                        
+                    } else {
+                        print("개인정보 수정 실패")
+                        print("value.success: \(value.success)")
+
+                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        showEndAlert = true
+                        activeInfoModifyAlert = .error
+                    }
+                
+                case .failure(let error):
+                    // 에러 응답 처리
+                if let statusCode = response.response?.statusCode {
+                                print("HTTP Status Code: \(statusCode)")
+                            }
+                
+                    alertMessage = "서버 연결에 실패했습니다."
+                    showEndAlert = true
+                    activeInfoModifyAlert = .error
+                    print("Error: \(error.localizedDescription)")
+            } // end of switch
+        } // end of AF.request
+    } // end of postUserInfoModifyData()
+    
 } // end of View
 
 #Preview {

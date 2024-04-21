@@ -8,7 +8,7 @@
 import Foundation
 
 struct UserInfoModifyRequest: Encodable {
-    var password: String
+    var password: String?
     var userNickname: String
     var userSpeed: String
     var userGender: String
