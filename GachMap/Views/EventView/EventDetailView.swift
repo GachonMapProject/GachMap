@@ -105,7 +105,7 @@ struct EventDetailView: View {
             } // end of VStack
         
             // 검색창으로 넘길 때, destination의 정보를 같이 넘겨줘야 됨
-            NavigationLink(destination: Text("검색뷰 : \(destination.placeName)"), isActive: $isSearch) {
+            NavigationLink(destination: Text("검색뷰 : \(destination.placeName) \n \(destination)"), isActive: $isSearch) {
                 EmptyView()
             }
 //            .navigationTitle(eventDetail[0].eventName)
