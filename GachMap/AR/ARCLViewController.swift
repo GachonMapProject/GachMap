@@ -122,14 +122,15 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         }
         getIntermediateCoordinates(path: path)
         
-        placeStartNode(currentLocation : currentLocation)
-        placeMiddleNode(currentLocation: currentLocation, start : stepData[0].startLocation, end: stepData[0].endLocation, next : stepData[0].nextLocation, nodeName: "nodeName")
+        placeStartNode(currentLocation : currentLocation)   // 출발지 노드
         
-        // 경로 노드마다 띄울 텍스트 설정
-//        for i in 0..<stepData.count - 1 {
-//            let nodeName = "node-\(stepData[i].locationName)"
-//            placeMiddleNode(currentLocation: currentLocation, start : stepData[i].startLocation, end: stepData[i].endLocation, next : stepData[i].nextLocation, nodeName: nodeName)
-//        }
+//         경로 노드마다 띄울 텍스트 설정
+        for i in 0..<stepData.count - 1 {
+            let nodeName = "node-\(stepData[i].locationName)"
+            placeMiddleNode(currentLocation: currentLocation, start : stepData[i].startLocation, end: stepData[i].endLocation, next : stepData[i].nextLocation, nodeName: nodeName)
+        }
+        placeDestinationNode(currentLocation : currentLocation) // 목적지 노드
+        
 //
 //        for i in 0..<path.count{
 //            let originalAltitude = path[i].location.altitude        // 다음 노드의 고도
@@ -200,11 +201,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     
 //    목적지 노드를 AR 환경에 배치
     private func placeMiddleNode(currentLocation: CLLocation, start :CLLocation, end: CLLocation, next : CLLocation, nodeName: String) {
-        
-//        let originalAltitude = end.altitude        // 다음 노드의 고도
-//        let updatedAltitude = originalAltitude + difAltitude    // 현재위치, 노드 고도 차
-//        let newLocation = CLLocation(coordinate: end.coordinate, altitude: updatedAltitude)    // 노드의 고도 수정 (현재 위치와 동일하게)
-        print("sourcePostion : \(sourcePosition)")
+    
         // 다음 노드 상대 좌표
         let nextDistance = distanceBetweenCoordinate(source: currentLocation, destination: next)
         let nextTransformationMatrix = transformMatrix(source: currentLocation, destination: next, distance: nextDistance)
@@ -245,7 +242,6 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         sourcePosition = endNode.position
         boxNode.constraints = nil
-        middleNode.constraints = nil
         
         addScenewideNodeSettings(middleNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: middleNode)
@@ -284,14 +280,49 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
           let dirVector = SCNVector3(destination.coordinate.longitude - source.coordinate.longitude,
                                      destination.altitude - source.altitude,
                                       destination.coordinate.latitude - source.coordinate.latitude)
-       let yAngle = atan(dirVector.x / dirVector.z)
-       print(yAngle) // -1.2743467
+       let yAngle = atan(dirVector.x / dirVector.z) + 0.07
+       print(yAngle)
+       
+       // CLLocation 사용 시 yAngle
+//       -1.2743467
+//       -1.324047
+//       0.40206537
+//       -1.281677
+       
+       // SCNVector3 사용 시 yAngle
+//       1.2034351
+//       1.263546
+//       -0.3286845
+//       1.2121987
        
        node.eulerAngles.y = -yAngle
 
        
        return node
    } // end of placeCylinder
+    
+    private func placeDestinationNode(currentLocation : CLLocation){
+        guard let last = stepData.last else {return}
+        let startLocation = last.startLocation
+        let destinationLocation = last.endLocation
+        let sourceNode = makePngNode(fileName: "MuhanEnd")
+        let destinationNode = LocationAnnotationNode(location: destinationLocation, node: sourceNode)
+        
+        
+        let coordinate = CLLocationCoordinate2D(latitude: (startLocation.coordinate.latitude + destinationLocation.coordinate.latitude) / 2, longitude: (startLocation.coordinate.longitude + destinationLocation.coordinate.longitude) / 2)
+        
+        let placeBoxLocation = CLLocation(coordinate: coordinate, altitude: (startLocation.altitude + destinationLocation.altitude) / 2 - 1.5)
+
+        let box = placeBox(source: startLocation, destination: destinationLocation)
+        let boxNode = LocationAnnotationNode(location: placeBoxLocation, node: box)
+        
+        boxNode.constraints = nil
+        
+        addScenewideNodeSettings(destinationNode)
+        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: destinationNode)
+        addScenewideNodeSettings(boxNode)
+        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: boxNode)
+    }
     
     
     

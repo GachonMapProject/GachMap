@@ -19,6 +19,6 @@ struct ARCLViewControllerWrapper: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: ARCLViewController, context: Context) {
-//        uiViewController.addNodes(path: path)
+        uiViewController.addNodes(path: path)
     }
 }
