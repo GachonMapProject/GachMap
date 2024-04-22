@@ -66,8 +66,8 @@ struct BuildingDetailView: View {
                             switch phase {
                             case .success(let image):
                                 CircleImage(image: image)
-                                    .offset(y: -130)
-                                    .padding(.bottom, -130)
+                                    .offset(y: -150)
+                                    .padding(.bottom, -150)
                             default:
                                 // 실패했을 때 보여줄 뷰 또는 처리할 내용
                                 ProgressView()
@@ -131,7 +131,7 @@ struct BuildingDetailView: View {
         
         //        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/map/building-floor/\(buildingCode)")
         
-        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/map/building-floor/\(buildingCode)")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/building-floor/\(buildingCode)")
             else {
                 print("Invalid URL")
             return
@@ -188,13 +188,14 @@ struct CircleImage: View {
     var body: some View {
         image
             .resizable()
+            .aspectRatio(contentMode: .fit)
             .clipShape(Circle())
             .overlay {
                 Circle().stroke(.white, lineWidth: 4)
                     
             }
             .shadow(radius: 7)
-            .frame(width: 220, height: 220)
+            .frame(width: 300, height: 300)
     }
 }
 

@@ -135,7 +135,7 @@ struct EventCardView : View {
 //        /src/admin/event/{eventId}
         
 //        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/event/\(eventId)")
-        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/admin/event/\(eventId)")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/event/\(eventId)")
         else {
             print("Invalid URL")
             return
