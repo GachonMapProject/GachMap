@@ -13,6 +13,8 @@ struct ContentView: View {
     @State private var selectedTab = 1
     @State private var showMainView = false
     
+    // @Binding var isLogin: Bool
+    
     // @State private var loginInfo: LoginInfo? = nil
     
 //    init() {
@@ -94,6 +96,7 @@ struct ContentView: View {
           
       } // end of NavigationStack
       .navigationBarBackButtonHidden()
+     
       
       // 스플래시 화면 작동
 //      ZStack {
@@ -125,7 +128,7 @@ struct ContentView: View {
         }
 } // end of View struct
 
-#Preview {
-  ContentView()
-}
+//#Preview {
+//  ContentView()
+//}
 

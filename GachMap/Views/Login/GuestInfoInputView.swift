@@ -26,6 +26,8 @@ struct GuestInfoInputView: View {
     @State private var userWeight = 0
     @State private var walkSpeed = ""
     
+    @Binding var showGuestInfoInputView: Bool
+
     @State private var showEndAlert: Bool = false
     @State private var isEnd: Bool = false
     @State private var showEscapeAlert: Bool = false
@@ -367,7 +369,7 @@ struct GuestInfoInputView: View {
             
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("비회원 정보입력")
+                    Text("비회원으로 이용하기")
                         .font(.system(size: 23, weight: .bold))
                 }
                 
@@ -387,16 +389,16 @@ struct GuestInfoInputView: View {
                     })
                     .padding(.trailing, 8)
                     .alert(isPresented: $showEscapeAlert) {
-                        Alert(title: Text("경고"), message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { isLoginViewActive = true}), secondaryButton: .cancel(Text("취소"))
+                        Alert(title: Text("경고"), message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { showGuestInfoInputView = false }), secondaryButton: .cancel(Text("취소"))
                         )
                     } // end of X Button
                 }
                 
             } // end of .toolbar
             
-            NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
-                EmptyView()
-            }
+//            NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
+//                EmptyView()
+//            }
             
         } // end of NavigationStack
         .navigationBarBackButtonHidden()
@@ -454,6 +456,6 @@ struct GuestInfoInputView: View {
     
 } // end of View
 
-    #Preview {
-        GuestInfoInputView()
-    }
+//    #Preview {
+//        GuestInfoInputView()
+//    }

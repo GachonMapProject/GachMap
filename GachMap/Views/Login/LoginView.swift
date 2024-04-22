@@ -23,6 +23,11 @@ struct LoginView: View {
     @State private var alertMessage: String = ""
     @State private var showAlert: Bool = false
     
+    @State private var showSignUpView: Bool = false
+    @State private var showGuestInfoInputView: Bool = false
+    
+    //@Binding var isLogin : Bool
+    
     // SHA-256 해시 생성 함수
     func sha256(_ string: String) -> String {
         if let stringData = string.data(using: .utf8) {
@@ -148,36 +153,46 @@ struct LoginView: View {
                         
                     } // end of Login Button
                     
-                    NavigationLink(destination: ContentView(), isActive: $isActive) {
+                    NavigationLink(destination: PrimaryView(), isActive: $isActive) {
                         EmptyView()
                     }
                         
                 } // end of Login Section VStack
                 
-                // 회원가입 화면 이동 버튼
-                NavigationLink(destination: SignUpView()){
+                // 회원가입 버튼
+                Button(action: {
+                    showSignUpView = true
+                }, label: {
                     Text("회원가입")
                         .font(.system(size: 16))
                         .foregroundColor(.gray)
-                }
+                })
                 .padding(.top, 15)
+                .fullScreenCover(isPresented: $showSignUpView) {
+                    SignUpView(showSignUpView: $showSignUpView)
+                }
                 
-                // 비회원 정보 입력 화면 이동 버튼
-                NavigationLink(destination: GuestInfoInputView()) {
+                Button(action: {
+                    showGuestInfoInputView = true
+                }, label: {
                     Text("비회원으로 이용하기")
                         .font(.system(size: 16))
                         .foregroundColor(.gray)
-                }
+                })
                 .padding(.top, 5)
+                .fullScreenCover(isPresented: $showGuestInfoInputView) {
+                    GuestInfoInputView(showGuestInfoInputView: $showGuestInfoInputView)
+                }
                 
                 Spacer()
             } // end of entier VStack
-            .onTapGesture { self.endTextEditing() }
+            //.onTapGesture { self.endTextEditing() }
+            //.toolbar(.hidden)
+            //.toolbar(.hidden, for: .navigationBar)
 
         } // end of NavigationStack
-        .onTapGesture { self.endTextEditing() }
-        .toolbar(.hidden, for: .navigationBar)
-        .toolbar(.hidden, for: .tabBar)
+//        .toolbar(.hidden)
+//        .navigationBarBackButtonHidden()
     } // end of body
     
     // 기기에 저장
@@ -256,6 +271,7 @@ struct LoginView: View {
                         print("value.success: \(value.success)")
                         
                         isActive = true
+                        //isLogin = true
                         
                         if let value = value.data {
                             let userCode = Int64(value.userId)
@@ -268,7 +284,7 @@ struct LoginView: View {
    
                     } else {
                         print("로그인 실패")
-                        print("value.success: \(value.success)")
+                        print("value.message: \(value.message)")
 
                         alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
                         showAlert = true
@@ -288,5 +304,5 @@ struct LoginView: View {
 } // end of View struct
 
 #Preview {
-    LoginView()
+    PrimaryView()
 }
