@@ -13,9 +13,7 @@ struct PrimaryView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Button("Load Login Info") {
-                    loginInfo = getLoginInfo()
-                }
+                // loginInfo = getLoginInfo()
                 
                 // 뷰를 분기할 때 userCode부터 보기
                 
@@ -36,6 +34,9 @@ struct PrimaryView: View {
             .toolbar(.hidden, for: .navigationBar)
             // .navigationBarHidden(true)
         } // end of NavigationView
+        .onAppear {
+            loginInfo = getLoginInfo()
+        }
         
     } // end of body
     

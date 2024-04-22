@@ -19,6 +19,10 @@ struct ProfileModifyView: View {
     let gender = ["남", "여"]
     let speed = ["FAST", "NORMAL", "SLOW"]
     
+    @State private var loginInfo: LoginInfo? = nil
+    @State private var showExitAlert: Bool = false
+    @State private var isProfileViewActive: Bool = false
+    
     @State private var userInfo: UserInquiryResponse?
     @State private var isLoading: Bool = false
     
@@ -98,9 +102,34 @@ struct ProfileModifyView: View {
         return ""
     }
     
+    // LoginInfo에 저장된 정보 가져오기
+    private func getLoginInfo() -> LoginInfo? {
+        if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
+           let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
+            return loginInfo
+        } else {
+            print("Login Info not found in UserDefaults")
+            return nil
+        }
+    }
+    
     // 서버에 저장된 사용자 정보 가져오기
     private func getUserInfoInquiry() {
         isLoading = true
+        
+        loginInfo = getLoginInfo()
+            
+        guard let userCode = loginInfo?.userCode else {
+            print("userCode is nil")
+            return
+        }
+        
+        if let userCode = loginInfo?.userCode {
+            self.userId = String(userCode)
+        } else {
+            print("userCode is nil")
+            return
+        }
         
         guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userId)")
         else {
@@ -119,7 +148,7 @@ struct ProfileModifyView: View {
                         print("회원 정보 요청 성공")
                         self.userInfo = value
                         
-//                        self.username = value.data.username ?? ""
+                        self.username = value.data.username ?? ""
                         self.userNickname = value.data.userNickname ?? ""
                         self.userBirth = value.data.userBirth ?? 0
                         self.selectedGender = value.data.userGender ?? ""
@@ -140,6 +169,7 @@ struct ProfileModifyView: View {
     
     var body: some View {
         NavigationStack {
+            let userInfo = userInfo
             VStack {
                 ScrollView {
                     // 첫 번째 줄
@@ -153,7 +183,7 @@ struct ProfileModifyView: View {
                             Spacer()
                         }
                         
-                        TextField("", text: $userId)
+                        TextField("", text: $username)
                             .disabled(true)
                             .padding(.leading)
                             .foregroundColor(.gray)
@@ -162,7 +192,11 @@ struct ProfileModifyView: View {
                                 RoundedRectangle(cornerRadius: 10)
                                 .fill(Color(.systemGray6))
                             )
+//                            .onAppear {
+//                                username = userInfo?.data.username ?? ""
+//                            }
                     }
+                    .padding(.top, 10)
                     // end of 첫 번째 줄
                     
                     // 두 번째 줄
@@ -297,25 +331,44 @@ struct ProfileModifyView: View {
                             .foregroundColor(.gray)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        if let userInfo = userInfo {
-                            TextField("", text: $userNickname)
-                                .padding(.leading)
-                                .frame(height: 45)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color(.systemGray6))
-                                )
-                                .onChange(of: userNickname, perform: { value in
-                                    // 10자 이내로 제한
-                                    if userNickname.count > 10 {
-                                        userNickname = String(userNickname.prefix(12))
-                                    }
-                                })
-                                .onAppear {
-                                    userNickname = userInfo.data.userNickname
+//                        let userInfo = userInfo
+                        
+                        TextField("", text: $userNickname)
+                            .padding(.leading)
+                            .frame(height: 45)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(.systemGray6))
+                            )
+                            .onChange(of: userNickname, perform: { value in
+                                // 10자 이내로 제한
+                                if userNickname.count > 10 {
+                                    userNickname = String(userNickname.prefix(12))
                                 }
-
-                        }
+                            })
+//                            .onAppear {
+//                                userNickname = userInfo?.data.userNickname ?? ""
+//                            }
+                        
+//                        if let userInfo = userInfo {
+//                            TextField("", text: $userNickname)
+//                                .padding(.leading)
+//                                .frame(height: 45)
+//                                .background(
+//                                    RoundedRectangle(cornerRadius: 10)
+//                                    .fill(Color(.systemGray6))
+//                                )
+//                                .onChange(of: userNickname, perform: { value in
+//                                    // 10자 이내로 제한
+//                                    if userNickname.count > 10 {
+//                                        userNickname = String(userNickname.prefix(12))
+//                                    }
+//                                })
+//                                .onAppear {
+//                                    userNickname = userInfo.data.userNickname
+//                                }
+//
+//                        }
                     }
                     .padding(.top, 10)
                     // end of 세 번째 줄
@@ -441,8 +494,17 @@ struct ProfileModifyView: View {
                 } // end of ScrollView
                 
                 Button(action: {
+                    guard let hashPassword = hashedModifyPassword else {return}
                     
-                    let param = UserInfoModifyRequest(password: hashedModifyPassword, userNickname: userNickname, userSpeed: selectedWalkSpeed, userGender: selectedGender, userBirth: userBirth, userHeight: userHeight, userWeight: userWeight)
+                    print("password: \(hashPassword)")
+                    print("userNickname: \(userNickname)")
+                    print("userSpeed: \(selectedWalkSpeed)")
+                    print("userGender: \(selectedGender)")
+                    print("userBirth: \(userBirth)")
+                    print("userHeight: \(userHeight)")
+                    print("userWeight: \(userWeight)")
+            
+                    let param = UserInfoModifyRequest(password: hashPassword, userNickname: userNickname, userSpeed: selectedWalkSpeed, userGender: selectedGender, userBirth: userBirth, userHeight: userHeight, userWeight: userWeight)
                     
                     postUserInfoModifyData(parameter: param)
                     
@@ -478,8 +540,41 @@ struct ProfileModifyView: View {
             .padding(.leading)
             .padding(.trailing)
             
-            .navigationBarTitle("개인정보 수정", displayMode: .inline)
             .navigationBarBackButtonHidden()
+            
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("개인정보 수정")
+                        .font(.system(size: 23, weight: .bold))
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showExitAlert = true
+                    }, label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(.white)
+                            .background(
+                                Circle()
+                                    .fill(Color.gray)
+                                    .opacity(0.7)
+                                    .frame(width: 30, height: 30)
+                            )
+                    })
+                    .padding(.trailing, 8)
+                    .alert(isPresented: $showExitAlert) {
+                        Alert(title: Text("경고"), message: Text("마이 페이지로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { isProfileViewActive = true}), secondaryButton: .cancel(Text("취소"))
+                        )
+                    } // end of X Button
+                }
+                
+            } // end of .toolbar
+            
+            NavigationLink(destination: ProfileTabView(), isActive: $isProfileViewActive) {
+                EmptyView()
+            }
+            
         } // end of NavigationStack
         .onAppear {
             getUserInfoInquiry()
@@ -490,19 +585,20 @@ struct ProfileModifyView: View {
     // postUserInfoModifyData 함수
     private func postUserInfoModifyData(parameter : UserInfoModifyRequest) {
         // API 요청을 보낼 URL 생성
-        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/user/signup")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userId)")
         else {
             print("Invalid URL")
             return
         }
             
         // Alamofire를 사용하여 POST 요청 생성
-        AF.request(url, method: .post, parameters: parameter, encoder: JSONParameterEncoder.default)
+        AF.request(url, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default)
             .validate()
             .responseDecodable(of: UserInfoModifyResponse.self) { response in
             // 서버 연결 여부
             switch response.result {
                 case .success(let value):
+                    print(url)
                     print(value)
                    // 개인정보 수정 내용 전달 성공 유무
                     if (value.success == true) {
@@ -531,6 +627,7 @@ struct ProfileModifyView: View {
                     alertMessage = "서버 연결에 실패했습니다."
                     showEndAlert = true
                     activeInfoModifyAlert = .error
+                    print(url)
                     print("Error: \(error.localizedDescription)")
             } // end of switch
         } // end of AF.request
