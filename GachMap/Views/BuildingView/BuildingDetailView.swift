@@ -66,18 +66,13 @@ struct BuildingDetailView: View {
                             switch phase {
                             case .success(let image):
                                 CircleImage(image: image)
-                                    .offset(y: -150)
-                                    .padding(.bottom, -150)
+                                    .offset(y: -130)
+                                    .padding(.bottom, -130)
                             default:
                                 // 실패했을 때 보여줄 뷰 또는 처리할 내용
                                 ProgressView()
                             }
                         }
-                                
-//                        } else {
-//                            Text("이미지를 찾을 수 없습니다.")
-//                                .foregroundColor(.red)
-//                        }
                                        
                         VStack(alignment : .leading){
                             Spacer()
@@ -101,11 +96,9 @@ struct BuildingDetailView: View {
                                     Text(buildingFloorInfoDict[floor]?.joined(separator: ", ") ?? "")
                                 }
                                 .padding(.top, 10)
-                               
                             }
-
                         }
-                        .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                        .padding(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
                     }
                 } // end of ScrollView
                 .navigationTitle(buildingName)
@@ -188,14 +181,14 @@ struct CircleImage: View {
     var body: some View {
         image
             .resizable()
-            .aspectRatio(contentMode: .fit)
             .clipShape(Circle())
             .overlay {
                 Circle().stroke(.white, lineWidth: 4)
                     
             }
             .shadow(radius: 7)
-            .frame(width: 300, height: 300)
+            .frame(width: 220, height: 220)
+            .aspectRatio(contentMode: .fit)
     }
 }
 
