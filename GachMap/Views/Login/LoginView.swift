@@ -60,6 +60,11 @@ struct LoginView: View {
                             .disableAutocorrection(true) // 자동 수정 해제
                             .font(.title3)
                             .foregroundColor(Color(.gray))
+                            .onChange(of: username) { newValue in
+                                                if newValue.contains(" ") {
+                                                    self.username = String(newValue.trimmingCharacters(in: .whitespaces))
+                                                }
+                                            }
                         
                         Spacer()
                     }
@@ -231,7 +236,7 @@ struct LoginView: View {
     // postData 함수
     private func postLoginData(parameter : LoginRequest) {
         // API 요청을 보낼 URL 생성
-        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/user/login")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/login")
         else {
             print("Invalid URL")
             return

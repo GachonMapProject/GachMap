@@ -49,7 +49,7 @@ class WeatherData {
                 case .success(let value):
                     // 성공적인 응답 처리
                     print("성공")
-                    print("value : \(value)")
+//                    print("value : \(value)")
                     let data = value.data(using: .utf8)
                     let parser = XMLParser(data: data!)
                     var temp = 0.0   // 온도

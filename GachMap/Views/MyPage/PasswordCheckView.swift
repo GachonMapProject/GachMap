@@ -138,7 +138,7 @@ struct PasswordCheckView: View {
     
     // 회원 비밀번호 일치 여부 확인용 함수
     private func isPasswordValid(parameter: UserPasswordCheckRequest) {
-        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/user/check-password")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/check-password")
         else {
             print("Invalid URL")
             return
@@ -177,12 +177,12 @@ struct PasswordCheckView: View {
     
 //    // 서버에 저장된 사용자 정보 가져오기
 //    private func getUserInfoInquiry() {
-//        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userId)")
+//        guard let url = URL(string: "https://2a93-58-121-110-235.ngrok-free.app\(userId)")
 //        else {
 //            print("Invalid URL")
 //            return
 //        }
-//        
+//
 //        AF.request(url, method: .get, parameters: nil, headers: nil)
 //            .validate()
 //            .responseDecodable(of: UserInquiryResponse.self) { response in

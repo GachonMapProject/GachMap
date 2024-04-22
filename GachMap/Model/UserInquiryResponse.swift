@@ -16,6 +16,7 @@ struct UserInquiryResponse: Decodable {
 
 struct UserInquiryData: Decodable {
     var userId: Int64
+    var username: String
     var userNickname: String
     var userSpeed: String
     var userGender: String
