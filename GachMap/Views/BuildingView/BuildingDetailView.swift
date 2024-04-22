@@ -73,11 +73,6 @@ struct BuildingDetailView: View {
                                 ProgressView()
                             }
                         }
-                                
-//                        } else {
-//                            Text("이미지를 찾을 수 없습니다.")
-//                                .foregroundColor(.red)
-//                        }
                                        
                         VStack(alignment : .leading){
                             Spacer()
@@ -101,11 +96,9 @@ struct BuildingDetailView: View {
                                     Text(buildingFloorInfoDict[floor]?.joined(separator: ", ") ?? "")
                                 }
                                 .padding(.top, 10)
-                               
                             }
-
                         }
-                        .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                        .padding(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
                     }
                 } // end of ScrollView
                 .navigationTitle(buildingName)
@@ -131,7 +124,7 @@ struct BuildingDetailView: View {
         
         //        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/map/building-floor/\(buildingCode)")
         
-        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/map/building-floor/\(buildingCode)")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/building-floor/\(buildingCode)")
             else {
                 print("Invalid URL")
             return
@@ -195,6 +188,7 @@ struct CircleImage: View {
             }
             .shadow(radius: 7)
             .frame(width: 220, height: 220)
+            .aspectRatio(contentMode: .fit)
     }
 }
 

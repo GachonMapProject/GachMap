@@ -54,6 +54,7 @@ struct BuildingTabView: View {
     let titles = ["글로벌캠퍼스", "메디컬캠퍼스"]
 
     @State var serverAlert = false  // 서버 통신 실패 알림
+    @State var nilData = false  // data가 없을 때 알림
     
     var body: some View {
         
@@ -67,6 +68,11 @@ struct BuildingTabView: View {
                         Button("확인") {}
                     } message: {
                         Text("서버 통신에 실패했습니다.")
+                    }
+                    .alert("알림", isPresented: $nilData) {
+                        Button("확인") {}
+                    } message: {
+                        Text("캠퍼스 맵 데이터가 없습니다.")
                     }
             }
             else{
@@ -121,7 +127,7 @@ struct BuildingTabView: View {
     func getBuildingList(){
         
         //        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/map/building-info/list")
-        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/map/building-info/list")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/building-info/list")
         else {
             print("Invalid URL")
             return
@@ -145,7 +151,8 @@ struct BuildingTabView: View {
                         apiConnection = true
                     }
                     else {
-                        // 데이터 없음 
+                        print("데이터 없음")
+                        nilData = true
                     }
                     
                     case .failure(let error):
