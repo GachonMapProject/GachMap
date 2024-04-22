@@ -14,6 +14,7 @@ struct NavigationInfoView: View {
     @State var distance = 0
     @State var rotation = "우회전"
     @State var nodeName = "반도체대학"
+
     var body: some View {
         HStack{
             Image(systemName: rotationDic[rotation] ?? "arrow.up.circle.fill")

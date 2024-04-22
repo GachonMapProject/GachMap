@@ -95,8 +95,8 @@ struct EventTabView: View {
     func getEventList() {
         // api 연결되면 지워야 함
 //        apiConnection = true
-//        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/event/list")
-        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/event/list")
+//        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/event/list")
+        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/event/list")
         else {
             print("Invalid URL")
             return
