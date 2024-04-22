@@ -404,7 +404,7 @@ struct GuestInfoInputView: View {
     
     // postGuestInfoData 함수
     private func postGuestInfoData(parameter: GuestInfoRequest) {
-        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/user/guest")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/guest")
         else {
             print("Invalid URL")
             return
