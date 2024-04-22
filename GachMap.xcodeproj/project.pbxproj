@@ -260,8 +260,8 @@
 				8B3159D02BCFE7190049CB5F /* SignUpView.swift */,
 				8BA84B5F2BCF8DD000ACD5E2 /* InfoInputView.swift */,
 				8B831BFD2BCCF57700A85973 /* GuestInfoInputView.swift */,
-				8B3159D62BD0419A0049CB5F /* PrivacyTermsView.swift */,
 				8B3159D42BD041500049CB5F /* ServiceTermsView.swift */,
+				8B3159D62BD0419A0049CB5F /* PrivacyTermsView.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";

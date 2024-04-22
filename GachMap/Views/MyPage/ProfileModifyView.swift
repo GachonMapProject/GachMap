@@ -16,12 +16,14 @@ enum ActiveInfoModifyAlert {
 
 struct ProfileModifyView: View {
     
+    @State private var showEscapeAlert: Bool = false
+    @Binding var showModifyView: Bool
+    
     let gender = ["남", "여"]
     let speed = ["FAST", "NORMAL", "SLOW"]
     
     @State private var loginInfo: LoginInfo? = nil
     @State private var showExitAlert: Bool = false
-    @State private var isProfileViewActive: Bool = false
     
     @State private var userInfo: UserInquiryResponse?
     @State private var isLoading: Bool = false
@@ -177,6 +179,7 @@ struct ProfileModifyView: View {
                         HStack {
                             Text("아이디")
                                 .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.black)
     //                        Text("필수")
     //                            .font(.system(size: 13, weight: .bold))
     //                            .foregroundColor(.red)
@@ -185,6 +188,8 @@ struct ProfileModifyView: View {
                         
                         TextField("", text: $username)
                             .disabled(true)
+                            .multilineTextAlignment(.leading)
+                            .textContentType(.username)
                             .padding(.leading)
                             .foregroundColor(.gray)
                             .frame(height: 45)
@@ -204,6 +209,7 @@ struct ProfileModifyView: View {
                         HStack {
                             Text("비밀번호 변경")
                                 .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.black)
                             Spacer()
                         }
                         .padding(.bottom, 1)
@@ -214,6 +220,7 @@ struct ProfileModifyView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         SecureField("변경할 비밀번호 입력", text: $modifyPassword)
+                            .multilineTextAlignment(.leading)
                             .padding(.leading)
                             .autocapitalization(.none) // 대문자 설정 지우기
                             .disableAutocorrection(true) // 자동 수정 해제
@@ -239,6 +246,7 @@ struct ProfileModifyView: View {
                                     xMark()
                                 }
                                 Text("최소 8자, 최대 20자")
+                                    .foregroundColor(.black)
                                 
                                 Spacer()
                             }
@@ -251,6 +259,7 @@ struct ProfileModifyView: View {
                                     xMark()
                                 }
                                 Text("영문 입력")
+                                    .foregroundColor(.black)
                             }
                             Spacer()
                             HStack {
@@ -261,6 +270,7 @@ struct ProfileModifyView: View {
                                     xMark()
                                 }
                                 Text("숫자 입력")
+                                    .foregroundColor(.black)
                             }
                             Spacer()
                             HStack {
@@ -271,6 +281,7 @@ struct ProfileModifyView: View {
                                     xMark()
                                 }
                                 Text("특수문자 입력")
+                                    .foregroundColor(.black)
                             }
                         }
                         .padding(.top, 5)
@@ -287,6 +298,7 @@ struct ProfileModifyView: View {
                         }
                     
                         SecureField("변경할 비밀번호 재입력", text: $reModifyPassword)
+                            .multilineTextAlignment(.leading)
                             .padding(.leading)
                             .autocapitalization(.none) // 대문자 설정 지우기
                             .disableAutocorrection(true) // 자동 수정 해제
@@ -310,6 +322,7 @@ struct ProfileModifyView: View {
                                 xMark()
                             }
                             Text("비밀번호 일치")
+                                .foregroundColor(.black)
                             Spacer()
                         }
                         .padding(.top, 5)
@@ -321,6 +334,7 @@ struct ProfileModifyView: View {
                     VStack {
                         HStack {
                             Text("닉네임")
+                                .foregroundColor(.black)
                                 .font(.system(size: 18, weight: .bold))
                             Spacer()
                         }
@@ -335,6 +349,10 @@ struct ProfileModifyView: View {
                         
                         TextField("", text: $userNickname)
                             .padding(.leading)
+                            .multilineTextAlignment(.leading)
+                            .textContentType(.username)
+                            .autocapitalization(.none) // 대문자 설정 지우기
+                            .disableAutocorrection(true) // 자동 수정 해제
                             .frame(height: 45)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
@@ -379,6 +397,7 @@ struct ProfileModifyView: View {
                         VStack {
                             HStack {
                                 Text("출생년도")
+                                    .foregroundColor(.black)
                                     .font(.system(size: 18, weight: .bold))
                                 Spacer()
                             }
@@ -403,6 +422,7 @@ struct ProfileModifyView: View {
                         VStack {
                             HStack {
                                 Text("성별")
+                                    .foregroundColor(.black)
                                     .font(.system(size: 18, weight: .bold))
                                 Spacer()
                             }
@@ -426,6 +446,7 @@ struct ProfileModifyView: View {
                         VStack {
                             HStack {
                                 Text("키")
+                                    .foregroundColor(.black)
                                     .font(.system(size: 18, weight: .bold))
                                 Spacer()
                             }
@@ -450,6 +471,7 @@ struct ProfileModifyView: View {
                         VStack {
                             HStack {
                                 Text("몸무게")
+                                    .foregroundColor(.black)
                                     .font(.system(size: 18, weight: .bold))
                                 Spacer()
                             }
@@ -475,6 +497,7 @@ struct ProfileModifyView: View {
                     VStack {
                         HStack {
                             Text("걸음 속도")
+                                .foregroundColor(.black)
                                 .font(.system(size: 18, weight: .bold))
                             Spacer()
                         }
@@ -526,31 +549,29 @@ struct ProfileModifyView: View {
                 .alert(isPresented: $showEndAlert) {
                     switch activeInfoModifyAlert {
                     case .ok:
-                        return Alert(title: Text("알림"), message: Text(alertMessage), dismissButton: .default(Text("확인"), action: { isEnd = true }))
+                        return Alert(title: Text("알림"), message: Text(alertMessage), dismissButton: .default(Text("확인"), action: { showModifyView = false }))
                         
                     case .error:
                         return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
                     }
                 }
-                
-                NavigationLink(destination: ProfileTabView(), isActive: $isEnd) {
-                    EmptyView()
-                }
+
             } // end of Entire VStack
             .padding(.leading)
             .padding(.trailing)
-            
             .navigationBarBackButtonHidden()
+            .onTapGesture { self.endTextEditing() }
             
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Text("개인정보 수정")
                         .font(.system(size: 23, weight: .bold))
+                        .foregroundColor(.black)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        showExitAlert = true
+                        showEscapeAlert = true
                     }, label: {
                         Image(systemName: "xmark")
                             .font(.system(size: 12, weight: .bold))
@@ -563,17 +584,13 @@ struct ProfileModifyView: View {
                             )
                     })
                     .padding(.trailing, 8)
-                    .alert(isPresented: $showExitAlert) {
-                        Alert(title: Text("경고"), message: Text("마이 페이지로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { isProfileViewActive = true}), secondaryButton: .cancel(Text("취소"))
+                    .alert(isPresented: $showEscapeAlert) {
+                        Alert(title: Text("경고"), message: Text("마이 페이지로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { showModifyView = false }), secondaryButton: .cancel(Text("취소"))
                         )
                     } // end of X Button
                 }
                 
             } // end of .toolbar
-            
-            NavigationLink(destination: ProfileTabView(), isActive: $isProfileViewActive) {
-                EmptyView()
-            }
             
         } // end of NavigationStack
         .onAppear {
@@ -635,6 +652,6 @@ struct ProfileModifyView: View {
     
 } // end of View
 
-#Preview {
-    ProfileModifyView()
-}
+//#Preview {
+//    ProfileTabView()
+//}

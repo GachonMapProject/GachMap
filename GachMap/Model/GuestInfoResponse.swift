@@ -11,9 +11,9 @@ struct GuestInfoResponse: Decodable {
     var success: Bool
     var property: Int
     var message: String
-    var data: GuestInfoData
+    var data: GuestData
 }
 
-struct GuestInfoData: Decodable {
-    var guestId: Int
+struct GuestData: Decodable {
+    var guestId: Int64
 }

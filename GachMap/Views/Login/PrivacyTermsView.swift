@@ -10,7 +10,7 @@ import SwiftUI
 struct PrivacyTermsView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @State private var longText = 
+    @State private var longText =
     """
     1. 개인정보의 수집 목적
     1.1 회사는 서비스 제공을 위해 필요한 최소한의 개인정보만을 수집합니다.
@@ -63,7 +63,7 @@ struct PrivacyTermsView: View {
     """
     
     var body: some View {
-        NavigationStack {
+        VStack {
             HStack() {
                 Text("개인정보 이용 약관")
                     .font(.system(size: 23, weight: .bold))
@@ -98,7 +98,9 @@ struct PrivacyTermsView: View {
             }
             
         }
+        
     }
+    
 }
 
 #Preview {

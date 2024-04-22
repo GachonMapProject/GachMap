@@ -15,6 +15,9 @@ enum ActiveAlert {
 }
 
 struct SignUpView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    @Binding var showSignUpView: Bool
     
     @State private var showEscapeAlert: Bool = false
     @State private var isLoginViewActive: Bool = false
@@ -42,6 +45,8 @@ struct SignUpView: View {
     @State private var isAlphabeticCharacterIncluded: Bool = false  // 영어 사용
     @State private var isNumericCharacterIncluded: Bool = false     // 숫자 사용
     @State private var isPasswordCount: Bool = false                // 8~20자리 만족
+    
+    //@Binding var isLogin : Bool
     
     private var isValidRePassword: Bool {
         return password == rePassword
@@ -91,120 +96,201 @@ struct SignUpView: View {
     
     var body: some View {
         NavigationStack {
-            // 상단 이미지, 프로그레스 바
             VStack {
-                Image("gach1200")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: UIScreen.main.bounds.height * 0.08)
-                    .padding(.top, 15)
-                
-                HStack {
-                    Rectangle()
-                        .fill(.gachonBlue)
-                        .frame(height: 3)
-                    Rectangle()
-                        .fill(Color(.systemGray4))
-                        .frame(height: 3)
-                }
-                .padding(.top, 20)
-            }
-            .padding(.leading)
-            .padding(.trailing)
-            // end of 상단 이미지, 프로그레스 바
-            
-            // 내용 입력 부분
-            VStack {
-                ScrollView(.vertical, showsIndicators: false) {
-                    // 첫 번째 줄
-                    VStack {
-                        HStack {
-                            Text("아이디")
-                                .font(.system(size: 20, weight: .bold))
-                            Text("필수")
-                                .font(.system(size: 13, weight: .bold))
-                                .foregroundColor(.red)
-                            Spacer()
-                        }
-                        
-                        HStack {
-                            TextField("6~12자리의 영문, 숫자", text: $username)
-                                .disabled(isIdValid)
-                                .padding(.leading)
-                                .textContentType(.username)
-                                .keyboardType(.asciiCapable)
-                                .autocapitalization(.none) // 대문자 설정 지우기
-                                .disableAutocorrection(true) // 자동 수정 해제
-                                .frame(height: 45)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color(.systemGray6))
-                                )
-                                .onChange(of: username, perform: { value in
-                                    // 1. 6~12자
-                                    if username.count > 12 {
-                                        username = String(username.prefix(12))
-                                    }
-                                    
-                                    // 2. 영문과 숫자만 사용 가능
-                                    username = String(username.filter {$0.isLetter || $0.isNumber})
-                                    
-                                })
-                            
-                            Button(action: {
-                                idDuplicationCheck()
-                            }, label: {
-                                Text("중복 확인")
-                                    .font(.system(size: 15, weight: .bold))
-                                    .foregroundColor(Color.white)
-                                    .frame(width: 80, height: 45)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .fill(username.count < 6 || isIdValid ? Color(UIColor.systemGray4) : Color.gachonBlue)
-                                    )
-                            })
-                            .disabled(username.count < 6 || isIdValid)
-                            .alert(isPresented: $showAlert) {
-                                switch activeAlert {
-                                    // 중복 X (사용 가능)
-                                case .valid:
-                                    return Alert(title: Text("알림"), message: Text(alertMessage), primaryButton: .default(Text("사용"), action: {
-                                        isIdValid = true
-                                    }), secondaryButton: .cancel(Text("취소"), action: {
-                                        isIdValid = false
-                                    }))
-                                    
-                                    // 중복 O (사용 불가능)
-                                case .invalid:
-                                    return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
-                                }
-                                
-                            }
-                            
-                        }
+                VStack {
+                    Image("gach1200")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: UIScreen.main.bounds.height * 0.08)
+                        .padding(.top, 15)
+                    
+                    HStack {
+                        Rectangle()
+                            .fill(.gachonBlue)
+                            .frame(height: 3)
+                        Rectangle()
+                            .fill(Color(.systemGray4))
+                            .frame(height: 3)
                     }
                     .padding(.top, 20)
-                    // end of 첫 번째 줄
-                    
-                    // 두 번째 줄
-                    VStack {
-                        HStack {
-                            Text("비밀번호")
-                                .font(.system(size: 20, weight: .bold))
-                            Text("필수")
-                                .font(.system(size: 13, weight: .bold))
-                                .foregroundColor(.red)
-                            Spacer()
-                        }
-                        .padding(.bottom, 1)
-                        
-                        Text("8~20자리의 영문, 숫자, 특수문자 필수 입력")
-                            .font(.system(size: 15))
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
+                }
+                .padding(.leading)
+                .padding(.trailing)
+                // end of 상단 이미지, 프로그레스 바
+                
+                // 내용 입력 부분
+                VStack {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        // 첫 번째 줄
                         VStack {
-                            SecureField("비밀번호 입력", text: $password)
+                            HStack {
+                                Text("아이디")
+                                    .font(.system(size: 20, weight: .bold))
+                                Text("필수")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundColor(.red)
+                                Spacer()
+                            }
+                            
+                            HStack {
+                                TextField("6~12자리의 영문, 숫자", text: $username)
+                                    .disabled(isIdValid)
+                                    .padding(.leading)
+                                    .textContentType(.username)
+                                    .keyboardType(.asciiCapable)
+                                    .autocapitalization(.none) // 대문자 설정 지우기
+                                    .disableAutocorrection(true) // 자동 수정 해제
+                                    .frame(height: 45)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color(.systemGray6))
+                                    )
+                                    .onChange(of: username, perform: { value in
+                                        // 1. 6~12자
+                                        if username.count > 12 {
+                                            username = String(username.prefix(12))
+                                        }
+                                        
+                                        // 2. 영문과 숫자만 사용 가능
+                                        username = String(username.filter {$0.isLetter || $0.isNumber})
+                                        
+                                    })
+                                
+                                Button(action: {
+                                    idDuplicationCheck()
+                                }, label: {
+                                    Text("중복 확인")
+                                        .font(.system(size: 15, weight: .bold))
+                                        .foregroundColor(Color.white)
+                                        .frame(width: 80, height: 45)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .fill(username.count < 6 || isIdValid ? Color(UIColor.systemGray4) : Color.gachonBlue)
+                                        )
+                                })
+                                .disabled(username.count < 6 || isIdValid)
+                                .alert(isPresented: $showAlert) {
+                                    switch activeAlert {
+                                        // 중복 X (사용 가능)
+                                    case .valid:
+                                        return Alert(title: Text("알림"), message: Text(alertMessage), primaryButton: .default(Text("사용"), action: {
+                                            isIdValid = true
+                                        }), secondaryButton: .cancel(Text("취소"), action: {
+                                            isIdValid = false
+                                        }))
+                                        
+                                        // 중복 O (사용 불가능)
+                                    case .invalid:
+                                        return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
+                        .padding(.top, 20)
+                        // end of 첫 번째 줄
+                        
+                        // 두 번째 줄
+                        VStack {
+                            HStack {
+                                Text("비밀번호")
+                                    .font(.system(size: 20, weight: .bold))
+                                Text("필수")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundColor(.red)
+                                Spacer()
+                            }
+                            .padding(.bottom, 1)
+                            
+                            Text("8~20자리의 영문, 숫자, 특수문자 필수 입력")
+                                .font(.system(size: 15))
+                                .foregroundColor(.gray)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            VStack {
+                                SecureField("비밀번호 입력", text: $password)
+                                    .padding(.leading)
+                                    .autocapitalization(.none) // 대문자 설정 지우기
+                                    .disableAutocorrection(true) // 자동 수정 해제
+                                    .frame(height: 45)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color(.systemGray6))
+                                    )
+                                    .onChange(of: password, perform: { value in
+                                        self.isPasswordCount = password.count >= 8
+                                        
+                                        if password.count > 20 {
+                                            password = String(password.prefix(20))
+                                        }
+                                    })
+                                
+                                //                            Text(passwordStrengthText)
+                                //                                .padding()
+                                //                                .foregroundColor(passwordStrengthForegroundColor)
+                                //                                .background(passwordStrengthColor)
+                                //                                .cornerRadius(10)
+                                //                                .padding()
+                                
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        // 비밀번호 길이에 따른 Image뷰 변경
+                                        if isPasswordCount {
+                                            checkMark()
+                                        } else {
+                                            xMark()
+                                        }
+                                        Text("최소 8자, 최대 20자")
+                                        
+                                        Spacer()
+                                    }
+                                    Spacer()
+                                    HStack {
+                                        // 영문 입력 여부에 따른 Image뷰 변경
+                                        if isAlphabeticCharacterIncluded {
+                                            checkMark()
+                                        } else {
+                                            xMark()
+                                        }
+                                        Text("영문 입력")
+                                    }
+                                    Spacer()
+                                    HStack {
+                                        // 숫자 입력 여부에 따른 Image뷰 변경
+                                        if isNumericCharacterIncluded {
+                                            checkMark()
+                                        } else {
+                                            xMark()
+                                        }
+                                        Text("숫자 입력")
+                                    }
+                                    Spacer()
+                                    HStack {
+                                        // 특수문자 입력 여부에 따른 Image뷰 변경
+                                        if isSpecialCharacterIncluded {
+                                            checkMark()
+                                        } else {
+                                            xMark()
+                                        }
+                                        Text("특수문자 입력")
+                                    }
+                                }
+                                .padding(.top, 5)
+                                .padding(.bottom, 5)
+                            }
+                            .onReceive(Just(password)) { newPass in
+                                // 특수문자 사용했으면 isSpecialCharacterIncluded = true
+                                self.isSpecialCharacterIncluded = newPass.rangeOfCharacter(from: .specialCharacters) != nil
+                                
+                                // 영어 사용했으면 isAlphabeticCharacterIncluded = true
+                                self.isAlphabeticCharacterIncluded = newPass.rangeOfCharacter(from: .letters) != nil
+                                
+                                // 숫자 사용했으면 isNumericCharacterIncluded = true
+                                self.isNumericCharacterIncluded = newPass.rangeOfCharacter(from: .decimalDigits) != nil
+                            }
+                            
+                            SecureField("비밀번호 재입력", text: $rePassword)
                                 .padding(.leading)
                                 .autocapitalization(.none) // 대문자 설정 지우기
                                 .disableAutocorrection(true) // 자동 수정 해제
@@ -213,307 +299,225 @@ struct SignUpView: View {
                                     RoundedRectangle(cornerRadius: 10)
                                         .fill(Color(.systemGray6))
                                 )
-                                .onChange(of: password, perform: { value in
-                                    self.isPasswordCount = password.count >= 8
-                                    
-                                    if password.count > 20 {
-                                        password = String(password.prefix(20))
+                                .onChange(of: rePassword, perform: { value in
+                                    if rePassword.count > 20 {
+                                        rePassword = String(rePassword.prefix(20))
                                     }
+                                    
+                                    hashedPassword = sha256(value)
                                 })
                             
-                            //                            Text(passwordStrengthText)
-                            //                                .padding()
-                            //                                .foregroundColor(passwordStrengthForegroundColor)
-                            //                                .background(passwordStrengthColor)
-                            //                                .cornerRadius(10)
-                            //                                .padding()
-                            
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    // 비밀번호 길이에 따른 Image뷰 변경
-                                    if isPasswordCount {
-                                        checkMark()
-                                    } else {
-                                        xMark()
-                                    }
-                                    Text("최소 8자, 최대 20자")
-                                    
-                                    Spacer()
+                            HStack {
+                                if (password == rePassword && isPasswordCount) {
+                                    checkMark()
+                                } else {
+                                    xMark()
                                 }
+                                Text("비밀번호 일치")
                                 Spacer()
-                                HStack {
-                                    // 영문 입력 여부에 따른 Image뷰 변경
-                                    if isAlphabeticCharacterIncluded {
-                                        checkMark()
-                                    } else {
-                                        xMark()
-                                    }
-                                    Text("영문 입력")
-                                }
-                                Spacer()
-                                HStack {
-                                    // 숫자 입력 여부에 따른 Image뷰 변경
-                                    if isNumericCharacterIncluded {
-                                        checkMark()
-                                    } else {
-                                        xMark()
-                                    }
-                                    Text("숫자 입력")
-                                }
-                                Spacer()
-                                HStack {
-                                    // 특수문자 입력 여부에 따른 Image뷰 변경
-                                    if isSpecialCharacterIncluded {
-                                        checkMark()
-                                    } else {
-                                        xMark()
-                                    }
-                                    Text("특수문자 입력")
-                                }
                             }
                             .padding(.top, 5)
-                            .padding(.bottom, 5)
-                        }
-                        .onReceive(Just(password)) { newPass in
-                            // 특수문자 사용했으면 isSpecialCharacterIncluded = true
-                            self.isSpecialCharacterIncluded = newPass.rangeOfCharacter(from: .specialCharacters) != nil
                             
-                            // 영어 사용했으면 isAlphabeticCharacterIncluded = true
-                            self.isAlphabeticCharacterIncluded = newPass.rangeOfCharacter(from: .letters) != nil
-                            
-                            // 숫자 사용했으면 isNumericCharacterIncluded = true
-                            self.isNumericCharacterIncluded = newPass.rangeOfCharacter(from: .decimalDigits) != nil
                         }
+                        .padding(.top, 10)
+                        // end of 두번째 줄
                         
-                        SecureField("비밀번호 재입력", text: $rePassword)
-                            .padding(.leading)
-                            .autocapitalization(.none) // 대문자 설정 지우기
-                            .disableAutocorrection(true) // 자동 수정 해제
-                            .frame(height: 45)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color(.systemGray6))
-                            )
-                            .onChange(of: rePassword, perform: { value in
-                                if rePassword.count > 20 {
-                                    rePassword = String(rePassword.prefix(20))
-                                }
-                                
-                                hashedPassword = sha256(value)
-                            })
-                        
-                        HStack {
-                            if (password == rePassword && isPasswordCount) {
-                                checkMark()
-                            } else {
-                                xMark()
+                        // 세 번째 줄 (약관 동의)
+                        VStack {
+                            HStack {
+                                Text("약관 동의")
+                                    .font(.system(size: 20, weight: .bold))
+                                Spacer()
                             }
-                            Text("비밀번호 일치")
+                            
                             Spacer()
+                            
+                            // 토글 1 (전체 동의)
+                            HStack {
+                                Toggle("", isOn: $isOn1)
+                                    .toggleStyle(CheckboxToggleStyle(style: .circle))
+                                    .foregroundColor(.blue)
+                                
+                                Text("전체 약관에 동의합니다.")
+                                    .bold()
+                                
+                                Spacer()
+                            }
+                            // end of 토글 1
+                            
+                            Spacer()
+                            
+                            // 토글 2 (서비스 이용 약관 동의)
+                            HStack {
+                                Toggle("", isOn: $isOn2)
+                                    .toggleStyle(CheckboxToggleStyle(style: .circle))
+                                    .foregroundColor(.blue)
+                                
+                                Text("서비스 이용 약관 (필수)")
+                                //.font(.system(size: 15))
+                                
+                                Spacer()
+                                
+                                Button(action: {
+                                    self.showServiceTermsModal = true
+                                }, label: {
+                                    Text("보기")
+                                        .foregroundColor(.gray)
+                                        .sheet(isPresented: $showServiceTermsModal) {
+                                            ServiceTermsView()
+                                            //.presentationBackground(.thinMaterial)
+                                        }
+                                        
+                                })
+                            }
+                            // end of 토글 2
+                            
+                            Spacer()
+                            
+                            // 토글 3 (개인정보 이용 동의)
+                            HStack {
+                                Toggle("", isOn: $isOn3)
+                                    .toggleStyle(CheckboxToggleStyle(style: .circle))
+                                    .foregroundColor(.blue)
+                                
+                                Text("개인정보 수집 및 이용 동의 (필수)")
+                                //.font(.system(size: 15))
+                                
+                                Spacer()
+                                
+                                Button(action: {
+                                    self.showPrivacyTermsModal = true
+                                }, label: {
+                                    Text("보기")
+                                        .foregroundColor(.gray)
+                                        .sheet(isPresented: $showPrivacyTermsModal) {
+                                            PrivacyTermsView()
+                                            //.presentationBackground(.thinMaterial)
+                                        }
+                                })
+                            }
+                            // end of 토글 3
+                            
                         }
-                        .padding(.top, 5)
+                        .padding(.top, 10)
+                        .padding(.bottom, 20)
+                        .onChange(of: isOn1) { newValue in
+                            if newValue {
+                                isOnAll = true
+                                isOn2 = true
+                                isOn3 = true
+                            } else if !newValue && isOn2 && isOn3 {
+                                isOn2 = false
+                                isOn3 = false
+                                isOnAll = false
+                            } else if !newValue && isOn2 {
+                                isOn3 = false
+                                isOnAll = false
+                            } else if !newValue && isOn3 {
+                                isOn2 = false
+                                isOnAll = false
+                            }
+                        }
+                        .onChange(of: isOn2) { newValue in
+                            if newValue && isOn3 {
+                                isOn1 = true
+                                isOnAll = true
+                            } else if !newValue {
+                                isOn1 = false
+                                isOnAll = false
+                            }
+                        }
+                        .onChange(of: isOn3) { newValue in
+                            if newValue && isOn2 {
+                                isOn1 = true
+                                isOnAll = true
+                            } else if !newValue {
+                                isOn1 = false
+                                isOnAll = false
+                            }
+                        }
                         
-                    }
-                    .padding(.top, 10)
-                    // end of 두번째 줄
+                        // end of 세 번째 줄 (약관 동의)
+                            
+                        } // end of ScrollView
+                    } // end of 내용 입력 부분 VStack
+                    .padding(.leading)
+                    .padding(.trailing)
+                    // end of 내용 입력 부분
                     
-                    // 세 번째 줄 (약관 동의)
-                    VStack {
-                        HStack {
-                            Text("약관 동의")
-                                .font(.system(size: 20, weight: .bold))
-                            Spacer()
-                        }
-                        
-                        Spacer()
-                        
-                        // 토글 1 (전체 동의)
-                        HStack {
-                            Toggle("", isOn: $isOn1)
-                                .toggleStyle(CheckboxToggleStyle(style: .circle))
-                                .foregroundColor(.blue)
-                            
-                            Text("전체 약관에 동의합니다.")
-                                .bold()
-                            
-                            Spacer()
-                        }
-                        // end of 토글 1
-                        
-                        Spacer()
-                        
-                        // 토글 2 (서비스 이용 약관 동의)
-                        HStack {
-                            Toggle("", isOn: $isOn2)
-                                .toggleStyle(CheckboxToggleStyle(style: .circle))
-                                .foregroundColor(.blue)
-                            
-                            Text("서비스 이용 약관 (필수)")
-                            //.font(.system(size: 15))
-                            
-                            Spacer()
-                            
-                            Button(action: {
-                                self.showServiceTermsModal = true
-                            }, label: {
-                                Text("보기")
-                                    .foregroundColor(.gray)
-                                    .sheet(isPresented: $showServiceTermsModal) {
-                                        ServiceTermsView()
-                                        //.presentationBackground(.thinMaterial)
-                                    }
-                            })
-                        }
-                        // end of 토글 2
-                        
-                        Spacer()
-                        
-                        // 토글 3 (개인정보 이용 동의)
-                        HStack {
-                            Toggle("", isOn: $isOn3)
-                                .toggleStyle(CheckboxToggleStyle(style: .circle))
-                                .foregroundColor(.blue)
-                            
-                            Text("개인정보 수집 및 이용 동의 (필수)")
-                            //.font(.system(size: 15))
-                            
-                            Spacer()
-                            
-                            Button(action: {
-                                self.showPrivacyTermsModal = true
-                            }, label: {
-                                Text("보기")
-                                    .foregroundColor(.gray)
-                                    .sheet(isPresented: $showPrivacyTermsModal) {
-                                        PrivacyTermsView()
-                                        //.presentationBackground(.thinMaterial)
-                                    }
-                            })
-                        }
-                        // end of 토글 3
-                        
-                    }
-                    .padding(.top, 10)
-                    .padding(.bottom, 20)
-                    .onChange(of: isOn1) { newValue in
-                        if newValue {
-                            isOnAll = true
-                            isOn2 = true
-                            isOn3 = true
-                        } else if !newValue && isOn2 && isOn3 {
-                            isOn2 = false
-                            isOn3 = false
-                            isOnAll = false
-                        } else if !newValue && isOn2 {
-                            isOn3 = false
-                            isOnAll = false
-                        } else if !newValue && isOn3 {
-                            isOn2 = false
-                            isOnAll = false
-                        }
-                    }
-                    .onChange(of: isOn2) { newValue in
-                        if newValue && isOn3 {
-                            isOn1 = true
-                            isOnAll = true
-                        } else if !newValue {
-                            isOn1 = false
-                            isOnAll = false
-                        }
-                    }
-                    .onChange(of: isOn3) { newValue in
-                        if newValue && isOn2 {
-                            isOn1 = true
-                            isOnAll = true
-                        } else if !newValue {
-                            isOn1 = false
-                            isOnAll = false
-                        }
-                    }
-                    
-                    // end of 세 번째 줄 (약관 동의)
-                        
-                    } // end of ScrollView
-                } // end of 내용 입력 부분 VStack
-                .padding(.leading)
-                .padding(.trailing)
-                // end of 내용 입력 부분
-                
-                // 하단 버튼 Stack
-                HStack {
-                    Button(action: {
-                        print("ID: \(self.username)")
-                        print("PW: \(self.password)")
-                        print("재입력 PW: \(self.rePassword)")
-                        print("hashedPW: \(self.hashedPassword)")
-                        
-                        if username != "" && password != "" && rePassword != "" {
-                            isFull.toggle()
-                        }
-                        
-                        isActive = true
-                        
-                    }, label: {
-                        Text("다음")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .fill(isButtonEnabled() ? Color.gachonBlue : Color(UIColor.systemGray4))
-                                    .shadow(radius: 5, x: 2, y: 2)
-                            )
-                            .padding(.bottom, 20)
-                            .padding(.top, 15)
-                    })
-                    .disabled(!isButtonEnabled())
-                    
-                    NavigationLink(destination: InfoInputView(username: $username, hashedPassword: $hashedPassword), isActive: $isActive) {
-                        EmptyView()
-                    }
-                }
-                .background(Color.clear)
-                .padding(.leading)
-                .padding(.trailing)
-                // end of 하단 버튼 Stack
-            
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Text("회원가입")
-                            .font(.system(size: 23, weight: .bold))
-                    }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    // 하단 버튼 Stack
+                    HStack {
                         Button(action: {
-                            showEscapeAlert = true
+                            print("ID: \(self.username)")
+                            print("PW: \(self.password)")
+                            print("재입력 PW: \(self.rePassword)")
+                            print("hashedPW: \(self.hashedPassword)")
+                            
+                            if username != "" && password != "" && rePassword != "" {
+                                isFull.toggle()
+                            }
+                            
+                            isActive = true
+                            
                         }, label: {
-                            Image(systemName: "xmark")
-                                .font(.system(size: 12, weight: .bold))
-                                .foregroundColor(.white)
+                            Text("다음")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(Color.white)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 50)
                                 .background(
-                                    Circle()
-                                        .fill(Color.gray)
-                                        .opacity(0.7)
-                                        .frame(width: 30, height: 30)
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(isButtonEnabled() ? Color.gachonBlue : Color(UIColor.systemGray4))
+                                        .shadow(radius: 5, x: 2, y: 2)
                                 )
+                                .padding(.bottom, 20)
+                                .padding(.top, 15)
                         })
-                        .padding(.trailing, 8)
-                        .alert(isPresented: $showEscapeAlert) {
-                            Alert(title: Text("경고"), message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { isLoginViewActive = true}), secondaryButton: .cancel(Text("취소"))
-                            )
-                        } // end of X Button
+                        .disabled(!isButtonEnabled())
+                        
+                        NavigationLink(destination: InfoInputView(showSignUpView: $showSignUpView, username: $username, hashedPassword: $hashedPassword), isActive: $isActive) {
+                            EmptyView()
+                        }
                     }
-                    
-                } // end of .toolbar
+                    .background(Color.clear)
+                    .padding(.leading)
+                    .padding(.trailing)
+                    // end of 하단 버튼 Stack
                 
-                NavigationLink(destination: LoginView(), isActive: $isLoginViewActive) {
-                    EmptyView()
-                }
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Text("회원가입")
+                                .font(.system(size: 23, weight: .bold))
+                        }
+                        
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                showEscapeAlert = true
+                            }, label: {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .background(
+                                        Circle()
+                                            .fill(Color.gray)
+                                            .opacity(0.7)
+                                            .frame(width: 30, height: 30)
+                                    )
+                            })
+                            .padding(.trailing, 8)
+                            .alert(isPresented: $showEscapeAlert) {
+                                Alert(title: Text("경고"), message: Text("로그인 화면으로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { showSignUpView = false }), secondaryButton: .cancel(Text("취소"))
+                                )
+                            } // end of X Button
+                        }
+                        
+                    } // end of .toolbar
+
+            }
+            //.onTapGesture { self.endTextEditing() }
             
             } // end of NavigationStack
-            .onTapGesture { self.endTextEditing() }
-            .navigationBarBackButtonHidden()
+            //.navigationBarBackButtonHidden()
             
     } // end of body
     
@@ -587,7 +591,7 @@ struct SignUpView: View {
 
     
     #Preview {
-        SignUpView()
+        PrimaryView()
     }
     
     // 특수문자 키

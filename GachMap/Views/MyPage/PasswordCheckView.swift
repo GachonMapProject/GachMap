@@ -11,6 +11,9 @@ import CryptoKit
 
 struct PasswordCheckView: View {
     
+    @State private var showEscapeAlert: Bool = false
+    @Binding var showModifyView: Bool
+    
     @State private var loginInfo: LoginInfo? = nil
     
     @State private var userId: Int64 = 0
@@ -48,8 +51,10 @@ struct PasswordCheckView: View {
             VStack(alignment: .leading) {
                 Text("개인정보 보호를 위해")
                     .font(.system(size: 30, weight: .bold))
+                    .foregroundColor(.black)
                 Text("비밀번호를 입력해주세요.")
                     .font(.system(size: 30, weight: .bold))
+                    .foregroundColor(.black)
             }
             .padding(.leading)
             .padding(.top, 50)
@@ -62,15 +67,18 @@ struct PasswordCheckView: View {
                 HStack {
                     Text("비밀번호 입력")
                         .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.black)
                     Spacer()
                 }
                 // .padding(.bottom, 1)
                 
                 SecureField("비밀번호 입력", text: $password)
-                    .padding(.leading)
+                    //.padding(.leading)
                     .autocapitalization(.none) // 대문자 설정 지우기
                     .disableAutocorrection(true) // 자동 수정 해제
                     .frame(height: 45)
+                    .padding(.leading)
+                    .multilineTextAlignment(.leading)
                     .background(
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color(.systemGray6))
@@ -93,6 +101,8 @@ struct PasswordCheckView: View {
             
             // 비밀번호 확인 Button
             Button(action: {
+                isSame = true
+                
                 loginInfo = getLoginInfo()
                 
                 let userId = loginInfo?.userCode ?? 0
@@ -127,12 +137,40 @@ struct PasswordCheckView: View {
             
             Spacer()
             
-            NavigationLink(destination: ProfileModifyView(), isActive: $isSame) {
+            NavigationLink(destination: ProfileModifyView(showModifyView: $showModifyView), isActive: $isSame) {
                 EmptyView()
             }
             // end of 비밀번호 확인 Button
             
-            .navigationBarTitle("비밀번호 확인", displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("비밀번호 확인")
+                        .font(.system(size: 23, weight: .bold))
+                        .foregroundColor(.black)
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showEscapeAlert = true
+                    }, label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(.white)
+                            .background(
+                                Circle()
+                                    .fill(Color.gray)
+                                    .opacity(0.7)
+                                    .frame(width: 30, height: 30)
+                            )
+                    })
+                    .padding(.trailing, 8)
+                    .alert(isPresented: $showEscapeAlert) {
+                        Alert(title: Text("경고"), message: Text("마이 페이지로 이동하시겠습니까?\n입력한 모든 정보가 초기화됩니다."), primaryButton: .default(Text("확인"), action: { showModifyView = false }), secondaryButton: .cancel(Text("취소"))
+                        )
+                    } // end of X Button
+                }
+                
+            } // end of .toolbar
         } // end of NavigationStack
     } // end of body
     
@@ -175,33 +213,8 @@ struct PasswordCheckView: View {
             }
     } // end of isPasswordValid()
     
-//    // 서버에 저장된 사용자 정보 가져오기
-//    private func getUserInfoInquiry() {
-//        guard let url = URL(string: "https://2a93-58-121-110-235.ngrok-free.app\(userId)")
-//        else {
-//            print("Invalid URL")
-//            return
-//        }
-//
-//        AF.request(url, method: .get, parameters: nil, headers: nil)
-//            .validate()
-//            .responseDecodable(of: UserInquiryResponse.self) { response in
-//                switch response.result {
-//                case .success(let value):
-//                    if (value.success == true) {
-//                        print("회원 정보 요청 성공")
-//                    } else {
-//                        print("회원 정보 요청 실패")
-//                    }
-//                    
-//                case .failure(let error):
-//                    print("Error: \(error.localizedDescription)")
-//                }
-//            }
-//    } // end of getUserInfoInquiry()
-    
 } // end of View struct
 
-#Preview {
-    PasswordCheckView()
-}
+//#Preview {
+//    ProfileTabView()
+//}
