@@ -21,7 +21,7 @@ struct ARMainView: View {
 
 
 //    @State var isCameraFixed : Bool = true
-    let path = Path().ITtoGachon
+    let path = Path().homeToAI
     
     
     var body: some View {

@@ -62,7 +62,7 @@ struct BuildingDetailView: View {
 //                        if let uiImage = UIImage(resource: mainImagePath) {
 //                            CircleImage(image: Image(uiImage: uiImage))
 //                        AsyncImage(url: mainImagePath){
-                        AsyncImage(url: URL(string: "https://af0b-58-121-110-235.ngrok-free.app/images/gachonguan.png")!) { phase in
+                        AsyncImage(url: URL(string: mainImagePath)!) { phase in
                             switch phase {
                             case .success(let image):
                                 CircleImage(image: image)
@@ -129,10 +129,11 @@ struct BuildingDetailView: View {
 //        apiConnection = true
         
         
-//        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/map/building-floor/\(buildingCode)")
-        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/map/building-floor/\(buildingCode)")
+        //        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/map/building-floor/\(buildingCode)")
+        
+        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/map/building-floor/\(buildingCode)")
             else {
-            print("Invalid URL")
+                print("Invalid URL")
             return
         }
             

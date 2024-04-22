@@ -273,7 +273,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
        // 실릴더 기울기
        let angle = acos(length / hypotenuse)
 //       node.eulerAngles.x = .pi / 2 + angle
-       node.eulerAngles.x = Float(-angle)
+       node.eulerAngles.x = Float(angle)
        
        
        // 출발지와 목적지 사이의 회전 각도 계산

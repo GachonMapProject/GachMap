@@ -50,7 +50,7 @@ struct EventCardView : View {
 //                            .resizable()
 //                            .frame(width: screenWidth)
 //                            .scaledToFit()
-                        AsyncImage(url: URL(string: "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQgByBT5IiAT_a2x9pUVb4VMoOrlzHH7Jrzj-HB5jzHlR4lNLMS")) { image in
+                        AsyncImage(url: URL(string: event.eventImagePath)) { image in
                             image.resizable()
                                 .frame(width: screenWidth)
                                 .scaledToFit()
@@ -133,8 +133,9 @@ struct EventCardView : View {
     func getEventDetail(eventId : Int){
         // API 요청을 보낼 URL 생성
 //        /src/admin/event/{eventId}
-//        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/src/admin/event/\(eventId)")
-        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/event/\(eventId)")
+        
+//        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/event/\(eventId)")
+        guard let url = URL(string: "https://ceprj.gachon.ac.kr/60002/admin/event/\(eventId)")
         else {
             print("Invalid URL")
             return
