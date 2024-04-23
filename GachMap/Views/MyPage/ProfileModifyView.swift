@@ -20,7 +20,7 @@ struct ProfileModifyView: View {
     @Binding var showModifyView: Bool
     
     let gender = ["남", "여"]
-    let speed = ["FAST", "NORMAL", "SLOW"]
+    let speed = ["빠름", "보통", "느림"]
     
     @State private var loginInfo: LoginInfo? = nil
     @State private var showExitAlert: Bool = false
@@ -519,15 +519,11 @@ struct ProfileModifyView: View {
                 Button(action: {
                     guard let hashPassword = hashedModifyPassword else {return}
                     
-                    print("password: \(hashPassword)")
-                    print("userNickname: \(userNickname)")
-                    print("userSpeed: \(selectedWalkSpeed)")
-                    print("userGender: \(selectedGender)")
-                    print("userBirth: \(userBirth)")
-                    print("userHeight: \(userHeight)")
-                    print("userWeight: \(userWeight)")
+                    let selectedSpeed = selectedWalkSpeed == "빠름" ? "FAST" : selectedWalkSpeed == "보통" ? "NORMAL" : "SLOW"
             
-                    let param = UserInfoModifyRequest(password: hashPassword, userNickname: userNickname, userSpeed: selectedWalkSpeed, userGender: selectedGender, userBirth: userBirth, userHeight: userHeight, userWeight: userWeight)
+                    let param = UserInfoModifyRequest(password: hashPassword, userNickname: userNickname, userSpeed: selectedSpeed, userGender: selectedGender, userBirth: userBirth, userHeight: userHeight, userWeight: userWeight)
+                    
+                    print("param: \(param)")
                     
                     postUserInfoModifyData(parameter: param)
                     
@@ -622,7 +618,7 @@ struct ProfileModifyView: View {
                         print("개인정보 수정 성공")
                         print("value.success: \(value.success)")
                         
-                        alertMessage = value.message
+                        alertMessage = "개인정보 수정에 성공했습니다."
                         showEndAlert = true
                         activeInfoModifyAlert = .ok
                         
@@ -630,7 +626,7 @@ struct ProfileModifyView: View {
                         print("개인정보 수정 실패")
                         print("value.success: \(value.success)")
 
-                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        alertMessage = "개인정보 수정에 실패했습니다.\n다시 시도해주세요."
                         showEndAlert = true
                         activeInfoModifyAlert = .error
                     }

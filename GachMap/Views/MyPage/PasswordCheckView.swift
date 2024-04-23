@@ -101,8 +101,6 @@ struct PasswordCheckView: View {
             
             // 비밀번호 확인 Button
             Button(action: {
-                isSame = true
-                
                 loginInfo = getLoginInfo()
                 
                 let userId = loginInfo?.userCode ?? 0
@@ -200,7 +198,7 @@ struct PasswordCheckView: View {
                     } else {
                         print("비밀번호 불일치")
                         
-                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        alertMessage = "비밀번호가 일치하지 않습니다."
                         showAlert = true
                     }
                     

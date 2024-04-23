@@ -21,16 +21,16 @@ struct InfoInputView: View {
     @Binding var hashedPassword: String
     
     let gender = ["남", "여"]
-    let speed = ["FAST", "NORMAL", "SLOW"]
+    let speed = ["빠름", "보통", "느림"]
     
     @State private var selectedGender = ""
     @State private var selectedWalkSpeed = ""
     
     @State private var userNickname = ""
-    @State private var userBirth = 0
+    @State private var userBirth = 2000
     @State private var userGender = ""
-    @State private var userHeight = 0
-    @State private var userWeight = 0
+    @State private var userHeight = 180
+    @State private var userWeight = 70
     @State private var walkSpeed = ""
     
     @State private var showEndAlert: Bool = false
@@ -124,17 +124,26 @@ struct InfoInputView: View {
                                     Spacer()
                                 }
                                 
-                                Picker("출생년도", selection: $userBirth) {
+                                Picker("", selection: $userBirth) {
                                     ForEach((1900...2024).reversed(), id: \.self) {
-                                        Text("\(String($0))년")
+                                        Text(String($0)+"년")
+//                                            .frame(maxWidth: .infinity)
+//                                            .contentShape(Rectangle())
+//                                            .background(Color(.systemGray6))
+//                                            .cornerRadius(10)
+//                                            .lineLimit(1) // 한 줄에만 표시
+//                                            .minimumScaleFactor(0.5)
+//                                            .fixedSize(horizontal: true, vertical: false)
                                     }
+                                    
                                 }
-                                .pickerStyle(.automatic)
+                                .lineLimit(1)
+                                //.pickerStyle(.automatic)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 45)
                                 .background(
                                     RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color(.systemGray6))
+                                        .fill(Color(.systemGray6))
                                 )
                             }
                             
@@ -267,17 +276,13 @@ struct InfoInputView: View {
                     
                     // 같이 가기 Button
                     Button(action: {
-                        print("ID: \(self.username)")
-                        print("hasedPW: \(self.hashedPassword)")
-                        print("닉네임: \(self.userNickname)")
-                        print("출생년도: \(self.userBirth)")
-                        print("성별: \(self.selectedGender)")
-                        print("키: \(self.userHeight)")
-                        print("몸무게: \(self.userWeight)")
-                        print("선택 속도: \(self.selectedWalkSpeed)")
+                        
+                        let selectedSpeed = selectedWalkSpeed == "빠름" ? "FAST" : selectedWalkSpeed == "보통" ? "NORMAL" : "SLOW"
                         
                         // UserInfoRequest 객체 생성
-                        let param = UserInfoRequest(username: username, password: hashedPassword, userNickname: userNickname, userSpeed: selectedWalkSpeed, userGender: selectedGender, userBirth: userBirth, userHeight: userHeight, userWeight: userWeight)
+                        let param = UserInfoRequest(username: username, password: hashedPassword, userNickname: userNickname, userSpeed: selectedSpeed, userGender: selectedGender, userBirth: userBirth, userHeight: userHeight, userWeight: userWeight)
+                        
+                        print("param: \(param)")
                         
                         postUserInfoData(parameter: param)
                         
@@ -311,8 +316,9 @@ struct InfoInputView: View {
                     }
                     // end of 같이 가기 Button
                     
-                    NavigationLink(destination: PrimaryView(), isActive: $isEnd) {
-                        EmptyView()
+                    NavigationLink("", isActive: $isEnd) {
+                        PrimaryView()
+                            .navigationBarBackButtonHidden(true)
                     }
                 }
                 .padding(.leading)
@@ -389,7 +395,7 @@ struct InfoInputView: View {
 //                            print("userId 저장 성공, userId: \(userCode)")
 //                        }
                         
-                        alertMessage = value.message
+                        alertMessage = "회원가입에 성공했습니다.\n입력한 아이디와 비밀번호로 로그인해주세요."
                         showEndAlert = true
                         activeInfoInputAlert = .ok
                         
@@ -397,7 +403,7 @@ struct InfoInputView: View {
                         print("회원가입 및 정보 전달 실패")
                         print("value.success: \(value.success)")
 
-                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        alertMessage = "회원가입에 실패했습니다.\n다시 시도해주세요."
                         showEndAlert = true
                         activeInfoInputAlert = .error
                     }
@@ -418,6 +424,6 @@ struct InfoInputView: View {
     
 } // end of View
 
-//#Preview {
-//    InfoInputView(username: Binding.constant("전달받은 ID"), hashedPassword: Binding.constant("전달받은 암호화된 비밀번호"))
-//}
+#Preview {
+    InfoInputView(showSignUpView: Binding.constant(true), username: Binding.constant("전달받은 ID"), hashedPassword: Binding.constant("전달받은 암호화된 비밀번호"))
+}
