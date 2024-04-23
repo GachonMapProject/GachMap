@@ -37,7 +37,7 @@ struct NavigationInfoView: View {
         }
         .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.2)
         .background(.white)
-        .cornerRadius(15)
+        .cornerRadius(20)
         .shadow(radius: 5, x: 2, y: 2)
     }
 }

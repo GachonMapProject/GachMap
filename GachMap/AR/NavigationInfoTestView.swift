@@ -22,17 +22,34 @@ struct NavigationInfoTestView: View {
                 }
         } else {
             if let rotationList = rotationList {
-                ScrollView(.horizontal){
-                    HStack {
-                        ForEach(rotationList) { rotation in
-                            NavigationInfoView(distance: Int(rotation.distance), rotation: rotation.rotation)
-                        }
-                    }
-                    .padding()
+                ZStack(alignment : .bottom){
+                    AppleMap(coreLocation: coreLocation, path: path)
+                    ScrollView(.horizontal){
+                        ZStack(){
+                            LazyHStack{
+                                ForEach(rotationList) { rotation in
+                                    NavigationInfoView(distance: Int(rotation.distance), rotation: rotation.rotation)
+                                        .scrollTransition(.animated, axis: .horizontal) { content, phase in
+                                            content
+                                                .opacity(phase.isIdentity ? 1.0 : 0.8)
+                                                .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+                                        }
+                                }
+                            } // end of LazyStack
+                            .padding(EdgeInsets(top: 0, leading: 30, bottom: 30, trailing: 30))
+                            .scrollTargetLayout()
+                            
+                        } // end of ZStack
+                        
+                    } // end of ScrollView
+                    .scrollTargetBehavior(.viewAligned)
+                    .frame(height: UIScreen.main.bounds.width * 0.3)
                 }
+
+
                 
 
-                AppleMap(coreLocation: coreLocation, path: path)
+
             }
         }
         
