@@ -153,8 +153,9 @@ struct LoginView: View {
                         
                     } // end of Login Button
                     
-                    NavigationLink(destination: PrimaryView(), isActive: $isActive) {
-                        EmptyView()
+                    NavigationLink("", isActive: $isActive) {
+                        PrimaryView()
+                            .navigationBarBackButtonHidden(true)
                     }
                         
                 } // end of Login Section VStack
@@ -186,9 +187,8 @@ struct LoginView: View {
                 
                 Spacer()
             } // end of entier VStack
+            //.navigationBarBackButtonHidden()
             //.onTapGesture { self.endTextEditing() }
-            //.toolbar(.hidden)
-            //.toolbar(.hidden, for: .navigationBar)
 
         } // end of NavigationStack
 //        .toolbar(.hidden)
