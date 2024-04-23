@@ -156,7 +156,8 @@ struct ProfileModifyView: View {
                         self.selectedGender = value.data.userGender ?? ""
                         self.userHeight = value.data.userHeight ?? 0
                         self.userWeight = value.data.userWeight ?? 0
-                        self.selectedWalkSpeed = value.data.userSpeed ?? ""
+                        let walkSpeed = value.data.userSpeed == "FAST" ? "빠름" : value.data.userSpeed == "SLOW" ? "느림" : "보통"
+                        self.selectedWalkSpeed = walkSpeed
                         
                     } else {
                         print("회원 정보 요청 실패")
@@ -518,10 +519,11 @@ struct ProfileModifyView: View {
                 
                 Button(action: {
                     guard let hashPassword = hashedModifyPassword else {return}
+                    let pw = reModifyPassword == "" ? nil : hashPassword
                     
                     let selectedSpeed = selectedWalkSpeed == "빠름" ? "FAST" : selectedWalkSpeed == "보통" ? "NORMAL" : "SLOW"
             
-                    let param = UserInfoModifyRequest(password: hashPassword, userNickname: userNickname, userSpeed: selectedSpeed, userGender: selectedGender, userBirth: userBirth, userHeight: userHeight, userWeight: userWeight)
+                    let param = UserInfoModifyRequest(password: pw, userNickname: userNickname, userSpeed: selectedSpeed, userGender: selectedGender, userBirth: userBirth, userHeight: userHeight, userWeight: userWeight)
                     
                     print("param: \(param)")
                     

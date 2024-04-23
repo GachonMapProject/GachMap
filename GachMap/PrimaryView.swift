@@ -12,17 +12,19 @@ struct PrimaryView: View {
     //@State var isLogin = false
     
     var body: some View {
-        Group {
-            if let loginInfo = getLoginInfo() {
-                if loginInfo.userCode != nil || loginInfo.guestCode != nil {
-                    ContentView()
+            Group {
+                if let loginInfo = getLoginInfo() {
+                    if loginInfo.userCode != nil || loginInfo.guestCode != nil {
+                        ContentView()
+                    } else {
+                        LoginView()
+                    }
                 } else {
-                    LoginView()
+                    LoginView() //isLogin: $isLogin
                 }
-            } else {
-                LoginView() //isLogin: $isLogin
             }
-        }
+        
+        
         
         
 //        NavigationStack {

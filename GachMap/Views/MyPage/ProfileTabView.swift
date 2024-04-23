@@ -98,6 +98,8 @@ struct ProfileTabView: View {
                     // 로그아웃 Button
                     Button(action: {
                         // 로그아웃 버튼을 누르면 LoginInfo에 연결된 userCode 삭제
+                        
+                        
                         showLogoutAlert = true
                     }, label: {
                         HStack {
@@ -163,6 +165,8 @@ struct ProfileTabView: View {
                     //Text(loginInfo?.guestCode)
                     
                     Button(action: {
+                        UserDefaults.standard.removeObject(forKey: "loginInfo")
+                        
                         isLoginMove = true
                     }, label: {
                         HStack {
@@ -184,7 +188,7 @@ struct ProfileTabView: View {
     //                }
                     
                     NavigationLink("", isActive: $isLoginMove) {
-                        LoginView()
+                        PrimaryView()
                             .navigationBarBackButtonHidden(true)
                     }
                     //.navigationBarBackButtonHidden(true)
