@@ -362,8 +362,9 @@ struct GuestInfoInputView: View {
                 }
                 // end of 같이 가기 Button
                 
-                NavigationLink(destination: PrimaryView(), isActive: $isEnd) {
-                    EmptyView()
+                NavigationLink("", isActive: $isEnd) {
+                    PrimaryView()
+                        .navigationBarBackButtonHidden(true)
                 }
             } // end of VStack (버튼용)
             
@@ -401,7 +402,7 @@ struct GuestInfoInputView: View {
 //            }
             
         } // end of NavigationStack
-        .navigationBarBackButtonHidden()
+        .navigationBarBackButtonHidden(true)
     } // end of body
     
     // postGuestInfoData 함수

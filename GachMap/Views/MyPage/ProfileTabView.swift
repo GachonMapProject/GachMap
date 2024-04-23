@@ -9,7 +9,7 @@ import SwiftUI
 import Alamofire
 
 enum ActiveExitAlert {
-    case exitok, exiterror
+    case exit, withdraw
 }
 
 struct ProfileTabView: View {
@@ -26,9 +26,8 @@ struct ProfileTabView: View {
  
     @State private var showLogoutAlert: Bool = false
     @State private var showExitAlert: Bool = false
-    @State private var showWithDrawAlert: Bool = false
     @State private var exitAlertMessage: String = ""
-    @State private var activeExitAlert: ActiveExitAlert = .exitok
+    @State private var activeExitAlert: ActiveExitAlert = .exit
     
     // LoginInfo에 저장된 정보 불러오기
     private func getLoginInfo() {
@@ -65,167 +64,140 @@ struct ProfileTabView: View {
     
     var body: some View {
         NavigationStack {
-            let userCode = getUserCodeFromUserDefaults()
-            
-            if (userCode != nil) {
-                Text("회원 상태")
-                //Text(loginInfo?.userCode)
+            VStack {
+                let userCode = getUserCodeFromUserDefaults()
                 
-                // 내 정보 수정 Button
-                Button(action: {
-                    showModifyView = true
-                }, label: {
-                    HStack {
-                        Text("내 정보 수정")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(Color(.black))
-                    }
-                    .frame(width: UIScreen.main.bounds.width - 200, height: 45)
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(Color(.systemGray5))
-                            .shadow(radius: 5, x: 2, y: 2)
-                        
-                    )
-                    .padding(.top, 20)
-                    .fullScreenCover(isPresented: $showModifyView) {
-                        PasswordCheckView(showModifyView: $showModifyView)
-                    }
-                })
+                if (userCode != nil) {
+                    Text("회원 상태")
+                    //Text(loginInfo?.userCode)
+                    
+                    // 내 정보 수정 Button
+                    Button(action: {
+                        showModifyView = true
+                    }, label: {
+                        HStack {
+                            Text("내 정보 수정")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(Color(.black))
+                        }
+                        .frame(width: UIScreen.main.bounds.width - 200, height: 45)
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                .fill(Color(.systemGray5))
+                                .shadow(radius: 5, x: 2, y: 2)
+                            
+                        )
+                        .padding(.top, 20)
+                        .fullScreenCover(isPresented: $showModifyView) {
+                            PasswordCheckView(showModifyView: $showModifyView)
+                        }
+                    })
 
-                // end of 내 정보 수정 Button
-                
-                // 로그아웃 Button
-                Button(action: {
-                    // 로그아웃 버튼을 누르면 LoginInfo에 연결된 userCode 삭제
-                    showLogoutAlert = true
+                    // end of 내 정보 수정 Button
                     
-                    // getUserCodeFromUserDefaults()
-                        
-                    
-                    
-                    
-                }, label: {
-                    HStack {
-                        Text("로그아웃")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(Color(.black))
+                    // 로그아웃 Button
+                    Button(action: {
+                        // 로그아웃 버튼을 누르면 LoginInfo에 연결된 userCode 삭제
+                        showLogoutAlert = true
+                    }, label: {
+                        HStack {
+                            Text("로그아웃")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(Color(.black))
+                        }
+                        .frame(width: UIScreen.main.bounds.width - 200, height: 45)
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                .fill(Color(.systemGray5))
+                                .shadow(radius: 5, x: 2, y: 2)
+                        )
+                        .padding(.top, 20)
+                    })
+                    .alert(isPresented: $showLogoutAlert) {
+                        Alert(title: Text("알림"), message: Text("로그아웃 하시겠습니까?"), primaryButton: .default(Text("예"), action: {
+                            UserDefaults.standard.removeObject(forKey: "loginInfo"); isLogout = true
+                        }), secondaryButton: .cancel(Text("아니오")))
                     }
-                    .frame(width: UIScreen.main.bounds.width - 200, height: 45)
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(Color(.systemGray5))
-                            .shadow(radius: 5, x: 2, y: 2)
-                    )
-                    .padding(.top, 20)
-                })
-                .alert(isPresented: $showLogoutAlert) {
-                    Alert(title: Text("알림"), message: Text("로그아웃 하시겠습니까?"), primaryButton: .default(Text("예"), action: {
-                        UserDefaults.standard.removeObject(forKey: "loginInfo"); isLogout = true
-                    }), secondaryButton: .cancel(Text("아니오")))
-                }
-                
-                NavigationLink(destination: PrimaryView(), isActive: $isLogout) {
-                    EmptyView()
-                }
-                // end of 로그아웃 버튼
-                
-                // 회원 탈퇴 Button
-                Button(action: {
-                    showExitAlert = true
-                }, label: {
-                    HStack {
-                        Text("회원 탈퇴하기")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(Color(.white))
+
+                    NavigationLink("", isActive: $isLogout) {
+                        PrimaryView()
+                            .navigationBarBackButtonHidden(true)
                     }
-                    .frame(width: UIScreen.main.bounds.width - 200, height: 45)
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            //.fill(Color(.systemBlue))
-                            .shadow(radius: 5, x: 2, y: 2)
-                    )
-                    .padding(.top, 20)
-                })
-                .alert(isPresented: $showExitAlert) {
-                    Alert(title: Text("탈퇴하시겠습니까?"), message: Text("회원 탈퇴 시 현재까지 제공되던\n개인 맞춤 소요시간 데이터가 삭제됩니다."), primaryButton: .default(Text("예"), action: { deleteUserRequest() }) , secondaryButton: .cancel(Text("아니오")))
-                }
-            } else {
-                Text("게스트 상태")
-                //Text(loginInfo?.guestCode)
-                
-                Button(action: {
-                    isLoginMove = true
-                }, label: {
-                    HStack {
-                        Text("로그인")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(Color(.white))
+                    // end of 로그아웃 버튼
+                    
+                    // 회원 탈퇴 Button
+                    Button(action: {
+                        showExitAlert = true
+                        activeExitAlert = .exit
+                    }, label: {
+                        HStack {
+                            Text("회원 탈퇴하기")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(Color(.white))
+                        }
+                        .frame(width: UIScreen.main.bounds.width - 200, height: 45)
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                //.fill(Color(.systemBlue))
+                                .shadow(radius: 5, x: 2, y: 2)
+                        )
+                        .padding(.top, 20)
+                    })
+                    .alert(isPresented: $showExitAlert) {
+                        switch activeExitAlert {
+                        case .exit:
+                            return Alert(title: Text("탈퇴하시겠습니까?"), message: Text("회원 탈퇴 시 현재까지 제공되던\n개인 맞춤 소요시간 데이터가 삭제됩니다."), primaryButton: .default(Text("예"), action: { deleteUserRequest() }) , secondaryButton: .cancel(Text("아니오")))
+                        case .withdraw:
+                            return Alert(title: Text("알림"), message: Text(exitAlertMessage), dismissButton: .default(Text("확인")))
+                        }
                     }
-                    .frame(width: UIScreen.main.bounds.width - 200, height: 45)
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            //.fill(Color(.systemBlue))
-                            .shadow(radius: 5, x: 2, y: 2)
-                    )
-                })
-                
-                NavigationLink(destination: LoginView(), isActive: $isLoginMove) {
-                    EmptyView()
+                    
+                    NavigationLink("", isActive: $isWithdraw) {
+                        PrimaryView()
+                            .navigationBarBackButtonHidden(true)
+                    }
+                    
+                    
+                } else {
+                    Text("게스트 상태")
+                    //Text(loginInfo?.guestCode)
+                    
+                    Button(action: {
+                        isLoginMove = true
+                    }, label: {
+                        HStack {
+                            Text("로그인")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(Color(.white))
+                        }
+                        .frame(width: UIScreen.main.bounds.width - 200, height: 45)
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                //.fill(Color(.systemBlue))
+                                .shadow(radius: 5, x: 2, y: 2)
+                        )
+                    })
+                    
+    //                NavigationLink(destination: LoginView(), isActive: $isLoginMove) {
+    //                    EmptyView()
+    //                        .navigationBarBackButtonHidden(true)
+    //                }
+                    
+                    NavigationLink("", isActive: $isLoginMove) {
+                        LoginView()
+                            .navigationBarBackButtonHidden(true)
+                    }
+                    //.navigationBarBackButtonHidden(true)
                 }
             }
-            
-            
-//            .alert(isPresented: $showWithDrawAlert) {
-//                Alert(title: Text("알림"), message: Text(exitAlertMessage), dismissButton: .default(Text("확인"), action: { isWithdraw = true }))
-//            }
-            
-//            // 회원 탈퇴 Button
-//            Button(action: {
-//                showExitAlert = true
-//            }, label: {
-//                HStack {
-//                    Text("회원 탈퇴하기")
-//                        .font(.system(size: 20, weight: .bold))
-//                        .foregroundColor(Color(.white))
-//                }
-//                .frame(width: UIScreen.main.bounds.width - 200, height: 45)
-//                .background(
-//                    RoundedRectangle(cornerRadius: 15)
-//                        //.fill(Color(.systemBlue))
-//                        .shadow(radius: 5, x: 2, y: 2)
-//                )
-//                .padding(.top, 20)
-//            })
-//            .alert(isPresented: $showExitAlert) {
-//                switch activeExitAlert {
-//                    case .exitok:
-//                        return Alert(title: Text("알림"), message: Text(exitAlertMessage), primaryButton: .default(Text("예"), action: {
-//                            isWithdraw = true
-//                        }), secondaryButton: .cancel(Text("아니오")))
-//                
-//                    case .exiterror:
-//                        return Alert(title: Text("경고"), message: Text(exitAlertMessage), dismissButton: .default(Text("확인")))
-//                }
-//                
-//                
-//                Alert(title: Text("알림"), message: Text(exitAlertMessage), primaryButton: .default(Text("예"), action: {
-//                    isWithdraw = true
-//                }), secondaryButton: .cancel(Text("아니오")))
-//            }
-            
-            NavigationLink(destination: PrimaryView(), isActive: $isWithdraw) {
-                EmptyView()
-            }
-            // end of 회원 탈퇴 Button
-            
-            .navigationTitle("마이 페이지")
-            
+            .navigationBarTitle("마이 페이지", displayMode: .large)
+            .navigationBarBackButtonHidden(true)
+   
         } // end of NavigationStack
     } // end of body
     
     // deleteUserRequest() 함수
-    private func deleteUserRequest() {
+    func deleteUserRequest() {
         // API 요청을 보낼 URL 생성
         guard let userCode = getUserCodeFromUserDefaults(),
               let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userCode)")
@@ -248,29 +220,34 @@ struct ProfileTabView: View {
                     if (value.success == true) {
                         print("회원 탈퇴 성공")
                         print("value.success: \(value.success)")
+                        print("value.messgae: \(value.message)")
                         
-                        getUserCodeFromUserDefaults()
+                        // getUserCodeFromUserDefaults()
                             
                         UserDefaults.standard.removeObject(forKey: "loginInfo")
                         
                         // isLogin = false
                         
                         exitAlertMessage = "회원 탈퇴에 성공했습니다.\n다시 만날 날을 기다리고 있을게요!"
-                        showWithDrawAlert = true
+                        showExitAlert = true
+                        activeExitAlert = .withdraw
 
                     } else {
                         print("회원 탈퇴 실패")
                         print("value.success: \(value.success)")
+                        print("value.messgae: \(value.message)")
 
                         exitAlertMessage = "알 수 없는 오류가 발생했습니다."
-                        showWithDrawAlert = true
+                        showExitAlert = true
+                        activeExitAlert = .withdraw
                     }
                 
                 case .failure(let error):
                     // 에러 응답 처리
                     print("url: \(url)")
                     exitAlertMessage = "서버 연결에 실패했습니다."
-                    showWithDrawAlert = true
+                    showExitAlert = true
+                    activeExitAlert = .withdraw
                     print("Error: \(error.localizedDescription)")
             } // end of switch
         } // end of AF.request
@@ -278,6 +255,6 @@ struct ProfileTabView: View {
     
 } // end of View strucet
 
-//#Preview {
-//    ProfileTabView()
-//}
+#Preview {
+    ProfileTabView()
+}

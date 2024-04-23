@@ -66,7 +66,7 @@ struct ContentView: View {
               ProfileTabView()
                   .tabItem {
                       Image(systemName: "person")
-                      Text("내 정보")
+                      Text("마이 페이지")
                   }.tag(4)
                   .onAppear() {
                       if selectedTab == 1 {
@@ -75,6 +75,7 @@ struct ContentView: View {
                           showSheet = false
                       }
                   }
+                  .navigationBarBackButtonHidden(true)
               
         }
         .ignoresSafeArea()
@@ -95,7 +96,7 @@ struct ContentView: View {
         } // end of .sheet
           
       } // end of NavigationStack
-      .navigationBarBackButtonHidden()
+      //.navigationBarBackButtonHidden()
      
       
       // 스플래시 화면 작동
@@ -128,7 +129,7 @@ struct ContentView: View {
         }
 } // end of View struct
 
-//#Preview {
-//  ContentView()
-//}
+#Preview {
+  ContentView()
+}
 
