@@ -21,7 +21,7 @@ struct BuildingData: Decodable {
 struct BuildingList: Decodable {
     var placeId: Int
     var placeName: String
-    var thumbnailImagePath: String
+    var thumbnailImagePath: String?
 }
 //{
 //    "success": true,

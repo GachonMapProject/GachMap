@@ -8,36 +8,6 @@
 import SwiftUI
 import Alamofire
 
-struct Building: Identifiable, Hashable {
-    let name: String
-    let imageName: String
-    let id = UUID()
-}
-
-private var globalBuilding = [
-    Building(name: "가천관", imageName: "gachonMark"),
-    Building(name: "AI관", imageName: "gachonMark"),
-    Building(name: "비전타워", imageName: "gachonMark"),
-    Building(name: "법과대학", imageName: "gachonMark"),
-    Building(name: "공과대학1", imageName: "gachonMark"),
-    Building(name: "공과대학2", imageName: "gachonMark"),
-    Building(name: "바이오나노대학", imageName: "gachonMark"),
-    Building(name: "반도체대학", imageName: "gachonMark"),
-    Building(name: "한의과대학", imageName: "gachonMark"),
-    Building(name: "예술・체육대학1", imageName: "gachonMark"),
-    Building(name: "예술・체육대학2", imageName: "gachonMark"),
-    Building(name: "글로벌센터", imageName: "gachonMark"),
-    Building(name: "중앙도서관", imageName: "gachonMark"),
-    Building(name: "전자정보도서관", imageName: "gachonMark"),
-    Building(name: "일반대학원/평생교육원", imageName: "gachonMark"),
-    Building(name: "교육대학원", imageName: "gachonMark"),
-    Building(name: "산학협력관", imageName: "gachonMark"),
-    Building(name: "바이오나노연구원", imageName: "gachonMark"),
-    Building(name: "학생회관", imageName: "gachonMark"),
-    Building(name: "제1기숙사", imageName: "gachonMark"),
-    Building(name: "제2기숙사", imageName: "gachonMark"),
-    Building(name: "제3기숙사", imageName: "gachonMark")
-]
 
 struct BuildingTabView: View {
     
