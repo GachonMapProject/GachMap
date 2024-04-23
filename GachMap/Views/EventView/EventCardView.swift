@@ -18,7 +18,6 @@ struct EventCardView : View {
     @State var eventDetail : [EventDetail]    // 이미지 선택 후 DetailView 가기 전에 변경해줘야 함
     @State var locationAlert = false
     @State var serverAlert = false  // 서버 통신 실패 알림
-    
 
     
     init(event: EventList) {
