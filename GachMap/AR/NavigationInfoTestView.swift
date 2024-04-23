@@ -8,18 +8,35 @@
 import SwiftUI
 
 struct NavigationInfoTestView: View {
-    let path = Path().ITtoGachon
-    let coreLocation = CoreLocationEx()
+    let path = Path().homeToAI
+    @ObservedObject var coreLocation = CoreLocationEx()
+    let checkRotation = CheckRotation()
     
-    var rotationList : [Rotation]{
-        CheckRotation().checkRotation(currentLocation: coreLocation.location!, path: path)
-    }
+    @State var rotationList: [Rotation]? = nil
+    
     var body: some View {
-        HStack{
-            ForEach(rotationList){rotation in
+        if rotationList == nil && coreLocation.location != nil {
+            ProgressView()
+                .onAppear {
+                    self.rotationList = checkRotation.checkRotation(currentLocation: coreLocation.location!, path: path)
+                }
+        } else {
+            if let rotationList = rotationList {
+                ScrollView(.horizontal){
+                    HStack {
+                        ForEach(rotationList) { rotation in
+                            NavigationInfoView(distance: Int(rotation.distance), rotation: rotation.rotation)
+                        }
+                    }
+                    .padding()
+                }
                 
+
+                AppleMap(coreLocation: coreLocation, path: path)
             }
         }
+        
+        
     }
 }
 

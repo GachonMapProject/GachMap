@@ -8,21 +8,21 @@
 import SwiftUI
 
 struct NavigationInfoView: View {
-    let rotationDic = ["우회전" : "arrow.triangle.turn.up.right.circle.fill",
-                       "좌회전" : "arrow.triangle.turn.up.left.circle.fill",
+    let rotationDic = ["우회전" : "arrowshape.turn.up.right.circle.fill",
+                       "좌회전" : "arrowshape.turn.up.left.circle.fill",
                        "직진" : "arrow.up.circle.fill"]
-    @State var distance = 0
-    @State var rotation = "우회전"
+    @State var distance : Int = 0
+    @State var rotation : String = "우회전"
     @State var nodeName = "반도체대학"
 
     var body: some View {
         HStack{
             Image(systemName: rotationDic[rotation] ?? "arrow.up.circle.fill")
                 .resizable()
-                .aspectRatio(contentMode: .fit) // 이미지의 비율을 유지하면서 부모 뷰에 맞게 조정
                 .foregroundColor(.blue)
                 .frame(width: 50, height: 50)
                 .padding(.leading)
+                .aspectRatio(contentMode: .fit) // 이미지의 비율을 유지하면서 부모 뷰에 맞게 조정
             
             VStack(alignment: .leading){
                 Text(nodeName)
@@ -31,6 +31,7 @@ struct NavigationInfoView: View {
                     .font(.system(size: 20))
                     .bold()
             }
+            .padding()
           
             Spacer()
         }
