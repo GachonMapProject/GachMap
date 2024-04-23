@@ -15,15 +15,15 @@ enum ActiveGuestInfoInputAlert {
 struct GuestInfoInputView: View {
     
     let gender = ["남", "여"]
-    let speed = ["FAST", "NORMAL", "SLOW"]
+    let speed = ["빠름", "보통", "느림"]
     
     @State private var selectedGender = ""
     @State private var selectedWalkSpeed = ""
     
-    @State private var userBirth = 0
+    @State private var userBirth = 2000
     @State private var userGender = ""
-    @State private var userHeight = 0
-    @State private var userWeight = 0
+    @State private var userHeight = 180
+    @State private var userWeight = 70
     @State private var walkSpeed = ""
     
     @Binding var showGuestInfoInputView: Bool
@@ -92,6 +92,7 @@ struct GuestInfoInputView: View {
                         Picker("출생년도", selection: $userBirth) {
                             ForEach((1900...2024).reversed(), id: \.self) {
                                 Text("\(String($0))년")
+                                    .frame(maxWidth: .infinity, alignment: .center)
                             }
                         }
                         .pickerStyle(.automatic)
@@ -324,13 +325,10 @@ struct GuestInfoInputView: View {
             VStack {
                 // 같이 가기 Button
                 Button(action: {
-                    print("출생년도: \(self.userBirth)")
-                    print("성별: \(self.selectedGender)")
-                    print("키: \(self.userHeight)")
-                    print("몸무게: \(self.userWeight)")
-                    print("선택 속도: \(self.selectedWalkSpeed)")
+                    let selectedSpeed = selectedWalkSpeed == "빠름" ? "FAST" : selectedWalkSpeed == "보통" ? "NORMAL" : "SLOW"
                     
-                    let param = GuestInfoRequest(guestSpeed: selectedWalkSpeed, gusetGender: selectedGender, guestBirth: userBirth, guestHeight: userHeight, guestWeight: userWeight)
+                    let param = GuestInfoRequest(guestSpeed: selectedSpeed, gusetGender: selectedGender, guestBirth: userBirth, guestHeight: userHeight, guestWeight: userWeight)
+                    print("param : \(param)")
                     
                     postGuestInfoData(parameter: param)
                     
@@ -432,14 +430,14 @@ struct GuestInfoInputView: View {
                             print("guestId 저장 성공, guestId: \(guestCode)")
                         }
                         
-                        alertMessage = value.message
+                        alertMessage = "비회원 정보 저장에 성공했습니다.\nAI 서비스를 이용하시려면 로그인을 해주세요."
                         showEndAlert = true
                         activeGuestInfoInputAlert = .ok
                         
                     } else {
                         print("비회원 정보 전달 실패")
                         
-                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        alertMessage = "정보 저장에 실패했습니다.\n다시 시도해주세요."
                         showEndAlert = true
                         activeGuestInfoInputAlert = .error
                     }
@@ -457,6 +455,6 @@ struct GuestInfoInputView: View {
     
 } // end of View
 
-//    #Preview {
-//        GuestInfoInputView()
-//    }
+    #Preview {
+        GuestInfoInputView(showGuestInfoInputView: Binding.constant(true))
+    }

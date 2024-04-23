@@ -549,7 +549,7 @@ struct SignUpView: View {
                         print("아이디 중복 X")
                         print("value.success: \(value.success)")
                         
-                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        alertMessage = "사용 가능한 아이디입니다.\n사용하시겠습니까?"
                         showAlert = true
                         activeAlert = .valid
                         
@@ -557,7 +557,7 @@ struct SignUpView: View {
                         print("아이디 중복 O")
                         print("value.success: \(value.success)")
 
-                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        alertMessage = "중복된 아이디가 존재합니다.\n다른 아이디를 입력해주세요."
                         showAlert = true
                         activeAlert = .invalid
                     }

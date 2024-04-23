@@ -63,7 +63,7 @@ struct ProfileTabView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             VStack {
                 let userCode = getUserCodeFromUserDefaults()
                 
@@ -148,7 +148,7 @@ struct ProfileTabView: View {
                         case .exit:
                             return Alert(title: Text("탈퇴하시겠습니까?"), message: Text("회원 탈퇴 시 현재까지 제공되던\n개인 맞춤 소요시간 데이터가 삭제됩니다."), primaryButton: .default(Text("예"), action: { deleteUserRequest() }) , secondaryButton: .cancel(Text("아니오")))
                         case .withdraw:
-                            return Alert(title: Text("알림"), message: Text(exitAlertMessage), dismissButton: .default(Text("확인")))
+                            return Alert(title: Text("알림"), message: Text(exitAlertMessage), dismissButton: .default(Text("확인"), action: { UserDefaults.standard.removeObject(forKey: "loginInfo"); isWithdraw = true }))
                         }
                     }
                     
@@ -223,21 +223,23 @@ struct ProfileTabView: View {
                         print("value.messgae: \(value.message)")
                         
                         // getUserCodeFromUserDefaults()
-                            
-                        UserDefaults.standard.removeObject(forKey: "loginInfo")
-                        
-                        // isLogin = false
                         
                         exitAlertMessage = "회원 탈퇴에 성공했습니다.\n다시 만날 날을 기다리고 있을게요!"
                         showExitAlert = true
                         activeExitAlert = .withdraw
+                            
+//                        UserDefaults.standard.removeObject(forKey: "loginInfo")
+                        
+                        // isLogin = false
+                        
+                        
 
                     } else {
                         print("회원 탈퇴 실패")
                         print("value.success: \(value.success)")
                         print("value.messgae: \(value.message)")
 
-                        exitAlertMessage = "알 수 없는 오류가 발생했습니다."
+                        exitAlertMessage = "회원 탈퇴에 실패했습니다.\n다시 시도해주세요."
                         showExitAlert = true
                         activeExitAlert = .withdraw
                     }

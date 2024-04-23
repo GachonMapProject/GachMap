@@ -93,7 +93,7 @@ struct BackgroundMapView : View {
                     Button(action: {
                         // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
                         setRegionToUserLocation()
-                    }, label: {Image(systemName: "figure.walk")})
+                    }, label: {Image(systemName: "scope")})
                     .frame(width: 45, height: 50)
                     .foregroundColor(.gray)
                     .bold()
@@ -105,7 +105,7 @@ struct BackgroundMapView : View {
                         withAnimation(.easeInOut(duration: 1.0)){
                             region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
                         }
-                    }, label: {Image(systemName: "location")})
+                    }, label: {Image(systemName: "graduationcap")})
                     .frame(width: 45, height: 50)
                     .foregroundColor(.gray)
                     .bold()
