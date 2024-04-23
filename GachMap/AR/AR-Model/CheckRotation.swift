@@ -9,52 +9,48 @@ import Foundation
 import SwiftUI
 import ARKit
 
-
+// 중간 노드에만 띄움 (시작 노드, 도착지 노드 제외)
 struct CheckRotation {
     @State var sourcePosition = SCNVector3(x: 0, y: 0, z: 0)
     
     func checkRotation(currentLocation: CLLocation, path: [Node]) -> [Rotation]{
         let steps = GetIntermediateCoordinate.getCoordinates(path: path)
         var rotationData = [Rotation]()
-        
-        
-        // 첫번째 출발지의 상대좌표 구하기
-        let firstDistance = distanceBetweenCoordinate(source: currentLocation, destination: path[0].location)
-        let firstTransformMatrix = transformMatrix(source: currentLocation, destination: path[0].location, distance: firstDistance)
-        let firstNode = SCNNode()
-        firstNode.transform = firstTransformMatrix
-        sourcePosition = firstNode.position
 
-        
-        for step in steps {
-            // 다음 노드 상대 좌표
-            let nextDistance = distanceBetweenCoordinate(source: currentLocation, destination: step.nextLocation)
-            let nextTransformationMatrix = transformMatrix(source: currentLocation, destination: step.nextLocation, distance: nextDistance)
-            let nextNode = SCNNode()
-            nextNode.transform = nextTransformationMatrix
-            
-            // 현재 노드 상대좌표
-            let distance = distanceBetweenCoordinate(source: currentLocation, destination: step.endLocation)
-            let transformationMatrix = transformMatrix(source: currentLocation, destination: step.endLocation, distance: distance)
-            let endNode = SCNNode()
-            endNode.transform = transformationMatrix
-            
-            // 1번 노드에서 2번 노드로 향하는 방향 벡터
-            let sourceToEndVector = simd_float2(endNode.position.x - sourcePosition.x,
-                                                   endNode.position.z - sourcePosition.z)
+        for (i, step) in steps.enumerated() {
+            if i != steps.count - 1 {
+      
+                // 3번 노드 벡터
+                let nextDistance = distanceBetweenCoordinate(source: step.startLocation, destination: step.nextLocation)
+                let nextTransformationMatrix = transformMatrix(source: step.startLocation, destination: step.nextLocation, distance: nextDistance)
+                let nextNode = SCNNode()
+                nextNode.transform = nextTransformationMatrix
+                
+                // 2번 노드 벡터
+                let endDistance = distanceBetweenCoordinate(source: step.startLocation, destination: step.endLocation)
+                let transformationMatrix = transformMatrix(source: step.startLocation, destination: step.endLocation, distance: endDistance)
+                let endNode = SCNNode()
+                endNode.transform = transformationMatrix
+                
+                // 1번 노드에서 2번 노드로 향하는 방향 벡터
+                let sourceToEndVector = simd_float2(endNode.position.x - sourcePosition.x,
+                                                       endNode.position.z - sourcePosition.z)
 
-            // 1번 노드에서 3번 노드로 향하는 방향 벡터
-            let sourceToNextVector = simd_float2(nextNode.position.x - sourcePosition.x,
-                                                 nextNode.position.z - sourcePosition.z)
-            let angleInDegrees = sourceToEndVector.x * sourceToNextVector.y - sourceToEndVector.y * sourceToNextVector.x
-            print("angleInDegrees : \(angleInDegrees)")
-            
-            
-            let rotation = angleInDegrees < -300 ? "좌회전" : angleInDegrees > 300 ? "우회전" : "직진"
-            rotationData.append(Rotation(rotation: rotation, distance: distance))
-            print("rotation : \(rotation), distance : \(distance)")
-            
-            sourcePosition = endNode.position
+                // 1번 노드에서 3번 노드로 향하는 방향 벡터
+                let sourceToNextVector = simd_float2(nextNode.position.x - sourcePosition.x,
+                                                     nextNode.position.z - sourcePosition.z)
+                let angleInDegrees = sourceToEndVector.x * sourceToNextVector.y - sourceToEndVector.y * sourceToNextVector.x
+                
+                print("angleInDegrees : \(angleInDegrees)")
+                
+                
+                let rotation = angleInDegrees < -300 ? "좌회전" : angleInDegrees > 300 ? "우회전" : "직진"
+                let distance = distanceBetweenCoordinate(source: step.endLocation, destination: step.nextLocation)
+
+                rotationData.append(Rotation(rotation: rotation, distance: distance))
+                print("rotation : \(rotation), distance : \(distance)")
+                
+            }
         }
         return rotationData
     }

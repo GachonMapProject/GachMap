@@ -21,6 +21,7 @@ struct EventTabView: View {
     @State var serverAlert = false  // 서버 통신 실패 알림
     @State var nilData = false      // data가 없을 때 알림
 
+
     
     var body: some View {
         NavigationView {

@@ -54,7 +54,7 @@ struct WeatherView: View {
                 if let newWeather = newWeather {
                     print("weather: \(newWeather)")
                     self.temp = Int(newWeather.temp)
-                    if newWeather.precipitationForm == "없음" {
+                    if newWeather.precipitationForm == "없음" || newWeather.precipitation == 0.0{
                         self.sky = newWeather.sky
                         self.image = sky_image[newWeather.sky] ?? "☀️"
                     }

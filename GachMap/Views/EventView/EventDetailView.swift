@@ -40,7 +40,7 @@ struct EventDetailView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationView {
             VStack{
                 ZStack(alignment : .top){
                     Map(position: $region, selection: $selectedItem){
