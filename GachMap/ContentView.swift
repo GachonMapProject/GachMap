@@ -22,7 +22,7 @@ struct ContentView: View {
 //    }
   
   var body: some View {
-      NavigationStack {
+      NavigationView {
           TabView(selection: $selectedTab) {
               MapTabView()
                   .tabItem {
