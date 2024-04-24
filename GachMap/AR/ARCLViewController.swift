@@ -125,7 +125,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         getIntermediateCoordinates(path: path)  // Step 형식으로 변환
         
-        // 인덱스가 0이면 출발지 노드 생성
+        // 인덱스가 0이면 출발지 노드 생
         if index == 0 {
             placeStartNode(currentLocation : currentLocation)   // 출발지 노드
         }

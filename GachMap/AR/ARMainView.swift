@@ -16,7 +16,7 @@ struct ARMainView: View {
     @ObservedObject var nextNodeObject = NextNodeObject()
     @State private var isARViewVisible = true // ARView의 on/off 상태 변수
     @State private var isEnd = false // 안내 종료 상태 변수
-    @State private var isARViewReady = true    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
+    @State private var isARViewReady = false    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
     
     let checkRotation = CheckRotation()
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
@@ -40,7 +40,7 @@ struct ARMainView: View {
                         ZStack(alignment: .topTrailing){
                             VStack{
 //                                ARView(coreLocation: coreLocation, nextNodeObject: nextNodeObject, bestHorizontalAccuracy: coreLocation.location!.horizontalAccuracy, bestVerticalAccuracy: coreLocation.location!.verticalAccuracy, location : coreLocation.location!, path: path)
-                                ARCLViewControllerWrapper(coreLocation :coreLocation, nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
+                                ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
                                 AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible)
                             }.edgesIgnoringSafeArea(.bottom)
                             
@@ -73,9 +73,13 @@ struct ARMainView: View {
                 }
             
             }  // end of VStack
-            .onChange(of: coreLocation.location) { _ in
+            .onChange(of: coreLocation.location!) { location in
                 if !isARViewReady {
                     checkLocationAccuracy()
+                }
+                else {
+                    // 사용자 현재 위치와 다음 노드까지의 거리를 구하는 함수
+                    checkDistance(location: location)
                 }
             }
         } // end of coreLocation.location != nil
@@ -99,6 +103,17 @@ struct ARMainView: View {
             
             // 경고 창을 현재 화면에 표시
             UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
+    
+    // 사용자 위치가 바뀔 떄마다 호출 (다음 노드까지의 거리 계산)
+    func checkDistance(location : CLLocation){
+        let index = nextNodeObject.nextIndex
+        let distance = location.distance(from: path[index].location)
+        if distance <= 5 {
+            print("\(path[index].name) - 5m 이내 ")
+            nextNodeObject.increment()
+            // timer 로직 추가
+        }
     }
     
     func checkLocationAccuracy() {

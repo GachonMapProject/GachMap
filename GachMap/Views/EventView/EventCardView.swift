@@ -25,15 +25,6 @@ struct EventCardView : View {
         self.eventDetail = [EventDetail(eventInfoId: 0, eventCode: 0, eventName: "", eventPlaceName: "", eventLatitude: 0, eventLongitude: 0, eventAltitude: 0)]
     }
     
-    
-//    var image: Image {
-//        guard let uiImage = UIImage(data: event.imageData) else {
-//            return Image(systemName: "photo") // 이미지 데이터가 없을 경우 기본 이미지 사용
-//        }
-//        return Image(uiImage: uiImage)
-//    }
-//    var image = "https://118b-58-121-110-235.ngrok-free.app/user/test"
-    
     var body: some View {
         NavigationView{
             VStack{
@@ -42,13 +33,8 @@ struct EventCardView : View {
                     Button(action: {
                         // 행사 디테일 API 통신 함수 추가하고 넘어온 데이터 보고 위치 데이터 있는지 없는지 판단해서 뷰 이동 혹은 알림 띄우기
                         getEventDetail(eventId: event.eventId)
-//                        haveLocationData = true
                         
                     }, label: {
-//                        Image("festival")
-//                            .resizable()
-//                            .frame(width: screenWidth)
-//                            .scaledToFit()
                         AsyncImage(url: URL(string: event.eventImagePath)) { image in
                             image.resizable()
                                 .frame(width: screenWidth)
@@ -81,7 +67,6 @@ struct EventCardView : View {
                                         .multilineTextAlignment(.leading)
                                     
                                     ScrollView(){
-//                                        Text("새로운 에너지가 충만한 2024년, 우리의 열정이 폭발하는 이곳 [2024 가천대학교 축구리그: G-LEAGUE]  2024년 4월부터 10월까지, 교내 축구리그가 진행됩니다.새로운 에너지가 충만한 2024년, 우리의 열정이 폭발하는 이곳 [2024 가천대학교 축구리그: G-LEAGUE]  2024년 4월부터 10월까지, 교내 축구리그가 진행됩니다.새로운 에너지가 충만한 2024년, 우리의 열정이 폭발하는 이곳 [2024 가천대학교 축구리그: G-LEAGUE]  2024년 4월부터 10월까지, 교내 축구리그가 진행됩니다.새로운 에너지가 충만한 2024년, 우리의 열정이 폭발하는 이곳 [2024 가천대학교 축구리그: G-LEAGUE]  2024년 4월부터 10월까지, 교내 축구리그가 진행됩니다.")
                                         Text(event.eventInfo)
                                             .font(.system(size: 13))
                                             .foregroundStyle(.white)
@@ -167,25 +152,3 @@ struct EventCardView : View {
         } // end of AF.request
     }
 }
-
-
-
-
-
-// 중앙 슬라이드 이미지 
-//                    HStack{
-//                        Image(systemName:"lessthan.circle.fill")
-//                            .font(.system(size: 35))
-//                            .foregroundColor(.gray)
-//                            .opacity(0.8)
-//                            .padding(.leading, 15)
-//
-//                        Spacer() // 가운데 여백 추가
-//
-//                        Image(systemName:"greaterthan.circle.fill")
-//                            .font(.system(size: 35))
-//                            .foregroundColor(.gray)
-//                            .opacity(0.8)
-//                            .padding(.trailing, 15)
-//                    }
-//                    .frame(width: screenWidth)
