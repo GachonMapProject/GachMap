@@ -37,11 +37,11 @@ struct ARMainView: View {
                         ZStack(alignment: .topTrailing){
                             VStack{
                                 ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
-                                AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible)
-                            }.edgesIgnoringSafeArea(.bottom)
+                                AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!)
+                            }.edgesIgnoringSafeArea(.all)
                             
                             if !isARViewVisible {
-                                AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible)
+                                AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!)
                             }
                             
                             Button(){
@@ -90,11 +90,8 @@ struct ARMainView: View {
             
             // 확인 액션 추가
             alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
-                // 안내 종료 누르면 타이머 stop
-                timer.stopTimer()
-                
-                // 확인을 눌렀을 때의 처리: 다음 페이지로 이동
-                isEnd = true
+                timer.stopTimer() // 안내 종료 누르면 타이머 stop
+                isEnd = true      // 확인을 눌렀을 때의 처리: 다음 페이지로 이동
             })
             
             // 취소 액션 추가
@@ -107,22 +104,28 @@ struct ARMainView: View {
     // 사용자 위치가 바뀔 떄마다 호출 (다음 노드까지의 거리 계산)
     func checkDistance(location : CLLocation){
         let index = nextNodeObject.nextIndex
-        let distance = location.distance(from: path[index].location)
-        if distance <= 5 {
-            print("\(path[index].name) - 5m 이내 ")
-            // timer 로직 추가
-            if index == 0 {
-                timer.startTimer()  // 첫 노드 근처에 오면 타이머 시작
-                print("timer 시작")
-            }else{
-                let time = timer.seconds
-                print(path[index-1].name + "~" + path[index].name + "까지 : \(time)초")
-                timer.stopTimer()
-                timer.startTimer()
-            }
-            nextNodeObject.increment()
+        
+        // 마지막 노드에 도착 이후부터는 실행 안 되게
+        if index != path.count {
+            let distance = location.distance(from: path[index].location)
+            if distance <= 5 {
+                print("\(path[index].name) - 5m 이내 ")
+                // timer 로직 추가
+                if index == 0 {
+                    timer.startTimer()  // 첫 노드 근처에 오면 타이머 시작
+                    print("timer 시작")
+                }else{
+                    let time = timer.seconds
+                    
+                    // timer (노드-노드, 시간) 배열 생성 후 append 하고 만족도 페이지에 넘겨서 Request 요청해야 됨
+                    print(path[index-1].name + "~" + path[index].name + "까지 : \(time)초")
+                    timer.stopTimer()
+                    timer.startTimer()
+                }
+                nextNodeObject.increment()
+            } // end of (if distance <= 5 )
         }
-    }
+    }   // end of checkDistance()
     
     func checkLocationAccuracy() {
         // Check location accuracy
