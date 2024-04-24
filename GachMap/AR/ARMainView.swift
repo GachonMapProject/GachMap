@@ -16,13 +16,13 @@ struct ARMainView: View {
     @ObservedObject var nextNodeObject = NextNodeObject()
     @State private var isARViewVisible = true // ARView의 on/off 상태 변수
     @State private var isEnd = false // 안내 종료 상태 변수
-    @State private var isARViewReady = true    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
+    @State private var isARViewReady = false    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
     
-
-
-//    @State var isCameraFixed : Bool = true
+    let checkRotation = CheckRotation()
+    @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
+    
+    let timer = MyTimer()
     let path = Path().homeToAI
-    
     
     var body: some View {
         if coreLocation.location != nil{
@@ -36,13 +36,12 @@ struct ARMainView: View {
                     if !isEnd {
                         ZStack(alignment: .topTrailing){
                             VStack{
-//                                ARView(coreLocation: coreLocation, nextNodeObject: nextNodeObject, bestHorizontalAccuracy: coreLocation.location!.horizontalAccuracy, bestVerticalAccuracy: coreLocation.location!.verticalAccuracy, location : coreLocation.location!, path: path)
-                                ARCLViewControllerWrapper(path: path, coreLocation: coreLocation)
-                                AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible)
-                            }.edgesIgnoringSafeArea(.bottom)
+                                ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
+                                AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!)
+                            }.edgesIgnoringSafeArea(.all)
                             
                             if !isARViewVisible {
-                                AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible)
+                                AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!)
                             }
                             
                             Button(){
@@ -65,14 +64,18 @@ struct ARMainView: View {
                     }
                     else{
                         // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
-                        NewScreenView()
+                        SatisfactionView()
                     }
                 }
             
             }  // end of VStack
-            .onChange(of: coreLocation.location) { _ in
+            .onChange(of: coreLocation.location!) { location in
                 if !isARViewReady {
                     checkLocationAccuracy()
+                }
+                else {
+                    // 사용자 현재 위치와 다음 노드까지의 거리를 구하는 함수
+                    checkDistance(location: location)
                 }
             }
         } // end of coreLocation.location != nil
@@ -87,8 +90,8 @@ struct ARMainView: View {
             
             // 확인 액션 추가
             alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
-                // 확인을 눌렀을 때의 처리: 다음 페이지로 이동
-                isEnd = true
+                timer.stopTimer() // 안내 종료 누르면 타이머 stop
+                isEnd = true      // 확인을 눌렀을 때의 처리: 다음 페이지로 이동
             })
             
             // 취소 액션 추가
@@ -98,6 +101,32 @@ struct ARMainView: View {
             UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
     }
     
+    // 사용자 위치가 바뀔 떄마다 호출 (다음 노드까지의 거리 계산)
+    func checkDistance(location : CLLocation){
+        let index = nextNodeObject.nextIndex
+        
+        // 마지막 노드에 도착 이후부터는 실행 안 되게
+        if index != path.count {
+            let distance = location.distance(from: path[index].location)
+            if distance <= 5 {
+                print("\(path[index].name) - 5m 이내 ")
+                // timer 로직 추가
+                if index == 0 {
+                    timer.startTimer()  // 첫 노드 근처에 오면 타이머 시작
+                    print("timer 시작")
+                }else{
+                    let time = timer.seconds
+                    
+                    // timer (노드-노드, 시간) 배열 생성 후 append 하고 만족도 페이지에 넘겨서 Request 요청해야 됨
+                    print(path[index-1].name + "~" + path[index].name + "까지 : \(time)초")
+                    timer.stopTimer()
+                    timer.startTimer()
+                }
+                nextNodeObject.increment()
+            } // end of (if distance <= 5 )
+        }
+    }   // end of checkDistance()
+    
     func checkLocationAccuracy() {
         // Check location accuracy
         DispatchQueue.main.async {
@@ -106,6 +135,8 @@ struct ARMainView: View {
                 let verticalAccuracy = location.verticalAccuracy
                 
                 if horizontalAccuracy < LocationAccuracy.accuracy && verticalAccuracy < LocationAccuracy.accuracy {
+                    // 정확도 범위 안에 들면 해당 위치 기준으로 중간 노드의 회전 방향, 거리를 가져옴
+                    rotationList = checkRotation.checkRotation(currentLocation: location, path: path)
                     isARViewReady = true
                 }
             }
@@ -113,9 +144,6 @@ struct ARMainView: View {
     }
 }
 
-// 임시 뷰
-struct NewScreenView: View {
-    var body: some View {
-        Text("만족도 조사")
-    }
-}
+
+
+//                                ARView(coreLocation: coreLocation, nextNodeObject: nextNodeObject, bestHorizontalAccuracy: coreLocation.location!.horizontalAccuracy, bestVerticalAccuracy: coreLocation.location!.verticalAccuracy, location : coreLocation.location!, path: path)

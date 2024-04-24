@@ -19,11 +19,13 @@ struct AppleMapView : View{
     let path : [Node]
     @Binding var isARViewVisible: Bool
     @State private var appleMap: AppleMap
+    let rotationList : [Rotation]
 
-    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>) {
+    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, rotationList : [Rotation]) {
         self.coreLocation = coreLocation
         self.path = path
         self._isARViewVisible = isARViewVisible
+        self.rotationList = rotationList
         _appleMap = State(initialValue: AppleMap(coreLocation: coreLocation, path: path))
     }
     var body: some View {
@@ -33,6 +35,26 @@ struct AppleMapView : View{
             }
             else{
                 appleMap.ignoresSafeArea(.all)
+                ScrollView(.horizontal){
+                    ZStack(){
+                        LazyHStack{
+                            ForEach(rotationList) { rotation in
+                                NavigationInfoView(distance: Int(rotation.distance), rotation: rotation.rotation)
+                                    .scrollTransition(.animated, axis: .horizontal) { content, phase in
+                                        content
+                                            .opacity(phase.isIdentity ? 1.0 : 0.8)
+                                            .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+                                    }
+                            }
+                        } // end of LazyStack
+                        .padding(EdgeInsets(top: 0, leading: 30, bottom: 30, trailing: 30))
+                        .scrollTargetLayout()
+                        
+                    } // end of ZStack
+                    
+                } // end of ScrollView
+                .scrollTargetBehavior(.viewAligned)
+                .frame(height: UIScreen.main.bounds.width * 0.3)
             }
           
             VStack(spacing: 0){
@@ -59,8 +81,7 @@ struct AppleMapView : View{
             .frame(width: 45, height: 100)
             .background(.white)
             .cornerRadius(15)
-            .padding(EdgeInsets(top: 0, leading: 0, bottom: 40, trailing: 20)) // bottomTrailing 마진 추가
-        
+            .padding(EdgeInsets(top: 0, leading: 0, bottom: isARViewVisible ? 40 : 40 + UIScreen.main.bounds.width * 0.3, trailing: 20)) // bottomTrailing 마진 추가
         }
     }
 }

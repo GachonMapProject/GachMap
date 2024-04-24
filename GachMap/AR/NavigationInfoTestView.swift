@@ -44,12 +44,7 @@ struct NavigationInfoTestView: View {
                     } // end of ScrollView
                     .scrollTargetBehavior(.viewAligned)
                     .frame(height: UIScreen.main.bounds.width * 0.3)
-                }
-
-
-                
-
-
+                } // end of ZStack
             }
         }
         
