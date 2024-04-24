@@ -11,6 +11,7 @@ struct SatisfactionView: View {
     var width = UIScreen.main.bounds.width
     @State var pathSelect = -1
     @State var timeSelect = -1
+    @State var submit = false
     
     var body: some View {
         VStack{
@@ -46,6 +47,7 @@ struct SatisfactionView: View {
             
             Button(action: {
                 // 데이터 서버에 전달하는 함수 필요
+                submit = true
             }, label: {
                 Text("확인")
                     .frame(width: width * 0.7, height: 50)
@@ -62,6 +64,10 @@ struct SatisfactionView: View {
             
         } // end of VStack
         .frame(width: width * 0.9)
+        .alert(isPresented: $submit) {
+            Alert(title: Text("만족도 조사"), message: Text("소중한 의견 감사드립니다."),
+                  dismissButton: .default(Text("확인")))
+        }
       
             
 
