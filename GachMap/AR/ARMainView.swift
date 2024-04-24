@@ -18,6 +18,9 @@ struct ARMainView: View {
     @State private var isEnd = false // 안내 종료 상태 변수
     @State private var isARViewReady = true    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
     
+    let checkRotation = CheckRotation()
+    @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
+    
 
 
 //    @State var isCameraFixed : Bool = true
@@ -37,7 +40,7 @@ struct ARMainView: View {
                         ZStack(alignment: .topTrailing){
                             VStack{
 //                                ARView(coreLocation: coreLocation, nextNodeObject: nextNodeObject, bestHorizontalAccuracy: coreLocation.location!.horizontalAccuracy, bestVerticalAccuracy: coreLocation.location!.verticalAccuracy, location : coreLocation.location!, path: path)
-                                ARCLViewControllerWrapper(path: path, coreLocation: coreLocation)
+                                ARCLViewControllerWrapper(coreLocation :coreLocation, nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
                                 AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible)
                             }.edgesIgnoringSafeArea(.bottom)
                             
@@ -65,7 +68,7 @@ struct ARMainView: View {
                     }
                     else{
                         // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
-                        NewScreenView()
+                        SatisfactionView()
                     }
                 }
             
@@ -106,16 +109,11 @@ struct ARMainView: View {
                 let verticalAccuracy = location.verticalAccuracy
                 
                 if horizontalAccuracy < LocationAccuracy.accuracy && verticalAccuracy < LocationAccuracy.accuracy {
+                    // 정확도 범위 안에 들면 해당 위치 기준으로 중간 노드의 회전 방향, 거리를 가져옴
+                    rotationList = checkRotation.checkRotation(currentLocation: location, path: path)
                     isARViewReady = true
                 }
             }
         }
-    }
-}
-
-// 임시 뷰
-struct NewScreenView: View {
-    var body: some View {
-        Text("만족도 조사")
     }
 }
