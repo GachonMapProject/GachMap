@@ -84,6 +84,7 @@
 		CB4EF6232BCFD7A000BDC73A /* EventCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4EF6222BCFD7A000BDC73A /* EventCardView.swift */; };
 		CB6071D82BD634AD00AB12EE /* NavigationInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */; };
 		CB6071DA2BD63BC000AB12EE /* CheckRotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6071D92BD63BC000AB12EE /* CheckRotation.swift */; };
+		CBC02A6C2BD90D9B005657B9 /* MyTmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */; };
 		CBD855FF2BD7A7F00046597D /* SatisfactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */; };
 		CBDDC9122BCEB62300019FAB /* BackgroundMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */; };
 		CBDDC9142BCEB6CB00019FAB /* PlaceCategoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDDC9132BCEB6CB00019FAB /* PlaceCategoryResponse.swift */; };
@@ -171,6 +172,7 @@
 		CB4EF6222BCFD7A000BDC73A /* EventCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCardView.swift; sourceTree = "<group>"; };
 		CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationInfoView.swift; sourceTree = "<group>"; };
 		CB6071D92BD63BC000AB12EE /* CheckRotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRotation.swift; sourceTree = "<group>"; };
+		CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTmer.swift; sourceTree = "<group>"; };
 		CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatisfactionView.swift; sourceTree = "<group>"; };
 		CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMapView.swift; sourceTree = "<group>"; };
 		CBDDC9132BCEB6CB00019FAB /* PlaceCategoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCategoryResponse.swift; sourceTree = "<group>"; };
@@ -348,6 +350,7 @@
 				CB2E457A2BD4E28F009DB796 /* ARCLViewControllerWrapper.swift */,
 				CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */,
 				CBEA32EF2BD64A560083D271 /* NavigationInfoTestView.swift */,
+				CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -567,6 +570,7 @@
 				8B3159DC2BD16C570049CB5F /* DeleteUserResponse.swift in Sources */,
 				8B831C712BCE0A9200A85973 /* GuestDashboardView.swift in Sources */,
 				8B5368FD2BD2C019007B8984 /* UserInfoModifyRequest.swift in Sources */,
+				CBC02A6C2BD90D9B005657B9 /* MyTmer.swift in Sources */,
 				8B831C0D2BCCF57700A85973 /* MapTabView.swift in Sources */,
 				CB0D26FE2BCE8F8300800459 /* EventDetailResponse.swift in Sources */,
 				8B831C0C2BCCF57700A85973 /* EventTabView.swift in Sources */,
