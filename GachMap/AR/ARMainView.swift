@@ -22,7 +22,7 @@ struct ARMainView: View {
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
     let timer = MyTimer()
-    let path = Path().homeToAI
+    let path = Path().ITtoGachon
     
     var body: some View {
         if coreLocation.location != nil{
@@ -108,8 +108,8 @@ struct ARMainView: View {
         // 마지막 노드에 도착 이후부터는 실행 안 되게
         if index != path.count {
             let distance = location.distance(from: path[index].location)
-            if distance <= 5 {
-                print("\(path[index].name) - 5m 이내 ")
+            if distance <= 2 {
+                print("\(path[index].name) - 2m 이내 ")
                 // timer 로직 추가
                 if index == 0 {
                     timer.startTimer()  // 첫 노드 근처에 오면 타이머 시작
