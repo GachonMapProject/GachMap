@@ -175,7 +175,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         boxNode.constraints = nil
         
         
-        let naviLocation = CLLocation(coordinate: end.coordinate, altitude: end.altitude + 2)
+        let naviLocation = CLLocation(coordinate: end.coordinate, altitude: end.altitude + 3)
         let navi = ARNaviInfoNode(view: ARNaviInfoView(distance: Int(rotationList[index].distance), rotation: rotationList[index].rotation))
         let naviNode = LocationAnnotationNode(location: naviLocation, node: navi)
         
@@ -350,7 +350,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let image = view.asImage()
         let material = SCNMaterial()
         material.diffuse.contents = image
-        let plane = SCNPlane(width: image.size.width / 100.0, height: image.size.height / 100.0)
+        let plane = SCNPlane(width: image.size.width / 50, height: image.size.height / 50)
         plane.materials = [material]
         node.geometry = plane
         return node
