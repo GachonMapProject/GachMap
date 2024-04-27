@@ -25,8 +25,8 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     public var scalingScheme = ScalingScheme.normal // 스케일링 방식
         
     // 노드 위치를 조정하고 크기를 업데이트하는데 필요한 변수
-    public var continuallyAdjustNodePositionWhenWithinRange = true
-    public var continuallyUpdatePositionAndScale = true
+    public var continuallyAdjustNodePositionWhenWithinRange = false
+    public var continuallyUpdatePositionAndScale = false
     public var annotationHeightAdjustmentFactor = 1.1
     
     init(path : [Node], nextNodeObject : NextNodeObject, rotationList : [Rotation]) {
@@ -109,7 +109,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             }
             return
         }
-        let index = nextNodeObject.nextIndex // 현재 인덱스
+        let index = nextNodeObject.nextIndex == 0 ? 0 : nextNodeObject.nextIndex - 1 // 현재 인덱스
         
         let altitude = currentLocation.altitude                 // ARCL에서 측정한 고도
         let difAltitude = altitude - path[index].location.altitude // 현재 인덱스와 고도를 맞춤
@@ -125,17 +125,18 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         getIntermediateCoordinates(path: path)  // Step 형식으로 변환
         
-        // 인덱스가 0이면 출발지 노드 생
+        // 인덱스가 0이면 출발지 노드 생성
         if index == 0 {
             placeStartNode(currentLocation : currentLocation)   // 출발지 노드
         }
         
 //         경로 노드마다 띄울 텍스트 설정 (여기도 0부터 시작이 아닌 인덱스 번호부터 시작하도록)
-        for i in index..<stepData.count - 1 {
+        for i in 0..<stepData.count - 1 {
             let nodeName = "node-\(stepData[i].locationName)"
             placeMiddleNode(currentLocation: currentLocation, start : stepData[i].startLocation, end: stepData[i].endLocation, next : stepData[i].nextLocation, nodeName: nodeName, index : i)
         }
         placeDestinationNode(currentLocation : currentLocation) // 목적지 노드
+        
     } // end of addNodes()
     
     
@@ -158,7 +159,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     
         // CheckRotation을 통해 rotationList를 받아와서 회전 방향 설정하면 될듯?
         let fileName = rotationList[index].rotation == "우회전" ? "MuhanPointRight" : rotationList[index].rotation == "좌회전" ? "MuhanPointLeft" : "MuhanMiddle"
-//        MuhanPointLeft,MuhanMiddle
+
         
         print("middleNode - rotation : \(rotationList[index])")
     
@@ -169,26 +170,55 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         let placeBoxLocation = CLLocation(coordinate: coordinate, altitude: (start.altitude + end.altitude) / 2 - 1.5)
 
-        let box = placeBox(start: start, end: end)
+        let box = placeBox(currentLocation : currentLocation, start: start, end: end)
         let boxNode = LocationAnnotationNode(location: placeBoxLocation, node: box)
         boxNode.constraints = nil
+        
+        
+        let naviLocation = CLLocation(coordinate: end.coordinate, altitude: end.altitude + 3)
+        let navi = ARNaviInfoNode(view: ARNaviInfoView(distance: Int(rotationList[index].distance), rotation: rotationList[index].rotation))
+        let naviNode = LocationAnnotationNode(location: naviLocation, node: navi)
         
         addScenewideNodeSettings(middleNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: middleNode)
         addScenewideNodeSettings(boxNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: boxNode)
+        addScenewideNodeSettings(naviNode)
+        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: naviNode)
         
         
     } // end of placeDestinationNode()
     
 //    출발지와 목적지 사이에 실린더 노드 배치하는 역할
-   private func placeBox(start: CLLocation, end: CLLocation) -> SCNNode{
-        let length = start.distance(from: end)   // 두 지점 사이의 거리
+    private func placeBox(currentLocation : CLLocation, start: CLLocation, end: CLLocation) -> SCNNode{
+        
+        // 현재 노드 상대 좌표
+         let startDistance = currentLocation.distance(from: start)
+        let startTransformationMatrix = transformMatrix(source: currentLocation, destination: start, distance: startDistance)
+        let startNode = SCNNode()
+        startNode.transform = startTransformationMatrix
+        let startVector = startNode.position
+        
+       
+       // 다음 노드 상대 좌표
+        let endDistance = currentLocation.distance(from: end)
+       let endTransformationMatrix = transformMatrix(source: currentLocation, destination: end, distance: endDistance)
+       let endNode = SCNNode()
+        endNode.transform = endTransformationMatrix
+        let endVector = endNode.position
+        
+        let length = startVector.distance(receiver: endVector)
+       
+        
+        
+        
+        
+//        let length = start.distance(from: end)   // 두 지점 사이의 거리
        
        // 출발지와 목적지 간의 고도 차이 계산
-        let altitudeDifference = Double(end.altitude - start.altitude)
+        let altitudeDifference = Float(start.altitude - end.altitude)
        
-        let box = SCNBox(width: 1.5, height: 0.1, length: CGFloat(length), chamferRadius: 0)
+        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(length), chamferRadius: 0)
         box.firstMaterial?.diffuse.contents = UIColor.gachonSky
         box.firstMaterial?.transparency = 0.9 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
         let node = SCNNode(geometry: box)
@@ -198,14 +228,17 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
 
         // 실릴더 기울기
         let angle = acos(length / hypotenuse)
-        node.eulerAngles.x = Float(angle)
+        node.eulerAngles.x = Float(-angle)
 
 
-        // 출발지와 목적지 사이의 회전 각도 계산
-        let dirVector = SCNVector3(end.coordinate.longitude - start.coordinate.longitude,
-                                     end.altitude - start.altitude,
-                                     end.coordinate.latitude - start.coordinate.latitude)
-        let yAngle = atan(dirVector.x / dirVector.z) + 0.07
+//        // 출발지와 목적지 사이의 회전 각도 계산
+//        let dirVector = SCNVector3(end.coordinate.longitude - start.coordinate.longitude,
+//                                     end.altitude - start.altitude,
+//                                     end.coordinate.latitude - start.coordinate.latitude)
+//       let yAngle = atan(dirVector.x / dirVector.z) + 0.07
+        
+        let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
+        let yAngle = atan(dirVector.x / dirVector.z)
         print("placeBox - yAngle : \(yAngle)")
        
        // CLLocation 사용 시 yAngle
@@ -220,7 +253,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
 //       -0.3286845
 //       1.2121987
        
-       node.eulerAngles.y = -yAngle
+       node.eulerAngles.y = yAngle
 
        return node
    } // end of placeBox
@@ -236,7 +269,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         let placeBoxLocation = CLLocation(coordinate: coordinate, altitude: (startLocation.altitude + destinationLocation.altitude) / 2 - 1.5)
 
-        let box = placeBox(start: startLocation, end: destinationLocation)
+        let box = placeBox(currentLocation : currentLocation, start: startLocation, end: destinationLocation)
         let boxNode = LocationAnnotationNode(location: placeBoxLocation, node: box)
         
         boxNode.constraints = nil
@@ -246,6 +279,22 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         addScenewideNodeSettings(boxNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: boxNode)
     }
+    
+    // 출발지와 목적지 사이의 변환 행렬 계산 후 노드 위치 방향 설정
+    private func transformMatrix(source: CLLocation, destination: CLLocation, distance: Double) -> SCNMatrix4 {
+
+        // 시작 노드와 도착 노드의 고도 차이를 계산
+        let altitudeDifference = source.altitude - destination.altitude
+        let translation = SCNMatrix4MakeTranslation(0, Float(-altitudeDifference), Float(-distance)) // 이동행렬
+        
+        // SCNMatrix4MakeRotation(회전량, x, y, z)
+        // y축 기준으로 베어링 각도 만큼 회전 -> 베어링은 시계 방향 기준, rotation은 반시계 기준이라 음수를 붙임 , 회전각에 시작위치-첫번째 노드의 회전을 더함
+        let rotation = SCNMatrix4MakeRotation(-1 * (Float(source.coordinate.calculateBearing(coordinate: destination.coordinate))), 0, 1, 0)
+        
+        let transformationMatrix = SCNMatrix4Mult(translation, rotation)
+        return transformationMatrix
+    } // end of tansformMatrix
+    
     
     // png 파일 노드 생성
     private func makePngNode(fileName : String) -> SCNNode {
@@ -293,4 +342,18 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         stepData = steps
           
     } // end of getIntermediateCordinates()
+    
+    
+    
+    func ARNaviInfoNode(view : ARNaviInfoView) -> SCNNode {
+        let node = SCNNode()
+        let image = view.asImage()
+        let material = SCNMaterial()
+        material.diffuse.contents = image
+        let plane = SCNPlane(width: image.size.width / 50, height: image.size.height / 50)
+        plane.materials = [material]
+        node.geometry = plane
+        return node
+    }
+
 }
