@@ -66,6 +66,7 @@
 		CB0D26F72BCE681F00800459 /* EventListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26F62BCE681F00800459 /* EventListResponse.swift */; };
 		CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26FB2BCE8EE500800459 /* EventDetailView.swift */; };
 		CB0D26FE2BCE8F8300800459 /* EventDetailResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26FD2BCE8F8300800459 /* EventDetailResponse.swift */; };
+		CB276E5C2BDCDA7B00447CE5 /* ARNaviInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB276E5B2BDCDA7B00447CE5 /* ARNaviInfoView.swift */; };
 		CB2E456E2BD4DF38009DB796 /* ARCLViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB2E456D2BD4DF38009DB796 /* ARCLViewController.swift */; };
 		CB2E45702BD4DF70009DB796 /* LocationAnnotationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB2E456F2BD4DF70009DB796 /* LocationAnnotationNode.swift */; };
 		CB2E45722BD4E015009DB796 /* SCNNode+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB2E45712BD4E015009DB796 /* SCNNode+Extension.swift */; };
@@ -153,6 +154,7 @@
 		CB0D26F62BCE681F00800459 /* EventListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListResponse.swift; sourceTree = "<group>"; };
 		CB0D26FB2BCE8EE500800459 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		CB0D26FD2BCE8F8300800459 /* EventDetailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailResponse.swift; sourceTree = "<group>"; };
+		CB276E5B2BDCDA7B00447CE5 /* ARNaviInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARNaviInfoView.swift; sourceTree = "<group>"; };
 		CB2E456D2BD4DF38009DB796 /* ARCLViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCLViewController.swift; sourceTree = "<group>"; };
 		CB2E456F2BD4DF70009DB796 /* LocationAnnotationNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAnnotationNode.swift; sourceTree = "<group>"; };
 		CB2E45712BD4E015009DB796 /* SCNNode+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Extension.swift"; sourceTree = "<group>"; };
@@ -338,19 +340,20 @@
 		8B831C282BCCF60C00A85973 /* AR */ = {
 			isa = PBXGroup;
 			children = (
-				CB2E457C2BD4F46C009DB796 /* AR-Model */,
-				CB2E45732BD4E146009DB796 /* Extension */,
 				8B831C1C2BCCF60C00A85973 /* Usdz */,
+				CB2E45732BD4E146009DB796 /* Extension */,
+				CB2E457C2BD4F46C009DB796 /* AR-Model */,
 				8B831C1D2BCCF60C00A85973 /* AppleMap.swift */,
+				CB2E456D2BD4DF38009DB796 /* ARCLViewController.swift */,
+				CB2E457A2BD4E28F009DB796 /* ARCLViewControllerWrapper.swift */,
 				8B831C1E2BCCF60C00A85973 /* ARMainView.swift */,
 				8B831C1F2BCCF60C00A85973 /* ARView.swift */,
 				8B831C202BCCF60C00A85973 /* Constant.swift */,
-				8B831C272BCCF60C00A85973 /* StartView.swift */,
-				CB2E456D2BD4DF38009DB796 /* ARCLViewController.swift */,
-				CB2E457A2BD4E28F009DB796 /* ARCLViewControllerWrapper.swift */,
-				CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */,
-				CBEA32EF2BD64A560083D271 /* NavigationInfoTestView.swift */,
 				CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */,
+				CBEA32EF2BD64A560083D271 /* NavigationInfoTestView.swift */,
+				CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */,
+				CB276E5B2BDCDA7B00447CE5 /* ARNaviInfoView.swift */,
+				8B831C272BCCF60C00A85973 /* StartView.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -589,6 +592,7 @@
 				8B831C302BCCF60C00A85973 /* LoginResponse.swift in Sources */,
 				8B831C0B2BCCF57700A85973 /* DashboardView.swift in Sources */,
 				CB4CE3912BCD3F4600E0611B /* WeatherData.swift in Sources */,
+				CB276E5C2BDCDA7B00447CE5 /* ARNaviInfoView.swift in Sources */,
 				CB2E457B2BD4E28F009DB796 /* ARCLViewControllerWrapper.swift in Sources */,
 				CB2E45722BD4E015009DB796 /* SCNNode+Extension.swift in Sources */,
 				8B831C0E2BCCF57700A85973 /* ProfileTabView.swift in Sources */,
