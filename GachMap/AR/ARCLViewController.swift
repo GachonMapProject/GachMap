@@ -176,7 +176,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         
         let naviLocation = CLLocation(coordinate: end.coordinate, altitude: end.altitude + 2)
-        let navi = ARNaviInfoNode(view: ARNaviInfoView())
+        let navi = ARNaviInfoNode(view: ARNaviInfoView(distance: Int(rotationList[index].distance), rotation: rotationList[index].rotation))
         let naviNode = LocationAnnotationNode(location: naviLocation, node: navi)
         
         addScenewideNodeSettings(middleNode)
