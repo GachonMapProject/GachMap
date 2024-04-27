@@ -159,7 +159,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     
         // CheckRotation을 통해 rotationList를 받아와서 회전 방향 설정하면 될듯?
         let fileName = rotationList[index].rotation == "우회전" ? "MuhanPointRight" : rotationList[index].rotation == "좌회전" ? "MuhanPointLeft" : "MuhanMiddle"
-//        MuhanPointLeft,MuhanMiddle
+
         
         print("middleNode - rotation : \(rotationList[index])")
     
@@ -174,10 +174,17 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let boxNode = LocationAnnotationNode(location: placeBoxLocation, node: box)
         boxNode.constraints = nil
         
+        
+        let naviLocation = CLLocation(coordinate: end.coordinate, altitude: end.altitude + 2)
+        let navi = ARNaviInfoNode(view: ARNaviInfoView())
+        let naviNode = LocationAnnotationNode(location: naviLocation, node: navi)
+        
         addScenewideNodeSettings(middleNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: middleNode)
         addScenewideNodeSettings(boxNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: boxNode)
+        addScenewideNodeSettings(naviNode)
+        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: naviNode)
         
         
     } // end of placeDestinationNode()
@@ -335,4 +342,18 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         stepData = steps
           
     } // end of getIntermediateCordinates()
+    
+    
+    
+    func ARNaviInfoNode(view : ARNaviInfoView) -> SCNNode {
+        let node = SCNNode()
+        let image = view.asImage()
+        let material = SCNMaterial()
+        material.diffuse.contents = image
+        let plane = SCNPlane(width: image.size.width / 100.0, height: image.size.height / 100.0)
+        plane.materials = [material]
+        node.geometry = plane
+        return node
+    }
+
 }
