@@ -19,6 +19,8 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     var stepData = [Step]()
     var nextNodeObject : NextNodeObject
     var rotationList : [Rotation]
+    var xAngle : Float = 0.0
+    var yAngle : Float = 0.0
     
     public var locationEstimateMethod = LocationEstimateMethod.mostRelevantEstimate // 위치 추정 방법
     public var arTrackingType = SceneLocationView.ARTrackingType.worldTracking // AR 추적 타입 (orientation : 방향 추적, world : 평면 추적)
@@ -179,6 +181,17 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let navi = ARNaviInfoNode(view: ARNaviInfoView(distance: Int(rotationList[index].distance), rotation: rotationList[index].rotation))
         let naviNode = LocationAnnotationNode(location: naviLocation, node: navi)
         
+        let midPoints = calculateMidPoints(start: start, end: end, numberOfDivisions: 5)
+        
+        
+        // boxNode 위에 화살표 노드 생성
+//        let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
+//        let placeArrowLocation = CLLocation(coordinate: coordinate, altitude: (start.altitude + end.altitude) / 2 - 1.3)
+//        let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
+//        arrowNode.constraints = nil
+//        addScenewideNodeSettings(arrowNode)
+//        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: arrowNode)
+    
         addScenewideNodeSettings(middleNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: middleNode)
         addScenewideNodeSettings(boxNode)
@@ -186,41 +199,91 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         addScenewideNodeSettings(naviNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: naviNode)
         
+        // boxNode 위에 화살표 노드 생성
+        for point in midPoints {
+            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
+            let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.39)
+            let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
+            arrowNode.constraints = nil
+            addScenewideNodeSettings(arrowNode)
+            sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: arrowNode)
+        }
+        
+        
         
     } // end of placeDestinationNode()
     
+    private func calculateMidPoints(start: CLLocation, end: CLLocation, numberOfDivisions: Int) -> [CLLocation] {
+        // 시작점과 끝점의 좌표
+        let startCoordinate = start.coordinate
+        let endCoordinate = end.coordinate
+        
+        // 각 좌표의 위도 및 경도 변화량 계산
+        let latitudeDelta = (endCoordinate.latitude - startCoordinate.latitude) / Double(numberOfDivisions)
+        let longitudeDelta = (endCoordinate.longitude - startCoordinate.longitude) / Double(numberOfDivisions)
+        let altitudeDelta = (end.altitude - start.altitude) / Double(numberOfDivisions)
+        
+        // 중간 지점들의 CLLocation 배열 초기화
+        var midPoints: [CLLocation] = []
+        
+        // 시작점에서부터 각 등분 지점의 좌표를 계산하고 CLLocation 객체를 배열에 추가
+        for i in 1..<numberOfDivisions {
+            let latitude = startCoordinate.latitude + (latitudeDelta * Double(i))
+            let longitude = startCoordinate.longitude + (longitudeDelta * Double(i))
+            let altitude = start.altitude + (altitudeDelta * Double(i))
+            let midCoordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            let midPoint = CLLocation(coordinate: midCoordinate, altitude: altitude)
+            midPoints.append(midPoint)
+        }
+        
+        return midPoints
+    }
+    
+    
+    func makeSCNVector(currnetLocation : CLLocation, location : CLLocation) -> SCNVector3{
+        let distance = currnetLocation.distance(from: location)
+        let transformationMatrix = transformMatrix(source: currnetLocation, destination: location, distance: distance)
+        let node = SCNNode()
+        node.transform = transformationMatrix
+        return node.position
+    }
+    
+    func placeArrow(xAngle: Float, yAngle: Float) -> SCNNode {
+        print("placeArrow - xAngle :\(xAngle), yAngle: \(yAngle)")
+        let textName = "⋀"
+        
+        // 텍스트 생성
+        let text = SCNText(string: textName, extrusionDepth: 0.02)
+        text.font = UIFont.systemFont(ofSize: 1.5) // 폰트 크기 및 두께 설정
+        
+        // 텍스트 머티리얼 설정 (흰색으로 변경)
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.white
+        text.firstMaterial = material
+        
+        // SCNNode 생성 및 텍스트 노드 추가
+        let textNode = SCNNode(geometry: text)
+        textNode.eulerAngles.x = .pi / 2 + xAngle
+        textNode.eulerAngles.y = yAngle
+        
+        return textNode
+    }
+//⋀
+
+    
 //    출발지와 목적지 사이에 실린더 노드 배치하는 역할
     private func placeBox(currentLocation : CLLocation, start: CLLocation, end: CLLocation) -> SCNNode{
-        
-        // 현재 노드 상대 좌표
-         let startDistance = currentLocation.distance(from: start)
-        let startTransformationMatrix = transformMatrix(source: currentLocation, destination: start, distance: startDistance)
-        let startNode = SCNNode()
-        startNode.transform = startTransformationMatrix
-        let startVector = startNode.position
-        
-       
-       // 다음 노드 상대 좌표
-        let endDistance = currentLocation.distance(from: end)
-       let endTransformationMatrix = transformMatrix(source: currentLocation, destination: end, distance: endDistance)
-       let endNode = SCNNode()
-        endNode.transform = endTransformationMatrix
-        let endVector = endNode.position
+        let startVector = makeSCNVector(currnetLocation: currentLocation, location: start)  // 현재 노드 상대 좌표
+        let endVector = makeSCNVector(currnetLocation: currentLocation, location: end)      // 다음 노드 상대 좌표
         
         let length = startVector.distance(receiver: endVector)
-       
-        
-        
-        
-        
-//        let length = start.distance(from: end)   // 두 지점 사이의 거리
        
        // 출발지와 목적지 간의 고도 차이 계산
         let altitudeDifference = Float(start.altitude - end.altitude)
        
         let box = SCNBox(width: 2, height: 0.1, length: CGFloat(length), chamferRadius: 0)
-        box.firstMaterial?.diffuse.contents = UIColor.gachonSky
-        box.firstMaterial?.transparency = 0.9 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
+        box.firstMaterial?.diffuse.contents = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
+        box.firstMaterial?.transparency = 0.8 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
         let node = SCNNode(geometry: box)
 
         // 빗변
@@ -229,29 +292,12 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         // 실릴더 기울기
         let angle = acos(length / hypotenuse)
         node.eulerAngles.x = Float(-angle)
+        xAngle = -angle
 
-
-//        // 출발지와 목적지 사이의 회전 각도 계산
-//        let dirVector = SCNVector3(end.coordinate.longitude - start.coordinate.longitude,
-//                                     end.altitude - start.altitude,
-//                                     end.coordinate.latitude - start.coordinate.latitude)
-//       let yAngle = atan(dirVector.x / dirVector.z) + 0.07
-        
         let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
         let yAngle = atan(dirVector.x / dirVector.z)
         print("placeBox - yAngle : \(yAngle)")
-       
-       // CLLocation 사용 시 yAngle
-//       -1.2743467
-//       -1.324047
-//       0.40206537
-//       -1.281677
-       
-       // SCNVector3 사용 시 yAngle
-//       1.2034351
-//       1.263546
-//       -0.3286845
-//       1.2121987
+        self.yAngle = yAngle
        
        node.eulerAngles.y = yAngle
 
