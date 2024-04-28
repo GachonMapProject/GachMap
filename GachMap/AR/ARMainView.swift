@@ -22,7 +22,7 @@ struct ARMainView: View {
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
     let timer = MyTimer()
-    let path = Path().ITtoGlobal
+    let path = Path().homeToAI
     
     var body: some View {
         if coreLocation.location != nil{
