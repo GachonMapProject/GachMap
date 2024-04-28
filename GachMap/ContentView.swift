@@ -96,7 +96,6 @@ struct ContentView: View {
         } // end of .sheet
           
       } // end of NavigationStack
-      //.navigationBarBackButtonHidden()
      
       
       // 스플래시 화면 작동

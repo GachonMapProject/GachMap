@@ -10,6 +10,8 @@ import MapKit
 import CoreLocation
 
 struct MapTabView: View {
+    // 검색창 활성화
+    @State private var showLocationSearchView: Bool = false
 //
 //    @State private var region: MKCoordinateRegion = MKCoordinateRegion(
 //        center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045),
@@ -34,8 +36,6 @@ struct MapTabView: View {
         ZStack() {
             BackgroundMapView(category: category, locations: locations, coreLocation: coreLocation)
                 .ignoresSafeArea()
-            /// 지도
-            /// (coordinateRegion: $region, showsUserLocation: true)
 //            Map {
 //                Marker("가천관", systemImage: "building.fill", coordinate: .gachon)
 //                    .tint(.blue)
@@ -104,213 +104,175 @@ struct MapTabView: View {
 //            .ignoresSafeArea()
             
             VStack {
-                // 검색창
                 HStack {
-                    Image("gachonMark")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 33, height: 24, alignment: .leading)
-                        .padding(.leading)
-                    
-                    Text("검색")
-                        .font(.title3)
-                        .foregroundColor(Color(.gray))
-                    
-                    Spacer()
-                } // end of HStack (검색창)
-                .frame(width: UIScreen.main.bounds.width - 30, height: 50)
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(Color(UIColor.systemBackground))
-                        .shadow(radius: 7, x: 2, y: 2)
-                )
-                .padding(.top, 10)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack() {
-                        // 버튼 1
-                        Button(action: {}, label: {
-                            HStack {
-                                Image("gachonMark")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 18, height: 13, alignment: .leading)
-                                    .padding(.leading)
-                                
-                                Text("건물")
-                                    .padding(.trailing)
-                                    .foregroundColor(.black)
-                                    .background(GeometryReader { geometry in
-                                        Color.clear
-                                        .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                    )
-                            }
-                            .frame(height: 30)
-                            .contentShape(.capsule)
-                            .background(
-                                Capsule()
-                                    .fill(Color(UIColor.systemBackground))
-                            )
-                        }) // end of Button 1
-                        
-                        // 버튼 2
-                        Button(action: {}, label: {
-                            HStack {
-                                Image("gachonMark")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 18, height: 13, alignment: .leading)
-                                    .padding(.leading)
-                                
-                                Text("무당이 정류장")
-                                    .padding(.trailing)
-                                    .foregroundColor(.black)
-                                    .background(GeometryReader { geometry in
-                                        Color.clear
-                                        .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                    )
-                            }
-                            .frame(height: 30)
-                            //.contentShape(.capsule)
-                            .background(
-                                Capsule()
-                                    .fill(Color(UIColor.systemBackground))
-                            )
-                        }) // end of Button 2
-                        
-                        // 버튼 2
-                        Button(action: {}, label: {
-                            HStack {
-                                Image("gachonMark")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 18, height: 13, alignment: .leading)
-                                    .padding(.leading)
-                                
-                                Text("음식점")
-                                    .padding(.trailing)
-                                    .foregroundColor(.black)
-                                    .background(GeometryReader { geometry in
-                                        Color.clear
-                                        .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                    )
-                            }
-                            .frame(height: 30)
-                            .contentShape(.capsule)
-                            .background(
-                                Capsule()
-                                    .fill(Color(UIColor.systemBackground))
-                            )
-                        }) // end of Button 2
-                        
-                        // 버튼 3
-                        Button(action: {}, label: {
-                            HStack {
-                                Image("gachonMark")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 18, height: 13, alignment: .leading)
-                                    .padding(.leading)
-                                
-                                // 보건실,
-                                Text("복지시설")
-                                    .padding(.trailing)
-                                    .foregroundColor(.black)
-                                    .background(GeometryReader { geometry in
-                                        Color.clear
-                                        .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                    )
-                            }
-                            .frame(height: 30)
-                            .contentShape(.capsule)
-                            .background(
-                                Capsule()
-                                    .fill(Color(UIColor.systemBackground))
-                            )
-                        }) // end of Button 3
-                        
-                        // 버튼 4
-                        Button(action: {}, label: {
-                            HStack {
-                                Image("gachonMark")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 18, height: 13, alignment: .leading)
-                                    .padding(.leading)
-                                
-                                Text("흡연구역")
-                                    .padding(.trailing)
-                                    .foregroundColor(.black)
-                                    .background(GeometryReader { geometry in
-                                        Color.clear
-                                        .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                    )
-                            }
-                            .frame(height: 30)
-                            .contentShape(.capsule)
-                            .background(
-                                Capsule()
-                                    .fill(Color(UIColor.systemBackground))
-                            )
-                        }) // end of Button 4
-                        
-                        // 버튼 3
-                        // ...
-                        
-                    }
-                    .padding(.leading, 20)
-                    .padding(.top, 7)
-                    .padding(.trailing, 20)
+                    // 카테고리 버튼
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack() {
+                            // 버튼 1
+                            Button(action: {}, label: {
+                                HStack {
+                                    Image("gachonMark")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 18, height: 13, alignment: .leading)
+                                        .padding(.leading)
+                                    
+                                    Text("건물")
+                                        .padding(.trailing)
+                                        .foregroundColor(.black)
+                                        .background(GeometryReader { geometry in
+                                            Color.clear
+                                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
+                                        )
+                                }
+                                .frame(height: 30)
+                                .contentShape(.capsule)
+                                .background(
+                                    Capsule()
+                                        .fill(Color(UIColor.systemBackground))
+                                )
+                            }) // end of Button 1
+                            
+                            // 버튼 2
+                            Button(action: {}, label: {
+                                HStack {
+                                    Image("gachonMark")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 18, height: 13, alignment: .leading)
+                                        .padding(.leading)
+                                    
+                                    Text("무당이 정류장")
+                                        .padding(.trailing)
+                                        .foregroundColor(.black)
+                                        .background(GeometryReader { geometry in
+                                            Color.clear
+                                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
+                                        )
+                                }
+                                .frame(height: 30)
+                                //.contentShape(.capsule)
+                                .background(
+                                    Capsule()
+                                        .fill(Color(UIColor.systemBackground))
+                                )
+                            }) // end of Button 2
+                            
+                            // 버튼 2
+                            Button(action: {}, label: {
+                                HStack {
+                                    Image("gachonMark")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 18, height: 13, alignment: .leading)
+                                        .padding(.leading)
+                                    
+                                    Text("음식점")
+                                        .padding(.trailing)
+                                        .foregroundColor(.black)
+                                        .background(GeometryReader { geometry in
+                                            Color.clear
+                                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
+                                        )
+                                }
+                                .frame(height: 30)
+                                .contentShape(.capsule)
+                                .background(
+                                    Capsule()
+                                        .fill(Color(UIColor.systemBackground))
+                                )
+                            }) // end of Button 2
+                            
+                            // 버튼 3
+                            Button(action: {}, label: {
+                                HStack {
+                                    Image("gachonMark")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 18, height: 13, alignment: .leading)
+                                        .padding(.leading)
+                                    
+                                    // 보건실,
+                                    Text("복지시설")
+                                        .padding(.trailing)
+                                        .foregroundColor(.black)
+                                        .background(GeometryReader { geometry in
+                                            Color.clear
+                                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
+                                        )
+                                }
+                                .frame(height: 30)
+                                .contentShape(.capsule)
+                                .background(
+                                    Capsule()
+                                        .fill(Color(UIColor.systemBackground))
+                                )
+                            }) // end of Button 3
+                            
+                            // 버튼 4
+                            Button(action: {}, label: {
+                                HStack {
+                                    Image("gachonMark")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 18, height: 13, alignment: .leading)
+                                        .padding(.leading)
+                                    
+                                    Text("흡연구역")
+                                        .padding(.trailing)
+                                        .foregroundColor(.black)
+                                        .background(GeometryReader { geometry in
+                                            Color.clear
+                                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
+                                        )
+                                }
+                                .frame(height: 30)
+                                .contentShape(.capsule)
+                                .background(
+                                    Capsule()
+                                        .fill(Color(UIColor.systemBackground))
+                                )
+                            }) // end of Button 4
+                            
+                        }
+                        .padding(.leading, 20)
+                        .padding(.top, 7)
+                        .padding(.trailing, 20)
+                    } // end of ScrollView of 카테고리 버튼
                 }
-                
-                
-//                // AR, 현재 위치 버튼
-//                HStack {
-//                    Spacer()
-//                    VStack {
-//                        Spacer()
-//                        
-//                        Button("AR") {
-//                            
-//                        }
-//                        // end of AR Button
-//                        
-//                        Spacer()
-//                        
-//                        Divider()
-//                        
-//                        Spacer()
-//                        
-//                        Button("위치") {
-//                            let manager = CLLocationManager()
-//                            manager.desiredAccuracy = kCLLocationAccuracyBest
-//                            manager.requestWhenInUseAuthorization()
-//                            manager.startUpdatingLocation()
-//                            
-//                            let latitude = manager.location?.coordinate.latitude
-//                            let longitude = manager.location?.coordinate.longitude
-//                            
-//                            region = MKCoordinateRegion (
-//                                center: CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!),
-//                                span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
-//                            )
-//                        } // end of location Button
-//                        
-//                        Spacer()
-//                    }
-//                    .frame(width: 49.0, height: UIScreen.main.bounds.width - 290)
-//                    .background(
-//                        RoundedRectangle(cornerRadius: 12)
-//                            .fill(Color(UIColor.systemBackground))
-//                            .shadow(radius: 7, x: 2, y: 2)
-//                    )
-//                    .padding(.top)
-//                    .padding(.trailing)
-//                } // end of HStack (AR, 현재 위치 버튼)
+                .padding(.top, 60)
                 
                 Spacer()
-                
             }
+            
+            VStack {
+                // 검색창
+                /// 방법 1: sheet로 띄우기
+    //                SearchMainView()
+    //                    .onTapGesture {
+    //                        showLocationSearchView.toggle()
+    //                    }
+    //                    .fullScreenCover(isPresented: $showLocationSearchView) {
+    //                        LocationSearchView(showLocationSearchView: $showLocationSearchView)
+    //                    }
+                
+                /// 방법 2: binding으로 화면 전환 넘기기
+                if showLocationSearchView {
+                    LocationSearchView(showLocationSearchView: $showLocationSearchView)
+                } else {
+                    SearchMainView()
+                        .onTapGesture {
+                            withAnimation(.spring()) {
+                                showLocationSearchView.toggle()
+                            }
+                        }
+                }
+                // end of 검색창
+                
+                Spacer()
+            }
+            
+
         }
         
     }
