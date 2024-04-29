@@ -79,6 +79,7 @@ struct ContentView: View {
               
         }
         .ignoresSafeArea()
+        .accentColor(.gachonBlue)
         .sheet(isPresented: $showSheet) {
           ScrollView(.vertical, content: {
             VStack(alignment: .leading, spacing: 15, content: {
@@ -96,6 +97,8 @@ struct ContentView: View {
         } // end of .sheet
           
       } // end of NavigationStack
+      .toolbar(.visible, for: .tabBar)
+      // 나중에 문제되면 위에 코드 삭제하기
      
       
       // 스플래시 화면 작동
