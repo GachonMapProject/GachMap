@@ -21,6 +21,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     var rotationList : [Rotation]
     var xAngle : Float = 0.0
     var yAngle : Float = 0.0
+//    var nodeNames : [Int : [String]] = [:]
     
     public var locationEstimateMethod = LocationEstimateMethod.mostRelevantEstimate // 위치 추정 방법
     public var arTrackingType = SceneLocationView.ARTrackingType.worldTracking // AR 추적 타입 (orientation : 방향 추적, world : 평면 추적)
@@ -144,15 +145,17 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     
     
     private func placeStartNode(currentLocation : CLLocation){
-
+        
         let startLocation = stepData[0].startLocation
         print("startLocation.altitude : \(startLocation.altitude)")
         
         let sourceNode = makePngNode(fileName: "MuhanStart")
         let startNode = LocationAnnotationNode(location: startLocation, node: sourceNode)
-
+        startNode.name = "0"
+        
         addScenewideNodeSettings(startNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: startNode)
+        nextNodeObject.nodeNames[0] = ["0"]
         
     } // end of placeStartNode
     
@@ -192,6 +195,9 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
 //        addScenewideNodeSettings(arrowNode)
 //        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: arrowNode)
     
+        middleNode.name = "\(index)-0"
+        boxNode.name = "\(index)-1"
+        naviNode.name = "\(index)-2"
         addScenewideNodeSettings(middleNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: middleNode)
         addScenewideNodeSettings(boxNode)
@@ -199,18 +205,22 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         addScenewideNodeSettings(naviNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: naviNode)
         
+        var names : [String] = ["\(index)-0", "\(index)-1", "\(index)-2"]
+        
         // boxNode 위에 화살표 노드 생성
         for point in midPoints {
             let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
             let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.39)
             let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
             arrowNode.constraints = nil
+            arrowNode.name = ("\(index)-\(point.coordinate.latitude)")
+            names.append("\(index)-\(point.coordinate.latitude)")
             addScenewideNodeSettings(arrowNode)
             sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: arrowNode)
+            
         }
-        
-        
-        
+        nextNodeObject.nodeNames[index+1] = names
+
     } // end of placeDestinationNode()
     
     private func calculateMidPoints(start: CLLocation, end: CLLocation, numberOfDivisions: Int) -> [CLLocation] {
@@ -254,7 +264,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         // 텍스트 생성
         let text = SCNText(string: textName, extrusionDepth: 0.02)
-        text.font = UIFont.systemFont(ofSize: 1.5) // 폰트 크기 및 두께 설정
+        text.font = UIFont.systemFont(ofSize: 2) // 폰트 크기 및 두께 설정
         
         // 텍스트 머티리얼 설정 (흰색으로 변경)
         let material = SCNMaterial()
@@ -320,10 +330,15 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         boxNode.constraints = nil
         
+        boxNode.name = "lastBoxNode"
+        destinationNode.name = "last"
+        
         addScenewideNodeSettings(destinationNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: destinationNode)
         addScenewideNodeSettings(boxNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: boxNode)
+        
+        nextNodeObject.nodeNames[path.count - 1] = [destinationNode.name!, boxNode.name!]
     }
     
     // 출발지와 목적지 사이의 변환 행렬 계산 후 노드 위치 방향 설정
@@ -400,6 +415,66 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         plane.materials = [material]
         node.geometry = plane
         return node
+    }
+    
+    // 이전, 현재, 다음 노드와 일정 거리 이내 노드만 화면에 표시
+    func checkNode(){
+        let index = nextNodeObject.nextIndex
+        
+//         모든 노드 숨김처리
+        for value in nextNodeObject.nodeNames.values{
+            value.map{name in
+                sceneLocationView?.scene.rootNode.enumerateChildNodes { (node, _) in
+                    if node.name == name{
+                        print("hiddend - " + (node.name ?? ""))
+                        node.isHidden = true
+                    }
+                }
+            }
+        }
+
+        
+        // 현재 위치 가져오기
+        guard let currentLocation = sceneLocationView?.sceneLocationManager.currentLocation else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.checkNode()
+            }
+            return
+        }
+        nextNodeObject.nodeNames[index]?.map{ names in
+            print("index-\(names)")
+            sceneLocationView?.scene.rootNode.enumerateChildNodes { (node, _) in
+                if node.name == names {
+                    print("index - find")
+                    node.isHidden = false
+                }
+            }
+        }
+        
+        nextNodeObject.nodeNames[index - 1]?.map{ names in
+            print("index - 1 -\(names)")
+            sceneLocationView?.scene.rootNode.enumerateChildNodes { (node, _) in
+                if node.name == names {
+                    print("index-1 - find")
+                    node.isHidden = false
+                }
+            }
+        }
+        nextNodeObject.nodeNames[index + 1]?.map{ names in
+            print("index + 1 -\(names)")
+            sceneLocationView?.scene.rootNode.enumerateChildNodes { (node, _) in
+                if node.name == names {
+                    node.isHidden = false
+                }
+            }
+        }
+//        for i in 0..<path.count {
+//            let distance = currentLocation.distance(from: path[i].location)
+//            if distance <= 20 {
+//                nodeNames[index]?.map{$0.isHidden = false}
+//            }
+//        }
+        
     }
 
 }

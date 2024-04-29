@@ -19,8 +19,9 @@ struct ARCLViewControllerWrapper: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: ARCLViewController, context: Context) {
-        // NextNodeObject.nextIndex가 변경될 때마다 호출 
-        uiViewController.addNodes(path: path)
+        // NextNodeObject.nextIndex가 변경될 때마다 호출 -> scene에 노드를 추가하는 함수를 호출해야 할듯
+//        uiViewController.addNodes(path: path)
+        uiViewController.checkNode()
     }
 }
 
