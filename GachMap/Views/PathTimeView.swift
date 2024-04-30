@@ -26,11 +26,12 @@ struct PathTimeView: View {
         VStack(alignment: .leading){
             Text(pathName)
                 .font(.system(size: 23))
+                .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
                 .bold()
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 0))
             
             HStack(alignment: .lastTextBaseline){
-                if isLogin {
+                if isLogin && time != nil{
                     Text("AI 예측")
                         .font(.system(size: 20))
                         .bold()
@@ -44,13 +45,16 @@ struct PathTimeView: View {
                             .mask(Text("AI 예측")).bold()
                         )
                 }
+
                 Spacer()
                 HStack(alignment: .lastTextBaseline, spacing : 4){
                     Text(time == nil ? "-" : time!)
                         .font(.system(size: 35))
+                        .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
                         .bold()
                     Text("분")
                         .font(.system(size: 18))
+                        .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
                         .bold()
                 }
                 
@@ -58,7 +62,7 @@ struct PathTimeView: View {
             .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
         }
         .frame(width: width, height: height)
-        .background(.white)
+        .background(time != nil ? .white : Color(red: 0.8, green: 0.8, blue: 0.8))
         .cornerRadius(15)
         .shadow(radius: 5, x: 2, y: 2)
         .overlay(
