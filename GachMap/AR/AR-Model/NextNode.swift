@@ -9,6 +9,7 @@ import Foundation
 
 class NextNodeObject : ObservableObject {
     @Published var nextIndex: Int = 0
+    @Published var nodeNames = [Int : [String]]()
     
     func increment() {
         nextIndex += 1

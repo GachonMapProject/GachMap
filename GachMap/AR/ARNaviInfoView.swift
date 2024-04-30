@@ -15,7 +15,7 @@ struct ARNaviInfoView: View {
                        "좌회전" : "arrowshape.turn.up.left.circle.fill",
                        "직진" : "arrow.up.circle.fill"]
     
-    @State var distance : Int = 0
+    @State var distance : Int = 100
     @State var rotation : String = "우회전"
     
     var body: some View {
@@ -39,7 +39,7 @@ struct ARNaviInfoView: View {
             .padding(.bottom, 33)
 
         }
-        .frame(width: 200, height: 100)
+        .frame(width: 250, height: 100)
         
 //        .background{
 //            Image(systemName: "bubble.middle.bottom.fill")
@@ -55,7 +55,7 @@ struct ARNaviInfoView: View {
 extension ARNaviInfoView {
     func asImage() -> UIImage {
         let hostView = UIHostingController(rootView: self)
-        let size = CGSize(width: 220, height: 100) // 원래 View의 크기로 설정
+        let size = CGSize(width: 250, height: 100) // 원래 View의 크기로 설정
         hostView.view.frame = CGRect(origin: .zero, size: size)
         
         // 모서리를 둥글게 처리하고 그림자 추가
