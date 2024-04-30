@@ -21,6 +21,9 @@ struct ARMainView: View {
     @State private var checkTime: Timer? // AR init 후 시간 체크
     let intervalTime : Double = 7.0
     
+    @State private var checkSecondTime: Timer?
+    @State var checkSecond = 0
+    
     let checkRotation = CheckRotation()
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
@@ -31,6 +34,18 @@ struct ARMainView: View {
         if coreLocation.location != nil{
             VStack{
                 if !isARViewReady {
+                    Image(systemName: "antenna.radiowaves.left.and.right")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(checkSecond % 2 == 0 ? .gray : .blue)
+                        .frame(width: 100, height: 100)
+                        .padding(.bottom, 30)
+                        .onAppear(){
+                            checkSecondTime = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: true) { _ in
+                                checkSecond += 1
+                                print(checkSecond)
+                            }
+                        }
                     ProgressView("GPS 신호를 찾고 있습니다.")
                         .onAppear {
                             // 타이머 시작
@@ -38,8 +53,8 @@ struct ARMainView: View {
                                 showAlert = true
                             }
                         }
-                    Text("수평 정확도 : \(coreLocation.location!.horizontalAccuracy)")
-                    Text("수직 정확도 : \(coreLocation.location!.verticalAccuracy)")
+//                    Text("수평 정확도 : \(coreLocation.location!.horizontalAccuracy)")
+//                    Text("수직 정확도 : \(coreLocation.location!.verticalAccuracy)")
                     .alert(isPresented: $showAlert) {
                         Alert(
                             title: Text("알림"),
@@ -55,6 +70,9 @@ struct ARMainView: View {
                             secondaryButton: .cancel(Text("취소")) {
                                 // '취소' 버튼을 누르면 이전 화면으로 이동합니다.
                                 showAlert = false
+                                checkSecondTime?.invalidate()
+                                checkTime?.invalidate()
+                                
                                 // 이전 화면으로 이동하는 코드를 여기에 추가하세요
                             }
                         )
