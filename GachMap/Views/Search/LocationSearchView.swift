@@ -69,10 +69,41 @@ struct LocationSearchView: View {
             // 검색창 끝
 
             // 최근 검색어 보여주기
-            List(recentSearches, id: \.self) { search in
-                Text(search)
+            VStack {
+                HStack {
+                    Text("최근 검색")
+                        .font(.system(size: 15))
+                        .foregroundColor(.gray)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        
+                    }, label: {
+                        Text("전체 삭제")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundColor(.gachonBlue)
+                    })
+                }
+                .padding(.leading, 20)
+                .padding(.trailing, 20)
+           
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        ForEach(0..<20, id: \.self) { _ in
+                            LocationSearchResultCell()
+                                .padding(.leading, 20)
+                                .padding(.trailing, 20)
+                                .padding(.top, 3)
+                        }
+                    }
+                } // end of ScrollView
+                
             }
-            .padding(.top, 10)
+            .padding(.top, 20)
+            
+            
+            
         }
         .background(Color.white)
         // end of 전체 VStack

@@ -65,6 +65,12 @@
 		8BC86EAE2BDE629600051BF0 /* SearchMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EAD2BDE629600051BF0 /* SearchMainView.swift */; };
 		8BC86EBB2BDE654700051BF0 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EBA2BDE654700051BF0 /* LocationSearchView.swift */; };
 		8BC86EBF2BDE7FFB00051BF0 /* LocationSearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EBE2BDE7FFB00051BF0 /* LocationSearchResultCell.swift */; };
+		8BC86EC12BDFC33400051BF0 /* CustomDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EC02BDFC33400051BF0 /* CustomDropdown.swift */; };
+		8BC86EC32BDFE1D500051BF0 /* WithdrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EC22BDFE1D500051BF0 /* WithdrawView.swift */; };
+		8BC86EC72BDFFE0700051BF0 /* InquireSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EC62BDFFE0700051BF0 /* InquireSendView.swift */; };
+		8BC86EC92BDFFE1100051BF0 /* InquireListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EC82BDFFE1100051BF0 /* InquireListView.swift */; };
+		8BC86ECB2BE1248400051BF0 /* InquireDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86ECA2BE1248400051BF0 /* InquireDetailView.swift */; };
+		8BC86ECD2BE124C200051BF0 /* InquireListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86ECC2BE124C200051BF0 /* InquireListCell.swift */; };
 		A34506E4E7DFA2C6F58F6EBE /* Pods_GachMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE0964287E09D08847B86CA /* Pods_GachMap.framework */; };
 		CB0D26F72BCE681F00800459 /* EventListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26F62BCE681F00800459 /* EventListResponse.swift */; };
 		CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26FB2BCE8EE500800459 /* EventDetailView.swift */; };
@@ -160,6 +166,12 @@
 		8BC86EAD2BDE629600051BF0 /* SearchMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMainView.swift; sourceTree = "<group>"; };
 		8BC86EBA2BDE654700051BF0 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
 		8BC86EBE2BDE7FFB00051BF0 /* LocationSearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchResultCell.swift; sourceTree = "<group>"; };
+		8BC86EC02BDFC33400051BF0 /* CustomDropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDropdown.swift; sourceTree = "<group>"; };
+		8BC86EC22BDFE1D500051BF0 /* WithdrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawView.swift; sourceTree = "<group>"; };
+		8BC86EC62BDFFE0700051BF0 /* InquireSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquireSendView.swift; sourceTree = "<group>"; };
+		8BC86EC82BDFFE1100051BF0 /* InquireListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquireListView.swift; sourceTree = "<group>"; };
+		8BC86ECA2BE1248400051BF0 /* InquireDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquireDetailView.swift; sourceTree = "<group>"; };
+		8BC86ECC2BE124C200051BF0 /* InquireListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquireListCell.swift; sourceTree = "<group>"; };
 		CB0D26F62BCE681F00800459 /* EventListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListResponse.swift; sourceTree = "<group>"; };
 		CB0D26FB2BCE8EE500800459 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		CB0D26FD2BCE8F8300800459 /* EventDetailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailResponse.swift; sourceTree = "<group>"; };
@@ -222,6 +234,11 @@
 				8B831C052BCCF57700A85973 /* ProfileTabView.swift */,
 				8B5368F82BD2BD8D007B8984 /* PasswordCheckView.swift */,
 				8B3159D92BD0F8510049CB5F /* ProfileModifyView.swift */,
+				8BC86EC22BDFE1D500051BF0 /* WithdrawView.swift */,
+				8BC86EC62BDFFE0700051BF0 /* InquireSendView.swift */,
+				8BC86EC82BDFFE1100051BF0 /* InquireListView.swift */,
+				8BC86ECC2BE124C200051BF0 /* InquireListCell.swift */,
+				8BC86ECA2BE1248400051BF0 /* InquireDetailView.swift */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -381,6 +398,7 @@
 				8B831C2A2BCCF60C00A85973 /* BottomSheetHelper.swift */,
 				8B831C2B2BCCF60C00A85973 /* MapTestView.swift */,
 				8BA84B612BCF964800ACD5E2 /* SegmentedControlHelper.swift */,
+				8BC86EC02BDFC33400051BF0 /* CustomDropdown.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -583,6 +601,7 @@
 				CB6071D82BD634AD00AB12EE /* NavigationInfoView.swift in Sources */,
 				CB4EF6232BCFD7A000BDC73A /* EventCardView.swift in Sources */,
 				8B831C2F2BCCF60C00A85973 /* LoginRequest.swift in Sources */,
+				8BC86EC72BDFFE0700051BF0 /* InquireSendView.swift in Sources */,
 				CB4CE3972BCD421A00E0611B /* Weather.swift in Sources */,
 				CB4EF6212BCFD5C000BDC73A /* BuildingDetailResponse.swift in Sources */,
 				8BA84B602BCF8DD000ACD5E2 /* InfoInputView.swift in Sources */,
@@ -606,6 +625,7 @@
 				8B831C0C2BCCF57700A85973 /* EventTabView.swift in Sources */,
 				CB2E456E2BD4DF38009DB796 /* ARCLViewController.swift in Sources */,
 				CB4EF61D2BCFA07C00BDC73A /* BuildingDetailView.swift in Sources */,
+				8BC86ECD2BE124C200051BF0 /* InquireListCell.swift in Sources */,
 				8B5368F92BD2BD8D007B8984 /* PasswordCheckView.swift in Sources */,
 				8B5369032BD37F6D007B8984 /* UserPasswordCheckResponse.swift in Sources */,
 				8B3159D12BCFE7190049CB5F /* SignUpView.swift in Sources */,
@@ -632,12 +652,15 @@
 				CB7C69862BE0CA0A00C277AE /* PathTimeTestView.swift in Sources */,
 				CB4EF61F2BCFD4C800BDC73A /* BuildingListResponse.swift in Sources */,
 				CBDDC9122BCEB62300019FAB /* BackgroundMapView.swift in Sources */,
+				8BC86ECB2BE1248400051BF0 /* InquireDetailView.swift in Sources */,
 				8B5368F52BD2B59D007B8984 /* GuestInfoRequest.swift in Sources */,
 				8B831C0A2BCCF57700A85973 /* BuildingTabView.swift in Sources */,
 				8B831C4B2BCD46DF00A85973 /* PrimaryView.swift in Sources */,
 				8BC86EBF2BDE7FFB00051BF0 /* LocationSearchResultCell.swift in Sources */,
 				8B831C472BCD1B5C00A85973 /* UserInfo.swift in Sources */,
 				CBEA32F02BD64A560083D271 /* NavigationInfoTestView.swift in Sources */,
+				8BC86EC32BDFE1D500051BF0 /* WithdrawView.swift in Sources */,
+				8BC86EC12BDFC33400051BF0 /* CustomDropdown.swift in Sources */,
 				8B3159DA2BD0F8510049CB5F /* ProfileModifyView.swift in Sources */,
 				8B5368F72BD2B5A9007B8984 /* GuestInfoResponse.swift in Sources */,
 				CB7C69842BE0B6F500C277AE /* PathTimeView.swift in Sources */,
@@ -658,6 +681,7 @@
 				8B5368F32BD25EB7007B8984 /* IdDuplicationResponse.swift in Sources */,
 				8B3159D52BD041500049CB5F /* ServiceTermsView.swift in Sources */,
 				8B831C2D2BCCF60C00A85973 /* LoginInfo.swift in Sources */,
+				8BC86EC92BDFFE1100051BF0 /* InquireListView.swift in Sources */,
 				8B831C412BCCF60C00A85973 /* Path.swift in Sources */,
 				8B831C3F2BCCF60C00A85973 /* NextNode.swift in Sources */,
 				8B831C422BCCF60C00A85973 /* StartView.swift in Sources */,

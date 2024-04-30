@@ -650,6 +650,6 @@ struct ProfileModifyView: View {
     
 } // end of View
 
-//#Preview {
-//    ProfileTabView()
-//}
+#Preview {
+    ProfileModifyView(showModifyView: Binding.constant(true))
+}

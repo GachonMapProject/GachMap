@@ -144,7 +144,7 @@ struct LoginView: View {
                             .frame(width: UIScreen.main.bounds.width - 200, height: 45)
                             .background(
                                 RoundedRectangle(cornerRadius: 15)
-                                    //.fill(Color(.systemBlue))
+                                    .fill(username.isEmpty || password.isEmpty ? Color(UIColor.systemGray4) : Color.gachonBlue)
                                     .shadow(radius: 5, x: 2, y: 2)
                             )
                             .padding(.top, 20)

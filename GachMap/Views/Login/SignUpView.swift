@@ -353,7 +353,7 @@ struct SignUpView: View {
                                     .toggleStyle(CheckboxToggleStyle(style: .circle))
                                     .foregroundColor(.blue)
                                 
-                                Text("서비스 이용 약관 (필수)")
+                                Text("서비스 이용 약관 동의 (필수)")
                                 //.font(.system(size: 15))
                                 
                                 Spacer()
@@ -470,7 +470,7 @@ struct SignUpView: View {
                                         .fill(isButtonEnabled() ? Color.gachonBlue : Color(UIColor.systemGray4))
                                         .shadow(radius: 5, x: 2, y: 2)
                                 )
-                                .padding(.bottom, 20)
+                                //.padding(.bottom, 20)
                                 .padding(.top, 15)
                         })
                         .disabled(!isButtonEnabled())
