@@ -17,6 +17,9 @@ struct ARMainView: View {
     @State private var isARViewVisible = true // ARView의 on/off 상태 변수
     @State private var isEnd = false // 안내 종료 상태 변수
     @State private var isARViewReady = false    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
+    @State private var showAlert = false
+    @State private var checkTime: Timer? // AR init 후 시간 체크
+    let intervalTime : Double = 7.0
     
     let checkRotation = CheckRotation()
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
@@ -28,9 +31,34 @@ struct ARMainView: View {
         if coreLocation.location != nil{
             VStack{
                 if !isARViewReady {
-                    ProgressView("Initializing AR...")
+                    ProgressView("GPS 신호를 찾고 있습니다.")
+                        .onAppear {
+                            // 타이머 시작
+                            checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
+                                showAlert = true
+                            }
+                        }
                     Text("수평 정확도 : \(coreLocation.location!.horizontalAccuracy)")
                     Text("수직 정확도 : \(coreLocation.location!.verticalAccuracy)")
+                    .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text("알림"),
+                            message: Text("GPS 신호가 불안정합니다.\n \n실내 혹은 높은 건물 주변은 \nGPS 신호가 불안정 할 수 있습니다."),
+                            primaryButton: .default(Text("재시도")) {
+                                // '재시도' 버튼을 누르면 타이머를 다시 시작하고 초기화를 시도합니다.
+                                showAlert = false
+                                checkTime?.invalidate()
+                                checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
+                                    showAlert = true
+                                }
+                            },
+                            secondaryButton: .cancel(Text("취소")) {
+                                // '취소' 버튼을 누르면 이전 화면으로 이동합니다.
+                                showAlert = false
+                                // 이전 화면으로 이동하는 코드를 여기에 추가하세요
+                            }
+                        )
+                    }
                 }
                 else {
                     if !isEnd {

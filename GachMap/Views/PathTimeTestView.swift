@@ -25,7 +25,9 @@ struct PathTimeTestView: View {
             ZStack(){
                 LazyHStack{
                     ForEach(0..<3){ index in
-                        Button(action: {}, label: {
+                        Button(action: {
+                            // 지도에 경로 표시 및 검색창의 텍스트 변경 (위치 포함)
+                        }, label: {
                             PathTimeView(pathName: test[index].pathName, time:  test[index].time , isLogin: true, num: index, selectedNum: $selectedNum)
                                 .scrollTransition(.animated, axis: .horizontal) { content, phase in
                                     content
