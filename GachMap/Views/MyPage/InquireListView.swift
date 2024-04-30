@@ -15,57 +15,11 @@ struct InquireListView: View {
         NavigationView {
             ScrollView {
                 
-                // 버튼 시작
-                Button(action: {
-                    
-                }, label: {
-                    HStack {
-                        Text("카테고리")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundColor(.gachonBlue)
-                            .padding(.trailing, 5)
-                        
-                        VStack(alignment: .leading) {
-                            Text("문의 제목")
-                                .font(.system(size: 18, weight: .bold))
-                                .foregroundColor(.black)
-                            Text("작성일")
-                                .font(.system(size: 15))
-                                .foregroundColor(.gray)
-                        }
-                        
-                        Spacer()
-                        
-                        HStack {
-                            Text("답변 대기중")
-                                .padding(.leading, 10)
-                                .padding(.trailing, 10)
-                                .font(.system(size: 13))
-                                .foregroundColor(.white)
-                                .background(GeometryReader { geometry in
-                                    Color.clear
-                                    .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                )
-                        }
-                        .frame(height: 25)
-                        .contentShape(.capsule)
-                        .background(
-                            Capsule()
-                                .fill(.gachonBlue))
-                        
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
-                    }
-                })
-                .frame(width: UIScreen.main.bounds.width - 30)
-                // 버튼 끝
-                
-                Divider()
-                    .frame(width: UIScreen.main.bounds.width - 30)
+                InquireListCell()
                 
             } // end of ScrollView
             .padding(.top, 15)
-            
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Text("문의내역 조회")
@@ -91,6 +45,7 @@ struct InquireListView: View {
                 }
                 
             } // end of .toolbar
+//            .naigationBarTitle("문의내역 조회", displayMode: .inline)
         } // end of NavigationView
         
     } // end of body

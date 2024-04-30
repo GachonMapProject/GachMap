@@ -94,12 +94,13 @@ struct LocationSearchView: View {
                             LocationSearchResultCell()
                                 .padding(.leading, 20)
                                 .padding(.trailing, 20)
+                                .padding(.top, 3)
                         }
                     }
                 } // end of ScrollView
                 
             }
-            .padding(.top, 10)
+            .padding(.top, 20)
             
             
             

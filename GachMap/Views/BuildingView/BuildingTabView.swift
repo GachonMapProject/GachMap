@@ -27,9 +27,8 @@ struct BuildingTabView: View {
     @State var nilData = false  // data가 없을 때 알림
     
     var body: some View {
-        
         NavigationView {
-            if !apiConnection{
+            if !apiConnection {
                 ProgressView()
                     .onAppear(){
                         getBuildingList()
@@ -44,12 +43,10 @@ struct BuildingTabView: View {
                     } message: {
                         Text("캠퍼스 맵 데이터가 없습니다.")
                     }
-            }
-            else{
-                List(selection: $selection){
+            } else {
+                List(selection: $selection) {
                     Section(header: Text(titles[0])) {
                         ForEach(buildingList.indices) { index in
-                            
                             NavigationLink(destination: BuildingDetailView(buildingCode: buildingList[index].placeId), label:{
                                 HStack {
                                     Image("gachonMark")
@@ -66,6 +63,7 @@ struct BuildingTabView: View {
                     }
                 }
                 .navigationTitle("캠퍼스 맵")
+
             }
         } // end of NavigationStack
             

@@ -44,7 +44,7 @@ struct EventTabView: View {
                             ForEach(1...eventList.count, id: \.self){index in
                                 Rectangle()
                                     .cornerRadius(10)
-                                    .frame(height: index == currentIndex ? 6 : 3)
+                                    .frame(height: index == currentIndex ? 5 : 3)
                                     .foregroundColor(index == currentIndex ? .gachonBlue : .gray)
                                     .animation(.easeInOut)  // 애니메이션 적용
                             }

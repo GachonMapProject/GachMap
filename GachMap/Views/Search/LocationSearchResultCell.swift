@@ -26,7 +26,7 @@ struct LocationSearchResultCell: View {
         }
         .padding(.leading, 15)
         .padding(.trailing, 15)
-        .padding(.top, 5)
+//        .padding(.top, 5)
         
         Divider()
     }

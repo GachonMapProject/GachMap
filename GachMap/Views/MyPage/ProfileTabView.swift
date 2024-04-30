@@ -16,6 +16,8 @@ struct ProfileTabView: View {
     @State private var showWithdrawView: Bool = false
     @State private var showInquireSendView: Bool = false
     @State private var showInquireListView: Bool = false
+    @State private var showServiceTermsModal: Bool = false
+    @State private var showPrivacyTermsModal: Bool = false
     
     @State private var loginInfo: LoginInfo? = nil
     @State private var isLogout: Bool = false
@@ -23,6 +25,10 @@ struct ProfileTabView: View {
     @State private var isLoginMove: Bool = false
  
     @State private var showLogoutAlert: Bool = false
+    
+    //@State private var loginInfo: LoginInfo? = nil
+    @State private var userInfo: UserInquiryResponse?
+    @State private var isLoading: Bool = false
     
     // LoginInfo에 저장된 정보 불러오기
     private func getLoginInfo() {
@@ -57,6 +63,61 @@ struct ProfileTabView: View {
         return nil
     }
     
+    // 서버에 저장된 사용자 정보 가져오기
+//    private func getUserInfoInquiry() {
+//        isLoading = true
+//        
+//        loginInfo = getLoginInfo()
+//            
+//        guard let userCode = loginInfo?.userCode else {
+//            print("userCode is nil")
+//            return
+//        }
+//        
+//        if let userCode = loginInfo?.userCode {
+//            self.userId = String(userCode)
+//        } else {
+//            print("userCode is nil")
+//            return
+//        }
+//        
+//        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userId)")
+//        else {
+//            print("Invalid URL")
+//            return
+//        }
+//        
+//        AF.request(url, method: .get, parameters: nil, headers: nil)
+//            .validate()
+//            .responseDecodable(of: UserInquiryResponse.self) { response in
+//                isLoading = false
+//                
+//                switch response.result {
+//                case .success(let value):
+//                    if (value.success == true) {
+//                        print("회원 정보 요청 성공")
+//                        self.userInfo = value
+//                        
+//                        self.username = value.data.username ?? ""
+//                        self.userNickname = value.data.userNickname ?? ""
+//                        self.userBirth = value.data.userBirth ?? 0
+//                        self.selectedGender = value.data.userGender ?? ""
+//                        self.userHeight = value.data.userHeight ?? 0
+//                        self.userWeight = value.data.userWeight ?? 0
+//                        let walkSpeed = value.data.userSpeed == "FAST" ? "빠름" : value.data.userSpeed == "SLOW" ? "느림" : "보통"
+//                        self.selectedWalkSpeed = walkSpeed
+//                        
+//                    } else {
+//                        print("회원 정보 요청 실패")
+//                        // showErrorAlert = true
+//                    }
+//                    
+//                case .failure(let error):
+//                    print("Error: \(error.localizedDescription)")
+//                }
+//            }
+//    } // end of getUserInfoInquiry()
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -64,8 +125,16 @@ struct ProfileTabView: View {
                 
                 /// 나중에 !=로 바꾸기!! 꼭!!!!!
                 if (userCode == nil) {
-                    VStack {
+                    VStack { // 전체 내용 VStack
+                        
+                        // 상단 파란 박스 부분 VStack
                         VStack {
+                            Image("MyPageTitle")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(maxWidth: UIScreen.main.bounds.width - 50, alignment: .leading)
+                                .frame(height: 35)
+                                //.padding(.top, 30)
                             // 닉네임, ID, 로그아웃 버튼 영역
                             HStack {
                                 VStack(spacing: 5) {
@@ -155,101 +224,165 @@ struct ProfileTabView: View {
                             // end of 이용 내역, 공지사항, 이벤트 버튼
                         }
                         .frame(maxWidth: .infinity)
-                        .frame(height: 230)
+                        .frame(height: 280)
                         .background(
                             LinearGradient(gradient: Gradient(colors: [.gachonBlue2,. gachonBlue]), startPoint: .top, endPoint: .bottom)
                         )
+                        // 상단 파란 박스 부분 끝
                         
-                        VStack(spacing: 30) {
-                            Button(action: {
-                                showModifyView = true
-                            }, label: {
-                                HStack {
-                                    Text("내 정보 수정")
-                                        .font(.system(size: 17, weight: .bold))
-                                        .foregroundColor(.black)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
-                                }
-                                .fullScreenCover(isPresented: $showModifyView) {
-                                    PasswordCheckView(showModifyView: $showModifyView)
-                                }
-                            })
-                            .padding(.leading, 25)
-                            .padding(.trailing, 25)
+                        ScrollView(showsIndicators: false) {
+                            VStack(spacing: 30) {
+                                Button(action: {
+                                    showModifyView = true
+                                }, label: {
+                                    HStack {
+                                        Text("내 정보 수정")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.black)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                    }
+                                    .fullScreenCover(isPresented: $showModifyView) {
+                                        PasswordCheckView(showModifyView: $showModifyView)
+                                    }
+                                })
+                                .padding(.leading, 25)
+                                .padding(.trailing, 25)
+                                
+                                Button(action: {
+                                    showInquireSendView = true
+                                }, label: {
+                                    HStack {
+                                        Text("1:1 문의")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.black)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                    }
+                                    .fullScreenCover(isPresented: $showInquireSendView) {
+                                        InquireSendView(showInquireSendView: $showInquireSendView)
+                                    }
+                                })
+                                .padding(.leading, 25)
+                                .padding(.trailing, 25)
+                                
+                                Button(action: {
+                                    showInquireListView = true
+                                }, label: {
+                                    HStack {
+                                        Text("문의내역 조회")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.black)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                    }
+                                    .fullScreenCover(isPresented: $showInquireListView) {
+                                        InquireListView(showInquireListView: $showInquireListView)
+                                    }
+                                })
+                                .padding(.leading, 25)
+                                .padding(.trailing, 25)
+                            }
+                            .frame(width: UIScreen.main.bounds.width - 50, height: 170)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.white))
+                            .padding(.top)
+                            // end of 내 정보 수정, 1:1 문의, 문의 내역 조회 버튼
                             
-                            Button(action: {
-                                showInquireSendView = true
-                            }, label: {
-                                HStack {
-                                    Text("1:1 문의")
-                                        .font(.system(size: 17, weight: .bold))
-                                        .foregroundColor(.black)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
-                                }
-                                .fullScreenCover(isPresented: $showInquireSendView) {
-                                    InquireSendView(showInquireSendView: $showInquireSendView)
-                                }
-                            })
-                            .padding(.leading, 25)
-                            .padding(.trailing, 25)
+                            VStack(spacing: 30) {
+                                Button(action: {
+                                    showServiceTermsModal = true
+                                }, label: {
+                                    HStack {
+                                        Text("서비스 이용 약관")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.black)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                    }
+                                    .fullScreenCover(isPresented: $showServiceTermsModal) {
+                                        ServiceTermsView()
+                                    }
+                                })
+                                .padding(.leading, 25)
+                                .padding(.trailing, 25)
+                                
+                                Button(action: {
+                                    showPrivacyTermsModal = true
+                                }, label: {
+                                    HStack {
+                                        Text("개인정보 이용 약관")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.black)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                    }
+                                    .fullScreenCover(isPresented: $showPrivacyTermsModal) {
+                                        PrivacyTermsView()
+                                    }
+                                })
+                                .padding(.leading, 25)
+                                .padding(.trailing, 25)
+                                
+                                Button(action: {
+                                    
+                                }, label: {
+                                    HStack {
+                                        Text("오픈소스 라이선스")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.black)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                    }
+    //                                .fullScreenCover(isPresented: $showPrivacyTermsModal) {
+    //                                    PrivacyTermsView()
+    //                                }
+                                })
+                                .padding(.leading, 25)
+                                .padding(.trailing, 25)
+                            }
+                            .frame(width: UIScreen.main.bounds.width - 50, height: 170)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.white))
+                            .padding(.top)
                             
-                            Button(action: {
-                                showInquireListView = true
-                            }, label: {
-                                HStack {
-                                    Text("문의내역 조회")
-                                        .font(.system(size: 17, weight: .bold))
-                                        .foregroundColor(.black)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
-                                }
-                                .fullScreenCover(isPresented: $showInquireListView) {
-                                    InquireListView(showInquireListView: $showInquireListView)
-                                }
-                            })
-                            .padding(.leading, 25)
-                            .padding(.trailing, 25)
-                        }
-                        .frame(width: UIScreen.main.bounds.width - 50, height: 170)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(.white))
-                        .padding(.top)
-                        // end of 내 정보 수정, 1:1 문의, 문의 내역 조회 버튼
-                        
-                        Spacer()
-                        
-                        // 회원탈퇴 버튼
-                        HStack {
-                            Button(action: {
-                                showWithdrawView = true
-                            }, label: {
-                                HStack {
-                                    Text("회원 탈퇴하기")
-                                        .font(.system(size: 17, weight: .bold))
-                                        .foregroundColor(.black)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
-                                }
-                                .fullScreenCover(isPresented: $showWithdrawView) {
-                                    WithdrawView(showWithdrawView: $showWithdrawView)
-                                }
-                            })
-                            .padding(.leading, 25)
-                            .padding(.trailing, 25)
-                        }
-                        .frame(width: UIScreen.main.bounds.width - 50, height: 50)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(.white))
-                        // end of 회원탈퇴 버튼
-                        
+                            // 회원탈퇴 버튼
+                            HStack {
+                                Button(action: {
+                                    showWithdrawView = true
+                                }, label: {
+                                    HStack {
+                                        Text("회원 탈퇴하기")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.black)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                    }
+                                    .fullScreenCover(isPresented: $showWithdrawView) {
+                                        WithdrawView(showWithdrawView: $showWithdrawView)
+                                    }
+                                })
+                                .padding(.leading, 25)
+                                .padding(.trailing, 25)
+                            }
+                            .frame(width: UIScreen.main.bounds.width - 50, height: 55)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.white))
+                            .padding(.top)
+                            .padding(.bottom)
+                            // end of 회원탈퇴 버튼
+                        } // end of ScrollView
+   
                     } // 전체 내용 VStack
                     
                     NavigationLink("", isActive: $isLogout) {
@@ -295,14 +428,18 @@ struct ProfileTabView: View {
                             )
                             .padding(.bottom, 20)
                         })
+                        .fullScreenCover(isPresented: $isLoginMove) {
+                            PrimaryView()
+                                .navigationBarBackButtonHidden()
+                        }
                     } // 전체 VStack
                     .padding(.leading, 20)
                     .padding(.trailing, 20)
 
-                    NavigationLink("", isActive: $isLoginMove) {
-                        PrimaryView()
-                            .navigationBarBackButtonHidden(true)
-                    }
+//                    NavigationLink("", isActive: $isLoginMove) {
+//                        PrimaryView()
+//                            .navigationBarBackButtonHidden(true)
+//                    }
                     
                 } // end of else
             } // end of 전체 내용 VStack (회원, 게스트 포함)

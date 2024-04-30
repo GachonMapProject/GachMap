@@ -269,7 +269,7 @@ struct InfoInputView: View {
                                     .fill(Color(.gachonBlue))
                                     .shadow(radius: 5, x: 2, y: 2)
                             )
-                            .padding(.bottom, 20)
+                            //.padding(.bottom, 20)
                             .padding(.top, 15)
                     })
                     // end of 이전 뷰 이동
@@ -299,7 +299,7 @@ struct InfoInputView: View {
                                 .fill(isButtonEnabled() ? Color.gachonBlue : Color(UIColor.systemGray4))
                                 .shadow(radius: 5, x: 2, y: 2)
                         )
-                        .padding(.bottom, 20)
+                        //.padding(.bottom, 20)
                         .padding(.top, 15)
                     })
                     .disabled(!isButtonEnabled())
