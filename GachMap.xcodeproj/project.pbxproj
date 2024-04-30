@@ -88,6 +88,9 @@
 		CB4EF6232BCFD7A000BDC73A /* EventCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4EF6222BCFD7A000BDC73A /* EventCardView.swift */; };
 		CB6071D82BD634AD00AB12EE /* NavigationInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */; };
 		CB6071DA2BD63BC000AB12EE /* CheckRotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6071D92BD63BC000AB12EE /* CheckRotation.swift */; };
+		CB7C69842BE0B6F500C277AE /* PathTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7C69832BE0B6F500C277AE /* PathTimeView.swift */; };
+		CB7C69862BE0CA0A00C277AE /* PathTimeTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7C69852BE0CA0A00C277AE /* PathTimeTestView.swift */; };
+		CB7C69882BE10C9100C277AE /* ChoosePathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7C69872BE10C9100C277AE /* ChoosePathView.swift */; };
 		CBC02A6C2BD90D9B005657B9 /* MyTmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */; };
 		CBD855FF2BD7A7F00046597D /* SatisfactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */; };
 		CBDDC9122BCEB62300019FAB /* BackgroundMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */; };
@@ -180,6 +183,9 @@
 		CB4EF6222BCFD7A000BDC73A /* EventCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCardView.swift; sourceTree = "<group>"; };
 		CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationInfoView.swift; sourceTree = "<group>"; };
 		CB6071D92BD63BC000AB12EE /* CheckRotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRotation.swift; sourceTree = "<group>"; };
+		CB7C69832BE0B6F500C277AE /* PathTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathTimeView.swift; sourceTree = "<group>"; };
+		CB7C69852BE0CA0A00C277AE /* PathTimeTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathTimeTestView.swift; sourceTree = "<group>"; };
+		CB7C69872BE10C9100C277AE /* ChoosePathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoosePathView.swift; sourceTree = "<group>"; };
 		CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTmer.swift; sourceTree = "<group>"; };
 		CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatisfactionView.swift; sourceTree = "<group>"; };
 		CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMapView.swift; sourceTree = "<group>"; };
@@ -295,6 +301,9 @@
 				CBDDC9152BCEBF6100019FAB /* BackMapTest.swift */,
 				8B3159D82BD0F53F0049CB5F /* MyPage */,
 				CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */,
+				CB7C69832BE0B6F500C277AE /* PathTimeView.swift */,
+				CB7C69852BE0CA0A00C277AE /* PathTimeTestView.swift */,
+				CB7C69872BE10C9100C277AE /* ChoosePathView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -602,6 +611,7 @@
 				8B3159D12BCFE7190049CB5F /* SignUpView.swift in Sources */,
 				8B831C732BCE0AB300A85973 /* StudentDashboardView.swift in Sources */,
 				8B5368FB2BD2BF73007B8984 /* UserInquiryResponse.swift in Sources */,
+				CB7C69882BE10C9100C277AE /* ChoosePathView.swift in Sources */,
 				8B831C3A2BCCF60C00A85973 /* ARView.swift in Sources */,
 				CBDDC9142BCEB6CB00019FAB /* PlaceCategoryResponse.swift in Sources */,
 				8B831C322BCCF60C00A85973 /* UserInfoRequest.swift in Sources */,
@@ -619,6 +629,7 @@
 				8BA84B622BCF964800ACD5E2 /* SegmentedControlHelper.swift in Sources */,
 				8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */,
 				8B831C3B2BCCF60C00A85973 /* Constant.swift in Sources */,
+				CB7C69862BE0CA0A00C277AE /* PathTimeTestView.swift in Sources */,
 				CB4EF61F2BCFD4C800BDC73A /* BuildingListResponse.swift in Sources */,
 				CBDDC9122BCEB62300019FAB /* BackgroundMapView.swift in Sources */,
 				8B5368F52BD2B59D007B8984 /* GuestInfoRequest.swift in Sources */,
@@ -629,6 +640,7 @@
 				CBEA32F02BD64A560083D271 /* NavigationInfoTestView.swift in Sources */,
 				8B3159DA2BD0F8510049CB5F /* ProfileModifyView.swift in Sources */,
 				8B5368F72BD2B5A9007B8984 /* GuestInfoResponse.swift in Sources */,
+				CB7C69842BE0B6F500C277AE /* PathTimeView.swift in Sources */,
 				8B831C442BCCF60C00A85973 /* BottomSheetHelper.swift in Sources */,
 				CB2E45772BD4E1A6009DB796 /* CLLocationCoordinate2D+Extension.swift in Sources */,
 				CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */,
@@ -783,7 +795,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = XW6H6BYJ53;
+				DEVELOPMENT_TEAM = X7TYNR98TC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
@@ -819,7 +831,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = XW6H6BYJ53;
+				DEVELOPMENT_TEAM = X7TYNR98TC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
