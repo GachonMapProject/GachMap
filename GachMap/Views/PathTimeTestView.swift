@@ -22,7 +22,7 @@ struct PathTimeTestView: View {
             ]
     var body: some View {
         ScrollView(.horizontal){
-            ZStack(){
+//            ZStack(alignment:.center){
                 LazyHStack{
                     ForEach(0..<3){ index in
                         Button(action: {
@@ -33,7 +33,7 @@ struct PathTimeTestView: View {
                                     content
                                         .opacity(phase.isIdentity ? 1.0 : 0.8)
                                 }
-                                .padding(.trailing, 10)
+                                .padding(.trailing, 7)
                                 .onTapGesture {
                                     selectedNum = index
                                 }
@@ -42,12 +42,13 @@ struct PathTimeTestView: View {
                     }
 
                 } // end of LazyStack
-                .padding(EdgeInsets(top: 0, leading: 30, bottom: 30, trailing: 30))
+                .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
                 .scrollTargetLayout()
                 
-            } // end of ZStack
+//            } // end of ZStack
             
         } // end of ScrollView
+        .frame(height: UIScreen.main.bounds.height / 7)
         .scrollTargetBehavior(.viewAligned)
     }
 }
