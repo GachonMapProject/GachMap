@@ -72,22 +72,39 @@ struct ARMainView: View {
                                 AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!)
                             }
                             
-                            Button(){
-                                ButtonAlert()
-                            } label: {
-                                HStack{
-                                    Image(systemName: "xmark.circle")
-                                        .foregroundColor(.white)
-                                    Text("안내 종료")
-                                        .foregroundStyle(.white)
+                            HStack {
+                                if isARViewVisible{
+                                    Button(){
+                                        ReloadButtonAlert()
+                                    } label: {
+                                        HStack{
+                                            Image(systemName: "gobackward")
+                                                .foregroundColor(.white)
+                                            Text("AR 재로드")
+                                                .foregroundStyle(.white)
+                                        }
+                                        .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
+                                        .background(.blue)
+                                        .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
+                                        
+                                    }
                                 }
-                                .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
-                                .background(.blue)
-                                .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
-
+                                Button(){
+                                    EndButtonAlert()
+                                } label: {
+                                    HStack{
+                                        Image(systemName: "xmark.circle")
+                                            .foregroundColor(.white)
+                                        Text("안내 종료")
+                                            .foregroundStyle(.white)
+                                    }
+                                    .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
+                                    .background(.blue)
+                                    .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
+                                    
+                                }
                             }
                             .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: isARViewVisible ? 10 : 55))
-
                         }
                     }
                     else{
@@ -112,7 +129,7 @@ struct ARMainView: View {
         }
     }
     
-    func ButtonAlert(){
+    func EndButtonAlert(){
         // 버튼을 눌렀을 때 경고 창 표시
             let alert = UIAlertController(title: "안내 종료", message: "경로 안내를 종료하시겠습니까?", preferredStyle: .alert)
             
@@ -120,6 +137,22 @@ struct ARMainView: View {
             alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
                 timer.stopTimer() // 안내 종료 누르면 타이머 stop
                 isEnd = true      // 확인을 눌렀을 때의 처리: 다음 페이지로 이동
+            })
+            
+            // 취소 액션 추가
+            alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+            
+            // 경고 창을 현재 화면에 표시
+            UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
+    
+    func ReloadButtonAlert(){
+        // 버튼을 눌렀을 때 경고 창 표시
+            let alert = UIAlertController(title: "AR 재로드", message: "AR을 재로드 하시겠습니까?", preferredStyle: .alert)
+            
+            // 확인 액션 추가
+            alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
+               isARViewReady = false
             })
             
             // 취소 액션 추가
