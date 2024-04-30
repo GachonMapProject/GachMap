@@ -264,7 +264,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         // 텍스트 생성
         let text = SCNText(string: textName, extrusionDepth: 0.02)
-        text.font = UIFont.systemFont(ofSize: 2) // 폰트 크기 및 두께 설정
+        text.font = UIFont.systemFont(ofSize: 3) // 폰트 크기 및 두께 설정
         
         // 텍스트 머티리얼 설정 (흰색으로 변경)
         let material = SCNMaterial()
