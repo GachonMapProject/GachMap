@@ -29,11 +29,13 @@ struct ChoosePathView: View {
     var body: some View {
         ZStack{
             MapView(region: region, lineCoordinates: lineCoordinates)
+                .ignoresSafeArea(.all)
             
             VStack{
                 SearchMainView()
                 Spacer()
                 PathTimeTestView()
+                    .padding(.bottom, 10)
             }
            
         }

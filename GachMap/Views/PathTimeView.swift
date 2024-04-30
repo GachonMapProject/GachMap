@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct PathTimeView: View {
-    let width = UIScreen.main.bounds.width / 2.6
-    let height = UIScreen.main.bounds.height / 9
+    let width = UIScreen.main.bounds.width / 2.5
+    let height = UIScreen.main.bounds.height / 8
     let pathName : String
     let time : String?
     let textGradient = Gradient(colors: [
@@ -29,7 +29,7 @@ struct PathTimeView: View {
                 .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
                 .bold()
                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 0))
-            
+            Spacer()
             HStack(alignment: .lastTextBaseline){
                 if isLogin && time != nil{
                     Text("AI 예측")
@@ -49,7 +49,7 @@ struct PathTimeView: View {
                 Spacer()
                 HStack(alignment: .lastTextBaseline, spacing : 4){
                     Text(time == nil ? "-" : time!)
-                        .font(.system(size: 35))
+                        .font(.system(size: 33))
                         .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
                         .bold()
                     Text("분")
@@ -59,7 +59,7 @@ struct PathTimeView: View {
                 }
                 
             }
-            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+            .padding(EdgeInsets(top: 0, leading: 5, bottom: 10, trailing: 10))
         }
         .frame(width: width, height: height)
         .background(time != nil ? .white : Color(red: 0.8, green: 0.8, blue: 0.8))
