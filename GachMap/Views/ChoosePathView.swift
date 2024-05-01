@@ -23,17 +23,24 @@ struct ChoosePathView: View {
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath : Int = 0   // 선택한 경로
     init() {
-        region = MKCoordinateRegion(center: Path().ITtoGachon[0].location.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
+        var locations = [CLLocation]()
         
         var lines = [[CLLocationCoordinate2D]]()
         for path in paths {
             var coordinates = [CLLocationCoordinate2D]()
             for i in path {
+                locations.append(i.location)
                 coordinates.append(i.location.coordinate)
             }
             lines.append(coordinates)
         }
         self.lineCoordinates = lines
+        
+        let centerLatitude = (paths[0][0].location.coordinate.latitude + paths[0][paths[0].count - 1].location.coordinate.latitude) / 2
+        let centerLongitude = (paths[0][0].location.coordinate.longitude + paths[0][paths[0].count - 1].location.coordinate.longitude) / 2
+        let center = CLLocationCoordinate2D(latitude: centerLatitude, longitude: centerLongitude)
+        let meter = locations[0].distance(from: locations[locations.count - 1]) * 1.5
+        region = MKCoordinateRegion(center: center, latitudinalMeters: meter, longitudinalMeters: meter)
     }
     
     var body: some View {
