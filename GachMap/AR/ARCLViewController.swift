@@ -63,8 +63,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
      }
     
     override func viewWillAppear(_ animated: Bool) {
-        checkCameraAccess()
-        // 진북 설정 알림 창 이동 함수 추가해야 함
+        checkCameraAccess()         // 카메라 허용 확인
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -433,7 +432,6 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             }
         }
 
-        
         // 현재 위치 가져오기
         guard let currentLocation = sceneLocationView?.sceneLocationManager.currentLocation else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
@@ -468,13 +466,5 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
                 }
             }
         }
-//        for i in 0..<path.count {
-//            let distance = currentLocation.distance(from: path[i].location)
-//            if distance <= 20 {
-//                nodeNames[index]?.map{$0.isHidden = false}
-//            }
-//        }
-        
     }
-
 }
