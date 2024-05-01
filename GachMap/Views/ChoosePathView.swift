@@ -5,6 +5,15 @@
 //  Created by 이수현 on 4/30/24.
 //
 
+class CustomPathAnnotation: NSObject, MKAnnotation {
+    let coordinate: CLLocationCoordinate2D
+
+    init(coordinate: CLLocationCoordinate2D) {
+        self.coordinate = coordinate
+    }
+}
+
+
 import SwiftUI
 import MapKit
 
@@ -71,6 +80,9 @@ struct MapView: UIViewRepresentable {
            }
            mapView.addOverlay(polyline)
        }
+      
+        addMapMarker(for: lineCoordinates.first?.first, with: "start", to: mapView)
+        addMapMarker(for: lineCoordinates.last?.last, with: "end", to: mapView)
    
 
     return mapView
@@ -94,8 +106,18 @@ struct MapView: UIViewRepresentable {
           }
         view.addOverlay(polyline)
        }
+      
+      addMapMarker(for: lineCoordinates.first?.first, with: "start", to: view)
+      addMapMarker(for: lineCoordinates.last?.last, with: "end", to: view)
 
   }
+    
+    private func addMapMarker(for coordinate: CLLocationCoordinate2D?, with title: String, to mapView: MKMapView) {
+        guard let coordinate = coordinate else { return }
+        let annotation = CustomPathAnnotation(coordinate: coordinate)
+        mapView.addAnnotation(annotation)
+    }
+
 
   func makeCoordinator() -> PathCoordinator {
       PathCoordinator(self)
@@ -139,10 +161,26 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
             }
         }
 
-        
         renderer.lineWidth = 10
         return renderer
     }
+    
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+         guard let customPathAnnotation = annotation as? CustomPathAnnotation else { return nil }
+         let reuseIdentifier = "customPathAnnotation"
+         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
+
+         if annotationView == nil {
+             annotationView = MKAnnotationView(annotation: customPathAnnotation, reuseIdentifier: reuseIdentifier)
+             annotationView?.image = UIImage(named: "PathDot") // Set custom marker image based on annotation title
+             annotationView?.canShowCallout = false
+         } else {
+             annotationView?.annotation = annotation
+         }
+
+         return annotationView
+     }
 }
 #Preview {
     ChoosePathView()
