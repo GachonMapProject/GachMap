@@ -21,7 +21,7 @@ struct PathTimeTestView: View {
                 pathTime(pathName: "최단 경로", time: "3", isLogin: true)
             ]
     var body: some View {
-        ScrollView(.horizontal){
+        ScrollView(.horizontal, showsIndicators: false){
 //            ZStack(alignment:.center){
                 LazyHStack{
                     ForEach(0..<3){ index in
