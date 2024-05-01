@@ -20,7 +20,7 @@ struct PathTimeView: View {
     
     let isLogin : Bool
     let num : Int
-    @Binding var selectedNum : Int
+    @Binding var selectedPath : Int
     
     var body: some View {
         VStack(alignment: .leading){
@@ -67,7 +67,7 @@ struct PathTimeView: View {
         .shadow(radius: 5, x: 2, y: 2)
         .overlay(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(selectedNum == num ? Color.blue : Color.clear, lineWidth: selectedNum == num ? 3 : 1)
+                .stroke(selectedPath == num ? Color.blue : Color.clear, lineWidth: selectedPath == num ? 3 : 1)
         )
     }
  }

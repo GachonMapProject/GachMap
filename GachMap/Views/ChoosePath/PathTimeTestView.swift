@@ -6,36 +6,37 @@
 //
 
 import SwiftUI
+import CoreLocation
 
-struct pathTime : Identifiable {
+struct PathTime : Identifiable {
     let id = UUID()
     let pathName : String
     let time : String?
     let isLogin : Bool
+    let line : [CLLocationCoordinate2D]
 }
 
 struct PathTimeTestView: View {
-    @State var selectedNum = 0
-    let test = [pathTime(pathName: "최적 경로", time: "33", isLogin: true),
-                pathTime(pathName: "무당이 경로", time: nil, isLogin: true),
-                pathTime(pathName: "최단 경로", time: "3", isLogin: true)
-            ]
+    @Binding var selectedPath : Int
+    
+    let test : [PathTime]
     var body: some View {
-        ScrollView(.horizontal){
+        ScrollView(.horizontal, showsIndicators: false){
 //            ZStack(alignment:.center){
                 LazyHStack{
                     ForEach(0..<3){ index in
                         Button(action: {
                             // 지도에 경로 표시 및 검색창의 텍스트 변경 (위치 포함)
+                            selectedPath = index
                         }, label: {
-                            PathTimeView(pathName: test[index].pathName, time:  test[index].time , isLogin: true, num: index, selectedNum: $selectedNum)
+                            PathTimeView(pathName: test[index].pathName, time:  test[index].time , isLogin: true, num: index, selectedPath: $selectedPath)
                                 .scrollTransition(.animated, axis: .horizontal) { content, phase in
                                     content
                                         .opacity(phase.isIdentity ? 1.0 : 0.8)
                                 }
                                 .padding(.trailing, 7)
                                 .onTapGesture {
-                                    selectedNum = index
+                                    selectedPath = index
                                 }
                         })
                         .disabled(test[index].time == nil)
@@ -50,12 +51,13 @@ struct PathTimeTestView: View {
         } // end of ScrollView
         .frame(height: UIScreen.main.bounds.height / 7)
         .scrollTargetBehavior(.viewAligned)
+
     }
 }
 
-#Preview {
-    PathTimeTestView()
-}
+//#Preview {
+//    PathTimeTestView()
+//}
 
 
 //

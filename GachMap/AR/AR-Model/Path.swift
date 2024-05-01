@@ -8,6 +8,65 @@
 import Foundation
 import CoreLocation
 class Path {
+    let pathExmaple : [Node] = [
+        Node(name: "startNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.450600,
+            longitude: 127.127626),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+        
+        Node(name: "반도체대학 앞 동산 횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.450136,
+            longitude: 127.129374),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+        
+        Node(name: "lastNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.450535,
+            longitude: 127.129554),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+    ]
+    
+    let pathExmaple1 : [Node] = [
+        Node(name: "startNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.450600,
+            longitude: 127.127626),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+        
+        Node(name: "세븐", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.451362,
+            longitude: 127.127521),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+        Node(name: "가천관 삼거리", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.450856,
+            longitude: 127.129614),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+        
+        Node(name: "lastNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.450535,
+            longitude: 127.129554),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+    ]
+    
+    let pathExmaple2 : [Node] = [
+        Node(name: "startNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.450600,
+            longitude: 127.127626),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+        
+        Node(name: "횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.450440,
+            longitude: 127.127581),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+        Node(name: "가천관 횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.450023,
+            longitude: 127.129291),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+        
+        Node(name: "lastNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+            latitude: 37.450535,
+            longitude: 127.129554),
+            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+    ]
+    
     let ITtoGachon : [Node] = [
 //        Node(name: "반도체 대학 정문", location: CLLocation(coordinate: CLLocationCoordinate2D(
 //            latitude: 37.4508817,

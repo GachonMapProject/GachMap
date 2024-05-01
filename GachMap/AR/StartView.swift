@@ -19,25 +19,8 @@ struct StartView: View {
             }
         }
         else{
-            ARMainView()
+            ARMainView(isAROn: $isAROn)
         }
-       
-
-        
-        
-        
-//        NavigationStack{
-//            Button(action: {
-//                isAROn = true
-//            }){
-//                Text("AR 길 안내")
-//            }
-//            NavigationLink(destination: ARMainView(),
-//                           isActive: $isAROn,
-//                           label: {EmptyView()}
-//            )
-//        }
-//      
         
     }
 }
