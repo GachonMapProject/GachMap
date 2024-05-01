@@ -58,6 +58,7 @@ struct ChoosePathView: View {
             
             VStack{
                 SearchMainView()
+                AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정 
                 Spacer()
                 PathTimeTestView(selectedPath: $selectedPath, test: test)
                     .padding(.bottom, 10)
