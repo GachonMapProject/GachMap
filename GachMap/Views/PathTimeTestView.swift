@@ -6,21 +6,20 @@
 //
 
 import SwiftUI
+import CoreLocation
 
-struct pathTime : Identifiable {
+struct PathTime : Identifiable {
     let id = UUID()
     let pathName : String
     let time : String?
     let isLogin : Bool
+    let line : [CLLocationCoordinate2D]
 }
 
 struct PathTimeTestView: View {
     @Binding var selectedPath : Int
     
-    let test = [pathTime(pathName: "최적 경로", time: "33", isLogin: true),
-                pathTime(pathName: "무당이 경로", time: nil, isLogin: true),
-                pathTime(pathName: "최단 경로", time: "3", isLogin: true)
-            ]
+    let test : [PathTime]
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){
 //            ZStack(alignment:.center){

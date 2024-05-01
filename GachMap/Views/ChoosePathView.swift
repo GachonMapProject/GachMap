@@ -22,6 +22,9 @@ struct ChoosePathView: View {
     @State private var region: MKCoordinateRegion
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath : Int = 0   // 선택한 경로
+    
+    @State var test : [PathTime]
+    
     init() {
         var locations = [CLLocation]()
         
@@ -41,17 +44,22 @@ struct ChoosePathView: View {
         let center = CLLocationCoordinate2D(latitude: centerLatitude, longitude: centerLongitude)
         let meter = locations[0].distance(from: locations[locations.count - 1]) * 1.5
         region = MKCoordinateRegion(center: center, latitudinalMeters: meter, longitudinalMeters: meter)
+        
+        test = [PathTime(pathName: "최적 경로", time: "33", isLogin: true, line: lines[0]),
+         PathTime(pathName: "무당이 경로", time: nil, isLogin: true, line: lines[1]),
+         PathTime(pathName: "최단 경로", time: "3", isLogin: true, line: lines[2])
+        ]
     }
     
     var body: some View {
         ZStack{
-            MapView(region: region, lineCoordinates: lineCoordinates, selectedPath : $selectedPath)
+            MapView(region: region, lineCoordinates: test, selectedPath : $selectedPath)
                 .ignoresSafeArea(.all)
             
             VStack{
                 SearchMainView()
                 Spacer()
-                PathTimeTestView(selectedPath: $selectedPath)
+                PathTimeTestView(selectedPath: $selectedPath, test: test)
                     .padding(.bottom, 10)
             }
            
@@ -64,7 +72,7 @@ struct ChoosePathView: View {
 struct MapView: UIViewRepresentable {
 
   let region: MKCoordinateRegion
-  let lineCoordinates: [[CLLocationCoordinate2D]]
+  let lineCoordinates: [PathTime]
     @Binding var selectedPath : Int
 
   func makeUIView(context: Context) -> MKMapView {
@@ -74,22 +82,22 @@ struct MapView: UIViewRepresentable {
     mapView.region = region
 
       for (index, lineCoordinate) in lineCoordinates.enumerated() {
-           let polyline = MKPolyline(coordinates: lineCoordinate, count: lineCoordinate.count)
-           if index == 0 {
+          let polyline = MKPolyline(coordinates: lineCoordinate.line, count: lineCoordinate.line.count)
+           if index == 0 && lineCoordinate.time != nil{
                polyline.title = "Path0"
                polyline.subtitle = "Path0" // Optional subtitle, not required
-           } else if index == 1 {
+           } else if index == 1 && lineCoordinate.time != nil{
                polyline.title = "Path1"
                polyline.subtitle = "Path1" // Optional subtitle, not required
-           }else if index == 2 {
+           }else if index == 2 && lineCoordinate.time != nil{
                polyline.title = "Path2"
                polyline.subtitle = "Path2" // Optional subtitle, not required
            }
            mapView.addOverlay(polyline)
        }
       
-        addMapMarker(for: lineCoordinates.first?.first, with: "start", to: mapView)
-        addMapMarker(for: lineCoordinates.last?.last, with: "end", to: mapView)
+      addMapMarker(for: lineCoordinates.first?.line.first, with: "start", to: mapView)
+      addMapMarker(for: lineCoordinates.last?.line.last, with: "end", to: mapView)
    
 
     return mapView
@@ -100,22 +108,22 @@ struct MapView: UIViewRepresentable {
       context.coordinator.parent = self
       view.removeOverlays(view.overlays) // 모든 오버레이를 삭제하여 다시 그리도록 유도
       for (index, lineCoordinate) in lineCoordinates.enumerated() {
-           let polyline = MKPolyline(coordinates: lineCoordinate, count: lineCoordinate.count)
-          if index == 0 {
+          let polyline = MKPolyline(coordinates: lineCoordinate.line, count: lineCoordinate.line.count)
+          if index == 0 && lineCoordinate.time != nil{
               polyline.title = "Path0"
               polyline.subtitle = "Path0" // Optional subtitle, not required
-          } else if index == 1 {
+          } else if index == 1 && lineCoordinate.time != nil {
               polyline.title = "Path1"
               polyline.subtitle = "Path1" // Optional subtitle, not required
-          }else if index == 2 {
+          }else if index == 2 && lineCoordinate.time != nil{
               polyline.title = "Path2"
               polyline.subtitle = "Path2" // Optional subtitle, not required
           }
         view.addOverlay(polyline)
        }
       
-      addMapMarker(for: lineCoordinates.first?.first, with: "start", to: view)
-      addMapMarker(for: lineCoordinates.last?.last, with: "end", to: view)
+      addMapMarker(for: lineCoordinates.first?.line.first, with: "start", to: view)
+      addMapMarker(for: lineCoordinates.last?.line.last, with: "end", to: view)
 
   }
     
