@@ -19,7 +19,7 @@ struct StartView: View {
             }
         }
         else{
-            ARMainView()
+            ARMainView(isAROn: $isAROn)
         }
        
 

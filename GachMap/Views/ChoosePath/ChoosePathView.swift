@@ -42,7 +42,7 @@ struct ChoosePathView: View {
         let centerLatitude = (paths[0][0].location.coordinate.latitude + paths[0][paths[0].count - 1].location.coordinate.latitude) / 2
         let centerLongitude = (paths[0][0].location.coordinate.longitude + paths[0][paths[0].count - 1].location.coordinate.longitude) / 2
         let center = CLLocationCoordinate2D(latitude: centerLatitude, longitude: centerLongitude)
-        let meter = locations[0].distance(from: locations[locations.count - 1]) * 1.5
+        let meter = locations[0].distance(from: locations[locations.count - 1]) + 100
         region = MKCoordinateRegion(center: center, latitudinalMeters: meter, longitudinalMeters: meter)
         
         test = [PathTime(pathName: "최적 경로", time: "33", isLogin: true, line: lines[0]),

@@ -11,6 +11,7 @@ import MapKit
 
 struct ARMainView: View {
 
+    @Binding var isAROn : Bool
     // 전역으로 CoreLocationEx 인스턴스 생성
     @ObservedObject var coreLocation = CoreLocationEx()
     @ObservedObject var nextNodeObject = NextNodeObject()
@@ -53,8 +54,6 @@ struct ARMainView: View {
                                 showAlert = true
                             }
                         }
-//                    Text("수평 정확도 : \(coreLocation.location!.horizontalAccuracy)")
-//                    Text("수직 정확도 : \(coreLocation.location!.verticalAccuracy)")
                     .alert(isPresented: $showAlert) {
                         Alert(
                             title: Text("알림"),
@@ -73,6 +72,7 @@ struct ARMainView: View {
                                 checkSecondTime?.invalidate()
                                 checkTime?.invalidate()
                                 
+                                isAROn = false
                                 // 이전 화면으로 이동하는 코드를 여기에 추가하세요
                             }
                         )
