@@ -215,7 +215,7 @@ struct ARMainView: View {
     // 진북 알림
     func trueNorthAlert(){
         // 버튼을 눌렀을 때 경고 창 표시
-        let alert = UIAlertController(title: "진북 설정", message: "향상된 AR 서비스를 위해 \n나침반의 진북 설정이 필요합니다.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "진북 설정", message: "나침반을 진북으로 설정하면\n향상된 AR 서비스를 이용하실 수 있습니다.", preferredStyle: .alert)
         
         // 확인 액션 추가
         alert.addAction(UIAlertAction(title: "확인", style: .default){ _ in
@@ -260,6 +260,10 @@ struct ARMainView: View {
                 }
                 nextNodeObject.increment()
             } // end of (if distance <= 5 )
+        }
+        else{
+            // 목적지에 도착하면 timer.stopTimer()
+            timer.stopTimer()
         }
     }   // end of checkDistance()
     
