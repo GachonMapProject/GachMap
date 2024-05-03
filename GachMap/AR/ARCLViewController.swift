@@ -205,7 +205,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         addScenewideNodeSettings(naviNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: naviNode)
         
-        var names : [String] = ["\(index)-0", "\(index)-1", "\(index)-2"]
+        var names : [String] = [middleNode.name ?? "", boxNode.name ?? "", naviNode.name ?? ""]
         
         // boxNode 위에 화살표 노드 생성
         for point in midPoints {
@@ -340,16 +340,32 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         placePinNode.constraints = nil
         placePinNode.name = "lastPinNode"
         
+        let midPoints = calculateMidPoints(start: startLocation, end: destinationLocation, numberOfDivisions: 5)
+        var names : [String] = [destinationNode.name ?? "", boxNode.name ?? "", placePinNode.name ?? ""]
+        
+        // boxNode 위에 화살표 노드 생성
+        for point in midPoints {
+//            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
+            let arrow = makeUsdzNode(fileName: "middleArrow", scale : 0.003, middle: true)
+            let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.39)
+            let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
+            arrowNode.constraints = nil
+            arrowNode.name = ("last-\(point.coordinate.latitude)")
+            names.append("last-\(point.coordinate.latitude)")
+            addScenewideNodeSettings(arrowNode)
+            sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: arrowNode)
+            
+        }
+        
+        
         addScenewideNodeSettings(placePinNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: placePinNode)
-        
-        
         addScenewideNodeSettings(destinationNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: destinationNode)
         addScenewideNodeSettings(boxNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: boxNode)
         
-        nextNodeObject.nodeNames[path.count - 1] = [destinationNode.name ?? "", boxNode.name ?? "", placePinNode.name ?? ""]
+        nextNodeObject.nodeNames[path.count - 1] = names
     }
     
     // 출발지와 목적지 사이의 변환 행렬 계산 후 노드 위치 방향 설정
