@@ -150,12 +150,13 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         let sourceNode = makePngNode(fileName: "MuhanStart")
         let startNode = LocationAnnotationNode(location: startLocation, node: sourceNode)
-        startNode.name = "0"
+        startNode.name = "0-0"
         
         let pinLocation = CLLocation(coordinate: startLocation.coordinate, altitude: startLocation.altitude + 3)
         let pinNode = makeUsdzNode(fileName: "Pin", scale : 0.005, middle: false)
         let placePinNode = LocationAnnotationNode(location: pinLocation, node: pinNode)
         placePinNode.constraints = nil
+        placePinNode.name = "0-1"
         
         addScenewideNodeSettings(placePinNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: placePinNode)
@@ -163,7 +164,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         addScenewideNodeSettings(startNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: startNode)
-        nextNodeObject.nodeNames[0] = ["0"]
+        nextNodeObject.nodeNames[0] = [startNode.name ?? "", placePinNode.name ?? ""]
         
     } // end of placeStartNode
     
@@ -337,6 +338,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let pinNode = makeUsdzNode(fileName: "Pin", scale : 0.005, middle: false)
         let placePinNode = LocationAnnotationNode(location: pinLocation, node: pinNode)
         placePinNode.constraints = nil
+        placePinNode.name = "lastPinNode"
         
         addScenewideNodeSettings(placePinNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: placePinNode)
@@ -347,7 +349,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         addScenewideNodeSettings(boxNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: boxNode)
         
-        nextNodeObject.nodeNames[path.count - 1] = [destinationNode.name!, boxNode.name!]
+        nextNodeObject.nodeNames[path.count - 1] = [destinationNode.name ?? "", boxNode.name ?? "", placePinNode.name ?? ""]
     }
     
     // 출발지와 목적지 사이의 변환 행렬 계산 후 노드 위치 방향 설정
