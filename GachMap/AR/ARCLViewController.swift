@@ -152,6 +152,15 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let startNode = LocationAnnotationNode(location: startLocation, node: sourceNode)
         startNode.name = "0"
         
+        let pinLocation = CLLocation(coordinate: startLocation.coordinate, altitude: startLocation.altitude + 3)
+        let pinNode = makeUsdzNode(fileName: "Pin", scale : 0.005, middle: false)
+        let placePinNode = LocationAnnotationNode(location: pinLocation, node: pinNode)
+        placePinNode.constraints = nil
+        
+        addScenewideNodeSettings(placePinNode)
+        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: placePinNode)
+        
+        
         addScenewideNodeSettings(startNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: startNode)
         nextNodeObject.nodeNames[0] = ["0"]
@@ -332,6 +341,15 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         boxNode.name = "lastBoxNode"
         destinationNode.name = "last"
         
+        let pinLocation = CLLocation(coordinate: destinationLocation.coordinate, altitude: destinationLocation.altitude + 3)
+        let pinNode = makeUsdzNode(fileName: "Pin", scale : 0.005, middle: false)
+        let placePinNode = LocationAnnotationNode(location: pinLocation, node: pinNode)
+        placePinNode.constraints = nil
+        
+        addScenewideNodeSettings(placePinNode)
+        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: placePinNode)
+        
+        
         addScenewideNodeSettings(destinationNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: destinationNode)
         addScenewideNodeSettings(boxNode)
@@ -355,6 +373,35 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         return transformationMatrix
     } // end of tansformMatrix
     
+    
+    // usdz 파일 노드 생성
+    private func makeUsdzNode(fileName : String, scale : Double, middle : Bool) -> SCNNode {
+        let file = fileName
+        guard let fileUrl = Bundle.main.url(forResource: file, withExtension: "usdz") else {
+            fatalError()
+        }
+        let scene = try? SCNScene(url: fileUrl, options: nil)
+        let node = SCNNode()
+        
+        if let scene = scene {
+            for child in scene.rootNode.childNodes {
+                child.scale = SCNVector3(scale, scale, scale)
+//                if middle {
+//                    child.eulerAngles.x = .pi / 2
+//                }
+//                else {
+//                    child.eulerAngles.y = .pi / 2
+//                }
+
+                node.addChildNode(child)
+            }
+        }
+        
+        let rotateForeverAction = SCNAction.repeatForever(SCNAction.rotate(by: .pi, around: SCNVector3(0, 1, 0), duration: 1))
+        node.runAction(rotateForeverAction)
+        
+        return node
+    }
     
     // png 파일 노드 생성
     private func makePngNode(fileName : String) -> SCNNode {
