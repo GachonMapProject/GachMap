@@ -21,6 +21,7 @@ struct ARMainView: View {
     @State private var showAlert = false
     @State private var trueNorthAlertOn = false
     @State private var checkTime: Timer? // AR init 후 시간 체크
+    @State private var selectedTrueNorth = false
     let intervalTime : Double = 7.0
     
     @State private var checkSecondTime: Timer?
@@ -36,28 +37,32 @@ struct ARMainView: View {
         if coreLocation.location != nil{
             VStack{
                 if !trueNorthAlertOn {
-
-                    Image("MuhanMiddle")
-                        .resizable()
-                        .frame(width: 200, height: 200)
-                        .scaledToFit()
-                        .padding(.bottom, 30)
-                    Button(action: {
-                        trueNorthAlertOn = true
-                    }, label: {
-                        Text("진북 설정 완료")
-                    })
-                    .frame(width: 200, height: 50)
-                    .background(.blue)
-                    .cornerRadius(15)
-                    .shadow(radius: 5, x: 2, y: 2)
-                    .foregroundColor(.white)
-                    .bold()
-                    .font(.system(size: 20))
-                    
-                    .onAppear(){
-                        trueNorthAlert()
+                    if !selectedTrueNorth {
+                        ProgressView()
+                            .onAppear(){
+                                trueNorthAlert()
+                            }
                     }
+                    else{
+                      Image("MuhanMiddle")
+                          .resizable()
+                          .frame(width: 200, height: 200)
+                          .scaledToFit()
+                          .padding(.bottom, 30)
+                      Button(action: {
+                          trueNorthAlertOn = true
+                      }, label: {
+                          Text("진북 설정 완료")
+                      })
+                      .frame(width: 200, height: 50)
+                      .background(.blue)
+                      .cornerRadius(15)
+                      .shadow(radius: 5, x: 2, y: 2)
+                      .foregroundColor(.white)
+                      .bold()
+                      .font(.system(size: 20))
+                    }
+
                 }
                 else{
                     if !isARViewReady {
@@ -224,6 +229,7 @@ struct ARMainView: View {
         
         // 이동 액션 추가
         alert.addAction(UIAlertAction(title: "설정으로 이동", style: .default) { _ in
+            selectedTrueNorth = true
             openSettings()
         })
             

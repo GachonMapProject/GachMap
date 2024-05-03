@@ -258,27 +258,27 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         return node.position
     }
     
-    func placeArrow(xAngle: Float, yAngle: Float) -> SCNNode {
-        print("placeArrow - xAngle :\(xAngle), yAngle: \(yAngle)")
-        let textName = "⋀"
-        
-        // 텍스트 생성
-        let text = SCNText(string: textName, extrusionDepth: 0.02)
-        text.font = UIFont.systemFont(ofSize: 3) // 폰트 크기 및 두께 설정
-        
-        // 텍스트 머티리얼 설정 (흰색으로 변경)
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor.white
-        text.firstMaterial = material
-        
-        // SCNNode 생성 및 텍스트 노드 추가
-        let textNode = SCNNode(geometry: text)
-        textNode.eulerAngles.x = .pi / 2 + xAngle
-        textNode.eulerAngles.y = yAngle
-        
-        return textNode
-    }
-//⋀
+//    func placeArrow(xAngle: Float, yAngle: Float) -> SCNNode {
+//        print("placeArrow - xAngle :\(xAngle), yAngle: \(yAngle)")
+//        let textName = "⋀"
+//        
+//        // 텍스트 생성
+//        let text = SCNText(string: textName, extrusionDepth: 0.02)
+//        text.font = UIFont.systemFont(ofSize: 3) // 폰트 크기 및 두께 설정
+//        
+//        // 텍스트 머티리얼 설정 (흰색으로 변경)
+//        let material = SCNMaterial()
+//        material.diffuse.contents = UIColor.white
+//        text.firstMaterial = material
+//        
+//        // SCNNode 생성 및 텍스트 노드 추가
+//        let textNode = SCNNode(geometry: text)
+//        textNode.eulerAngles.x = .pi / 2 + xAngle
+//        textNode.eulerAngles.y = yAngle
+//        
+//        return textNode
+//    }
+
 
     
 //    출발지와 목적지 사이에 실린더 노드 배치하는 역할
