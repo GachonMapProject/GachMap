@@ -12,7 +12,8 @@ struct AIDescriptionView: View {
         HStack{
             Image(systemName: "person.crop.circle.badge.clock")
                 .resizable()
-                .frame(width: 25, height: 25)
+                .frame(width: 30, height: 25)
+                .scaledToFit()
                 .padding(.horizontal, 10)
             HStack(spacing : 0){
                 Text("AI 학습")

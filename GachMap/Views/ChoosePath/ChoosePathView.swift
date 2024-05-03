@@ -23,6 +23,8 @@ struct ChoosePathView: View {
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath : Int = 0   // 선택한 경로
     
+    @State private var isAROn = false
+    
     @State var test : [PathTime]
     
     init() {
@@ -52,19 +54,32 @@ struct ChoosePathView: View {
     }
     
     var body: some View {
-        ZStack{
-            MapView(region: region, lineCoordinates: test, selectedPath : $selectedPath)
-                .ignoresSafeArea(.all)
-            
-            VStack{
-                SearchMainView()
-                AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정 
-                Spacer()
-                PathTimeTestView(selectedPath: $selectedPath, test: test)
-                    .padding(.bottom, 10)
+        if !isAROn {
+            ZStack{
+                MapView(region: region, lineCoordinates: test, selectedPath : $selectedPath)
+                    .ignoresSafeArea(.all)
+                
+                VStack{
+                    ZStack(alignment : .trailing){
+                        SearchMainView()
+                        Button(action: {
+                            isAROn = true
+                        }, label: {
+                            Text("길안내")
+                        })
+                        .frame(width: 50, height: 50)
+                        
+                    }
+                    
+                    AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정
+                    Spacer()
+                    PathTimeTestView(selectedPath: $selectedPath, test: test)
+                        .padding(.bottom, 10)
+                }
             }
-           
-            
+        }
+        else{
+            ARMainView(isAROn: $isAROn)
         }
     }
 }
