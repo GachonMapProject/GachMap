@@ -193,15 +193,6 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let naviNode = LocationAnnotationNode(location: naviLocation, node: navi)
         
         let midPoints = calculateMidPoints(start: start, end: end, numberOfDivisions: 5)
-        
-        
-        // boxNode 위에 화살표 노드 생성
-//        let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
-//        let placeArrowLocation = CLLocation(coordinate: coordinate, altitude: (start.altitude + end.altitude) / 2 - 1.3)
-//        let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
-//        arrowNode.constraints = nil
-//        addScenewideNodeSettings(arrowNode)
-//        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: arrowNode)
     
         middleNode.name = "\(index)-0"
         boxNode.name = "\(index)-1"
@@ -217,7 +208,8 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         // boxNode 위에 화살표 노드 생성
         for point in midPoints {
-            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
+//            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
+            let arrow = makeUsdzNode(fileName: "middleArrow", scale : 0.003, middle: true)
             let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.39)
             let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
             arrowNode.constraints = nil
@@ -386,19 +378,18 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         if let scene = scene {
             for child in scene.rootNode.childNodes {
                 child.scale = SCNVector3(scale, scale, scale)
-//                if middle {
-//                    child.eulerAngles.x = .pi / 2
-//                }
-//                else {
-//                    child.eulerAngles.y = .pi / 2
-//                }
+                if middle {
+                    child.eulerAngles.x = xAngle
+                    child.eulerAngles.y = yAngle
+                }
+                else{
+                    let rotateForeverAction = SCNAction.repeatForever(SCNAction.rotate(by: .pi, around: SCNVector3(0, 1, 0), duration: 1))
+                    child.runAction(rotateForeverAction)
+                }
 
                 node.addChildNode(child)
             }
         }
-        
-        let rotateForeverAction = SCNAction.repeatForever(SCNAction.rotate(by: .pi, around: SCNVector3(0, 1, 0), duration: 1))
-        node.runAction(rotateForeverAction)
         
         return node
     }
