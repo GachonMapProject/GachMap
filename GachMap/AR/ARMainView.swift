@@ -21,6 +21,7 @@ struct ARMainView: View {
     @State private var showAlert = false
     @State private var trueNorthAlertOn = false
     @State private var checkTime: Timer? // AR init 후 시간 체크
+    @State private var selectedTrueNorth = false
     let intervalTime : Double = 7.0
     
     @State private var checkSecondTime: Timer?
@@ -30,34 +31,38 @@ struct ARMainView: View {
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
     let timer = MyTimer()
-    let path = Path().ITtoGachon
+    let path = Path().homeToAI
     
     var body: some View {
         if coreLocation.location != nil{
             VStack{
                 if !trueNorthAlertOn {
-
-                    Image("MuhanMiddle")
-                        .resizable()
-                        .frame(width: 200, height: 200)
-                        .scaledToFit()
-                        .padding(.bottom, 30)
-                    Button(action: {
-                        trueNorthAlertOn = true
-                    }, label: {
-                        Text("진북 설정 완료")
-                    })
-                    .frame(width: 200, height: 50)
-                    .background(.blue)
-                    .cornerRadius(15)
-                    .shadow(radius: 5, x: 2, y: 2)
-                    .foregroundColor(.white)
-                    .bold()
-                    .font(.system(size: 20))
-                    
-                    .onAppear(){
-                        trueNorthAlert()
+                    if !selectedTrueNorth {
+                        ProgressView()
+                            .onAppear(){
+                                trueNorthAlert()
+                            }
                     }
+                    else{
+                      Image("MuhanMiddle")
+                          .resizable()
+                          .frame(width: 200, height: 200)
+                          .scaledToFit()
+                          .padding(.bottom, 30)
+                      Button(action: {
+                          trueNorthAlertOn = true
+                      }, label: {
+                          Text("진북 설정 완료")
+                      })
+                      .frame(width: 200, height: 50)
+                      .background(.blue)
+                      .cornerRadius(15)
+                      .shadow(radius: 5, x: 2, y: 2)
+                      .foregroundColor(.white)
+                      .bold()
+                      .font(.system(size: 20))
+                    }
+
                 }
                 else{
                     if !isARViewReady {
@@ -215,7 +220,7 @@ struct ARMainView: View {
     // 진북 알림
     func trueNorthAlert(){
         // 버튼을 눌렀을 때 경고 창 표시
-        let alert = UIAlertController(title: "진북 설정", message: "향상된 AR 서비스를 위해 \n나침반의 진북 설정이 필요합니다.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "진북 설정", message: "나침반을 진북으로 설정하면\n향상된 AR 서비스를 이용하실 수 있습니다.", preferredStyle: .alert)
         
         // 확인 액션 추가
         alert.addAction(UIAlertAction(title: "확인", style: .default){ _ in
@@ -224,6 +229,7 @@ struct ARMainView: View {
         
         // 이동 액션 추가
         alert.addAction(UIAlertAction(title: "설정으로 이동", style: .default) { _ in
+            selectedTrueNorth = true
             openSettings()
         })
             
@@ -260,6 +266,10 @@ struct ARMainView: View {
                 }
                 nextNodeObject.increment()
             } // end of (if distance <= 5 )
+        }
+        else{
+            // 목적지에 도착하면 timer.stopTimer()
+            timer.stopTimer()
         }
     }   // end of checkDistance()
     

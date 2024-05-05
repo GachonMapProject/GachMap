@@ -150,11 +150,21 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         let sourceNode = makePngNode(fileName: "MuhanStart")
         let startNode = LocationAnnotationNode(location: startLocation, node: sourceNode)
-        startNode.name = "0"
+        startNode.name = "0-0"
+        
+        let pinLocation = CLLocation(coordinate: startLocation.coordinate, altitude: startLocation.altitude + 3)
+        let pinNode = makeUsdzNode(fileName: "Pin", scale : 0.005, middle: false)
+        let placePinNode = LocationAnnotationNode(location: pinLocation, node: pinNode)
+        placePinNode.constraints = nil
+        placePinNode.name = "0-1"
+        
+        addScenewideNodeSettings(placePinNode)
+        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: placePinNode)
+        
         
         addScenewideNodeSettings(startNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: startNode)
-        nextNodeObject.nodeNames[0] = ["0"]
+        nextNodeObject.nodeNames[0] = [startNode.name ?? "", placePinNode.name ?? ""]
         
     } // end of placeStartNode
     
@@ -184,15 +194,6 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let naviNode = LocationAnnotationNode(location: naviLocation, node: navi)
         
         let midPoints = calculateMidPoints(start: start, end: end, numberOfDivisions: 5)
-        
-        
-        // boxNode 위에 화살표 노드 생성
-//        let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
-//        let placeArrowLocation = CLLocation(coordinate: coordinate, altitude: (start.altitude + end.altitude) / 2 - 1.3)
-//        let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
-//        arrowNode.constraints = nil
-//        addScenewideNodeSettings(arrowNode)
-//        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: arrowNode)
     
         middleNode.name = "\(index)-0"
         boxNode.name = "\(index)-1"
@@ -204,11 +205,12 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         addScenewideNodeSettings(naviNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: naviNode)
         
-        var names : [String] = ["\(index)-0", "\(index)-1", "\(index)-2"]
+        var names : [String] = [middleNode.name ?? "", boxNode.name ?? "", naviNode.name ?? ""]
         
         // boxNode 위에 화살표 노드 생성
         for point in midPoints {
-            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
+//            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
+            let arrow = makeUsdzNode(fileName: "middleArrow", scale : 0.003, middle: true)
             let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.39)
             let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
             arrowNode.constraints = nil
@@ -257,27 +259,27 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         return node.position
     }
     
-    func placeArrow(xAngle: Float, yAngle: Float) -> SCNNode {
-        print("placeArrow - xAngle :\(xAngle), yAngle: \(yAngle)")
-        let textName = "⋀"
-        
-        // 텍스트 생성
-        let text = SCNText(string: textName, extrusionDepth: 0.02)
-        text.font = UIFont.systemFont(ofSize: 3) // 폰트 크기 및 두께 설정
-        
-        // 텍스트 머티리얼 설정 (흰색으로 변경)
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor.white
-        text.firstMaterial = material
-        
-        // SCNNode 생성 및 텍스트 노드 추가
-        let textNode = SCNNode(geometry: text)
-        textNode.eulerAngles.x = .pi / 2 + xAngle
-        textNode.eulerAngles.y = yAngle
-        
-        return textNode
-    }
-//⋀
+//    func placeArrow(xAngle: Float, yAngle: Float) -> SCNNode {
+//        print("placeArrow - xAngle :\(xAngle), yAngle: \(yAngle)")
+//        let textName = "⋀"
+//        
+//        // 텍스트 생성
+//        let text = SCNText(string: textName, extrusionDepth: 0.02)
+//        text.font = UIFont.systemFont(ofSize: 3) // 폰트 크기 및 두께 설정
+//        
+//        // 텍스트 머티리얼 설정 (흰색으로 변경)
+//        let material = SCNMaterial()
+//        material.diffuse.contents = UIColor.white
+//        text.firstMaterial = material
+//        
+//        // SCNNode 생성 및 텍스트 노드 추가
+//        let textNode = SCNNode(geometry: text)
+//        textNode.eulerAngles.x = .pi / 2 + xAngle
+//        textNode.eulerAngles.y = yAngle
+//        
+//        return textNode
+//    }
+
 
     
 //    출발지와 목적지 사이에 실린더 노드 배치하는 역할
@@ -332,12 +334,38 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         boxNode.name = "lastBoxNode"
         destinationNode.name = "last"
         
+        let pinLocation = CLLocation(coordinate: destinationLocation.coordinate, altitude: destinationLocation.altitude + 3)
+        let pinNode = makeUsdzNode(fileName: "Pin", scale : 0.005, middle: false)
+        let placePinNode = LocationAnnotationNode(location: pinLocation, node: pinNode)
+        placePinNode.constraints = nil
+        placePinNode.name = "lastPinNode"
+        
+        let midPoints = calculateMidPoints(start: startLocation, end: destinationLocation, numberOfDivisions: 5)
+        var names : [String] = [destinationNode.name ?? "", boxNode.name ?? "", placePinNode.name ?? ""]
+        
+        // boxNode 위에 화살표 노드 생성
+        for point in midPoints {
+//            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
+            let arrow = makeUsdzNode(fileName: "middleArrow", scale : 0.003, middle: true)
+            let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.39)
+            let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
+            arrowNode.constraints = nil
+            arrowNode.name = ("last-\(point.coordinate.latitude)")
+            names.append("last-\(point.coordinate.latitude)")
+            addScenewideNodeSettings(arrowNode)
+            sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: arrowNode)
+            
+        }
+        
+        
+        addScenewideNodeSettings(placePinNode)
+        sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: placePinNode)
         addScenewideNodeSettings(destinationNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: destinationNode)
         addScenewideNodeSettings(boxNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: boxNode)
         
-        nextNodeObject.nodeNames[path.count - 1] = [destinationNode.name!, boxNode.name!]
+        nextNodeObject.nodeNames[path.count - 1] = names
     }
     
     // 출발지와 목적지 사이의 변환 행렬 계산 후 노드 위치 방향 설정
@@ -355,6 +383,34 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         return transformationMatrix
     } // end of tansformMatrix
     
+    
+    // usdz 파일 노드 생성
+    private func makeUsdzNode(fileName : String, scale : Double, middle : Bool) -> SCNNode {
+        let file = fileName
+        guard let fileUrl = Bundle.main.url(forResource: file, withExtension: "usdz") else {
+            fatalError()
+        }
+        let scene = try? SCNScene(url: fileUrl, options: nil)
+        let node = SCNNode()
+        
+        if let scene = scene {
+            for child in scene.rootNode.childNodes {
+                child.scale = SCNVector3(scale, scale, scale)
+                if middle {
+                    child.eulerAngles.x = xAngle + .pi
+                    child.eulerAngles.y = yAngle
+                }
+                else{
+                    let rotateForeverAction = SCNAction.repeatForever(SCNAction.rotate(by: .pi, around: SCNVector3(0, 1, 0), duration: 1))
+                    child.runAction(rotateForeverAction)
+                }
+
+                node.addChildNode(child)
+            }
+        }
+        
+        return node
+    }
     
     // png 파일 노드 생성
     private func makePngNode(fileName : String) -> SCNNode {
