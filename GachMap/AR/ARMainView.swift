@@ -11,13 +11,14 @@ import MapKit
 
 struct ARMainView: View {
 
-    @Binding var isAROn : Bool
+//    @Binding var isAROn : Bool
     // 전역으로 CoreLocationEx 인스턴스 생성
     @ObservedObject var coreLocation = CoreLocationEx()         // ObservedObject를 생성하는 것이 아닌 넘겨 받는 걸로 수정해야 됨 
     @ObservedObject var nextNodeObject = NextNodeObject()
     @State var isARViewVisible = false // ARView의 on/off 상태 변수
     @State var isEnd = false // 안내 종료 상태 변수
     @State var isARViewReady = false    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
+    @State var isARReadyViewOn = false  // AR을 처음 띄우는가
 
 
     let checkRotation = CheckRotation()
@@ -30,52 +31,56 @@ struct ARMainView: View {
         if coreLocation.location != nil{
             VStack{
                 if !isEnd {
-                    ZStack(alignment: .topTrailing){
-                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, rotationList: rotationList!)
-                        
-                        if isARViewVisible{
-                            VStack{
-                                ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
-                                AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, rotationList: rotationList!)
-                            }.edgesIgnoringSafeArea(.all)
-                        }
-                        HStack {
+                    if rotationList != nil {
+                        ZStack(alignment: .topTrailing){
+                            AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, rotationList: rotationList!)
+                            
                             if isARViewVisible{
-                                Button(){
-                                    ReloadButtonAlert()
-                                } label: {
-                                    HStack{
-                                        Image(systemName: "gobackward")
-                                            .foregroundColor(.white)
-                                        Text("AR 재로드")
-                                            .foregroundStyle(.white)
+                                VStack{
+                                    ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
+                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, rotationList: rotationList!)
+                                }.edgesIgnoringSafeArea(.all)
+                            }
+                            HStack {
+                                if !isARReadyViewOn {
+                                    if isARViewVisible{
+                                        Button(){
+                                            ReloadButtonAlert()
+                                        } label: {
+                                            HStack{
+                                                Image(systemName: "gobackward")
+                                                    .foregroundColor(.white)
+                                                Text("AR 재로드")
+                                                    .foregroundStyle(.white)
+                                            }
+                                            .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
+                                            .background(.blue)
+                                            .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
+                        
+                                        }
                                     }
-                                    .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
-                                    .background(.blue)
-                                    .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
-                
+                                    Button(){
+                                        EndButtonAlert()
+                                    } label: {
+                                        HStack{
+                                            Image(systemName: "xmark.circle")
+                                                .foregroundColor(.white)
+                                            Text("안내 종료")
+                                                .foregroundStyle(.white)
+                                        }
+                                        .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
+                                        .background(.blue)
+                                        .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
+                        
+                                    }
                                 }
                             }
-                            Button(){
-                                EndButtonAlert()
-                            } label: {
-                                HStack{
-                                    Image(systemName: "xmark.circle")
-                                        .foregroundColor(.white)
-                                    Text("안내 종료")
-                                        .foregroundStyle(.white)
-                                }
-                                .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
-                                .background(.blue)
-                                .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
-                
-                            }
+                            .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: isARViewVisible ? 10 : 55))
                         }
-                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: isARViewVisible ? 10 : 55))
-                    }
-                    .onAppear(){
-//                        checkSecondTime?.invalidate()
-//                        checkTime?.invalidate()
+                        .onAppear(){
+    //                        checkSecondTime?.invalidate()
+    //                        checkTime?.invalidate()
+                        }
                     }
                 }
                 else{
@@ -86,6 +91,9 @@ struct ARMainView: View {
             .onChange(of: coreLocation.location!) { location in
                 if !isARViewReady {
 //                    checkLocationAccuracy()
+                    if rotationList == nil {
+                        rotationList = checkRotation.checkRotation(currentLocation: location, path: path)
+                    }
                 }
                 else {
                     // 사용자 현재 위치와 다음 노드까지의 거리를 구하는 함수
@@ -95,6 +103,11 @@ struct ARMainView: View {
         } // end of coreLocation.location != nil
         else {
             ProgressView("Waiting for location accuracy...")
+                .onAppear(){
+                    if let location = coreLocation.location{
+                        
+                    }
+                }
         }
     }
     

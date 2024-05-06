@@ -15,6 +15,7 @@ struct ARReadyView: View {
     
     @Binding var isARViewReady : Bool  // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
     @Binding var isARReadyViewOn : Bool        // AR을 처음 띄우는가
+    @Binding var isARViewVisible : Bool
     @State private var showGPSAlert = false // GPS 신호 알림
     
     @State private var checkTime: Timer? // AR init 후 시간 체크
@@ -64,7 +65,7 @@ struct ARReadyView: View {
                         .onAppear(){
                             checkSecondTime = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: true) { _ in
                                 checkSecond += 1
-                                print(checkSecond)
+//                                print(checkSecond)
                             }
                         }
                     ProgressView("GPS 신호를 찾고 있습니다.")
@@ -146,9 +147,11 @@ struct ARReadyView: View {
                 
                 if horizontalAccuracy < LocationAccuracy.accuracy && verticalAccuracy < LocationAccuracy.accuracy {
                     // 정확도 범위 안에 들면 해당 위치 기준으로 중간 노드의 회전 방향, 거리를 가져옴
-//                    rotationList = checkRotation.checkRotation(currentLocation: location, path: path)
                     isARViewReady = true
                     isARReadyViewOn = false
+                    isARViewVisible = true
+                    checkSecondTime?.invalidate()
+                    checkTime?.invalidate()
                 }
             }
         }

@@ -79,7 +79,8 @@ struct ChoosePathView: View {
             }
         }
         else{
-            ARMainView(isAROn: $isAROn)
+//            ARMainView(isAROn: $isAROn)
+            ARMainView()
         }
     }
 }
