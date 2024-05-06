@@ -34,12 +34,15 @@ struct ARMainView: View {
                     if rotationList != nil {
                         ZStack(alignment: .topTrailing){
                             AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, rotationList: rotationList!)
+                                .zIndex(isARViewVisible ? 0 : 1) // 첫 번째 뷰
                             
-                            if isARViewVisible{
+                            if isARViewReady{
                                 VStack{
                                     ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
                                     AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, rotationList: rotationList!)
-                                }.edgesIgnoringSafeArea(.all)
+                                }
+                                .edgesIgnoringSafeArea(.all)
+                                .zIndex(isARViewVisible ? 1 : 0) // 첫 번째 뷰
                             }
                             HStack {
                                 if !isARReadyViewOn {
@@ -76,6 +79,7 @@ struct ARMainView: View {
                                 }
                             }
                             .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: isARViewVisible ? 10 : 55))
+                            .zIndex(2)
                         }
                         .onAppear(){
     //                        checkSecondTime?.invalidate()
