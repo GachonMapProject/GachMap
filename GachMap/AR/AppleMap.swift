@@ -17,80 +17,98 @@ class CustomAnnotation: NSObject, MKAnnotation, Identifiable{
 struct AppleMapView : View{
     @ObservedObject var coreLocation : CoreLocationEx
     let path : [Node]
-    @Binding var isARViewVisible: Bool
+    
+    @Binding var isARViewVisible: Bool  // AR 화면을 띄우는가
+    @Binding var isARViewReady: Bool    // AR 화면이 준비가 완료 되었는가
+    @State var isARReadyViewOn = false         // AR을 처음 띄우는가
+    
     @State private var appleMap: AppleMap
     let rotationList : [Rotation]
+    
+//    @State private var isARInit : bool
+    
 
-    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, rotationList : [Rotation]) {
+    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, isARViewReady: Binding<Bool>, rotationList : [Rotation]) {
         self.coreLocation = coreLocation
         self.path = path
         self._isARViewVisible = isARViewVisible
+        self._isARViewReady = isARViewReady
         self.rotationList = rotationList
         _appleMap = State(initialValue: AppleMap(coreLocation: coreLocation, path: path))
     }
     var body: some View {
         ZStack(alignment: .bottomTrailing){
-            if isARViewVisible {
+            if !isARReadyViewOn {
+                if isARViewVisible {
+                        appleMap
+                        .frame(height: 300)
+                        .onAppear(){
+                            appleMap.setRegionToUserLocation()
+                        }
+                }
+                else{
                     appleMap
-                    .frame(height: 300)
-                    .onAppear(){
-                        appleMap.setRegionToUserLocation()
-                    }
-            }
-            else{
-                appleMap
-                    .ignoresSafeArea(.all)
-                    .onAppear(){
-                        appleMap.setRegionToUserLocation()
-                    }
-                ScrollView(.horizontal){
-                    ZStack(){
-                        LazyHStack{
-                            ForEach(rotationList) { rotation in
-                                NavigationInfoView(distance: Int(rotation.distance), rotation: rotation.rotation)
-                                    .scrollTransition(.animated, axis: .horizontal) { content, phase in
-                                        content
-                                            .opacity(phase.isIdentity ? 1.0 : 0.8)
-                                            .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
-                                    }
-                            }
-                        } // end of LazyStack
-                        .padding(EdgeInsets(top: 0, leading: 30, bottom: 30, trailing: 30))
-                        .scrollTargetLayout()
+                        .ignoresSafeArea(.all)
+                        .onAppear(){
+                            appleMap.setRegionToUserLocation()
+                        }
+                    ScrollView(.horizontal){
+                        ZStack(){
+                            LazyHStack{
+                                ForEach(rotationList) { rotation in
+                                    NavigationInfoView(distance: Int(rotation.distance), rotation: rotation.rotation)
+                                        .scrollTransition(.animated, axis: .horizontal) { content, phase in
+                                            content
+                                                .opacity(phase.isIdentity ? 1.0 : 0.8)
+                                                .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+                                        }
+                                }
+                            } // end of LazyStack
+                            .padding(EdgeInsets(top: 0, leading: 30, bottom: 30, trailing: 30))
+                            .scrollTargetLayout()
+                            
+                        } // end of ZStack
                         
-                    } // end of ZStack
+                    } // end of ScrollView
+                    .scrollTargetBehavior(.viewAligned)
+                    .frame(height: UIScreen.main.bounds.width * 0.3)
+                } // end of if isARViewVisible
+                VStack(spacing: 0){
+                    Button(action: {
+                        // AR을 처음 시작할 때는 ARReadyView를 호출하고 이후부터는 toggle 사용
+                        if isARViewReady {
+                            isARViewVisible.toggle()
+                        }
+                        else{
+                            isARReadyViewOn.toggle()
+                        }
+                    },
+                           label: {Text(isARViewVisible ? "2D" : "AR")})
+                    .frame(width: 45, height: 50)
+                    .foregroundColor(.gray)
+                    .bold()
                     
-                } // end of ScrollView
-                .scrollTargetBehavior(.viewAligned)
-                .frame(height: UIScreen.main.bounds.width * 0.3)
-            }
-          
-            VStack(spacing: 0){
-                Button(action: {
-                    isARViewVisible.toggle()
-                },
-                       label: {Text(isARViewVisible ? "2D" : "AR")})
-                .frame(width: 45, height: 50)
-                .foregroundColor(.gray)
-                .bold()
-                
-                Divider().background(.gray) // 중앙선
+                    Divider().background(.gray) // 중앙선
 
-                Button(action: {
-                    // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
-                    appleMap.setRegionToUserLocation()
-                },
-                       label: {Image(systemName: "location")})
-                .frame(width: 45, height: 50)
-                .foregroundColor(.gray)
-                .bold()
-                
+                    Button(action: {
+                        // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
+                        appleMap.setRegionToUserLocation()
+                    },
+                           label: {Image(systemName: "location")})
+                    .frame(width: 45, height: 50)
+                    .foregroundColor(.gray)
+                    .bold()
+                    
+                } // end of VStack
+                .frame(width: 45, height: 100)
+                .background(.white)
+                .cornerRadius(15)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: isARViewVisible ? 40 : 40 + UIScreen.main.bounds.width * 0.3, trailing: 20)) // bottomTrailing 마진 추가
+            } // end of if !isARInit
+            else{
+                ARReadyView(coreLocation: coreLocation, isARViewReady: $isARViewReady, isARReadyViewOn : $isARReadyViewOn)
             }
-            .frame(width: 45, height: 100)
-            .background(.white)
-            .cornerRadius(15)
-            .padding(EdgeInsets(top: 0, leading: 0, bottom: isARViewVisible ? 40 : 40 + UIScreen.main.bounds.width * 0.3, trailing: 20)) // bottomTrailing 마진 추가
-        }
+        } // end of ZStack
     }
 }
 
