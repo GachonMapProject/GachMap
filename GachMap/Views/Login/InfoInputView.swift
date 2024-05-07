@@ -269,7 +269,7 @@ struct InfoInputView: View {
                                     .fill(Color(.gachonBlue))
                                     .shadow(radius: 5, x: 2, y: 2)
                             )
-                            //.padding(.bottom, 20)
+                            .padding(.bottom, 20)
                             .padding(.top, 15)
                     })
                     // end of 이전 뷰 이동
@@ -299,7 +299,7 @@ struct InfoInputView: View {
                                 .fill(isButtonEnabled() ? Color.gachonBlue : Color(UIColor.systemGray4))
                                 .shadow(radius: 5, x: 2, y: 2)
                         )
-                        //.padding(.bottom, 20)
+                        .padding(.bottom, 20)
                         .padding(.top, 15)
                     })
                     .disabled(!isButtonEnabled())
@@ -368,7 +368,7 @@ struct InfoInputView: View {
     // postUserInfoData 함수
     private func postUserInfoData(parameter : UserInfoRequest) {
         // API 요청을 보낼 URL 생성
-        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/signup")
+        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/user/signup")
         else {
             print("Invalid URL")
             return

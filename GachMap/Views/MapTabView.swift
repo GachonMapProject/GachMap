@@ -8,10 +8,26 @@
 import SwiftUI
 import MapKit
 import CoreLocation
+import Alamofire
+
+enum BuildingCategory: String, CaseIterable {
+    case BUILDING = "건물"
+    case SMOKING = "흡연구역"
+    case FOOD = "음식점"
+    case CAFE = "카페"
+    case CONV = "편의점"
+    case WELFARE = "복지시설"
+    case PRINT = "인쇄"
+    case BUSSTOP = "무당이 정류장"
+}
 
 struct MapTabView: View {
     // 검색창 활성화
     @State private var showLocationSearchView: Bool = false
+    
+    @State private var selectedCategory: BuildingCategory?
+    @State private var buildingMarkers: [BuildingMarkerData] = []
+    
 //
 //    @State private var region: MKCoordinateRegion = MKCoordinateRegion(
 //        center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045),
@@ -31,8 +47,11 @@ struct MapTabView: View {
                         CategoryData(placeId: 4, placeName: "1-4", placeLatitude: 37.45048746, placeLongitude: 127.1280814, placeSummary: "Sum")
     ]
     
+    // data의 개수만큼 ForEach
+//    [BuildingMarkerData(placeName: <#T##String#>, placeLatitude: <#T##Double#>, placeLongitude: <#T##Double#>, placeAltitude: <#T##Double#>)]
+    
     var body: some View {
-        
+
         ZStack() {
             BackgroundMapView(category: category, locations: locations, coreLocation: coreLocation)
                 .ignoresSafeArea()
@@ -41,133 +60,13 @@ struct MapTabView: View {
                 HStack {
                     // 카테고리 버튼
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack() {
-                            // 버튼 1
-                            Button(action: {}, label: {
-                                HStack {
-                                    Image("gachonMark")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 18, height: 13, alignment: .leading)
-                                        .padding(.leading)
-                                    
-                                    Text("건물")
-                                        .padding(.trailing)
-                                        .foregroundColor(.black)
-                                        .background(GeometryReader { geometry in
-                                            Color.clear
-                                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                        )
-                                }
-                                .frame(height: 30)
-                                .contentShape(.capsule)
-                                .background(
-                                    Capsule()
-                                        .fill(Color(UIColor.systemBackground))
-                                )
-                            }) // end of Button 1
-                            
-                            // 버튼 2
-                            Button(action: {}, label: {
-                                HStack {
-                                    Image("gachonMark")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 18, height: 13, alignment: .leading)
-                                        .padding(.leading)
-                                    
-                                    Text("무당이 정류장")
-                                        .padding(.trailing)
-                                        .foregroundColor(.black)
-                                        .background(GeometryReader { geometry in
-                                            Color.clear
-                                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                        )
-                                }
-                                .frame(height: 30)
-                                //.contentShape(.capsule)
-                                .background(
-                                    Capsule()
-                                        .fill(Color(UIColor.systemBackground))
-                                )
-                            }) // end of Button 2
-                            
-                            // 버튼 2
-                            Button(action: {}, label: {
-                                HStack {
-                                    Image("gachonMark")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 18, height: 13, alignment: .leading)
-                                        .padding(.leading)
-                                    
-                                    Text("음식점")
-                                        .padding(.trailing)
-                                        .foregroundColor(.black)
-                                        .background(GeometryReader { geometry in
-                                            Color.clear
-                                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                        )
-                                }
-                                .frame(height: 30)
-                                .contentShape(.capsule)
-                                .background(
-                                    Capsule()
-                                        .fill(Color(UIColor.systemBackground))
-                                )
-                            }) // end of Button 2
-                            
-                            // 버튼 3
-                            Button(action: {}, label: {
-                                HStack {
-                                    Image("gachonMark")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 18, height: 13, alignment: .leading)
-                                        .padding(.leading)
-                                    
-                                    // 보건실,
-                                    Text("복지시설")
-                                        .padding(.trailing)
-                                        .foregroundColor(.black)
-                                        .background(GeometryReader { geometry in
-                                            Color.clear
-                                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                        )
-                                }
-                                .frame(height: 30)
-                                .contentShape(.capsule)
-                                .background(
-                                    Capsule()
-                                        .fill(Color(UIColor.systemBackground))
-                                )
-                            }) // end of Button 3
-                            
-                            // 버튼 4
-                            Button(action: {}, label: {
-                                HStack {
-                                    Image("gachonMark")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 18, height: 13, alignment: .leading)
-                                        .padding(.leading)
-                                    
-                                    Text("흡연구역")
-                                        .padding(.trailing)
-                                        .foregroundColor(.black)
-                                        .background(GeometryReader { geometry in
-                                            Color.clear
-                                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                                        )
-                                }
-                                .frame(height: 30)
-                                .contentShape(.capsule)
-                                .background(
-                                    Capsule()
-                                        .fill(Color(UIColor.systemBackground))
-                                )
-                            }) // end of Button 4
-                            
+                        HStack {
+                            ForEach(BuildingCategory.allCases, id: \.self) { category in
+                                CategoryButton(category: category.rawValue)
+                                    .onTapGesture {
+                                        selectedCategory = category
+                                    }
+                            }
                         }
                         .padding(.leading, 20)
                         .padding(.top, 7)

@@ -11,6 +11,7 @@ import Alamofire
 struct ProfileTabView: View {
     
     // @Binding var isLogin: Bool
+    var tabBarHeight = UITabBarController().tabBar.frame.size.height
     
     @State private var showModifyView: Bool = false
     @State private var showWithdrawView: Bool = false
@@ -18,6 +19,7 @@ struct ProfileTabView: View {
     @State private var showInquireListView: Bool = false
     @State private var showServiceTermsModal: Bool = false
     @State private var showPrivacyTermsModal: Bool = false
+    @State private var showUsageListView: Bool = false
     
     @State private var loginInfo: LoginInfo? = nil
     @State private var isLogout: Bool = false
@@ -30,28 +32,31 @@ struct ProfileTabView: View {
     @State private var userInfo: UserInquiryResponse?
     @State private var isLoading: Bool = false
     
-    // LoginInfo에 저장된 정보 불러오기
-    private func getLoginInfo() {
-        if let savedData = UserDefaults.standard.data(forKey: "loginInfo") {
-            if let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
-                // userCode가 저장되어 있다면 출력
-                if let userCode = loginInfo.userCode {
-                    print("userCode: \(userCode)")
-                } else {
-                    print("userCode: Not set")
-                }
-                
-                // guestCode가 저장되어 있다면 출력
-                if let guestCode = loginInfo.guestCode {
-                    print("guestCode: \(guestCode)")
-                } else {
-                    print("guestCode: Not set")
-                }
-            }
-        } else {
-            print("Login Info not found in UserDefaults")
-        }
-    }
+    @State private var username = ""
+    @State private var userNickname = ""
+    
+//    // LoginInfo에 저장된 정보 불러오기
+//    private func getLoginInfo() {
+//        if let savedData = UserDefaults.standard.data(forKey: "loginInfo") {
+//            if let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
+//                // userCode가 저장되어 있다면 출력
+//                if let userCode = loginInfo.userCode {
+//                    print("userCode: \(userCode)")
+//                } else {
+//                    print("userCode: Not set")
+//                }
+//                
+//                // guestCode가 저장되어 있다면 출력
+//                if let guestCode = loginInfo.guestCode {
+//                    print("guestCode: \(guestCode)")
+//                } else {
+//                    print("guestCode: Not set")
+//                }
+//            }
+//        } else {
+//            print("Login Info not found in UserDefaults")
+//        }
+//    }
     
     // LoginInfo에 저장된 userCode 가져오기
     func getUserCodeFromUserDefaults() -> String? {
@@ -64,67 +69,62 @@ struct ProfileTabView: View {
     }
     
     // 서버에 저장된 사용자 정보 가져오기
-//    private func getUserInfoInquiry() {
-//        isLoading = true
-//        
-//        loginInfo = getLoginInfo()
-//            
-//        guard let userCode = loginInfo?.userCode else {
-//            print("userCode is nil")
-//            return
-//        }
-//        
-//        if let userCode = loginInfo?.userCode {
-//            self.userId = String(userCode)
-//        } else {
-//            print("userCode is nil")
-//            return
-//        }
-//        
-//        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userId)")
-//        else {
-//            print("Invalid URL")
-//            return
-//        }
-//        
-//        AF.request(url, method: .get, parameters: nil, headers: nil)
-//            .validate()
-//            .responseDecodable(of: UserInquiryResponse.self) { response in
-//                isLoading = false
-//                
-//                switch response.result {
-//                case .success(let value):
-//                    if (value.success == true) {
-//                        print("회원 정보 요청 성공")
-//                        self.userInfo = value
-//                        
-//                        self.username = value.data.username ?? ""
-//                        self.userNickname = value.data.userNickname ?? ""
-//                        self.userBirth = value.data.userBirth ?? 0
-//                        self.selectedGender = value.data.userGender ?? ""
-//                        self.userHeight = value.data.userHeight ?? 0
-//                        self.userWeight = value.data.userWeight ?? 0
-//                        let walkSpeed = value.data.userSpeed == "FAST" ? "빠름" : value.data.userSpeed == "SLOW" ? "느림" : "보통"
-//                        self.selectedWalkSpeed = walkSpeed
-//                        
-//                    } else {
-//                        print("회원 정보 요청 실패")
-//                        // showErrorAlert = true
-//                    }
-//                    
-//                case .failure(let error):
-//                    print("Error: \(error.localizedDescription)")
-//                }
-//            }
-//    } // end of getUserInfoInquiry()
+    private func getUserInfoInquiry() {
+        isLoading = true
+        
+        guard let userCode = getUserCodeFromUserDefaults(),
+              let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/user/\(userCode)")
+        else {
+            print("Invalid URL")
+            return
+        }
+        
+        AF.request(url, method: .get)
+            .validate()
+            .responseDecodable(of: UserInquiryResponse.self) { response in
+                isLoading = false
+                
+                switch response.result {
+                case .success(let value):
+                    if (value.success == true) {
+                        print("회원 정보 요청 성공")
+                        self.userInfo = value
+                        
+                        self.username = value.data.username
+                        self.userNickname = value.data.userNickname
+                        
+                    } else {
+                        print("회원 정보 요청 실패")
+                        // showErrorAlert = true
+                    }
+                    
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                }
+            }
+    } // end of getUserInfoInquiry()
     
     var body: some View {
+//        let userCode = getUserCodeFromUserDefaults()
+//        
+//        if (userCode != nil) {
+//            // 회원 뷰
+//            NavigationView {
+//                
+//            }
+//        } else {
+//            // 게스트 뷰
+//            NavigationView {
+//                
+//            }
+//        }
+        
         NavigationView {
             VStack {
                 let userCode = getUserCodeFromUserDefaults()
                 
                 /// 나중에 !=로 바꾸기!! 꼭!!!!!
-                if (userCode == nil) {
+                if (userCode != nil) {
                     VStack { // 전체 내용 VStack
                         
                         // 상단 파란 박스 부분 VStack
@@ -133,13 +133,13 @@ struct ProfileTabView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(maxWidth: UIScreen.main.bounds.width - 50, alignment: .leading)
-                                .frame(height: 35)
-                                //.padding(.top, 30)
+                                .frame(height: 32)
+                                .padding(.top, 70)
                             // 닉네임, ID, 로그아웃 버튼 영역
                             HStack {
                                 VStack(spacing: 5) {
                                     HStack {
-                                        Text("닉네임")
+                                        Text(userNickname)
                                             .font(.system(size: 30, weight: .bold))
                                             .foregroundColor(.white)
                                         
@@ -147,9 +147,9 @@ struct ProfileTabView: View {
                                     }
                                     
                                     HStack {
-                                        Text("아이디")
+                                        Text(username)
                                             .font(.system(size: 15))
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(Color(UIColor.systemGray4))
                                         
                                         Spacer()
                                     }
@@ -179,17 +179,27 @@ struct ProfileTabView: View {
                             // end of 닉네임, ID, 로그아웃 버튼
                             
                             HStack {
-                                VStack(spacing: 10) {
-                                    Image(systemName: "figure.walk")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.gachonBlue)
-                                    Text("이용 내역")
-                                        .font(.system(size: 15, weight: .bold))
-                                }
-                                .frame(width: (UIScreen.main.bounds.width - 70) / 3, height: 80)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(.white))
+                                Button(action: {
+                                    showUsageListView = true
+                                }, label: {
+                                    VStack(spacing: 10) {
+                                        Image(systemName: "figure.walk")
+                                            .font(.system(size: 20))
+                                            .foregroundColor(.gachonBlue)
+                                        Text("이용 내역")
+                                            .font(.system(size: 15, weight: .bold))
+                                            .foregroundColor(.black)
+                                    }
+                                    .frame(width: (UIScreen.main.bounds.width - 70) / 3, height: 75)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(.white))
+                                    .fullScreenCover(isPresented: $showUsageListView) {
+                                        UsageListView()
+                                            .foregroundColor(.black)
+                                            .presentationBackground(.thinMaterial)
+                                    }
+                                })
                                 
                                 Spacer()
                                 
@@ -200,7 +210,7 @@ struct ProfileTabView: View {
                                     Text("공지사항")
                                         .font(.system(size: 15, weight: .bold))
                                 }
-                                .frame(width: (UIScreen.main.bounds.width - 70) / 3, height: 80)
+                                .frame(width: (UIScreen.main.bounds.width - 70) / 3, height: 75)
                                 .background(
                                     RoundedRectangle(cornerRadius: 10)
                                         .fill(.white))
@@ -214,17 +224,18 @@ struct ProfileTabView: View {
                                     Text("FAQ")
                                         .font(.system(size: 15, weight: .bold))
                                 }
-                                .frame(width: (UIScreen.main.bounds.width - 70) / 3, height: 80)
+                                .frame(width: (UIScreen.main.bounds.width - 70) / 3, height: 75)
                                 .background(
                                     RoundedRectangle(cornerRadius: 10)
                                         .fill(.white))
                             }
                             .frame(width: UIScreen.main.bounds.width - 50)
                             .padding(.top, 20)
+                            .padding(.bottom, 25)
                             // end of 이용 내역, 공지사항, 이벤트 버튼
                         }
                         .frame(maxWidth: .infinity)
-                        .frame(height: 280)
+                        //.frame(height: 330)
                         .background(
                             LinearGradient(gradient: Gradient(colors: [.gachonBlue2,. gachonBlue]), startPoint: .top, endPoint: .bottom)
                         )
@@ -379,9 +390,11 @@ struct ProfileTabView: View {
                                 RoundedRectangle(cornerRadius: 10)
                                     .fill(.white))
                             .padding(.top)
-                            .padding(.bottom)
+                            .padding(.bottom, 45)
                             // end of 회원탈퇴 버튼
                         } // end of ScrollView
+                        .padding(.bottom, tabBarHeight)
+                        //.ignoresSafeArea()
    
                     } // 전체 내용 VStack
                     
@@ -433,6 +446,8 @@ struct ProfileTabView: View {
                                 .navigationBarBackButtonHidden()
                         }
                     } // 전체 VStack
+                    .padding(.top, 50)
+                    .padding(.bottom, 90)
                     .padding(.leading, 20)
                     .padding(.trailing, 20)
 
@@ -442,13 +457,17 @@ struct ProfileTabView: View {
 //                    }
                     
                 } // end of else
+                    
             } // end of 전체 내용 VStack (회원, 게스트 포함)
+            .ignoresSafeArea()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(UIColor.systemGray6))
-            //.navigationBarTitle("마이 페이지", displayMode: .large)
-            .navigationBarBackButtonHidden(true)
+            .navigationBarBackButtonHidden()
    
         } // end of NavigationView
+        .onAppear {
+            getUserInfoInquiry()
+        }
         
     } // end of body
     

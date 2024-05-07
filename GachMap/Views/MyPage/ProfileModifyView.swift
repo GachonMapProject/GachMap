@@ -133,7 +133,7 @@ struct ProfileModifyView: View {
             return
         }
         
-        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userId)")
+        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/user/\(userId)")
         else {
             print("Invalid URL")
             return
@@ -150,12 +150,12 @@ struct ProfileModifyView: View {
                         print("회원 정보 요청 성공")
                         self.userInfo = value
                         
-                        self.username = value.data.username ?? ""
-                        self.userNickname = value.data.userNickname ?? ""
-                        self.userBirth = value.data.userBirth ?? 0
-                        self.selectedGender = value.data.userGender ?? ""
-                        self.userHeight = value.data.userHeight ?? 0
-                        self.userWeight = value.data.userWeight ?? 0
+                        self.username = value.data.username
+                        self.userNickname = value.data.userNickname
+                        self.userBirth = value.data.userBirth
+                        self.selectedGender = value.data.userGender
+                        self.userHeight = value.data.userHeight
+                        self.userWeight = value.data.userWeight
                         let walkSpeed = value.data.userSpeed == "FAST" ? "빠름" : value.data.userSpeed == "SLOW" ? "느림" : "보통"
                         self.selectedWalkSpeed = walkSpeed
                         
@@ -600,7 +600,7 @@ struct ProfileModifyView: View {
     // postUserInfoModifyData 함수
     private func postUserInfoModifyData(parameter : UserInfoModifyRequest) {
         // API 요청을 보낼 URL 생성
-        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userId)")
+        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/user/\(userId)")
         else {
             print("Invalid URL")
             return

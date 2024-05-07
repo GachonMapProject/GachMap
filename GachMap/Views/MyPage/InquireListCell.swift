@@ -10,6 +10,31 @@ import SwiftUI
 struct InquireListCell: View {
     
     @State private var isMoved: Bool = false
+    @State private var selectedCategory: String = ""
+    
+    var inquiry: InquireListData
+    
+    func selectedInquiryCategory(category: String) -> String {
+        switch category {
+        case "Node":
+            return "지점 문의"
+        case "Route":
+            return "경로 문의"
+        case "AITime":
+            return "AI 소요시간"
+        case "AR":
+            return "AR 문의"
+        case "Event":
+            return "행사 문의"
+        case "Place":
+            return "장소 문의"
+        case "Etc":
+            return "기타 문의"
+        default:
+            return ""
+        }
+    }
+
     
     var body: some View {
         // 버튼 시작
@@ -17,17 +42,18 @@ struct InquireListCell: View {
             isMoved = true
         }, label: {
             HStack {
-                Text("카테고리")
+                
+                Text(selectedInquiryCategory(category: inquiry.inquiryCategory))
                     .font(.system(size: 15, weight: .bold))
                     .foregroundColor(.gachonBlue)
                     .frame(width: 60)
                     .padding(.trailing, 5)
                 
                 VStack(alignment: .leading) {
-                    Text("문의 제목")
+                    Text(inquiry.inquiryTitle)
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(.black)
-                    Text("작성일")
+                    Text(inquiry.createDt)
                         .font(.system(size: 15))
                         .foregroundColor(.gray)
                 }
@@ -35,15 +61,27 @@ struct InquireListCell: View {
                 Spacer()
                 
                 HStack {
-                    Text("답변 대기중")
-                        .padding(.leading, 10)
-                        .padding(.trailing, 10)
-                        .font(.system(size: 13))
-                        .foregroundColor(.white)
-                        .background(GeometryReader { geometry in
-                            Color.clear
-                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
-                        )
+                    if (inquiry.inquiryProgress == false) {
+                        Text("답변 대기중")
+                            .padding(.leading, 10)
+                            .padding(.trailing, 10)
+                            .font(.system(size: 13))
+                            .foregroundColor(.white)
+                            .background(GeometryReader { geometry in
+                                Color.clear
+                                .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
+                            )
+                    } else {
+                        Text("답변 완료")
+                            .padding(.leading, 10)
+                            .padding(.trailing, 10)
+                            .font(.system(size: 13))
+                            .foregroundColor(.white)
+                            .background(GeometryReader { geometry in
+                                Color.clear
+                                .preference(key: WidthPreferenceKey.self, value: geometry.size.width) }
+                            )
+                    }
                 }
                 .frame(height: 25)
                 .contentShape(.capsule)
@@ -59,12 +97,12 @@ struct InquireListCell: View {
         // 버튼 끝
         
         NavigationLink("", isActive: $isMoved) {
-            InquireDetailView()
+            InquireDetailView(inquiryId: inquiry.inquiryId)
                 .navigationBarBackButtonHidden()
         }
     }
 }
 
-#Preview {
-    InquireListCell()
-}
+//#Preview {
+//    InquireListCell()
+//}
