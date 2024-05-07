@@ -19,6 +19,7 @@ struct ARMainView: View {
     @State var isEnd = false // 안내 종료 상태 변수
     @State var isARViewReady = false    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
     @State var isARReadyViewOn = false  // AR을 처음 띄우는가
+    @State var trueNorthAlertOn : Bool = false
 
 
     let checkRotation = CheckRotation()
@@ -33,16 +34,16 @@ struct ARMainView: View {
                 if !isEnd {
                     if rotationList != nil {
                         ZStack(alignment: .topTrailing){
-                            AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, rotationList: rotationList!)
-                                .zIndex(isARViewVisible ? 0 : 1) // 첫 번째 뷰
+                            AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, trueNorthAlertOn: $trueNorthAlertOn, rotationList: rotationList!)
+//                                .zIndex(isARViewVisible ? 0 : 1) // 첫 번째 뷰
                             
                             if isARViewReady && isARViewVisible{
                                 VStack{
                                     ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
-                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, rotationList: rotationList!)
+                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, trueNorthAlertOn: $trueNorthAlertOn, rotationList: rotationList!)
                                 }
                                 .edgesIgnoringSafeArea(.all)
-                                .zIndex(isARViewVisible ? 1 : 0) // 첫 번째 뷰
+//                                .zIndex(isARViewVisible ? 1 : 0) // 첫 번째 뷰
                             }
                             HStack {
                                 if !isARReadyViewOn {
@@ -138,7 +139,12 @@ struct ARMainView: View {
             
             // 확인 액션 추가
             alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
-               isARViewReady = false
+                DispatchQueue.main.async {
+                    isARViewReady = false
+                    isARViewVisible = false
+                    isARReadyViewOn = true
+                    trueNorthAlertOn = true
+                }
             })
             
             // 취소 액션 추가

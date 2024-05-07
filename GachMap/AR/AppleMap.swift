@@ -21,6 +21,7 @@ struct AppleMapView : View{
     @Binding var isARViewVisible: Bool  // AR 화면을 띄우는가
     @Binding var isARViewReady: Bool    // AR 화면이 준비가 완료 되었는가
     @Binding var isARReadyViewOn : Bool  // AR을 처음 띄우는가
+    @Binding var trueNorthAlertOn : Bool
     
     @State private var appleMap: AppleMap
     let rotationList : [Rotation]
@@ -28,12 +29,13 @@ struct AppleMapView : View{
 //    @State private var isARInit : bool
     
 
-    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, isARViewReady: Binding<Bool>, isARReadyViewOn : Binding<Bool>, rotationList : [Rotation]) {
+    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, isARViewReady: Binding<Bool>, isARReadyViewOn : Binding<Bool>, trueNorthAlertOn : Binding<Bool>, rotationList : [Rotation]) {
         self.coreLocation = coreLocation
         self.path = path
         self._isARViewVisible = isARViewVisible
         self._isARViewReady = isARViewReady
         self._isARReadyViewOn = isARReadyViewOn
+        self._trueNorthAlertOn = trueNorthAlertOn
         self.rotationList = rotationList
         
         _appleMap = State(initialValue: AppleMap(coreLocation: coreLocation, path: path))
@@ -108,7 +110,7 @@ struct AppleMapView : View{
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: isARViewVisible ? 40 : 40 + UIScreen.main.bounds.width * 0.3, trailing: 20)) // bottomTrailing 마진 추가
             } // end of if !isARReadyViewOn
             else{
-                ARReadyView(coreLocation: coreLocation, isARViewReady: $isARViewReady, isARReadyViewOn : $isARReadyViewOn, isARViewVisible : $isARViewVisible)
+                ARReadyView(coreLocation: coreLocation, trueNorthAlertOn: $trueNorthAlertOn, isARViewReady: $isARViewReady, isARReadyViewOn : $isARReadyViewOn, isARViewVisible : $isARViewVisible)
             }
         } // end of ZStack
     }

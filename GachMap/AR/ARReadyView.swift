@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct ARReadyView: View {
     @ObservedObject var coreLocation : CoreLocationEx
-    @State var trueNorthAlertOn : Bool = false
+    @Binding var trueNorthAlertOn : Bool 
     @State var selectedNorthAlertOn : Bool = false
     @State private var selectedTrueNorth = false
     
@@ -63,18 +64,26 @@ struct ARReadyView: View {
                         .frame(width: 100, height: 100)
                         .padding(.bottom, 30)
                         .onAppear(){
+                            // image의 색 변환 타이머
                             checkSecondTime = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: true) { _ in
                                 checkSecond += 1
-//                                print(checkSecond)
+                                print("checkSecond")
                             }
-                        }
-                    ProgressView("GPS 신호를 찾고 있습니다.")
-                        .onAppear {
-                            // 타이머 시작
+                            
+                            // GPS 신호 불안정 알림 타이머
                             checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
                                 showGPSAlert = true
+                                print("checkTime")
                             }
                         }
+                        .onChange(of: coreLocation.location!) { location in
+                            checkLocationAccuracy(location : location)
+                        }
+                        .onDisappear(){
+                            checkTime?.invalidate()
+                            checkSecondTime?.invalidate()
+                        }
+                    ProgressView("GPS 신호를 찾고 있습니다.")
                         .alert(isPresented: $showGPSAlert) {
                         Alert(
                             title: Text("알림"),
@@ -94,7 +103,6 @@ struct ARReadyView: View {
                                 checkTime?.invalidate()
                                 
                                 isARReadyViewOn = false  // 이전 화면으로 돌아감
-                                
                             }
                         )
                     }
@@ -104,9 +112,6 @@ struct ARReadyView: View {
                 }
             }
         } // end of VStack
-        .onChange(of: coreLocation.location!) { location in
-            checkLocationAccuracy()
-        }
                 
     } // end of body
     
@@ -122,8 +127,8 @@ struct ARReadyView: View {
         
         // 이동 액션 추가
         alert.addAction(UIAlertAction(title: "설정으로 이동", style: .default) { _ in
-            selectedTrueNorth = true
             openSettings()
+            selectedTrueNorth = true
         })
             
         // 경고 창을 현재 화면에 표시
@@ -138,24 +143,26 @@ struct ARReadyView: View {
     }
     
     // 위치 정확도 확인
-    func checkLocationAccuracy() {
+    func checkLocationAccuracy(location : CLLocation) {
+        print("checkLocationAccuraacy()")
         // Check location accuracy
         DispatchQueue.main.async {
-            if let location = coreLocation.location {
-                let horizontalAccuracy = location.horizontalAccuracy
-                let verticalAccuracy = location.verticalAccuracy
-                
-                if horizontalAccuracy < LocationAccuracy.accuracy && verticalAccuracy < LocationAccuracy.accuracy {
-                    // 정확도 범위 안에 들면 해당 위치 기준으로 중간 노드의 회전 방향, 거리를 가져옴
-                    isARViewReady = true
-                    isARReadyViewOn = false
-                    isARViewVisible = true
-                    checkSecondTime?.invalidate()
-                    checkTime?.invalidate()
-                }
+            let horizontalAccuracy = location.horizontalAccuracy
+            let verticalAccuracy = location.verticalAccuracy
+            
+            if horizontalAccuracy < LocationAccuracy.accuracy && verticalAccuracy < LocationAccuracy.accuracy {
+                // 정확도 범위 안에 들면 해당 위치 기준으로 중간 노드의 회전 방향, 거리를 가져옴
+                print("checkLocation")
+                checkSecondTime?.invalidate()
+                checkTime?.invalidate()
+                isARViewVisible = true
+                isARViewReady = true
+                isARReadyViewOn = false
+
             }
         }
     }
+        
 }
 
 //#Preview {
