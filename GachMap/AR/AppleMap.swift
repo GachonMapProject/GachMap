@@ -31,10 +31,18 @@ struct AppleMapView : View{
     var body: some View {
         ZStack(alignment: .bottomTrailing){
             if isARViewVisible {
-                    appleMap.frame(height: 300)
+                    appleMap
+                    .frame(height: 300)
+                    .onAppear(){
+                        appleMap.setRegionToUserLocation()
+                    }
             }
             else{
-                appleMap.ignoresSafeArea(.all)
+                appleMap
+                    .ignoresSafeArea(.all)
+                    .onAppear(){
+                        appleMap.setRegionToUserLocation()
+                    }
                 ScrollView(.horizontal){
                     ZStack(){
                         LazyHStack{
@@ -119,9 +127,7 @@ struct AppleMap: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         
         mapView.delegate = context.coordinator
-        setRegionToUserLocation()
         mapView.setRegion(region, animated: true)
-        
         mapView.userTrackingMode  = .followWithHeading
       
         let polyline = MKPolyline(coordinates: lineCoordinates, count: lineCoordinates.count)
@@ -152,7 +158,6 @@ struct AppleMap: UIViewRepresentable {
         
 //        mapView.showsUserLocation = true
         
-        setRegionToUserLocation()
         return mapView
     }
 

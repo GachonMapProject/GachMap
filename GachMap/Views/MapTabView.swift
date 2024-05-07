@@ -47,50 +47,11 @@ struct MapTabView: View {
                         CategoryData(placeId: 4, placeName: "1-4", placeLatitude: 37.45048746, placeLongitude: 127.1280814, placeSummary: "Sum")
     ]
     
-//    ForEach(buildingMarkers) { markerData in
-//        let annotation = MKPointAnnotation()
-//        annotation.coordinate = CLLocationCoordinate2D(latitude: markerData.latitude, longitude: markerData.longitude)
-//        annotation.title = markerData.placeName
-//        
-//        mapView.addAnnotation(annotation)
-//    }
-    
-    // 카테고리 별 건물 목록 가져오기
-//    private func getBuildingMarker() {
-//        guard let placeCategory = selectedCategory,
-//              let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/map/\(placeCategory)")
-//        else {
-//            print("Invalid URL")
-//            return
-//        }
-//        
-//        AF.request(url, method: .get)
-//            .validate()
-//            .responseDecodable(of: BuildingMarkerResponse.self) { response in
-//                print("Response: \(response)")
-//                switch response.result {
-//                case .success(let value):
-//                    print(value)
-//                    
-//                    if(value.success == true) {
-//                        print("카테고리 별 건물 목록 가져오기 성공")
-//                        // self.placeName = value.data.placeName
-//                        
-//                    } else {
-//                        print("카테고리 별 건물 목록 가져오기 실패")
-//                    }
-//                    
-//                case .failure(let error):
-//                    print("서버 연결 실패")
-//                    print(url)
-//                    print("Error: \(error.localizedDescription)")
-//                }
-//            }
-//    }
+    // data의 개수만큼 ForEach
+//    [BuildingMarkerData(placeName: <#T##String#>, placeLatitude: <#T##Double#>, placeLongitude: <#T##Double#>, placeAltitude: <#T##Double#>)]
     
     var body: some View {
-        
-        
+
         ZStack() {
             BackgroundMapView(category: category, locations: locations, coreLocation: coreLocation)
                 .ignoresSafeArea()

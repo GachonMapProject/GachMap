@@ -32,7 +32,7 @@ struct CategoryButton: View {
                     
                     if(value.success == true) {
                         print("카테고리 별 건물 목록 가져오기 성공")
-                        // self.placeName = value.data.placeName
+                        // data에 담긴 정보를 넘겨줘야돼
                         
                     } else {
                         print("카테고리 별 건물 목록 가져오기 실패")

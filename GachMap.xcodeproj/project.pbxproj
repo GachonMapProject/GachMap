@@ -105,12 +105,16 @@
 		CB4EF6232BCFD7A000BDC73A /* EventCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4EF6222BCFD7A000BDC73A /* EventCardView.swift */; };
 		CB6071D82BD634AD00AB12EE /* NavigationInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */; };
 		CB6071DA2BD63BC000AB12EE /* CheckRotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6071D92BD63BC000AB12EE /* CheckRotation.swift */; };
+		CB7C69842BE0B6F500C277AE /* PathTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7C69832BE0B6F500C277AE /* PathTimeView.swift */; };
+		CB7C69862BE0CA0A00C277AE /* PathTimeTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7C69852BE0CA0A00C277AE /* PathTimeTestView.swift */; };
+		CB7C69882BE10C9100C277AE /* ChoosePathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7C69872BE10C9100C277AE /* ChoosePathView.swift */; };
 		CBC02A6C2BD90D9B005657B9 /* MyTmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */; };
 		CBD855FF2BD7A7F00046597D /* SatisfactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */; };
 		CBDDC9122BCEB62300019FAB /* BackgroundMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */; };
 		CBDDC9142BCEB6CB00019FAB /* PlaceCategoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDDC9132BCEB6CB00019FAB /* PlaceCategoryResponse.swift */; };
 		CBDDC9162BCEBF6100019FAB /* BackMapTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDDC9152BCEBF6100019FAB /* BackMapTest.swift */; };
 		CBEA32F02BD64A560083D271 /* NavigationInfoTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEA32EF2BD64A560083D271 /* NavigationInfoTestView.swift */; };
+		CBED53B12BE2178E00DDFD0C /* AIDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBED53B02BE2178E00DDFD0C /* AIDescriptionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -214,12 +218,16 @@
 		CB4EF6222BCFD7A000BDC73A /* EventCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCardView.swift; sourceTree = "<group>"; };
 		CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationInfoView.swift; sourceTree = "<group>"; };
 		CB6071D92BD63BC000AB12EE /* CheckRotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRotation.swift; sourceTree = "<group>"; };
+		CB7C69832BE0B6F500C277AE /* PathTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathTimeView.swift; sourceTree = "<group>"; };
+		CB7C69852BE0CA0A00C277AE /* PathTimeTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathTimeTestView.swift; sourceTree = "<group>"; };
+		CB7C69872BE10C9100C277AE /* ChoosePathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoosePathView.swift; sourceTree = "<group>"; };
 		CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTmer.swift; sourceTree = "<group>"; };
 		CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatisfactionView.swift; sourceTree = "<group>"; };
 		CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMapView.swift; sourceTree = "<group>"; };
 		CBDDC9132BCEB6CB00019FAB /* PlaceCategoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCategoryResponse.swift; sourceTree = "<group>"; };
 		CBDDC9152BCEBF6100019FAB /* BackMapTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackMapTest.swift; sourceTree = "<group>"; };
 		CBEA32EF2BD64A560083D271 /* NavigationInfoTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationInfoTestView.swift; sourceTree = "<group>"; };
+		CBED53B02BE2178E00DDFD0C /* AIDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIDescriptionView.swift; sourceTree = "<group>"; };
 		E0202EBB66AC85F899D763AC /* Pods-GachMap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GachMap.release.xcconfig"; path = "Target Support Files/Pods-GachMap/Pods-GachMap.release.xcconfig"; sourceTree = "<group>"; };
 		EEE0964287E09D08847B86CA /* Pods_GachMap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GachMap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -322,8 +330,12 @@
 		8B831C062BCCF57700A85973 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				8B831C042BCCF57700A85973 /* MapTabView.swift */,
 				8BC86EDA2BE89B0F00051BF0 /* MapView */,
+=======
+				CBED53B22BE2203A00DDFD0C /* ChoosePath */,
+>>>>>>> c75c0cc93f7a994781e2b7f6db0c858c852b4ded
 				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
 				8BC86EAC2BDE628800051BF0 /* Search */,
 				CB4EF61B2BCFA06600BDC73A /* BuildingView */,
@@ -510,6 +522,17 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		CBED53B22BE2203A00DDFD0C /* ChoosePath */ = {
+			isa = PBXGroup;
+			children = (
+				CB7C69832BE0B6F500C277AE /* PathTimeView.swift */,
+				CB7C69852BE0CA0A00C277AE /* PathTimeTestView.swift */,
+				CB7C69872BE10C9100C277AE /* ChoosePathView.swift */,
+				CBED53B02BE2178E00DDFD0C /* AIDescriptionView.swift */,
+			);
+			path = ChoosePath;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -666,8 +689,10 @@
 				8B5368F92BD2BD8D007B8984 /* PasswordCheckView.swift in Sources */,
 				8B5369032BD37F6D007B8984 /* UserPasswordCheckResponse.swift in Sources */,
 				8B3159D12BCFE7190049CB5F /* SignUpView.swift in Sources */,
+				CBED53B12BE2178E00DDFD0C /* AIDescriptionView.swift in Sources */,
 				8B831C732BCE0AB300A85973 /* StudentDashboardView.swift in Sources */,
 				8B5368FB2BD2BF73007B8984 /* UserInquiryResponse.swift in Sources */,
+				CB7C69882BE10C9100C277AE /* ChoosePathView.swift in Sources */,
 				8B831C3A2BCCF60C00A85973 /* ARView.swift in Sources */,
 				CBDDC9142BCEB6CB00019FAB /* PlaceCategoryResponse.swift in Sources */,
 				8B831C322BCCF60C00A85973 /* UserInfoRequest.swift in Sources */,
@@ -687,6 +712,7 @@
 				8BA84B622BCF964800ACD5E2 /* SegmentedControlHelper.swift in Sources */,
 				8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */,
 				8B831C3B2BCCF60C00A85973 /* Constant.swift in Sources */,
+				CB7C69862BE0CA0A00C277AE /* PathTimeTestView.swift in Sources */,
 				CB4EF61F2BCFD4C800BDC73A /* BuildingListResponse.swift in Sources */,
 				8BC86EE02BE8EF5D00051BF0 /* InquireSendRequest.swift in Sources */,
 				CBDDC9122BCEB62300019FAB /* BackgroundMapView.swift in Sources */,
@@ -701,6 +727,7 @@
 				8BC86EC12BDFC33400051BF0 /* CustomDropdown.swift in Sources */,
 				8B3159DA2BD0F8510049CB5F /* ProfileModifyView.swift in Sources */,
 				8B5368F72BD2B5A9007B8984 /* GuestInfoResponse.swift in Sources */,
+				CB7C69842BE0B6F500C277AE /* PathTimeView.swift in Sources */,
 				8B831C442BCCF60C00A85973 /* BottomSheetHelper.swift in Sources */,
 				CB2E45772BD4E1A6009DB796 /* CLLocationCoordinate2D+Extension.swift in Sources */,
 				CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */,
@@ -859,13 +886,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = XW6H6BYJ53;
+				DEVELOPMENT_TEAM = X7TYNR98TC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "카메라 권한";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 권한";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 권한";
+				INFOPLIST_KEY_NSCameraUsageDescription = "AR 서비스를 위해 카메라 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "내비게이션 서비스를 위해 위치 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "내비게이션 서비스를 위해 위치 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -895,13 +922,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = XW6H6BYJ53;
+				DEVELOPMENT_TEAM = X7TYNR98TC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "카메라 권한";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 권한";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 권한";
+				INFOPLIST_KEY_NSCameraUsageDescription = "AR 서비스를 위해 카메라 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "내비게이션 서비스를 위해 위치 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "내비게이션 서비스를 위해 위치 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
