@@ -36,7 +36,7 @@ struct ARMainView: View {
                             AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, rotationList: rotationList!)
                                 .zIndex(isARViewVisible ? 0 : 1) // 첫 번째 뷰
                             
-                            if isARViewReady{
+                            if isARViewReady && isARViewVisible{
                                 VStack{
                                     ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
                                     AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, rotationList: rotationList!)

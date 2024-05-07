@@ -20,7 +20,7 @@ struct AppleMapView : View{
     
     @Binding var isARViewVisible: Bool  // AR 화면을 띄우는가
     @Binding var isARViewReady: Bool    // AR 화면이 준비가 완료 되었는가
-    @Binding var isARReadyViewOn : Bool         // AR을 처음 띄우는가
+    @Binding var isARReadyViewOn : Bool  // AR을 처음 띄우는가
     
     @State private var appleMap: AppleMap
     let rotationList : [Rotation]
@@ -42,11 +42,11 @@ struct AppleMapView : View{
         ZStack(alignment: .bottomTrailing){
             if !isARReadyViewOn {
                 if isARViewVisible {
-                        appleMap
-                        .frame(height: 300)
-                        .onAppear(){
-                            appleMap.setRegionToUserLocation()
-                        }
+                    appleMap
+                    .frame(height: 300)
+                    .onAppear(){
+                        appleMap.setRegionToUserLocation()
+                    }
                 }
                 else{
                     appleMap
