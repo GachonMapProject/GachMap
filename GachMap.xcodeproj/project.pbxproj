@@ -330,12 +330,9 @@
 		8B831C062BCCF57700A85973 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD
 				8B831C042BCCF57700A85973 /* MapTabView.swift */,
 				8BC86EDA2BE89B0F00051BF0 /* MapView */,
-=======
 				CBED53B22BE2203A00DDFD0C /* ChoosePath */,
->>>>>>> c75c0cc93f7a994781e2b7f6db0c858c852b4ded
 				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
 				8BC86EAC2BDE628800051BF0 /* Search */,
 				CB4EF61B2BCFA06600BDC73A /* BuildingView */,
