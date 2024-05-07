@@ -46,7 +46,7 @@ struct LocationSearchView: View {
                 if (searchText != "") {
                     Button(action: {
                         // 검색어 전달 API 함수 넣기
-                        addSearchItem()
+                        
                     }, label: {
                         Image(systemName: "magnifyingglass")
                             .font(.title2)
@@ -90,6 +90,8 @@ struct LocationSearchView: View {
            
                 ScrollView {
                     VStack(alignment: .leading) {
+                        // userdefaults에 저장된 배열의 아이템 개수만큼 출력 가능?
+                        // let 변수명 = UserDefaults.standard.array(forKey: "ageList") as? [String]
                         ForEach(0..<20, id: \.self) { _ in
                             LocationSearchResultCell()
                                 .padding(.leading, 20)
@@ -102,21 +104,11 @@ struct LocationSearchView: View {
             }
             .padding(.top, 20)
             
-            
-            
         }
         .background(Color.white)
         // end of 전체 VStack
         
     } // end of body
-    
-    private func addSearchItem() {
-        if !searchText.isEmpty && !recentSearches.contains(searchText) {
-            recentSearches.append(searchText)
-            print(searchText)
-            searchText = ""
-        }
-    }
     
 } // end of View struct
 

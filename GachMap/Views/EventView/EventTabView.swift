@@ -2,7 +2,7 @@
 //  EventTabView.swift
 //  GachonMap
 //
-//  Created by 원웅주 on 4/9/24. 
+//  Created by 원웅주 on 4/9/24.
 //
 
 import SwiftUI
@@ -97,7 +97,7 @@ struct EventTabView: View {
         // api 연결되면 지워야 함
 //        apiConnection = true
 //        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/event/list")
-        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/event/list")
+        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/event/list")
         else {
             print("Invalid URL")
             return
@@ -133,7 +133,7 @@ struct EventTabView: View {
 
 }
     
-// scrollView offset 가져오기 
+// scrollView offset 가져오기
 struct ViewOffsetKey: PreferenceKey {
     typealias Value = CGFloat
     static var defaultValue = CGFloat.zero
@@ -145,5 +145,4 @@ struct ViewOffsetKey: PreferenceKey {
 #Preview {
     EventTabView()
 }
-
 

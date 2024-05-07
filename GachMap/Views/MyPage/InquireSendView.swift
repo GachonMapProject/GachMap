@@ -6,6 +6,11 @@
 //
 
 import SwiftUI
+import Alamofire
+
+enum ActiveInquireAlert {
+    case success, fail
+}
 
 struct InquireSendView: View {
     // Environment 추가하기 (바인딩 없애고)
@@ -14,10 +19,27 @@ struct InquireSendView: View {
     
     let category = ["지점 문의", "경로 문의", "AI 소요시간 문의", "AR 문의", "행사 문의", "장소 문의", "기타 문의"]
     
+    @State private var loginInfo: LoginInfo? = nil
+    
     @State private var showEscapeAlert: Bool = false
     @State private var selectedCategory: String = ""
     @State private var inquireTitle: String = ""
     @State private var inquireDetail: String = ""
+    
+    @State private var showAlert: Bool = false
+    @State private var activeInquireAlert: ActiveInquireAlert = .success
+    @State private var alertMessage: String = ""
+    
+    // LoginInfo에 저장된 정보 가져오기
+    private func getLoginInfo() -> LoginInfo? {
+        if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
+           let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
+            return loginInfo
+        } else {
+            print("Login Info not found in UserDefaults")
+            return nil
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -103,6 +125,36 @@ struct InquireSendView: View {
                 } // end of ScrollView
                 
                 Button(action: {
+                    loginInfo = getLoginInfo()
+                    
+                    let userId = loginInfo?.userCode ?? 0
+                    
+                    func selectedInquiryCategory(selectedCategory: String) -> String {
+                        switch selectedCategory {
+                        case "지점 문의":
+                            return "Node"
+                        case "경로 문의":
+                            return "Route"
+                        case "AI 소요시간 문의":
+                            return "AITime"
+                        case "AR 문의":
+                            return "AR"
+                        case "행사 문의":
+                            return "Event"
+                        case "장소 문의":
+                            return "Place"
+                        case "기타 문의":
+                            return "Etc"
+                        default:
+                            return ""
+                        }
+                    }
+                    
+                    let param = InquireSendRequest(userId: userId, inquiryTitle: inquireTitle, inquiryContent: inquireDetail, inquiryCategory: selectedInquiryCategory(selectedCategory: selectedCategory))
+                    
+                    print("param: \(param)")
+                    
+                    inquireSend(parameter: param)
                     
                 }, label: {
                     Text("전달")
@@ -112,11 +164,20 @@ struct InquireSendView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 15)
                                 .fill(selectedCategory.isEmpty || inquireTitle.isEmpty || inquireDetail.isEmpty ? Color(UIColor.systemGray4) : Color.gachonBlue)
-                                .shadow(radius: 5, x: 2, y: 2)
+                                //.shadow(radius: 5, x: 2, y: 2)
                         )
                 })
                 .disabled(selectedCategory.isEmpty || inquireTitle.isEmpty || inquireDetail.isEmpty)
                 .padding(.bottom)
+                .alert(isPresented: $showAlert) {
+                    switch activeInquireAlert {
+                    case .success:
+                        return Alert(title: Text("알림"), message: Text(alertMessage), dismissButton: .default(Text("확인"), action: { showInquireSendView = false }))
+                        
+                    case .fail:
+                        return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
+                    }
+                }
                 
             } // end of 전체 VStack
             .frame(width: UIScreen.main.bounds.width - 30)
@@ -153,6 +214,47 @@ struct InquireSendView: View {
         } // end of NavigationView
         
     } // end of body
+    
+    // 문의사항 POST 함수
+    private func inquireSend(parameter: InquireSendRequest) {
+        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/inquiry")
+        else {
+            print("Invalid URL")
+            return
+        }
+        
+        AF.request(url, method: .post, parameters: parameter, encoder: JSONParameterEncoder.default)
+            .validate()
+            .responseDecodable(of: InquireSendResponse.self) { response in
+                // 서버 연결 여부
+                switch response.result {
+                case .success(let value):
+                    print(value)
+                    if(value.success == true) {
+                        print("1:1 문의 전송 성공")
+                        
+                        alertMessage = "문의 사항이 저장되었습니다."
+                        showAlert = true
+                        activeInquireAlert = .success
+                        
+                    } else {
+                        print("1:1 문의 전송 실패")
+                        
+                        alertMessage = "알 수 없는 오류가 발생했습니다.\n다시 시도해 주세요."
+                        showAlert = true
+                        activeInquireAlert = .fail
+                    }
+                    
+                case .failure(let error):
+                    alertMessage = "서버 연결에 실패했습니다."
+                    showAlert = true
+                    activeInquireAlert = .fail
+                    
+                    print("Error: \(error.localizedDescription)")
+                }
+            }
+    } // end of isPasswordValid()
+    
 } // end of View struct
 
 #Preview {

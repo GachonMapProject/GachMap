@@ -111,7 +111,7 @@ struct BuildingDetailView: View {
     // 건물 세부 정보 가져오는 API
     func getBuildingDetail(buildingCode : Int){
         
-        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/building-floor/\(buildingCode)")
+        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/map/building-floor/\(buildingCode)")
             else {
                 print("Invalid URL")
             return
