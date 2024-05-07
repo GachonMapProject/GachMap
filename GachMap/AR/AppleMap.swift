@@ -20,13 +20,15 @@ struct AppleMapView : View{
     @Binding var isARViewVisible: Bool
     @State private var appleMap: AppleMap
     let rotationList : [Rotation]
+    let onlyMap : Bool
 
-    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, rotationList : [Rotation]) {
+    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, rotationList : [Rotation], onlyMap : Bool) {
         self.coreLocation = coreLocation
         self.path = path
         self._isARViewVisible = isARViewVisible
         self.rotationList = rotationList
         _appleMap = State(initialValue: AppleMap(coreLocation: coreLocation, path: path))
+        self.onlyMap = onlyMap
     }
     var body: some View {
         ZStack(alignment: .bottomTrailing){
@@ -64,32 +66,54 @@ struct AppleMapView : View{
                 .scrollTargetBehavior(.viewAligned)
                 .frame(height: UIScreen.main.bounds.width * 0.3)
             }
-          
-            VStack(spacing: 0){
-                Button(action: {
-                    isARViewVisible.toggle()
-                },
-                       label: {Text(isARViewVisible ? "2D" : "AR")})
-                .frame(width: 45, height: 50)
-                .foregroundColor(.gray)
-                .bold()
-                
-                Divider().background(.gray) // 중앙선
+            if !onlyMap{
+                VStack(spacing: 0){
+                    Button(action: {
+                        isARViewVisible.toggle()
+                    },
+                           label: {Text(isARViewVisible ? "2D" : "AR")
+                    })
+                    .frame(width: 45, height: 50)
+                    .foregroundColor(.gray)
+                    .bold()
+                    
+                    Divider().background(.gray) // 중앙선
 
-                Button(action: {
-                    // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
-                    appleMap.setRegionToUserLocation()
-                },
-                       label: {Image(systemName: "location")})
-                .frame(width: 45, height: 50)
-                .foregroundColor(.gray)
-                .bold()
-                
+                    Button(action: {
+                        // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
+                        appleMap.setRegionToUserLocation()
+                    },
+                           label: {Image(systemName: "location")
+                    })
+                    .frame(width: 45, height: 50)
+                    .foregroundColor(.gray)
+                    .bold()
+                    
+                }
+                .frame(width: 45, height: 100)
+                .background(.white)
+                .cornerRadius(15)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: isARViewVisible ? 40 : 40 + UIScreen.main.bounds.width * 0.3, trailing: 20)) // bottomTrailing 마진 추가
             }
-            .frame(width: 45, height: 100)
-            .background(.white)
-            .cornerRadius(15)
-            .padding(EdgeInsets(top: 0, leading: 0, bottom: isARViewVisible ? 40 : 40 + UIScreen.main.bounds.width * 0.3, trailing: 20)) // bottomTrailing 마진 추가
+            else {
+                VStack {
+                    Button(action: {
+                        // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
+                        appleMap.setRegionToUserLocation()
+                    },
+                           label: {Image(systemName: "location")
+                    })
+                    .frame(width: 45, height: 50)
+                    .foregroundColor(.gray)
+                    .bold()
+                }
+                .frame(width: 50, height: 50)
+                .background(.white)
+                .cornerRadius(15)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: isARViewVisible ? 40 : 40 + UIScreen.main.bounds.width * 0.3, trailing: 20)) // bottomTrailing 마진 추가
+
+            }
+
         }
     }
 }
@@ -242,7 +266,7 @@ class Coordinator: NSObject, MKMapViewDelegate {
                 if let startImage = UIImage(named: "Start3") {
                     let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "start")
                     annotationView.image = startImage
-                    annotationView.frame.size = CGSize(width: 30, height: 30)
+                    annotationView.frame.size = CGSize(width: 40, height: 30)
                     return annotationView
                 }
             } else if customAnnotation.reuseIdentifier == "destination" {
@@ -300,7 +324,7 @@ class Coordinator: NSObject, MKMapViewDelegate {
             if let annotationView = mapView.view(for: annotation) {
                 if let customAnnotation = annotation as? CustomAnnotation {
                     if customAnnotation.reuseIdentifier != "middle" {
-                        annotationView.frame.size = markerSize
+//                        annotationView.frame.size = markerSize
                     }
                 }
             }

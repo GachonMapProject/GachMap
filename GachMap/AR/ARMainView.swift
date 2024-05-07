@@ -92,11 +92,11 @@ struct ARMainView: View {
                                 ZStack(alignment: .topTrailing){
                                     VStack{
                                         ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
-                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!)
+                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
                                     }.edgesIgnoringSafeArea(.all)
                                     
                                     if !isARViewVisible {
-                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!)
+                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
                                     }
                                     
                                     HStack {
@@ -139,7 +139,24 @@ struct ARMainView: View {
                                 }
                             } // end of if !onlyMap
                             else{
-                                AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!)
+                                ZStack(alignment: .topTrailing){
+                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                    
+                                    Button(){
+                                        EndButtonAlert()
+                                    } label: {
+                                        HStack{
+                                            Image(systemName: "xmark.circle")
+                                                .foregroundColor(.white)
+                                            Text("안내 종료")
+                                                .foregroundStyle(.white)
+                                        }
+                                        .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
+                                        .background(.blue)
+                                        .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
+                                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 55))
+                                    }
+                                }
                             }
                         } // end of if !isEnd
                         else{
@@ -182,6 +199,7 @@ struct ARMainView: View {
             self.checkSecondTime?.invalidate()
             self.checkTime?.invalidate()
             isARViewReady = true
+            isARViewVisible = false
             rotationList = checkRotation.checkRotation(currentLocation: coreLocation.location!, path: path)
             onlyMap = true
         })
