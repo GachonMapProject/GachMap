@@ -397,7 +397,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             for child in scene.rootNode.childNodes {
                 child.scale = SCNVector3(scale, scale, scale)
                 if middle {
-                    child.eulerAngles.x = xAngle + .pi
+                    child.eulerAngles.x = xAngle
                     child.eulerAngles.y = yAngle
                 }
                 else{
