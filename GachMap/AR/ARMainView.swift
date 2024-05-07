@@ -13,9 +13,10 @@ struct ARMainView: View {
 
 //    @Binding var isAROn : Bool
     // 전역으로 CoreLocationEx 인스턴스 생성
-    @ObservedObject var coreLocation = CoreLocationEx()         // ObservedObject를 생성하는 것이 아닌 넘겨 받는 걸로 수정해야 됨 
+    @ObservedObject var coreLocation = CoreLocationEx()         // ObservedObject를 생성하는 것이 아닌 넘겨 받는 걸로 수정해야 됨
+    @Binding var isAROn : Bool
     @ObservedObject var nextNodeObject = NextNodeObject()
-    @State var isARViewVisible = false // ARView의 on/off 상태 변수
+    @State var isARViewVisible = true // ARView의 on/off 상태 변수
     @State var isEnd = false // 안내 종료 상태 변수
     @State var isARViewReady = false    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
     @State var isARReadyViewOn = false  // AR을 처음 띄우는가
@@ -31,66 +32,70 @@ struct ARMainView: View {
     var body: some View {
         if coreLocation.location != nil{
             VStack{
-                if !isEnd {
-                    if rotationList != nil {
-                        ZStack(alignment: .topTrailing){
-                            AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, trueNorthAlertOn: $trueNorthAlertOn, rotationList: rotationList!)
-//                                .zIndex(isARViewVisible ? 0 : 1) // 첫 번째 뷰
-                            
-                            if isARViewReady && isARViewVisible{
+                if !isARViewReady {
+                    ARReadyView(coreLocation: coreLocation, trueNorthAlertOn: $trueNorthAlertOn, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, isARViewVisible: $isARViewVisible)
+                }
+                else{
+                    if !isEnd {
+                        if rotationList != nil {
+                            ZStack(alignment: .topTrailing){
                                 VStack{
                                     ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
                                     AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, trueNorthAlertOn: $trueNorthAlertOn, rotationList: rotationList!)
                                 }
                                 .edgesIgnoringSafeArea(.all)
-//                                .zIndex(isARViewVisible ? 1 : 0) // 첫 번째 뷰
-                            }
-                            HStack {
-                                if !isARReadyViewOn {
-                                    if isARViewVisible{
+                        
+                                if !isARViewVisible {
+                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, isARViewReady: $isARViewReady, isARReadyViewOn: $isARReadyViewOn, trueNorthAlertOn: $trueNorthAlertOn, rotationList: rotationList!)
+                                }
+
+                                HStack {
+                                    if !isARReadyViewOn {
+                                        if isARViewVisible{
+                                            Button(){
+                                                ReloadButtonAlert()
+                                            } label: {
+                                                HStack{
+                                                    Image(systemName: "gobackward")
+                                                        .foregroundColor(.white)
+                                                    Text("AR 재로드")
+                                                        .foregroundStyle(.white)
+                                                }
+                                                .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
+                                                .background(.blue)
+                                                .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
+                            
+                                            }
+                                        }
                                         Button(){
-                                            ReloadButtonAlert()
+                                            EndButtonAlert()
                                         } label: {
                                             HStack{
-                                                Image(systemName: "gobackward")
+                                                Image(systemName: "xmark.circle")
                                                     .foregroundColor(.white)
-                                                Text("AR 재로드")
+                                                Text("안내 종료")
                                                     .foregroundStyle(.white)
                                             }
                                             .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
                                             .background(.blue)
                                             .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
-                        
+                            
                                         }
-                                    }
-                                    Button(){
-                                        EndButtonAlert()
-                                    } label: {
-                                        HStack{
-                                            Image(systemName: "xmark.circle")
-                                                .foregroundColor(.white)
-                                            Text("안내 종료")
-                                                .foregroundStyle(.white)
-                                        }
-                                        .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
-                                        .background(.blue)
-                                        .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
-                        
                                     }
                                 }
+                                .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: isARViewVisible ? 10 : 55))
+                                .zIndex(2)
                             }
-                            .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: isARViewVisible ? 10 : 55))
-                            .zIndex(2)
-                        }
-                        .onAppear(){
-    //                        checkSecondTime?.invalidate()
-    //                        checkTime?.invalidate()
+                            .onAppear(){
+        //                        checkSecondTime?.invalidate()
+        //                        checkTime?.invalidate()
+                            }
                         }
                     }
-                }
-                else{
-                    // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
-                    SatisfactionView()
+                    else{
+                        // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
+                        SatisfactionView()
+                    }
                 }
             }  // end of VStack
             .onChange(of: coreLocation.location!) { location in

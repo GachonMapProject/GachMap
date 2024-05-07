@@ -23,7 +23,7 @@ struct ChoosePathView: View {
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath : Int = 0   // 선택한 경로
     
-    @State private var isAROn = false
+    @State var isAROn = false
     
     @State var test : [PathTime]
     
@@ -79,8 +79,8 @@ struct ChoosePathView: View {
             }
         }
         else{
-//            ARMainView(isAROn: $isAROn)
-            ARMainView()
+            ARMainView(isAROn: $isAROn)
+//            ARMainView()
         }
     }
 }
