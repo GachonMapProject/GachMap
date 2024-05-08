@@ -152,7 +152,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let startNode = LocationAnnotationNode(location: startLocation, node: sourceNode)
         startNode.name = "0-0"
         
-        let pinLocation = CLLocation(coordinate: startLocation.coordinate, altitude: startLocation.altitude + 3)
+        let pinLocation = CLLocation(coordinate: startLocation.coordinate, altitude: startLocation.altitude + 2.5)
         let pinNode = makeUsdzNode(fileName: "Pin", scale : 0.005, middle: false)
         let placePinNode = LocationAnnotationNode(location: pinLocation, node: pinNode)
         placePinNode.constraints = nil
@@ -294,7 +294,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
        
         let box = SCNBox(width: 2, height: 0.1, length: CGFloat(length), chamferRadius: 0)
         box.firstMaterial?.diffuse.contents = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
-        box.firstMaterial?.transparency = 0.8 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
+        box.firstMaterial?.transparency = 0.9 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
         let node = SCNNode(geometry: box)
 
         // 빗변
@@ -334,7 +334,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         boxNode.name = "lastBoxNode"
         destinationNode.name = "last"
         
-        let pinLocation = CLLocation(coordinate: destinationLocation.coordinate, altitude: destinationLocation.altitude + 3)
+        let pinLocation = CLLocation(coordinate: destinationLocation.coordinate, altitude: destinationLocation.altitude + 2.5)
         let pinNode = makeUsdzNode(fileName: "Pin", scale : 0.005, middle: false)
         let placePinNode = LocationAnnotationNode(location: pinLocation, node: pinNode)
         placePinNode.constraints = nil
@@ -397,12 +397,12 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             for child in scene.rootNode.childNodes {
                 child.scale = SCNVector3(scale, scale, scale)
                 if middle {
-                    child.eulerAngles.x = xAngle
+                    child.eulerAngles.x = xAngle + .pi
                     child.eulerAngles.y = yAngle
                 }
                 else{
-//                    let rotateForeverAction = SCNAction.repeatForever(SCNAction.rotate(by: .pi, around: SCNVector3(0, 1, 0), duration: 1))
-//                    child.runAction(rotateForeverAction)
+                    let rotateForeverAction = SCNAction.repeatForever(SCNAction.rotate(by: .pi, around: SCNVector3(0, 1, 0), duration: 1))
+                    child.runAction(rotateForeverAction)
                     // 노드의 현재 위치를 저장합니다.
                     let currentPosition = child.position
 

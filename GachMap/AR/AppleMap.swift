@@ -241,9 +241,10 @@ class Coordinator: NSObject, MKMapViewDelegate {
         if annotation is MKUserLocation {
             // 사용자 위치 표시 마커를 커스텀 이미지로 설정
             let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "userLocation")
-            annotationView.image = UIImage(named: "userLocationIcon")
-            annotationView.frame.size = CGSize(width: 30, height: 30)
-//            annotationView.frame.size = CGSize(width: 30, height: 30)
+            annotationView.image = UIImage(named: "userLocation")?.resizedAndScaledToFit(targetSize: CGSize(width: 25, height: 25))
+
+
+//            annotationView.frame.size = CGSize(width: 25, height: 27)
 //            if let image = UIImage(systemName: "location.north.fill") {
 //                let coloredImage = image.withTintColor(.red)
 //                annotationView.image = coloredImage.resize(targetSize: CGSize(width: 40, height: 40))
@@ -349,6 +350,19 @@ extension UIImage {
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return newImage!
+    }
+    
+    func resizedAndScaledToFit(targetSize: CGSize) -> UIImage? {
+        let widthRatio = targetSize.width / size.width
+        let heightRatio = targetSize.height / size.height
+        let scaleFactor = min(widthRatio, heightRatio)
+        let newSize = CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: newSize))
+        
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
     
     
