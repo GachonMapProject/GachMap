@@ -35,16 +35,18 @@ struct AppleMapView : View{
             if isARViewVisible {
                     appleMap
                     .frame(height: 300)
-                    .onAppear(){
-                        appleMap.setRegionToUserLocation()
-                    }
+                    .edgesIgnoringSafeArea(.all)
+//                    .onAppear(){
+//                        appleMap.setRegionToUserLocation()
+//                    }
+                    
             }
             else{
                 appleMap
                     .ignoresSafeArea(.all)
-                    .onAppear(){
-                        appleMap.setRegionToUserLocation()
-                    }
+//                    .onAppear(){
+//                        appleMap.setRegionToUserLocation()
+//                    }
                 ScrollView(.horizontal){
                     ZStack(){
                         LazyHStack{
@@ -131,19 +133,18 @@ struct AppleMap: UIViewRepresentable {
         self.coreLocation = coreLocation
         region = MKCoordinateRegion(
             center: coreLocation.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
-            latitudinalMeters: 100,
-            longitudinalMeters: 100
+            latitudinalMeters: 200,
+            longitudinalMeters: 200
         )
   
         lineCoordinates =  path.map{CLLocationCoordinate2D(latitude: $0.location.coordinate.latitude, longitude: $0.location.coordinate.longitude)
         }
-        print("init")
     }
     // 현재 위치를 기반으로 지도의 중심을 설정하는 함수
     func setRegionToUserLocation() {
         if let userLocation = coreLocation.location {
-            let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 150, longitudinalMeters: 150)
-            mapView.setRegion(region, animated: true)
+            let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
+            mapView.region = region
         }
     }
     
@@ -151,8 +152,8 @@ struct AppleMap: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         
         mapView.delegate = context.coordinator
-        mapView.setRegion(region, animated: true)
-        mapView.userTrackingMode  = .followWithHeading
+        mapView.region = region
+//        mapView.userTrackingMode  = .followWithHeading
       
         let polyline = MKPolyline(coordinates: lineCoordinates, count: lineCoordinates.count)
         mapView.addOverlay(polyline)
@@ -180,7 +181,7 @@ struct AppleMap: UIViewRepresentable {
             mapView.addAnnotation(destinationAnnotation)
         }
         
-//        mapView.showsUserLocation = true
+        mapView.showsUserLocation = true
         
         return mapView
     }
@@ -194,8 +195,8 @@ struct AppleMap: UIViewRepresentable {
           
 //          print("updateUIView - isCameraFixed (true)")
           if let userLocation = coreLocation.location {
-              let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
-              view.setRegion(region, animated: true)
+              let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
+              mapView.region = region
           }
       }
       
@@ -206,7 +207,7 @@ struct AppleMap: UIViewRepresentable {
       
 //
 //      // 이것도 사용자 위치를 추적하는데, 애니메이션 효과가 추가 되어 부드럽게 화면 확대 및 이동
-//      view.setUserTrackingMode(.follow, animated: true)
+//      view.setUserTrackingMode(.follow, animated: true) 
       
       
   }

@@ -48,8 +48,8 @@ struct ChoosePathView: View {
         region = MKCoordinateRegion(center: center, latitudinalMeters: meter, longitudinalMeters: meter)
         
         test = [PathTime(pathName: "최적 경로", time: "33", isLogin: true, line: lines[0]),
-         PathTime(pathName: "무당이 경로", time: nil, isLogin: true, line: lines[1]),
-         PathTime(pathName: "최단 경로", time: "3", isLogin: true, line: lines[2])
+         PathTime(pathName: "최단 경로", time: "3", isLogin: true, line: lines[1]),
+         PathTime(pathName: "무당이 경로", time: nil, isLogin: true, line: lines[2])
         ]
     }
     
@@ -193,7 +193,7 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
             }
         }
 
-        renderer.lineWidth = 10
+        renderer.lineWidth = 8
         return renderer
     }
     

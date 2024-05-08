@@ -31,7 +31,7 @@ struct ARMainView: View {
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
     let timer = MyTimer()
-    let path = Path().homeToAI
+    let path = Path().ITtoGachon
     
     var body: some View {
         if coreLocation.location != nil{
@@ -90,7 +90,7 @@ struct ARMainView: View {
                         if !isEnd { // 안내 종료 상태변수
                             if !onlyMap{    // 지도만 이용 상태변수
                                 ZStack(alignment: .topTrailing){
-                                    VStack{
+                                    VStack(spacing : 0){
                                         ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
                                         AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
                                     }.edgesIgnoringSafeArea(.all)
