@@ -401,8 +401,28 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
                     child.eulerAngles.y = yAngle
                 }
                 else{
-                    let rotateForeverAction = SCNAction.repeatForever(SCNAction.rotate(by: .pi, around: SCNVector3(0, 1, 0), duration: 1))
-                    child.runAction(rotateForeverAction)
+//                    let rotateForeverAction = SCNAction.repeatForever(SCNAction.rotate(by: .pi, around: SCNVector3(0, 1, 0), duration: 1))
+//                    child.runAction(rotateForeverAction)
+                    // 노드의 현재 위치를 저장합니다.
+                    let currentPosition = child.position
+
+                    // 점프하는 높이를 설정합니다.
+                    let jumpHeight: CGFloat = 0.5
+
+                    // 위로 점프하는 액션
+                    let jumpUpAction = SCNAction.moveBy(x: 0, y: jumpHeight, z: 0, duration: 0.5)
+                    jumpUpAction.timingMode = .easeInEaseOut
+
+                    // 아래로 떨어지는 액션
+                    let jumpDownAction = SCNAction.moveBy(x: 0, y: -jumpHeight, z: 0, duration: 0.5)
+                    jumpDownAction.timingMode = .easeInEaseOut
+
+                    // 점프를 반복하는 시퀀스 생성
+                    let jumpSequence = SCNAction.sequence([jumpUpAction, jumpDownAction])
+
+                    // 노드에 점프 액션 반복 실행
+                    let jumpForeverAction = SCNAction.repeatForever(jumpSequence)
+                    child.runAction(jumpForeverAction)
                 }
 
                 node.addChildNode(child)
