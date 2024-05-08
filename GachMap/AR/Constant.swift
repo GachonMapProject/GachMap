@@ -56,5 +56,5 @@ struct TextNodeConstant {
 }
 
 struct LocationAccuracy {
-    static let accuracy = 60.0
+    static let accuracy = 20.0
 }

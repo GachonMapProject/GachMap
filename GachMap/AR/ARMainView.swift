@@ -31,7 +31,12 @@ struct ARMainView: View {
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
     let timer = MyTimer()
-    let path = Path().ITtoGachon
+    let path = Path().homeToAI
+    
+    
+    
+    @State var distance : Double?
+    @State var timeList = [Int]()
     
     var body: some View {
         if coreLocation.location != nil{
@@ -154,10 +159,15 @@ struct ARMainView: View {
                                         .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
                                         .background(.blue)
                                         .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
-                                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 55))
+                                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 10))
                                     }
                                 }
                             }
+                            
+                            Text(String(format: "남은 거리: %.2f", distance ?? 0.0))
+                            Text("다음 인덱스 : \(nextNodeObject.nextIndex)")
+                            Text("측정 시간 : \(timer.seconds)")
+                            Text("시간 리스트 : \(String(describing: timeList))")
                         } // end of if !isEnd
                         else{
                             // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
@@ -282,15 +292,16 @@ struct ARMainView: View {
         // 마지막 노드에 도착 이후부터는 실행 안 되게
         if index != path.count {
             let distance = location.distance(from: path[index].location)
-            if distance <= 2 {
-                print("\(path[index].name) - 2m 이내 ")
+            self.distance = distance
+            if distance <= 5 {
+                print("\(path[index].name) - 5m 이내 ")
                 // timer 로직 추가
                 if index == 0 {
                     timer.startTimer()  // 첫 노드 근처에 오면 타이머 시작
                     print("timer 시작")
                 }else{
                     let time = timer.seconds
-                    
+                    timeList.append(time)
                     // timer (노드-노드, 시간) 배열 생성 후 append 하고 만족도 페이지에 넘겨서 Request 요청해야 됨
                     print(path[index-1].name + "~" + path[index].name + "까지 : \(time)초")
                     timer.stopTimer()
