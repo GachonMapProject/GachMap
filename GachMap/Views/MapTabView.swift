@@ -23,19 +23,31 @@ enum BuildingCategory: String, CaseIterable {
 
 struct MapTabView: View {
     
+    let categoryPinItem = ["BUILDING" : pinItem(image: "building.fill", color: Color.blue),
+                           "SMOKING" : pinItem(image: "flame.fill", color: Color.brown),
+                           "FOOD": pinItem(image: "fork.knife", color: Color.orange),
+                           "CAFE": pinItem(image: "cup.and.saucer.fill", color: Color.green),
+                           "CONV": pinItem(image: "storefront.fill", color: Color.cyan),
+                           "WELFARE": pinItem(image: "cross.fill", color: Color.pink),
+                           "PRINT": pinItem(image: "printer.fill", color: Color.mint),
+                           "BUSSTOP" : pinItem(image: "ladybug.fill", color: Color.red)] as [String : Any]
+    
     // 검색창 활성화
     @State private var showLocationSearchView: Bool = false
     
-    @State private var selectedCategory: BuildingCategory?
     //@State private var buildingMarkers: [BuildingMarkerData] = []
     @State var locations: [BuildingMarkerData] = []
+    // category에 따라 바꿔줘야 됨
+    @State var pinImage : String = "building.fill"
+    @State var pinColor : Color = Color.blue
     
     //var buildingDatas: [BuildingMarkerData]
     
     // CoreLocationEx, Category, [CategoryData]을 받아야 함
     
     @ObservedObject var coreLocation = CoreLocationEx()
-    var category = "" // 선택한 카테고리 넘겨주기
+    @State var category = "BUILDING" // 선택한 카테고리 넘겨주기
+    @State var selecetedCategory = "BUILDING"
 //    var locations = [CategoryData(placeId: 1, placeName: "1-1", placeLatitude: 37.4508817, placeLongitude: 127.1274769, placeSummary: "Sum"),
 //                        CategoryData(placeId: 2, placeName: "1-2", placeLatitude: 37.4506271, placeLongitude: 127.1274554, placeSummary: "Sum"),
 //                        CategoryData(placeId: 3, placeName: "1-3", placeLatitude: 37.45062308, placeLongitude: 127.1276374, placeSummary: "Sum"),
@@ -51,8 +63,21 @@ struct MapTabView: View {
     var body: some View {
 
         ZStack() {
-            BackgroundMapView(category: category, locations: locations, coreLocation: coreLocation)
+            BackgroundMapView(selecetedCategory: $selecetedCategory, locations: locations, coreLocation: coreLocation, pinImage : $pinImage, pinColor : $pinColor)
                 .ignoresSafeArea()
+                .onChange(of: selecetedCategory){
+                    // 핀 이미지, 백그라운드 색 설정
+                    if let pinItem = categoryPinItem[$selecetedCategory.wrappedValue] as? pinItem { // selecetedCategory 속성에 접근할 때 .wrappedValue를 사용하여 값에 접근
+                        print("category : \($selecetedCategory.wrappedValue)")
+                        print("pinItem : \(pinItem)")
+                        self.pinImage = pinItem.image
+                        self.pinColor = pinItem.color
+                    } else {
+                        print("pinItem else: \($selecetedCategory.wrappedValue)")
+                        self.pinImage = "building.fill" // 기본 이미지
+                        self.pinColor = Color.blue // 기본 색상
+                    }
+                }
             
             VStack {
                 HStack {
@@ -60,14 +85,16 @@ struct MapTabView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(BuildingCategory.allCases, id: \.self) { category in
-                                CategoryButton(viewModel: BuildingMarkerViewModel(), locations: $locations, category: category.rawValue)
-                                    .onTapGesture {
-                                        selectedCategory = category
-                                    }
+//                                CategoryButton(viewModel: BuildingMarkerViewModel(), locations: $locations, category: category.rawValue)
+                                CategoryButton(locations: $locations, selectedCategory: $selecetedCategory, category: category.rawValue)
+//                                    .onTapGesture {
+//                                        selectedCategory = category
+//                                        print("selectedCategory : \(String(describing: selectedCategory))")
+//                                    }
                             }
                         }
                         .padding(.leading, 20)
-                        .padding(.top, 10)
+                        .padding(.top, 20)
                         .padding(.trailing, 20)
                     } // end of ScrollView of 카테고리 버튼
                 }

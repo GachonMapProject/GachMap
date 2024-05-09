@@ -32,18 +32,9 @@ struct pinItem {
 // CoreLocationEx, Category, [CategoryData]을 받아야 함 
 struct BackgroundMapView : View {
     
-    var categoryPinItem = ["건물" : pinItem(image: "building.fill", color: Color.blue),
-                           "흡연구역" : pinItem(image: "flame.fill", color: Color.brown),
-                           "음식점": pinItem(image: "fork.knife", color: Color.orange),
-                           "카페": pinItem(image: "cup.and.saucer.fill", color: Color.green),
-                           "편의점": pinItem(image: "storefront.fill", color: Color.cyan),
-                           "복지시설": pinItem(image: "cross.fill", color: Color.pink),
-                           "인쇄": pinItem(image: "printer.fill", color: Color.mint),
-                           "무당이 정류장" : pinItem(image: "ladybug.fill", color: Color.red)] as [String : Any]
-    
     // 카테고리 추가
     
-    var category : String
+    @Binding var selecetedCategory : String
     var locations : [IdentifiableLocation]
     @ObservedObject var coreLocation : CoreLocationEx
 
@@ -51,28 +42,19 @@ struct BackgroundMapView : View {
 
     
     // category에 따라 바꿔줘야 됨
-    @State var pinImage : String
-    @State var pinColor : Color
+    @Binding var pinImage : String
+    @Binding var pinColor : Color
     
     @State var selectedItem : String? // 마커 선택시 id
     
     @State var isARStart = false    // AR 캠퍼스 둘러보기 버튼 실행 유무
     
-    init(category : String, locations: [BuildingMarkerData], coreLocation: CoreLocationEx) {
-        self.category = category
+    init(selecetedCategory: Binding<String>, locations: [BuildingMarkerData], coreLocation: CoreLocationEx, pinImage :Binding<String>, pinColor : Binding<Color>) {
+        _selecetedCategory = selecetedCategory // Binding 속성에 직접 바인딩
         self.locations = locations.map{IdentifiableLocation(coordinate: CLLocationCoordinate2D(latitude: $0.placeLatitude, longitude: $0.placeLongitude), markerData: $0)}
         self.coreLocation = coreLocation
-        
-        // 핀 이미지, 백그라운드 색 설정
-        if let pinItem = categoryPinItem[category] as? pinItem {
-              self.pinImage = pinItem.image
-              self.pinColor = pinItem.color
-          } else {
-              self.pinImage = "building.fill" // 기본 이미지
-              self.pinColor = Color.blue // 기본 색상
-       }
-        
-        
+        _pinColor = pinColor
+        _pinImage = pinImage
     }
     
     var body: some View {
@@ -85,11 +67,18 @@ struct BackgroundMapView : View {
                 }
             }
             .onChange(of: selectedItem){
-                let location = locations.filter{$0.id == selectedItem}
-                let region = MKCoordinateRegion(center: location[0].coordinate,
-                                                latitudinalMeters: 200,
-                                                longitudinalMeters: 200)
-                self.region = MapCameraPosition.region(region)
+//                print("selectedItem : \(String(describing: selectedItem))")
+                if selectedItem != nil {
+                    let location = locations.filter{$0.id == selectedItem}
+                    let region = MKCoordinateRegion(center: location[0].coordinate,
+                                                    latitudinalMeters: 200,
+                                                    longitudinalMeters: 200)
+                    self.region = MapCameraPosition.region(region)
+                }
+            }
+            .onChange(of: selecetedCategory){
+                region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
+                print(pinImage, pinColor)
             }
             
             VStack{

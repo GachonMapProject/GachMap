@@ -769,7 +769,7 @@
 				CB2E45702BD4DF70009DB796 /* LocationAnnotationNode.swift in Sources */,
 				8BC86EAE2BDE629600051BF0 /* SearchMainBar.swift in Sources */,
 				CB6DF8D42BE8909A00DC8BC5 /* ARReadyView.swift in Sources */,
-				8BC86EAE2BDE629600051BF0 /* SearchMainView.swift in Sources */,
+				8BC86EAE2BDE629600051BF0 /* SearchMainBar.swift in Sources */,
 				8B5368F32BD25EB7007B8984 /* IdDuplicationResponse.swift in Sources */,
 				8BC86EEC2BEA044800051BF0 /* RouteHistoryResponse.swift in Sources */,
 				8B3159D52BD041500049CB5F /* ServiceTermsView.swift in Sources */,
@@ -912,7 +912,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = XW6H6BYJ53;
+				DEVELOPMENT_TEAM = X7TYNR98TC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
@@ -948,7 +948,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = XW6H6BYJ53;
+				DEVELOPMENT_TEAM = X7TYNR98TC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
