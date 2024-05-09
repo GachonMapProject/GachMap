@@ -65,7 +65,7 @@ struct InquireDetailView: View {
     
     // 문의 상세 정보 가져오기
     private func getInquireDetail() {
-        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/inquiry/\(inquiryId)")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/inquiry/\(inquiryId)")
         else {
             print("Invalid URL")
             return

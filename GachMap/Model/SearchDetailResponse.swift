@@ -1,22 +1,23 @@
 //
-//  BuildingMarkerResponse.swift
+//  SearchDetailResponse.swift
 //  GachMap
 //
-//  Created by 원웅주 on 5/7/24.
+//  Created by 원웅주 on 5/8/24.
 //
 
 import Foundation
 
-struct BuildingMarkerResponse: Decodable {
+struct SearchDetailResponse: Decodable {
     var success: Bool
     var property: Int
     var message: String
-    var data: [BuildingMarkerData]
+    var data: SearchDetailData
 }
 
-struct BuildingMarkerData: Decodable {
+struct SearchDetailData: Decodable {
     var placeName: String
     var placeLatitude: Double
     var placeLongitude: Double
     // var placeId: Int
+    // 이미지, 요약 정보
 }

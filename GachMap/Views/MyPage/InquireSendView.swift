@@ -217,7 +217,7 @@ struct InquireSendView: View {
     
     // 문의사항 POST 함수
     private func inquireSend(parameter: InquireSendRequest) {
-        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/inquiry")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/inquiry")
         else {
             print("Invalid URL")
             return

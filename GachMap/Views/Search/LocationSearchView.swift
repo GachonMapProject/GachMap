@@ -93,7 +93,7 @@ struct LocationSearchView: View {
                         // userdefaults에 저장된 배열의 아이템 개수만큼 출력 가능?
                         // let 변수명 = UserDefaults.standard.array(forKey: "ageList") as? [String]
                         ForEach(0..<20, id: \.self) { _ in
-                            LocationSearchResultCell()
+                            RecentSearchCell()
                                 .padding(.leading, 20)
                                 .padding(.trailing, 20)
                                 .padding(.top, 3)

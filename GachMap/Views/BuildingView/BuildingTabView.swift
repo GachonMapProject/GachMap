@@ -95,7 +95,7 @@ struct BuildingTabView: View {
     func getBuildingList(){
         
         //        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/map/building-info/list")
-        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/map/building-info/list")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/building-info/list")
         else {
             print("Invalid URL")
             return

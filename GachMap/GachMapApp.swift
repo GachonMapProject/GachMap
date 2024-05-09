@@ -11,7 +11,8 @@ import SwiftUI
 struct GachMapApp: App {
     var body: some Scene {
         WindowGroup {
-            StartView()
+//            SearchMainView(showLocationSearchView: Binding.constant(true))
+            MapTabView()
         }
     }
 }

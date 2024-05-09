@@ -368,7 +368,7 @@ struct InfoInputView: View {
     // postUserInfoData 함수
     private func postUserInfoData(parameter : UserInfoRequest) {
         // API 요청을 보낼 URL 생성
-        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/user/signup")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/signup")
         else {
             print("Invalid URL")
             return

@@ -8,15 +8,13 @@
 import SwiftUI
 import Alamofire
 
-struct CategoryButton: View {
-    
-    let category: String
+class BuildingMarkerViewModel: ObservableObject {
+    @Published var buildingDatas: [BuildingMarkerData] = []
     
     // 카테고리 별 건물 목록 가져오기
-    private func getBuildingMarker(placeCategory: String) {
-//        let placeCategory = BuildingCategory(rawValue: category)
+    func getBuildingMarker(placeCategory: String, completion: @escaping ([BuildingMarkerData]) -> Void) {
         
-        guard let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/map/\(placeCategory)")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/\(placeCategory)")
         else {
             print("Invalid URL")
             return
@@ -33,6 +31,8 @@ struct CategoryButton: View {
                     if(value.success == true) {
                         print("카테고리 별 건물 목록 가져오기 성공")
                         // data에 담긴 정보를 넘겨줘야돼
+                        // self.buildingDatas = value.data
+                        completion(value.data)
                         
                     } else {
                         print("카테고리 별 건물 목록 가져오기 실패")
@@ -45,12 +45,22 @@ struct CategoryButton: View {
                 }
             }
     }
+}
+
+struct CategoryButton: View {
+    @ObservedObject var viewModel: BuildingMarkerViewModel
     
+    @Binding var locations: [BuildingMarkerData]
+    
+    let category: String
+
     var body: some View {
-        // 버튼 1
+        // 버튼
         Button(action: {
             if let placeCat = BuildingCategory(rawValue: category) {
-                getBuildingMarker(placeCategory: placeCat.rawValue)
+                viewModel.getBuildingMarker(placeCategory: placeCat.rawValue) {
+                    self.locations = $0 // 클로저가 새 데이터를 제공한다고 가정
+                }
             }
             
         }, label: {

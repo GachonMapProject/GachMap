@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct SearchSpotDetailCard: View {
+    var placeName: String
+    // var placeSummary: String
+    // var placeImage ...
+    
     var body: some View {
         VStack {
             HStack {
@@ -19,8 +23,8 @@ struct SearchSpotDetailCard: View {
                     .clipped()
                 
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("AI관")
-                        .font(.system(size: 22, weight: .bold))
+                    Text(placeName)
+                        .font(.system(size: 20, weight: .bold))
                     Text("가천대학교 공학의 중심")
                         .font(.system(size: 15))
                     Spacer()
@@ -39,7 +43,7 @@ struct SearchSpotDetailCard: View {
                         Text("출발지로 설정")
                             .font(.system(size: 15, weight: .bold))
                     })
-                    .frame(width: 130, height: 30)
+                    .frame(width: 130, height: 33)
                     .foregroundColor(.white)
                     .background(Capsule()
                         .fill(.gachonBlue))
@@ -54,7 +58,7 @@ struct SearchSpotDetailCard: View {
                         Text("도착지로 설정")
                             .font(.system(size: 15, weight: .bold))
                     })
-                    .frame(width: 130, height: 30)
+                    .frame(width: 130, height: 33)
                     .foregroundColor(.white)
                     .background(Capsule()
                         .fill(.gachonBlue))
@@ -75,6 +79,10 @@ struct SearchSpotDetailCard: View {
     }
 }
 
-#Preview {
-    SearchSpotDetailCard()
+struct SearchSpotDetailCard_Previews: PreviewProvider {
+    static var previews: some View {
+        SearchSpotDetailCard(placeName: "전달받은 장소명")
+            .previewLayout(.sizeThatFits)
+            .padding()
+    }
 }
