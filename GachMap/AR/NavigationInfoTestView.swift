@@ -23,7 +23,7 @@ struct NavigationInfoTestView: View {
         } else {
             if let rotationList = rotationList {
                 ZStack(alignment : .bottom){
-                    AppleMap(coreLocation: coreLocation, path: path)
+//                    AppleMap(coreLocation: coreLocation, path: path)
                     ScrollView(.horizontal){
                         ZStack(){
                             LazyHStack{

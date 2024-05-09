@@ -23,7 +23,7 @@ struct ChoosePathView: View {
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath : Int = 0   // 선택한 경로
     
-    @State private var isAROn = false
+    @State var isAROn = false
     
     @State var test : [PathTime]
     
@@ -48,8 +48,8 @@ struct ChoosePathView: View {
         region = MKCoordinateRegion(center: center, latitudinalMeters: meter, longitudinalMeters: meter)
         
         test = [PathTime(pathName: "최적 경로", time: "33", isLogin: true, line: lines[0]),
-         PathTime(pathName: "무당이 경로", time: nil, isLogin: true, line: lines[1]),
-         PathTime(pathName: "최단 경로", time: "3", isLogin: true, line: lines[2])
+         PathTime(pathName: "최단 경로", time: "3", isLogin: true, line: lines[1]),
+         PathTime(pathName: "무당이 경로", time: nil, isLogin: true, line: lines[2])
         ]
     }
     
@@ -80,6 +80,7 @@ struct ChoosePathView: View {
         }
         else{
             ARMainView(isAROn: $isAROn)
+//            ARMainView()
         }
     }
 }
@@ -192,7 +193,7 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
             }
         }
 
-        renderer.lineWidth = 10
+        renderer.lineWidth = 8
         return renderer
     }
     

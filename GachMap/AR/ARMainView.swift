@@ -18,7 +18,7 @@ struct ARMainView: View {
     @State private var isARViewVisible = true // ARView의 on/off 상태 변수
     @State private var isEnd = false // 안내 종료 상태 변수
     @State private var isARViewReady = false    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
-    @State private var showAlert = false
+    @State private var onlyMap = false
     @State private var trueNorthAlertOn = false
     @State private var checkTime: Timer? // AR init 후 시간 체크
     @State private var selectedTrueNorth = false
@@ -32,6 +32,11 @@ struct ARMainView: View {
     
     let timer = MyTimer()
     let path = Path().homeToAI
+    
+    
+    
+    @State var distance : Double?
+    @State var timeList = [Int]()
     
     var body: some View {
         if coreLocation.location != nil{
@@ -82,54 +87,47 @@ struct ARMainView: View {
                             .onAppear {
                                 // 타이머 시작
                                 checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
-                                    showAlert = true
+                                    showGPSAlert()
                                 }
                             }
-                        .alert(isPresented: $showAlert) {
-                            Alert(
-                                title: Text("알림"),
-                                message: Text("GPS 신호가 불안정합니다.\n \n실내 혹은 높은 건물 주변은 \nGPS 신호가 불안정 할 수 있습니다."),
-                                primaryButton: .default(Text("재시도")) {
-                                    // '재시도' 버튼을 누르면 타이머를 다시 시작하고 초기화를 시도합니다.
-                                    showAlert = false
-                                    checkTime?.invalidate()
-                                    checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
-                                        showAlert = true
-                                    }
-                                },
-                                secondaryButton: .cancel(Text("취소")) {
-                                    // '취소' 버튼을 누르면 이전 화면으로 이동합니다.
-                                    showAlert = false
-                                    checkSecondTime?.invalidate()
-                                    checkTime?.invalidate()
-                                    
-                                    isAROn = false  // 이전 화면으로 돌아감
-                                    
-                                }
-                            )
-                        }
                     }
                     else {
-                        if !isEnd {
-                            ZStack(alignment: .topTrailing){
-                                VStack{
-                                    ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
-                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!)
-                                }.edgesIgnoringSafeArea(.all)
-                                
-                                if !isARViewVisible {
-                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!)
-                                }
-                                
-                                HStack {
-                                    if isARViewVisible{
+                        if !isEnd { // 안내 종료 상태변수
+                            if !onlyMap{    // 지도만 이용 상태변수
+                                ZStack(alignment: .topTrailing){
+                                    VStack(spacing : 0){
+                                        ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
+                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                    }.edgesIgnoringSafeArea(.all)
+                                    
+                                    if !isARViewVisible {
+                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                    }
+                                    
+                                    HStack {
+                                        if isARViewVisible{
+                                            Button(){
+                                                ReloadButtonAlert()
+                                            } label: {
+                                                HStack{
+                                                    Image(systemName: "gobackward")
+                                                        .foregroundColor(.white)
+                                                    Text("AR 재로드")
+                                                        .foregroundStyle(.white)
+                                                }
+                                                .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
+                                                .background(.blue)
+                                                .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
+                                                
+                                            }
+                                        }
                                         Button(){
-                                            ReloadButtonAlert()
+                                            EndButtonAlert()
                                         } label: {
                                             HStack{
-                                                Image(systemName: "gobackward")
+                                                Image(systemName: "xmark.circle")
                                                     .foregroundColor(.white)
-                                                Text("AR 재로드")
+                                                Text("안내 종료")
                                                     .foregroundStyle(.white)
                                             }
                                             .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
@@ -138,6 +136,17 @@ struct ARMainView: View {
                                             
                                         }
                                     }
+                                    .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: isARViewVisible ? 10 : 55))
+                                }
+                                .onAppear(){
+                                    checkSecondTime?.invalidate()
+                                    checkTime?.invalidate()
+                                }
+                            } // end of if !onlyMap
+                            else{
+                                ZStack(alignment: .topTrailing){
+                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                    
                                     Button(){
                                         EndButtonAlert()
                                     } label: {
@@ -150,16 +159,16 @@ struct ARMainView: View {
                                         .padding(8) // 내부 콘텐츠를 감싸는 패딩 추가
                                         .background(.blue)
                                         .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
-                                        
+                                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 10))
                                     }
                                 }
-                                .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: isARViewVisible ? 10 : 55))
                             }
-                            .onAppear(){
-                                checkSecondTime?.invalidate()
-                                checkTime?.invalidate()
-                            }
-                        }
+                            
+                            Text(String(format: "남은 거리: %.2f", distance ?? 0.0))
+                            Text("다음 인덱스 : \(nextNodeObject.nextIndex)")
+                            Text("측정 시간 : \(timer.seconds)")
+                            Text("시간 리스트 : \(String(describing: timeList))")
+                        } // end of if !isEnd
                         else{
                             // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
                             SatisfactionView()
@@ -182,6 +191,39 @@ struct ARMainView: View {
         else {
             ProgressView("Waiting for location accuracy...")
         }
+    }
+    
+    // GPS 알림
+    func showGPSAlert() {
+        let alert = UIAlertController(title: "알림", message: "GPS 신호가 불안정합니다. \n실내 혹은 높은 건물 주변은 \nGPS 신호가 불안정 할 수 있습니다.", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "재시도", style: .default) { _ in
+            // '재시도' 버튼을 누르면 타이머를 다시 시작하고 초기화를 시도합니다.
+            self.checkTime?.invalidate()
+            self.checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
+                showGPSAlert()
+            }
+        })
+        
+        alert.addAction(UIAlertAction(title: "지도만 이용", style: .default){ _ in
+            self.checkSecondTime?.invalidate()
+            self.checkTime?.invalidate()
+            isARViewReady = true
+            isARViewVisible = false
+            rotationList = checkRotation.checkRotation(currentLocation: coreLocation.location!, path: path)
+            onlyMap = true
+        })
+                        
+        
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel) { _ in
+            // '취소' 버튼을 누르면 이전 화면으로 이동합니다.
+            self.checkSecondTime?.invalidate()
+            self.checkTime?.invalidate()
+            
+            self.isAROn = false  // 이전 화면으로 돌아감
+        })
+        
+        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
     }
     
     func EndButtonAlert(){
@@ -250,15 +292,16 @@ struct ARMainView: View {
         // 마지막 노드에 도착 이후부터는 실행 안 되게
         if index != path.count {
             let distance = location.distance(from: path[index].location)
-            if distance <= 2 {
-                print("\(path[index].name) - 2m 이내 ")
+            self.distance = distance
+            if distance <= 5 {
+                print("\(path[index].name) - 5m 이내 ")
                 // timer 로직 추가
                 if index == 0 {
                     timer.startTimer()  // 첫 노드 근처에 오면 타이머 시작
                     print("timer 시작")
                 }else{
                     let time = timer.seconds
-                    
+                    timeList.append(time)
                     // timer (노드-노드, 시간) 배열 생성 후 append 하고 만족도 페이지에 넘겨서 Request 요청해야 됨
                     print(path[index-1].name + "~" + path[index].name + "까지 : \(time)초")
                     timer.stopTimer()

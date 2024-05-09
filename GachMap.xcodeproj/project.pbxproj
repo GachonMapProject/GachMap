@@ -111,6 +111,7 @@
 		CB4EF6232BCFD7A000BDC73A /* EventCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4EF6222BCFD7A000BDC73A /* EventCardView.swift */; };
 		CB6071D82BD634AD00AB12EE /* NavigationInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */; };
 		CB6071DA2BD63BC000AB12EE /* CheckRotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6071D92BD63BC000AB12EE /* CheckRotation.swift */; };
+		CB6DF8D42BE8909A00DC8BC5 /* ARReadyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6DF8D32BE8909A00DC8BC5 /* ARReadyView.swift */; };
 		CB7C69842BE0B6F500C277AE /* PathTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7C69832BE0B6F500C277AE /* PathTimeView.swift */; };
 		CB7C69862BE0CA0A00C277AE /* PathTimeTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7C69852BE0CA0A00C277AE /* PathTimeTestView.swift */; };
 		CB7C69882BE10C9100C277AE /* ChoosePathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7C69872BE10C9100C277AE /* ChoosePathView.swift */; };
@@ -230,6 +231,7 @@
 		CB4EF6222BCFD7A000BDC73A /* EventCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCardView.swift; sourceTree = "<group>"; };
 		CB6071D72BD634AD00AB12EE /* NavigationInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationInfoView.swift; sourceTree = "<group>"; };
 		CB6071D92BD63BC000AB12EE /* CheckRotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRotation.swift; sourceTree = "<group>"; };
+		CB6DF8D32BE8909A00DC8BC5 /* ARReadyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARReadyView.swift; sourceTree = "<group>"; };
 		CB7C69832BE0B6F500C277AE /* PathTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathTimeView.swift; sourceTree = "<group>"; };
 		CB7C69852BE0CA0A00C277AE /* PathTimeTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathTimeTestView.swift; sourceTree = "<group>"; };
 		CB7C69872BE10C9100C277AE /* ChoosePathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoosePathView.swift; sourceTree = "<group>"; };
@@ -420,9 +422,10 @@
 				CB2E45732BD4E146009DB796 /* Extension */,
 				CB2E457C2BD4F46C009DB796 /* AR-Model */,
 				8B831C1D2BCCF60C00A85973 /* AppleMap.swift */,
+				8B831C1E2BCCF60C00A85973 /* ARMainView.swift */,
+				CB6DF8D32BE8909A00DC8BC5 /* ARReadyView.swift */,
 				CB2E456D2BD4DF38009DB796 /* ARCLViewController.swift */,
 				CB2E457A2BD4E28F009DB796 /* ARCLViewControllerWrapper.swift */,
-				8B831C1E2BCCF60C00A85973 /* ARMainView.swift */,
 				8B831C1F2BCCF60C00A85973 /* ARView.swift */,
 				8B831C202BCCF60C00A85973 /* Constant.swift */,
 				CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */,
@@ -765,6 +768,8 @@
 				8B831C392BCCF60C00A85973 /* ARMainView.swift in Sources */,
 				CB2E45702BD4DF70009DB796 /* LocationAnnotationNode.swift in Sources */,
 				8BC86EAE2BDE629600051BF0 /* SearchMainBar.swift in Sources */,
+				CB6DF8D42BE8909A00DC8BC5 /* ARReadyView.swift in Sources */,
+				8BC86EAE2BDE629600051BF0 /* SearchMainView.swift in Sources */,
 				8B5368F32BD25EB7007B8984 /* IdDuplicationResponse.swift in Sources */,
 				8BC86EEC2BEA044800051BF0 /* RouteHistoryResponse.swift in Sources */,
 				8B3159D52BD041500049CB5F /* ServiceTermsView.swift in Sources */,

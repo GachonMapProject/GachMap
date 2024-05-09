@@ -20,29 +20,33 @@ struct AppleMapView : View{
     @Binding var isARViewVisible: Bool
     @State private var appleMap: AppleMap
     let rotationList : [Rotation]
+    let onlyMap : Bool
 
-    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, rotationList : [Rotation]) {
+    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, rotationList : [Rotation], onlyMap : Bool) {
         self.coreLocation = coreLocation
         self.path = path
         self._isARViewVisible = isARViewVisible
         self.rotationList = rotationList
         _appleMap = State(initialValue: AppleMap(coreLocation: coreLocation, path: path))
+        self.onlyMap = onlyMap
     }
     var body: some View {
         ZStack(alignment: .bottomTrailing){
             if isARViewVisible {
                     appleMap
                     .frame(height: 300)
-                    .onAppear(){
-                        appleMap.setRegionToUserLocation()
-                    }
+                    .edgesIgnoringSafeArea(.all)
+//                    .onAppear(){
+//                        appleMap.setRegionToUserLocation()
+//                    }
+                    
             }
             else{
                 appleMap
                     .ignoresSafeArea(.all)
-                    .onAppear(){
-                        appleMap.setRegionToUserLocation()
-                    }
+//                    .onAppear(){
+//                        appleMap.setRegionToUserLocation()
+//                    }
                 ScrollView(.horizontal){
                     ZStack(){
                         LazyHStack{
@@ -64,32 +68,54 @@ struct AppleMapView : View{
                 .scrollTargetBehavior(.viewAligned)
                 .frame(height: UIScreen.main.bounds.width * 0.3)
             }
-          
-            VStack(spacing: 0){
-                Button(action: {
-                    isARViewVisible.toggle()
-                },
-                       label: {Text(isARViewVisible ? "2D" : "AR")})
-                .frame(width: 45, height: 50)
-                .foregroundColor(.gray)
-                .bold()
-                
-                Divider().background(.gray) // 중앙선
+            if !onlyMap{
+                VStack(spacing: 0){
+                    Button(action: {
+                        isARViewVisible.toggle()
+                    },
+                           label: {Text(isARViewVisible ? "2D" : "AR")
+                    })
+                    .frame(width: 45, height: 50)
+                    .foregroundColor(.gray)
+                    .bold()
+                    
+                    Divider().background(.gray) // 중앙선
 
-                Button(action: {
-                    // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
-                    appleMap.setRegionToUserLocation()
-                },
-                       label: {Image(systemName: "location")})
-                .frame(width: 45, height: 50)
-                .foregroundColor(.gray)
-                .bold()
-                
+                    Button(action: {
+                        // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
+                        appleMap.setRegionToUserLocation()
+                    },
+                           label: {Image(systemName: "location")
+                    })
+                    .frame(width: 45, height: 50)
+                    .foregroundColor(.gray)
+                    .bold()
+                    
+                }
+                .frame(width: 45, height: 100)
+                .background(.white)
+                .cornerRadius(15)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: isARViewVisible ? 40 : 40 + UIScreen.main.bounds.width * 0.3, trailing: 20)) // bottomTrailing 마진 추가
             }
-            .frame(width: 45, height: 100)
-            .background(.white)
-            .cornerRadius(15)
-            .padding(EdgeInsets(top: 0, leading: 0, bottom: isARViewVisible ? 40 : 40 + UIScreen.main.bounds.width * 0.3, trailing: 20)) // bottomTrailing 마진 추가
+            else {
+                VStack {
+                    Button(action: {
+                        // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
+                        appleMap.setRegionToUserLocation()
+                    },
+                           label: {Image(systemName: "location")
+                    })
+                    .frame(width: 45, height: 50)
+                    .foregroundColor(.gray)
+                    .bold()
+                }
+                .frame(width: 50, height: 50)
+                .background(.white)
+                .cornerRadius(15)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: isARViewVisible ? 40 : 40 + UIScreen.main.bounds.width * 0.3, trailing: 20)) // bottomTrailing 마진 추가
+
+            }
+
         }
     }
 }
@@ -107,19 +133,18 @@ struct AppleMap: UIViewRepresentable {
         self.coreLocation = coreLocation
         region = MKCoordinateRegion(
             center: coreLocation.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
-            latitudinalMeters: 100,
-            longitudinalMeters: 100
+            latitudinalMeters: 200,
+            longitudinalMeters: 200
         )
   
         lineCoordinates =  path.map{CLLocationCoordinate2D(latitude: $0.location.coordinate.latitude, longitude: $0.location.coordinate.longitude)
         }
-        print("init")
     }
     // 현재 위치를 기반으로 지도의 중심을 설정하는 함수
     func setRegionToUserLocation() {
         if let userLocation = coreLocation.location {
-            let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 150, longitudinalMeters: 150)
-            mapView.setRegion(region, animated: true)
+            let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
+            mapView.region = region
         }
     }
     
@@ -127,8 +152,8 @@ struct AppleMap: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         
         mapView.delegate = context.coordinator
-        mapView.setRegion(region, animated: true)
-        mapView.userTrackingMode  = .followWithHeading
+        mapView.region = region
+//        mapView.userTrackingMode  = .followWithHeading
       
         let polyline = MKPolyline(coordinates: lineCoordinates, count: lineCoordinates.count)
         mapView.addOverlay(polyline)
@@ -156,7 +181,7 @@ struct AppleMap: UIViewRepresentable {
             mapView.addAnnotation(destinationAnnotation)
         }
         
-//        mapView.showsUserLocation = true
+        mapView.showsUserLocation = true
         
         return mapView
     }
@@ -170,8 +195,8 @@ struct AppleMap: UIViewRepresentable {
           
 //          print("updateUIView - isCameraFixed (true)")
           if let userLocation = coreLocation.location {
-              let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
-              view.setRegion(region, animated: true)
+              let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
+              mapView.region = region
           }
       }
       
@@ -182,7 +207,7 @@ struct AppleMap: UIViewRepresentable {
       
 //
 //      // 이것도 사용자 위치를 추적하는데, 애니메이션 효과가 추가 되어 부드럽게 화면 확대 및 이동
-//      view.setUserTrackingMode(.follow, animated: true)
+//      view.setUserTrackingMode(.follow, animated: true) 
       
       
   }
@@ -216,9 +241,10 @@ class Coordinator: NSObject, MKMapViewDelegate {
         if annotation is MKUserLocation {
             // 사용자 위치 표시 마커를 커스텀 이미지로 설정
             let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "userLocation")
-            annotationView.image = UIImage(named: "userLocationIcon")
-            annotationView.frame.size = CGSize(width: 30, height: 30)
-//            annotationView.frame.size = CGSize(width: 30, height: 30)
+            annotationView.image = UIImage(named: "userLocation")?.resizedAndScaledToFit(targetSize: CGSize(width: 25, height: 25))
+
+
+//            annotationView.frame.size = CGSize(width: 25, height: 27)
 //            if let image = UIImage(systemName: "location.north.fill") {
 //                let coloredImage = image.withTintColor(.red)
 //                annotationView.image = coloredImage.resize(targetSize: CGSize(width: 40, height: 40))
@@ -242,7 +268,7 @@ class Coordinator: NSObject, MKMapViewDelegate {
                 if let startImage = UIImage(named: "Start3") {
                     let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "start")
                     annotationView.image = startImage
-                    annotationView.frame.size = CGSize(width: 30, height: 30)
+                    annotationView.frame.size = CGSize(width: 40, height: 30)
                     return annotationView
                 }
             } else if customAnnotation.reuseIdentifier == "destination" {
@@ -300,7 +326,7 @@ class Coordinator: NSObject, MKMapViewDelegate {
             if let annotationView = mapView.view(for: annotation) {
                 if let customAnnotation = annotation as? CustomAnnotation {
                     if customAnnotation.reuseIdentifier != "middle" {
-                        annotationView.frame.size = markerSize
+//                        annotationView.frame.size = markerSize
                     }
                 }
             }
@@ -324,6 +350,19 @@ extension UIImage {
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return newImage!
+    }
+    
+    func resizedAndScaledToFit(targetSize: CGSize) -> UIImage? {
+        let widthRatio = targetSize.width / size.width
+        let heightRatio = targetSize.height / size.height
+        let scaleFactor = min(widthRatio, heightRatio)
+        let newSize = CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: newSize))
+        
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
     
     
