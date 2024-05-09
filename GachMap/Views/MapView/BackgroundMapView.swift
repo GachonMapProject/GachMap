@@ -85,11 +85,14 @@ struct BackgroundMapView : View {
                 }
             }
             .onChange(of: selectedItem){
-                let location = locations.filter{$0.id == selectedItem}
-                let region = MKCoordinateRegion(center: location[0].coordinate,
-                                                latitudinalMeters: 200,
-                                                longitudinalMeters: 200)
-                self.region = MapCameraPosition.region(region)
+//                print("selectedItem : \(String(describing: selectedItem))")
+                if selectedItem != nil {
+                    let location = locations.filter{$0.id == selectedItem}
+                    let region = MKCoordinateRegion(center: location[0].coordinate,
+                                                    latitudinalMeters: 200,
+                                                    longitudinalMeters: 200)
+                    self.region = MapCameraPosition.region(region)
+                }
             }
             
             VStack{
