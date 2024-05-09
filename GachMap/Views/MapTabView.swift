@@ -26,7 +26,6 @@ struct MapTabView: View {
     // 검색창 활성화
     @State private var showLocationSearchView: Bool = false
     
-    @State private var selectedCategory: BuildingCategory?
     //@State private var buildingMarkers: [BuildingMarkerData] = []
     @State var locations: [BuildingMarkerData] = []
     
@@ -35,7 +34,7 @@ struct MapTabView: View {
     // CoreLocationEx, Category, [CategoryData]을 받아야 함
     
     @ObservedObject var coreLocation = CoreLocationEx()
-    var category = "" // 선택한 카테고리 넘겨주기
+    @State var category = "BUILDING" // 선택한 카테고리 넘겨주기
 //    var locations = [CategoryData(placeId: 1, placeName: "1-1", placeLatitude: 37.4508817, placeLongitude: 127.1274769, placeSummary: "Sum"),
 //                        CategoryData(placeId: 2, placeName: "1-2", placeLatitude: 37.4506271, placeLongitude: 127.1274554, placeSummary: "Sum"),
 //                        CategoryData(placeId: 3, placeName: "1-3", placeLatitude: 37.45062308, placeLongitude: 127.1276374, placeSummary: "Sum"),
@@ -60,14 +59,16 @@ struct MapTabView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(BuildingCategory.allCases, id: \.self) { category in
-                                CategoryButton(viewModel: BuildingMarkerViewModel(), locations: $locations, category: category.rawValue)
-                                    .onTapGesture {
-                                        selectedCategory = category
-                                    }
+//                                CategoryButton(viewModel: BuildingMarkerViewModel(), locations: $locations, category: category.rawValue)
+                                CategoryButton(locations: $locations, category: category.rawValue)
+//                                    .onTapGesture {
+//                                        selectedCategory = category
+//                                        print("selectedCategory : \(String(describing: selectedCategory))")
+//                                    }
                             }
                         }
                         .padding(.leading, 20)
-                        .padding(.top, 10)
+                        .padding(.top, 20)
                         .padding(.trailing, 20)
                     } // end of ScrollView of 카테고리 버튼
                 }

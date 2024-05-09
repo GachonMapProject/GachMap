@@ -32,18 +32,18 @@ struct pinItem {
 // CoreLocationEx, Category, [CategoryData]을 받아야 함 
 struct BackgroundMapView : View {
     
-    var categoryPinItem = ["건물" : pinItem(image: "building.fill", color: Color.blue),
-                           "흡연구역" : pinItem(image: "flame.fill", color: Color.brown),
-                           "음식점": pinItem(image: "fork.knife", color: Color.orange),
-                           "카페": pinItem(image: "cup.and.saucer.fill", color: Color.green),
-                           "편의점": pinItem(image: "storefront.fill", color: Color.cyan),
-                           "복지시설": pinItem(image: "cross.fill", color: Color.pink),
-                           "인쇄": pinItem(image: "printer.fill", color: Color.mint),
-                           "무당이 정류장" : pinItem(image: "ladybug.fill", color: Color.red)] as [String : Any]
+    var categoryPinItem = ["BUILDING" : pinItem(image: "building.fill", color: Color.blue),
+                           "SMOKING" : pinItem(image: "flame.fill", color: Color.brown),
+                           "FOOD": pinItem(image: "fork.knife", color: Color.orange),
+                           "CAFE": pinItem(image: "cup.and.saucer.fill", color: Color.green),
+                           "CONV": pinItem(image: "storefront.fill", color: Color.cyan),
+                           "WELFARE": pinItem(image: "cross.fill", color: Color.pink),
+                           "PRINT": pinItem(image: "printer.fill", color: Color.mint),
+                           "BUSSTOP" : pinItem(image: "ladybug.fill", color: Color.red)] as [String : Any]
     
     // 카테고리 추가
     
-    var category : String
+    @State var category : String    
     var locations : [IdentifiableLocation]
     @ObservedObject var coreLocation : CoreLocationEx
 
@@ -93,6 +93,9 @@ struct BackgroundMapView : View {
                                                     longitudinalMeters: 200)
                     self.region = MapCameraPosition.region(region)
                 }
+            }
+            .onChange(of: category){
+                region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
             }
             
             VStack{
