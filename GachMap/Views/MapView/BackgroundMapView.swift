@@ -5,6 +5,15 @@
 //  Created by 이수현 on 4/16/24.
 //
 
+//case BUILDING = "건물"
+//case SMOKING = "흡연구역"
+//case FOOD = "음식점"
+//case CAFE = "카페"
+//case CONV = "편의점"
+//case WELFARE = "복지시설"
+//case PRINT = "인쇄"
+//case BUSSTOP = "무당이 정류장"
+
 import SwiftUI
 import MapKit
 
@@ -12,7 +21,7 @@ import MapKit
 struct IdentifiableLocation: Identifiable {
     var id = UUID().uuidString
     var coordinate: CLLocationCoordinate2D
-    var categoryData : CategoryData
+    var markerData: BuildingMarkerData
 }
 
 struct pinItem {
@@ -24,8 +33,15 @@ struct pinItem {
 struct BackgroundMapView : View {
     
     var categoryPinItem = ["건물" : pinItem(image: "building.fill", color: Color.blue),
-                        "흡연구역" : pinItem(image: "skis.fill", color: Color.green),
-                        "편의시설" : pinItem(image: "skis.fill", color: Color.green)] as [String : Any]// 카테고리 추가
+                           "흡연구역" : pinItem(image: "flame.fill", color: Color.brown),
+                           "음식점": pinItem(image: "fork.knife", color: Color.orange),
+                           "카페": pinItem(image: "cup.and.saucer.fill", color: Color.green),
+                           "편의점": pinItem(image: "storefront.fill", color: Color.cyan),
+                           "복지시설": pinItem(image: "cross.fill", color: Color.pink),
+                           "인쇄": pinItem(image: "printer.fill", color: Color.mint),
+                           "무당이 정류장" : pinItem(image: "ladybug.fill", color: Color.red)] as [String : Any]
+    
+    // 카테고리 추가
     
     var category : String
     var locations : [IdentifiableLocation]
@@ -42,9 +58,9 @@ struct BackgroundMapView : View {
     
     @State var isARStart = false    // AR 캠퍼스 둘러보기 버튼 실행 유무
     
-    init(category : String, locations: [CategoryData], coreLocation: CoreLocationEx) {
+    init(category : String, locations: [BuildingMarkerData], coreLocation: CoreLocationEx) {
         self.category = category
-        self.locations = locations.map{IdentifiableLocation(coordinate: CLLocationCoordinate2D(latitude: $0.placeLatitude, longitude: $0.placeLongitude), categoryData : $0)}
+        self.locations = locations.map{IdentifiableLocation(coordinate: CLLocationCoordinate2D(latitude: $0.placeLatitude, longitude: $0.placeLongitude), markerData: $0)}
         self.coreLocation = coreLocation
         
         // 핀 이미지, 백그라운드 색 설정
@@ -64,13 +80,13 @@ struct BackgroundMapView : View {
             Map(position: $region, selection: $selectedItem){
                 UserAnnotation() // 사용자 현재 위치
                 ForEach(locations){ location in
-                    Marker(location.categoryData.placeName, systemImage: pinImage, coordinate: location.coordinate)
+                    Marker(location.markerData.placeName, systemImage: pinImage, coordinate: location.coordinate)
                         .tint(pinColor)
                 }
             }
             .onChange(of: selectedItem){
-                let location = locations.filter{$0.id == selectedItem}[0]
-                let region = MKCoordinateRegion(center: location.coordinate,
+                let location = locations.filter{$0.id == selectedItem}
+                let region = MKCoordinateRegion(center: location[0].coordinate,
                                                 latitudinalMeters: 200,
                                                 longitudinalMeters: 200)
                 self.region = MapCameraPosition.region(region)

@@ -30,7 +30,7 @@ class InquireListViewModel: ObservableObject {
     // 문의 내역 리스트 가져오기
     private func getInquireList() {
         guard let userCode = getUserCodeFromUserDefaults(),
-              let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/inquiry/list/\(userCode)")
+              let url = URL(string: "http://ceprj.gachon.ac.kr:60002/inquiry/list/\(userCode)")
         else {
             print("Invalid URL")
             return

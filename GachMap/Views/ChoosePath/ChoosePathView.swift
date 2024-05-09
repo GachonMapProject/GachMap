@@ -61,7 +61,7 @@ struct ChoosePathView: View {
                 
                 VStack{
                     ZStack(alignment : .trailing){
-                        SearchMainView()
+                        SearchMainBar()
                         Button(action: {
                             isAROn = true
                         }, label: {

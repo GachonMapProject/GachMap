@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct UsageListCell: View {
+    
+    var usages: RouteHistoryData
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack {
@@ -19,27 +22,28 @@ struct UsageListCell: View {
             .padding(.bottom, 7)
             
             HStack {
+                //2024-03-25T...
                 Text("날짜")
                     .font(.system(size: 15))
-                Text("2024년 3월 25일(월)")
+                Text(usages.createDt)
                     .font(.system(size: 15, weight: .bold))
             }
             HStack {
                 Text("출발")
                     .font(.system(size: 15))
-                Text("스타벅스 앞")
+                Text(usages.departures)
                     .font(.system(size: 15, weight: .bold))
             }
             HStack {
                 Text("도착")
                     .font(.system(size: 15))
-                Text("교육대학원")
+                Text(usages.arrivals)
                     .font(.system(size: 15, weight: .bold))
             }
             HStack {
                 Text("총 소요시간")
                     .font(.system(size: 15))
-                Text("12분")
+                Text(usages.totalTime)
                     .font(.system(size: 15, weight: .bold))
             }
             HStack {
@@ -47,7 +51,7 @@ struct UsageListCell: View {
                     Text("경로 평가")
                         .font(.system(size: 15))
                         .padding(.trailing, 7)
-                    Text("5")
+                    Text(usages.satisfactionRoute)
                         .font(.system(size: 15, weight: .bold))
                     Text("/5")
                         .font(.system(size: 13))
@@ -58,7 +62,7 @@ struct UsageListCell: View {
                     Text("소요시간 만족도")
                         .font(.system(size: 15))
                         .padding(.trailing, 7)
-                    Text("4")
+                    Text(usages.satisfactionTime)
                         .font(.system(size: 15, weight: .bold))
                     Text("/5")
                         .font(.system(size: 13))
@@ -75,6 +79,6 @@ struct UsageListCell: View {
     }
 }
 
-#Preview {
-    UsageListCell()
-}
+//#Preview {
+//    UsageListCell()
+//}

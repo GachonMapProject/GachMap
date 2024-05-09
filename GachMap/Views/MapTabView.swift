@@ -11,44 +11,42 @@ import CoreLocation
 import Alamofire
 
 enum BuildingCategory: String, CaseIterable {
-    case BUILDING = "건물"
-    case SMOKING = "흡연구역"
-    case FOOD = "음식점"
-    case CAFE = "카페"
-    case CONV = "편의점"
-    case WELFARE = "복지시설"
-    case PRINT = "인쇄"
-    case BUSSTOP = "무당이 정류장"
+    case building = "BUILDING" // 건물
+    case smoking = "SMOKING" // 흡연구역
+    case food = "FOOD" // 음식점
+    case cafe = "CAFE" // 카페
+    case conv = "CONV" // 편의점
+    case werfare = "WELFARE" // 복지시설
+    case print = "PRINT" // 인쇄
+    case busstop = "BUSSTOP" // 무당이 정류장
 }
 
 struct MapTabView: View {
+    
     // 검색창 활성화
     @State private var showLocationSearchView: Bool = false
     
     @State private var selectedCategory: BuildingCategory?
-    @State private var buildingMarkers: [BuildingMarkerData] = []
+    //@State private var buildingMarkers: [BuildingMarkerData] = []
+    @State var locations: [BuildingMarkerData] = []
     
-//
-//    @State private var region: MKCoordinateRegion = MKCoordinateRegion(
-//        center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045),
-//        span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
-//    )
-//    
-//    @State private var myLocation: CLLocationCoordinate2D =
-//    CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045)
-//    
+    //var buildingDatas: [BuildingMarkerData]
+    
     // CoreLocationEx, Category, [CategoryData]을 받아야 함
     
     @ObservedObject var coreLocation = CoreLocationEx()
-    var category = "흡연구역"
-    var locations = [CategoryData(placeId: 1, placeName: "1-1", placeLatitude: 37.4508817, placeLongitude: 127.1274769, placeSummary: "Sum"),
-                        CategoryData(placeId: 2, placeName: "1-2", placeLatitude: 37.4506271, placeLongitude: 127.1274554, placeSummary: "Sum"),
-                        CategoryData(placeId: 3, placeName: "1-3", placeLatitude: 37.45062308, placeLongitude: 127.1276374, placeSummary: "Sum"),
-                        CategoryData(placeId: 4, placeName: "1-4", placeLatitude: 37.45048746, placeLongitude: 127.1280814, placeSummary: "Sum")
-    ]
+    var category = "" // 선택한 카테고리 넘겨주기
+//    var locations = [CategoryData(placeId: 1, placeName: "1-1", placeLatitude: 37.4508817, placeLongitude: 127.1274769, placeSummary: "Sum"),
+//                        CategoryData(placeId: 2, placeName: "1-2", placeLatitude: 37.4506271, placeLongitude: 127.1274554, placeSummary: "Sum"),
+//                        CategoryData(placeId: 3, placeName: "1-3", placeLatitude: 37.45062308, placeLongitude: 127.1276374, placeSummary: "Sum"),
+//                        CategoryData(placeId: 4, placeName: "1-4", placeLatitude: 37.45048746, placeLongitude: 127.1280814, placeSummary: "Sum")
+//    ]
+    
+    //var locations: [BuildingMarkerData] = []
+    
+//    var locations = [BuildingMarkerData(placeName: buildingDatas.placeName, placeLatitude: buildingDatas.placeLatitude, placeLongitude: buildingDatas.placeLongitude)]
     
     // data의 개수만큼 ForEach
-//    [BuildingMarkerData(placeName: <#T##String#>, placeLatitude: <#T##Double#>, placeLongitude: <#T##Double#>, placeAltitude: <#T##Double#>)]
     
     var body: some View {
 
@@ -62,14 +60,14 @@ struct MapTabView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(BuildingCategory.allCases, id: \.self) { category in
-                                CategoryButton(category: category.rawValue)
+                                CategoryButton(viewModel: BuildingMarkerViewModel(), locations: $locations, category: category.rawValue)
                                     .onTapGesture {
                                         selectedCategory = category
                                     }
                             }
                         }
                         .padding(.leading, 20)
-                        .padding(.top, 7)
+                        .padding(.top, 10)
                         .padding(.trailing, 20)
                     } // end of ScrollView of 카테고리 버튼
                 }
@@ -91,9 +89,9 @@ struct MapTabView: View {
                 
                 /// 방법 2: binding으로 화면 전환 넘기기
                 if showLocationSearchView {
-                    LocationSearchView(showLocationSearchView: $showLocationSearchView)
+                    SearchMainView(showLocationSearchView: $showLocationSearchView)
                 } else {
-                    SearchMainView()
+                    SearchMainBar()
                         .onTapGesture {
                             withAnimation(.spring()) {
                                 showLocationSearchView.toggle()
@@ -120,41 +118,6 @@ struct WidthPreferenceKey: PreferenceKey {
     }
 }
 
-extension CLLocationCoordinate2D {
-    static let gachon = CLLocationCoordinate2D(latitude: 37.4504, longitude: 127.1299)
-    static let visiontower = CLLocationCoordinate2D(latitude: 37.4496, longitude: 127.1273)
-    static let law = CLLocationCoordinate2D(latitude: 37.4492, longitude: 127.1275)
-    static let eng1 = CLLocationCoordinate2D(latitude: 37.4516, longitude: 127.128)
-    static let eng2 = CLLocationCoordinate2D(latitude: 37.4493, longitude: 127.1285)
-    static let kmed = CLLocationCoordinate2D(latitude: 37.45, longitude: 127.1287)
-    static let ape1 = CLLocationCoordinate2D(latitude: 37.4522, longitude: 127.1288)
-    static let ape2 = CLLocationCoordinate2D(latitude: 37.4517, longitude: 127.1297)
-    static let ai = CLLocationCoordinate2D(latitude: 37.4553, longitude: 127.134)
-    static let bionano = CLLocationCoordinate2D(latitude: 37.4527, longitude: 127.1295)
-    static let mainlib = CLLocationCoordinate2D(latitude: 37.4524, longitude: 127.1331)
-    static let eilib = CLLocationCoordinate2D(latitude: 37.4508, longitude: 127.1287)
-    static let gschool = CLLocationCoordinate2D(latitude: 37.4527, longitude: 127.1301)
-    static let eduschool = CLLocationCoordinate2D(latitude: 37.4519, longitude: 127.1317)
-    static let bnresearch = CLLocationCoordinate2D(latitude: 37.4499, longitude: 127.1281)
-    static let industry = CLLocationCoordinate2D(latitude: 37.4495, longitude: 127.1296)
-    static let su = CLLocationCoordinate2D(latitude: 37.451, longitude: 127.1272)
-    static let hak = CLLocationCoordinate2D(latitude: 37.4532, longitude: 127.1344)
-    static let dorm1 = CLLocationCoordinate2D(latitude: 37.4564, longitude: 127.1354)
-    static let dorm2 = CLLocationCoordinate2D(latitude: 37.4562, longitude: 127.1346)
-    static let dorm3 = CLLocationCoordinate2D(latitude: 37.4559, longitude: 127.1332)
-    static let global = CLLocationCoordinate2D(latitude: 37.4519, longitude: 127.1272)
-    
-    static let ITskz1 = CLLocationCoordinate2D(latitude: 37.450705, longitude: 127.127088)
-    static let ITskz2 = CLLocationCoordinate2D(latitude: 37.451489, longitude: 127.127255)
-    static let GDskz = CLLocationCoordinate2D(latitude: 37.449199, longitude: 127.128001)
-    static let ARTskz = CLLocationCoordinate2D(latitude: 37.451523, longitude: 127.129532)
-    static let SHskz = CLLocationCoordinate2D(latitude: 37.4498, longitude: 127.1294)
-    static let LIBskz = CLLocationCoordinate2D(latitude: 37.452441, longitude: 127.132681)
-    static let AIskz = CLLocationCoordinate2D(latitude: 37.455288, longitude: 127.133055)
-    static let GRskz = CLLocationCoordinate2D(latitude: 37.455843, longitude: 127.134886)
-    static let DORskz = CLLocationCoordinate2D(latitude: 37.456, longitude: 127.1355)
-}
-
-#Preview {
-    MapTabView()
-}
+//#Preview {
+//    MapTabView()
+//}

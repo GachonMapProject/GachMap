@@ -73,7 +73,7 @@ struct ProfileTabView: View {
         isLoading = true
         
         guard let userCode = getUserCodeFromUserDefaults(),
-              let url = URL(string: "https://8eac-58-121-110-235.ngrok-free.app/user/\(userCode)")
+              let url = URL(string: "http://ceprj.gachon.ac.kr:60002/user/\(userCode)")
         else {
             print("Invalid URL")
             return
