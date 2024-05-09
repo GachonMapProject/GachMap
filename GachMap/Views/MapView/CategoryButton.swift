@@ -24,7 +24,7 @@ struct CategoryButton: View {
     ]
     
     @Binding var locations: [BuildingMarkerData]
-    
+    @Binding var selectedCategory : String
     var category: String
 
     var body: some View {
@@ -36,6 +36,7 @@ struct CategoryButton: View {
 //                }
 //            } 
             getBuildingMarker(placeCategory: category)
+            selectedCategory = category
             print("category : \(category)")
             
         }, label: {
