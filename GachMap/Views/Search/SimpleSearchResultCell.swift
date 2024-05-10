@@ -1,34 +1,21 @@
 //
-//  LocationSearchResultCell.swift
+//  SimpleSearchResultCell.swift
 //  GachMap
 //
-//  Created by 원웅주 on 4/28/24.
+//  Created by 원웅주 on 5/9/24.
 //
 
 import SwiftUI
 import Alamofire
 
-class SearchViewModel: ObservableObject {
+class SimpleSearchViewModel: ObservableObject {
     
     @Published var searchText: String = ""
     @Published var searchResults: [SearchKeywordData] = []
+    @Published var selectedPlaceName: String?
     @Published var searchResultNull: Bool = false
     
-    @Published var recentSearches: [String] = UserDefaults.standard.stringArray(forKey: "recentSearches") ?? []
-    
     @State var placeName: String = ""
-    
-    // 최근 검색어 추가
-    func addSearchText(_ text: String) {
-            if !text.isEmpty {
-                // 중복 검색어를 맨 위로 이동
-                if let index = recentSearches.firstIndex(of: text) {
-                    recentSearches.remove(at: index)
-                }
-                recentSearches.insert(text, at: 0)
-                UserDefaults.standard.set(recentSearches, forKey: "recentSearches")
-            }
-        }
 
     // 키워드 검색 결과 가져오기
     func getSearchResult() {
@@ -57,8 +44,8 @@ class SearchViewModel: ObservableObject {
                     
                 case .failure(let error):
                     // 서버 연결 실패할 때도 검색 결과 없음 표시
-                    self.searchResultNull = true
                     print("서버 연결 실패")
+                    self.searchResultNull = true
                     print(url)
                     print("Error: \(error.localizedDescription)")
                 }
@@ -68,9 +55,10 @@ class SearchViewModel: ObservableObject {
 
 // 빈 공간 선택 시 키보드 내리기 추가
 
-struct LocationSearchResultCell: View {
+struct SimpleSearchResultCell: View {
     // @Binding var searchText: String
-    @ObservedObject var viewModel: SearchViewModel
+    @ObservedObject var viewModel: SimpleSearchViewModel
+    var onSelect: (String) -> Void
     
     var body: some View {
         NavigationView {
@@ -98,8 +86,9 @@ struct LocationSearchResultCell: View {
                     
                     ScrollView {
                         ForEach(viewModel.searchResults, id: \.placeId) { result in
-                            
-                            NavigationLink(destination: ResultSelectView(detailViewModel: DetailResultViewModel(placeId: result.placeId))) {
+                            Button(action: {
+                                self.onSelect(result.placeName)
+                            }, label: {
                                 VStack(alignment: .leading) {
                                     HStack {
                                         // 건물명
@@ -120,33 +109,7 @@ struct LocationSearchResultCell: View {
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(EdgeInsets(top: 3, leading: 20, bottom: 0, trailing: 20))
-                            }
-                            .navigationBarBackButtonHidden()
-                            
-//                            Button(action: {
-//                                
-//                            }, label: {
-//                                VStack(alignment: .leading) {
-//                                    HStack {
-//                                        // 건물명
-//                                        Text(result.placeName)
-//                                            .font(.body)
-//                                            .foregroundColor(.black)
-//                                        Spacer()
-//                                    }
-//                                    
-//                                    // 요약 정보
-//                                    if (result.placeSummary != "\n") {
-//                                        HStack {
-//                                            Text(result.placeSummary)
-//                                                .font(.subheadline)
-//                                                .foregroundColor(.gray)
-//                                        }
-//                                    }
-//                                }
-//                                .frame(maxWidth: .infinity)
-//                                .padding(EdgeInsets(top: 3, leading: 20, bottom: 0, trailing: 20))
-//                            })
+                            })
                             
                             Divider()
                                 .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
@@ -162,6 +125,6 @@ struct LocationSearchResultCell: View {
     } // end of body
 } // end of View struct
 
-#Preview {
-    LocationSearchResultCell(viewModel: SearchViewModel())
-}
+//#Preview {
+//    SimpleSearchResultCell()
+//}

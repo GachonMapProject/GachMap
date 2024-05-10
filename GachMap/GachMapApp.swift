@@ -12,7 +12,7 @@ struct GachMapApp: App {
     var body: some Scene {
         WindowGroup {
 //            SearchMainView(showLocationSearchView: Binding.constant(true))
-            MapTabView()
+            ContentView()
         }
     }
 }

@@ -18,6 +18,7 @@ struct SearchDetailData: Decodable {
     var placeName: String
     var placeLatitude: Double
     var placeLongitude: Double
-    // var placeId: Int
-    // 이미지, 요약 정보
+    var placeSummary: String
+    var placeId: Int
+    var mainImagePath: String?
 }

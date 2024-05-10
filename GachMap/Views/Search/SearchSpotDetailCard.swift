@@ -9,23 +9,64 @@ import SwiftUI
 
 struct SearchSpotDetailCard: View {
     var placeName: String
-    // var placeSummary: String
-    // var placeImage ...
+    var placeSummary: String
+    var mainImagePath: String?
+    
+    @State private var isStartMoved: Bool = false
+    @State private var isEndMoved: Bool = false
     
     var body: some View {
         VStack {
             HStack {
-                Image("festival")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 70, height: 70)
-                    .cornerRadius(10)
-                    .clipped()
+                if let imagePath = mainImagePath, let url = URL(string: imagePath) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image.resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 75, height: 75)
+                            .cornerRadius(10)
+                            .clipped()
+                        default:
+                            // 로딩 중이나 실패 시 기본 이미지 또는 플레이스홀더
+                            Image("gachonMark") // 여기에 기본 이미지 이름을 입력
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 60)
+                                .cornerRadius(10)
+                        }
+                    }
+                } else {
+                    // mainImagePath가 nil일 경우
+                    Image("gachonMark") // 로컬 이미지 이름 입력
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 60)
+                        .cornerRadius(10)
+                }
+                
+//                AsyncImage(url: URL(string: mainImagePath ?? "gachonMark")) { image in
+//                    image.resizable()
+//                        .frame(width: 70, height: 70)
+//                        .scaledToFit()
+//                        //.aspectRatio(contentMode: .fill)
+//                        .cornerRadius(10)
+//                        //.clipped()
+//                    } placeholder: {
+//                        ProgressView()
+//                } // end of AsyncImgae
+                
+//                Image(mainImagePath ?? "gachonMark") // mainImagePath로 수정
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fill)
+//                    .frame(width: 70, height: 70)
+//                    .cornerRadius(10)
+//                    .clipped()
                 
                 VStack(alignment: .leading, spacing: 5) {
                     Text(placeName)
                         .font(.system(size: 20, weight: .bold))
-                    Text("가천대학교 공학의 중심")
+                    Text(placeSummary)
                         .font(.system(size: 15))
                     Spacer()
                 }
@@ -38,7 +79,7 @@ struct SearchSpotDetailCard: View {
             HStack {
                 HStack {
                     Button(action: {
-                        
+                        isStartMoved = true
                     }, label: {
                         Text("출발지로 설정")
                             .font(.system(size: 15, weight: .bold))
@@ -53,7 +94,7 @@ struct SearchSpotDetailCard: View {
                 
                 HStack {
                     Button(action: {
-                        
+                        isEndMoved = true
                     }, label: {
                         Text("도착지로 설정")
                             .font(.system(size: 15, weight: .bold))
@@ -76,12 +117,22 @@ struct SearchSpotDetailCard: View {
                 .shadow(radius: 10)
         )
         
+        NavigationLink("", isActive: $isStartMoved) {
+            SearchSecondView(getStartSearchText: placeName, getEndSearchText: "")
+                .navigationBarBackButtonHidden()
+        }
+        
+        NavigationLink("", isActive: $isEndMoved) {
+            SearchSecondView(getStartSearchText: "", getEndSearchText: placeName)
+                .navigationBarBackButtonHidden()
+        }
+        
     }
 }
 
 struct SearchSpotDetailCard_Previews: PreviewProvider {
     static var previews: some View {
-        SearchSpotDetailCard(placeName: "전달받은 장소명")
+        SearchSpotDetailCard(placeName: "전달받은 장소명", placeSummary: "전달받은 요약명")
             .previewLayout(.sizeThatFits)
             .padding()
     }

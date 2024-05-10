@@ -63,7 +63,6 @@
 		8BA84B602BCF8DD000ACD5E2 /* InfoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84B5F2BCF8DD000ACD5E2 /* InfoInputView.swift */; };
 		8BA84B622BCF964800ACD5E2 /* SegmentedControlHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84B612BCF964800ACD5E2 /* SegmentedControlHelper.swift */; };
 		8BC86EAE2BDE629600051BF0 /* SearchMainBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EAD2BDE629600051BF0 /* SearchMainBar.swift */; };
-		8BC86EBB2BDE654700051BF0 /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EBA2BDE654700051BF0 /* LocationSearchView.swift */; };
 		8BC86EBF2BDE7FFB00051BF0 /* LocationSearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EBE2BDE7FFB00051BF0 /* LocationSearchResultCell.swift */; };
 		8BC86EC12BDFC33400051BF0 /* CustomDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EC02BDFC33400051BF0 /* CustomDropdown.swift */; };
 		8BC86EC32BDFE1D500051BF0 /* WithdrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EC22BDFE1D500051BF0 /* WithdrawView.swift */; };
@@ -88,6 +87,7 @@
 		8BC97A762BEB7A530021C544 /* SearchDetailResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC97A752BEB7A530021C544 /* SearchDetailResponse.swift */; };
 		8BC97A782BEB979F0021C544 /* ResultSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC97A772BEB979F0021C544 /* ResultSelectView.swift */; };
 		8BC97A7A2BEBCA1E0021C544 /* SearchSecondView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC97A792BEBCA1E0021C544 /* SearchSecondView.swift */; };
+		8BD157102BECFE0E00C7EA24 /* SimpleSearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD1570F2BECFE0E00C7EA24 /* SimpleSearchResultCell.swift */; };
 		A34506E4E7DFA2C6F58F6EBE /* Pods_GachMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE0964287E09D08847B86CA /* Pods_GachMap.framework */; };
 		CB0D26F72BCE681F00800459 /* EventListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26F62BCE681F00800459 /* EventListResponse.swift */; };
 		CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26FB2BCE8EE500800459 /* EventDetailView.swift */; };
@@ -182,7 +182,6 @@
 		8BA84B5F2BCF8DD000ACD5E2 /* InfoInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoInputView.swift; sourceTree = "<group>"; };
 		8BA84B612BCF964800ACD5E2 /* SegmentedControlHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlHelper.swift; sourceTree = "<group>"; };
 		8BC86EAD2BDE629600051BF0 /* SearchMainBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMainBar.swift; sourceTree = "<group>"; };
-		8BC86EBA2BDE654700051BF0 /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
 		8BC86EBE2BDE7FFB00051BF0 /* LocationSearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchResultCell.swift; sourceTree = "<group>"; };
 		8BC86EC02BDFC33400051BF0 /* CustomDropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDropdown.swift; sourceTree = "<group>"; };
 		8BC86EC22BDFE1D500051BF0 /* WithdrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawView.swift; sourceTree = "<group>"; };
@@ -207,6 +206,7 @@
 		8BC97A752BEB7A530021C544 /* SearchDetailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDetailResponse.swift; sourceTree = "<group>"; };
 		8BC97A772BEB979F0021C544 /* ResultSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultSelectView.swift; sourceTree = "<group>"; };
 		8BC97A792BEBCA1E0021C544 /* SearchSecondView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSecondView.swift; sourceTree = "<group>"; };
+		8BD1570F2BECFE0E00C7EA24 /* SimpleSearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleSearchResultCell.swift; sourceTree = "<group>"; };
 		CB0D26F62BCE681F00800459 /* EventListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListResponse.swift; sourceTree = "<group>"; };
 		CB0D26FB2BCE8EE500800459 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		CB0D26FD2BCE8F8300800459 /* EventDetailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailResponse.swift; sourceTree = "<group>"; };
@@ -449,14 +449,14 @@
 		8BC86EAC2BDE628800051BF0 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				8BC97A6F2BEB6FE90021C544 /* SearchMainView.swift */,
 				8BC86EAD2BDE629600051BF0 /* SearchMainBar.swift */,
+				8BC97A6F2BEB6FE90021C544 /* SearchMainView.swift */,
 				8BC97A712BEB75220021C544 /* RecentSearchCell.swift */,
 				8BC86EBE2BDE7FFB00051BF0 /* LocationSearchResultCell.swift */,
 				8BC97A772BEB979F0021C544 /* ResultSelectView.swift */,
 				8BC86EDD2BE8CC5B00051BF0 /* SearchSpotDetailCard.swift */,
-				8BC86EBA2BDE654700051BF0 /* LocationSearchView.swift */,
 				8BC97A792BEBCA1E0021C544 /* SearchSecondView.swift */,
+				8BD1570F2BECFE0E00C7EA24 /* SimpleSearchResultCell.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -684,13 +684,13 @@
 				CBDDC9162BCEBF6100019FAB /* BackMapTest.swift in Sources */,
 				CBD855FF2BD7A7F00046597D /* SatisfactionView.swift in Sources */,
 				8B5369072BD38B55007B8984 /* UserIdInjection.swift in Sources */,
+				8BD157102BECFE0E00C7EA24 /* SimpleSearchResultCell.swift in Sources */,
 				CB2E45752BD4E190009DB796 /* SCNVector3+Extension.swift in Sources */,
 				CB6071DA2BD63BC000AB12EE /* CheckRotation.swift in Sources */,
 				8B831C402BCCF60C00A85973 /* Node.swift in Sources */,
 				8BC86EE42BE8F03000051BF0 /* InquireListResponse.swift in Sources */,
 				8BC86EE62BE8F0D700051BF0 /* InquireDetailResponse.swift in Sources */,
 				8B831C492BCD3F4D00A85973 /* SplashScreen.swift in Sources */,
-				8BC86EBB2BDE654700051BF0 /* LocationSearchView.swift in Sources */,
 				8B831C3E2BCCF60C00A85973 /* GetIntermediateCoordinate.swift in Sources */,
 				8BC97A702BEB6FE90021C544 /* SearchMainView.swift in Sources */,
 				8B3159DC2BD16C570049CB5F /* DeleteUserResponse.swift in Sources */,
@@ -904,6 +904,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
@@ -928,6 +929,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.F2Z.GachMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -940,6 +942,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
@@ -964,6 +967,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.F2Z.GachMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
