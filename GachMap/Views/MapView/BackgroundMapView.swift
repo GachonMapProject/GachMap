@@ -59,6 +59,8 @@ struct BackgroundMapView : View {
     
     @State var isARStart = false    // AR 캠퍼스 둘러보기 버튼 실행 유무
     
+    @GestureState private var isTapOutside: Bool = false    // 탭 제스처
+    
     init(showSheet :Binding<Bool>, selecetedCategory: Binding<String>, locations: [BuildingMarkerData], coreLocation: CoreLocationEx, pinImage :Binding<String>, pinColor : Binding<Color>) {
         _showSheet = showSheet
         _selecetedCategory = selecetedCategory // Binding 속성에 직접 바인딩
@@ -161,6 +163,16 @@ struct BackgroundMapView : View {
                 
             }
         } // end of ZStack
+        .gesture(
+            TapGesture()
+                .onEnded { _ in
+                    self.showDetalView = false
+                    self.showSheet = true
+                }
+                .updating($isTapOutside) { value, state, _ in
+                    state = true
+                }
+        )
         
     }
     // 현재 위치를 기반으로 지도의 중심을 설정하는 함수
