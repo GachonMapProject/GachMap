@@ -22,6 +22,7 @@ enum BuildingCategory: String, CaseIterable {
 }
 
 struct MapTabView: View {
+    @Binding var showSearchView: Bool
     
     let categoryPinItem = ["BUILDING" : pinItem(image: "building.fill", color: Color.blue),
                            "SMOKING" : pinItem(image: "flame.fill", color: Color.brown),
@@ -115,17 +116,22 @@ struct MapTabView: View {
     //                    }
                 
                 /// 방법 2: binding으로 화면 전환 넘기기
-                if showLocationSearchView {
-                    SearchMainView(showLocationSearchView: $showLocationSearchView)
-                } else {
-                    SearchMainBar()
-                        .onTapGesture {
-                            withAnimation(.spring()) {
-                                showLocationSearchView.toggle()
-                            }
-                        }
-                }
+//                if showLocationSearchView {
+//                    SearchMainView(showLocationSearchView: $showLocationSearchView)
+//                } else {
+//                    SearchMainBar()
+//                        .onTapGesture {
+//                            withAnimation(.spring()) {
+//                                // showLocationSearchView.toggle()
+//                                showSearchView = true
+//                            }
+//                        }
+//                }
                 // end of 검색창
+                SearchMainBar()
+                    .onTapGesture {
+                        showSearchView = true
+                    }
                 
                 Spacer()
             }

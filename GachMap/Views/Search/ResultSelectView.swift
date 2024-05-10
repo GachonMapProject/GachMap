@@ -11,9 +11,15 @@ import SwiftUI
 import MapKit
 import Alamofire
 
+struct Place: Identifiable {
+    let id = UUID()
+    let name: String
+    let coordinate: CLLocationCoordinate2D
+}
+
 extension SearchDetailData {
     static var defaultData: SearchDetailData {
-        return SearchDetailData(placeName: "기본 위치", placeLatitude: 37.4508, placeLongitude: 127.1292)
+        return SearchDetailData(placeName: "기본 위치", placeLatitude: 37.4508, placeLongitude: 127.1292, placeSummary: "기본 요약", placeId: 0, mainImagePath: "gachonMark")
     }
 }
 
@@ -21,6 +27,10 @@ class DetailResultViewModel: ObservableObject {
     
     @Published var detailResults: SearchDetailData
     var placeId: Int
+    
+    lazy var places: [Place] = [
+            Place(name: detailResults.placeName, coordinate: CLLocationCoordinate2D(latitude: detailResults.placeLatitude, longitude: detailResults.placeLongitude))
+        ]
     
     init(placeId: Int) {
         self.placeId = placeId
@@ -68,70 +78,82 @@ struct ResultSelectView: View {
     
     @ObservedObject var detailViewModel: DetailResultViewModel
     
-    @State var region: MapCameraPosition
+    @State var region: MKCoordinateRegion
     @State private var selectedResult: MKMapItem?
     
     init(detailViewModel: DetailResultViewModel) {
-            self._detailViewModel = ObservedObject(initialValue: detailViewModel)
-            let initialRegion = MKCoordinateRegion(
-                center: CLLocationCoordinate2D(
-                    latitude: detailViewModel.detailResults.placeLatitude,
-                    longitude: detailViewModel.detailResults.placeLongitude),
-                span: MKCoordinateSpan(latitudeDelta: 0.006, longitudeDelta: 0.006))
-            self._region = State(initialValue: MapCameraPosition.region(initialRegion))
-        }
+        self._detailViewModel = ObservedObject(initialValue: detailViewModel)
+        self._region = State(initialValue: MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude: detailViewModel.detailResults.placeLatitude,
+                longitude: detailViewModel.detailResults.placeLongitude),
+            span: MKCoordinateSpan(latitudeDelta: 0.004, longitudeDelta: 0.004)
+        ))
+    }
     
     var body: some View {
-        // 경도: Long, 위도: Lati
-        ZStack {
-            // coordinateRegion: .constant(region)
-            Map(position: $region, selection: $selectedResult) {
-                Marker(detailViewModel.detailResults.placeName,
-                       coordinate: CLLocationCoordinate2D(latitude: detailViewModel.detailResults.placeLatitude,
-                                                          longitude: detailViewModel.detailResults.placeLongitude))
-            }
-            
-            
-            // 검색창 및 카드뷰
-            VStack {
-                HStack {
-                    Button(action: {
-                        withAnimation(.spring()) {
-                            dismiss()
-                        }
-                    }, label: {
-                        Image(systemName: "arrow.left")
-                            .font(.title2)
-                            .foregroundColor(.black)
-                            // .frame(width: 33, alignment: .leading)
-                            .padding(.leading)
-                    })
-                    
-                    Text(detailViewModel.detailResults.placeName)
-                        .font(.title3)
+        NavigationView {
+            // 경도: Long, 위도: Lati
+            ZStack {
+                // coordinateRegion: .constant(region)
+//                Map(position: $region, selection: $selectedResult) {
+//                    Marker(detailViewModel.detailResults.placeName,
+//                           coordinate: CLLocationCoordinate2D(latitude: detailViewModel.detailResults.placeLatitude,
+//                                                              longitude: detailViewModel.detailResults.placeLongitude))
+//                }
+                
+                Map(coordinateRegion: $region, annotationItems: detailViewModel.places) { place in
+                    MapMarker(coordinate: place.coordinate, tint: .gachonSky)
+                }
+                .ignoresSafeArea()
+                
+                // 검색창 및 카드뷰
+                VStack {
+//                    if showSearchBar {
+//                        SearchBar(text: $searchText)
+//                    }
+    
+                    HStack {
+                        Button(action: {
+                            withAnimation(.spring()) {
+                                dismiss()
+                            }
+                        }, label: {
+                            Image(systemName: "arrow.left")
+                                .font(.title2)
+                                .foregroundColor(.black)
+                                // .frame(width: 33, alignment: .leading)
+                                .padding(.leading)
+                        })
+                        
+                        Text(detailViewModel.detailResults.placeName)
+                            .font(.title3)
+                        
+                        Spacer()
+                    }
+                    .frame(width: UIScreen.main.bounds.width - 30, height: 50)
+                    .background(
+                        RoundedRectangle(cornerRadius: 15)
+                            .fill(Color(UIColor.systemBackground))
+                            .shadow(radius: 7, x: 2, y: 2)
+                    )
+                    .padding(.top, 10)
                     
                     Spacer()
+                    
+                    SearchSpotDetailCard(placeName: detailViewModel.detailResults.placeName, placeSummary: detailViewModel.detailResults.placeSummary, mainImagePath: detailViewModel.detailResults.mainImagePath)
+                        //.padding(.bottom)
                 }
-                .frame(width: UIScreen.main.bounds.width - 30, height: 50)
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(Color(UIColor.systemBackground))
-                        .shadow(radius: 7, x: 2, y: 2)
-                )
-                .padding(.top, 10)
+                // 검색창 및 카드뷰 끝
                 
-                Spacer()
-                
-                SearchSpotDetailCard(placeName: detailViewModel.detailResults.placeName)
-                    .padding(.bottom)
-            }
-            // 검색창 및 카드뷰 끝
-            
+            } // end of ZStack
         }
+        .navigationBarBackButtonHidden()
+        
     }
 
 }
 
-//#Preview {
-//    ResultSelectView()
-//}
+#Preview {
+    ResultSelectView(detailViewModel: DetailResultViewModel(placeId: 111))
+}

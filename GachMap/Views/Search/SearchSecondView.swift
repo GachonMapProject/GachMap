@@ -8,19 +8,34 @@
 import SwiftUI
 
 struct SearchSecondView: View {
+    var getStartSearchText: String
+    var getEndSearchText: String
+    
+    @Environment(\.dismiss) private var dismiss
     
     @State private var startSearchText = ""
     @State private var endSearchText = ""
+    @State private var isSearched: Bool = false
     
+    @State private var validStartText: Bool = false
+    @State private var validEndText: Bool = false
+    
+    @State private var fixedStart: Bool = false
+    @State private var fixedEnd: Bool = false
+    
+    @State private var activeTextField: String = ""
+    
+    @StateObject private var simpleSearchViewModel = SimpleSearchViewModel()
     @StateObject private var searchViewModel = SearchViewModel()
     @State private var showLocationSearchResultView: Bool = false
     
     var body: some View {
+        
         VStack {
             HStack {
                 // 뒤로 가기 버튼
                 Button(action: {
-                    
+                    dismiss()
                 }, label: {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -42,6 +57,7 @@ struct SearchSecondView: View {
             .padding(.top, 10)
             
             // 상단 검색바
+            // 출발, 도착 두 필드가 모두 true일때만 길찾기 버튼 활성화
             HStack(spacing: 0) {
                 Image("gachonMark")
                     .resizable()
@@ -53,19 +69,27 @@ struct SearchSecondView: View {
                     HStack {
                         TextField("출발", text: $startSearchText)
                             .font(.title3)
+                            .onTapGesture {
+                                self.activeTextField = "start"
+                            }
+                            .onSubmit {
+                                performSearch()
+                            }
                         
                         Spacer()
                         
-                        if(!startSearchText.isEmpty) {
+                        if(fixedStart) {
                             Button(action: {
+                                fixedStart = false
                                 startSearchText = ""
                             }, label: {
                                 Image(systemName: "xmark")
+                                    .font(.system(size: 12))
                                     .foregroundColor(.white)
                                     .background(
                                         Circle()
                                             .fill(.gray)
-                                            .frame(width: 25, height: 25))
+                                            .frame(width: 23, height: 23))
                             })
                             .padding(.trailing, 7)
                         }
@@ -78,19 +102,27 @@ struct SearchSecondView: View {
                     HStack {
                         TextField("도착", text: $endSearchText)
                             .font(.title3)
+                            .onTapGesture {
+                                self.activeTextField = "end"
+                            }
+                            .onSubmit {
+                                performSearch()
+                            }
                         
                         Spacer()
                         
-                        if(!endSearchText.isEmpty) {
+                        if(fixedEnd) {
                             Button(action: {
+                                fixedEnd = false
                                 endSearchText = ""
                             }, label: {
                                 Image(systemName: "xmark")
+                                    .font(.system(size: 12))
                                     .foregroundColor(.white)
                                     .background(
                                         Circle()
                                             .fill(.gray)
-                                            .frame(width: 25, height: 25))
+                                            .frame(width: 23, height: 23))
                             })
                             .padding(.trailing, 7)
                         }
@@ -103,15 +135,33 @@ struct SearchSecondView: View {
                 if (startSearchText != "" || endSearchText != "") {
                     Button(action: {
                         // 검색어 전달 API 함수 넣기
-                        performSearch()
+                        if (fixedStart && fixedEnd) {
+                            // 길안내 뷰로 이동!
+                        } else {
+                            isSearched = true
+                            performSearch()
+                        }
                     }, label: {
-                        VStack(spacing: 5) {
-                            Image(systemName: "magnifyingglass")
-                                .font(.title2)
-                                .foregroundColor(.white)
-                            Text("검색")
-                                .font(.system(size: 13, weight: .bold))
-                                .foregroundColor(.white)
+                        if (fixedStart && fixedEnd) {
+                            // 길찾기 뷰로 넘기기
+                            VStack(spacing: 5) {
+                                Image(systemName: "arrow.triangle.turn.up.right.circle.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                                Text("길찾기")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundColor(.white)
+                            }
+                        } else {
+                            // 키워드 검색(출발, 도착)
+                            VStack(spacing: 5) {
+                                Image(systemName: "magnifyingglass")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                                Text("검색")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundColor(.white)
+                            }
                         }
                         
                     })
@@ -132,18 +182,48 @@ struct SearchSecondView: View {
             .padding(.top, 20)
             // 검색창 끝
             
+            if isSearched {
+                SimpleSearchResultCell(viewModel: simpleSearchViewModel) { selectedPlaceName in
+                    if self.activeTextField == "start" {
+                        self.startSearchText = selectedPlaceName
+                        fixedStart = true
+                    } else if self.activeTextField == "end" {
+                        self.endSearchText = selectedPlaceName
+                        fixedEnd = true
+                    }
+                }
+                .padding(.top, 15)
+            }
             
+            
+        }
+        .onAppear {
+            if !getStartSearchText.isEmpty {
+                startSearchText = getStartSearchText
+                fixedStart = true
+            }
+            if !getEndSearchText.isEmpty {
+                endSearchText = getEndSearchText
+                fixedEnd = true
+            }
         }
         .frame(maxHeight: .infinity, alignment: .top)
         .background(Color.white)
         // end of 전체 VStack
         
-    }
+    } // end of body
     
     private func performSearch() {
         // 검색어 전달 API 함수 넣기
-        searchViewModel.searchText = startSearchText
-        searchViewModel.getSearchResult()
+        if activeTextField == "start" {
+            searchViewModel.addSearchText(startSearchText)
+            simpleSearchViewModel.searchText = startSearchText
+        } else if activeTextField == "end" {
+            searchViewModel.addSearchText(endSearchText)
+            simpleSearchViewModel.searchText = endSearchText
+        }
+        
+        simpleSearchViewModel.getSearchResult()
         
         self.showLocationSearchResultView = true
         
@@ -156,5 +236,5 @@ struct SearchSecondView: View {
 }
 
 #Preview {
-    SearchSecondView()
+    SearchSecondView(getStartSearchText: "", getEndSearchText: "")
 }

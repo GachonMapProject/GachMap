@@ -13,6 +13,8 @@ struct ContentView: View {
     @State private var selectedTab = 1
     @State private var showMainView = false
     
+    @State private var showSearchView = false
+    
     // @Binding var isLogin: Bool
     
     // @State private var loginInfo: LoginInfo? = nil
@@ -24,17 +26,20 @@ struct ContentView: View {
   var body: some View {
       NavigationView {
           TabView(selection: $selectedTab) {
-              MapTabView()
+              MapTabView(showSearchView: $showSearchView)
                   .tabItem {
                       Image(systemName: "map")
                       Text("지도")
                   }.tag(1)
                   .onAppear() {
+                      showSheet = true
+                  }
+                  .fullScreenCover(isPresented: $showSearchView, onDismiss: {
                       if selectedTab == 1 {
                           showSheet = true
-                      } else {
-                          showSheet = false
                       }
+                  }) {
+                      SearchMainView(showLocationSearchView: $showSearchView)
                   }
               
               BuildingTabView()
@@ -43,11 +48,7 @@ struct ContentView: View {
                       Text("캠퍼스 맵")
                   }.tag(2)
                   .onAppear() {
-                      if selectedTab == 1 {
-                          showSheet = true
-                      } else {
-                          showSheet = false
-                      }
+                      showSheet = false
                   }
               
               EventTabView()
@@ -56,11 +57,7 @@ struct ContentView: View {
                       Text("교내 행사")
                   }.tag(3)
                   .onAppear() {
-                      if selectedTab == 1 {
-                          showSheet = true
-                      } else {
-                          showSheet = false
-                      }
+                      showSheet = false
                   }
               
               ProfileTabView()
@@ -69,11 +66,7 @@ struct ContentView: View {
                       Text("마이 페이지")
                   }.tag(4)
                   .onAppear() {
-                      if selectedTab == 1 {
-                          showSheet = true
-                      } else {
-                          showSheet = false
-                      }
+                      showSheet = false
                   }
                   .navigationBarBackButtonHidden(true)
               
