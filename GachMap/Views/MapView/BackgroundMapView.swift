@@ -16,10 +16,11 @@
 
 import SwiftUI
 import MapKit
+import Alamofire
 
 // CLLocationCoordinate2D를 감싸는 IdentifiableCoordinate 구조체 정의
 struct IdentifiableLocation: Identifiable {
-    var id = UUID().uuidString
+    var id : Int
     var coordinate: CLLocationCoordinate2D
     var markerData: BuildingMarkerData
 }
@@ -33,7 +34,6 @@ struct pinItem {
 struct BackgroundMapView : View {
     
     // 카테고리 추가
-    
     @Binding var selecetedCategory : String
     var locations : [IdentifiableLocation]
     @ObservedObject var coreLocation : CoreLocationEx
@@ -45,85 +45,106 @@ struct BackgroundMapView : View {
     @Binding var pinImage : String
     @Binding var pinColor : Color
     
-    @State var selectedItem : String? // 마커 선택시 id
+    @State var selectedItem : Int? // 마커 선택시 id
+    @State var showDetalView = false
+    
+    @State var selectedPlaceName = ""
+    @State var selectedPlaceSummary = ""
+    @State var selectedImagePath = ""
+    
     
     @State var isARStart = false    // AR 캠퍼스 둘러보기 버튼 실행 유무
     
     init(selecetedCategory: Binding<String>, locations: [BuildingMarkerData], coreLocation: CoreLocationEx, pinImage :Binding<String>, pinColor : Binding<Color>) {
         _selecetedCategory = selecetedCategory // Binding 속성에 직접 바인딩
-        self.locations = locations.map{IdentifiableLocation(coordinate: CLLocationCoordinate2D(latitude: $0.placeLatitude, longitude: $0.placeLongitude), markerData: $0)}
+        self.locations = locations.map{IdentifiableLocation(id : $0.placeId, coordinate: CLLocationCoordinate2D(latitude: $0.placeLatitude, longitude: $0.placeLongitude), markerData: $0)}
         self.coreLocation = coreLocation
         _pinColor = pinColor
         _pinImage = pinImage
     }
     
     var body: some View {
-        ZStack(alignment : .topTrailing){
-            Map(position: $region, selection: $selectedItem){
-                UserAnnotation() // 사용자 현재 위치
-                ForEach(locations){ location in
-                    Marker(location.markerData.placeName, systemImage: pinImage, coordinate: location.coordinate)
-                        .tint(pinColor)
+        ZStack(alignment : .bottom){
+            ZStack(alignment : .topTrailing){
+                Map(position: $region, selection: $selectedItem){
+                    UserAnnotation() // 사용자 현재 위치
+                    ForEach(locations){ location in
+                        Marker(location.markerData.placeName, systemImage: pinImage, coordinate: location.coordinate)
+                            .tint(pinColor)
+                    }
                 }
-            }
-            .onChange(of: selectedItem){
-//                print("selectedItem : \(String(describing: selectedItem))")
-                if selectedItem != nil {
-                    let location = locations.filter{$0.id == selectedItem}
-                    let region = MKCoordinateRegion(center: location[0].coordinate,
-                                                    latitudinalMeters: 200,
-                                                    longitudinalMeters: 200)
-                    self.region = MapCameraPosition.region(region)
+                .onChange(of: selectedItem){
+                    //                print("selectedItem : \(String(describing: selectedItem))")
+                    if selectedItem != nil {
+                        let location = locations.filter{$0.id == selectedItem}
+                        let region = MKCoordinateRegion(center: location[0].coordinate,
+                                                        latitudinalMeters: 200,
+                                                        longitudinalMeters: 200)
+                        self.region = MapCameraPosition.region(region)
+                        print("selectedItem : \(selectedItem)")
+                        // 뷰 띄우기
+                        selectedPlaceName = location[0].markerData.placeName
+                        selectedPlaceSummary = location[0].markerData.placeSummary
+                        selectedImagePath = location[0].markerData.mainImagePath ?? ""
+                        showDetalView = true
+                    }
                 }
-            }
-            .onChange(of: selecetedCategory){
-                region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
-                print(pinImage, pinColor)
-            }
-            
-            VStack{
-//                Spacer()
-                VStack(spacing: 0){
-                    Button(action: {
-                        // AR 캠퍼스 둘러보기 기능 추가해야 함
-                        isARStart.toggle()
-                    },
-                           label: {Text("AR")})
-                    .frame(width: 45, height: 50)
-                    .foregroundColor(.gray)
-                    .bold()
-                    
-                    Divider().background(.gray) // 중앙선
-
-                    Button(action: {
-                        // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
-                        setRegionToUserLocation()
-                    }, label: {Image(systemName: "scope")})
-                    .frame(width: 45, height: 50)
-                    .foregroundColor(.gray)
-                    .bold()
-                    
-                    Divider().background(.gray) // 중앙선
-                    
-                    Button(action: {
-                        // 버튼을 누를 때 기존 지도 중심으로 설정
-                        withAnimation(.easeInOut(duration: 1.0)){
-                            region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
-                        }
-                    }, label: {Image(systemName: "graduationcap")})
-                    .frame(width: 45, height: 50)
-                    .foregroundColor(.gray)
-                    .bold()
-                    
+                .onChange(of: selecetedCategory){
+                    let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700)
+                    withAnimation(.easeInOut (duration : 1.0)){
+                        self.region = MapCameraPosition.region(region)
+                    }
+                    showDetalView = false
                 }
-                .frame(width: 45, height: 150)
-                .background(.white)
-                .cornerRadius(15)
-                .padding(EdgeInsets(top: 200, leading: 0, bottom: 0, trailing: 20))  // bottomTrailing 마진 추가
-                Spacer()
+                
+                VStack{
+                    //                Spacer()
+                    VStack(spacing: 0){
+                        Button(action: {
+                            // AR 캠퍼스 둘러보기 기능 추가해야 함
+                            isARStart.toggle()
+                        },
+                               label: {Text("AR")})
+                        .frame(width: 45, height: 50)
+                        .foregroundColor(.gray)
+                        .bold()
+                        
+                        Divider().background(.gray) // 중앙선
+                        
+                        Button(action: {
+                            // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
+                            setRegionToUserLocation()
+                        }, label: {Image(systemName: "scope")})
+                        .frame(width: 45, height: 50)
+                        .foregroundColor(.gray)
+                        .bold()
+                        
+                        Divider().background(.gray) // 중앙선
+                        
+                        Button(action: {
+                            // 버튼을 누를 때 기존 지도 중심으로 설정
+                            withAnimation(.easeInOut(duration: 1.0)){
+                                region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
+                            }
+                        }, label: {Image(systemName: "graduationcap")})
+                        .frame(width: 45, height: 50)
+                        .foregroundColor(.gray)
+                        .bold()
+                        
+                    }
+                    .frame(width: 45, height: 150)
+                    .background(.white)
+                    .cornerRadius(15)
+                    .padding(EdgeInsets(top: 200, leading: 0, bottom: 0, trailing: 20))  // bottomTrailing 마진 추가
+                    Spacer()
+                } // end of VStack
+            } // end of ZStack(alignment : .topTrailing)
+            if showDetalView {
+                SearchSpotDetailCard(placeName: selectedPlaceName, placeSummary: selectedPlaceSummary, mainImagePath: selectedImagePath)
+                    .padding(.bottom, 160)
+                
             }
-           
-        }
+        } // end of ZStack
         
     }
     // 현재 위치를 기반으로 지도의 중심을 설정하는 함수
