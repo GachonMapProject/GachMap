@@ -14,6 +14,8 @@ struct SearchSpotDetailCard: View {
     
     @State private var isStartMoved: Bool = false
     @State private var isEndMoved: Bool = false
+    var inCategory : Bool
+    var isBuilding : Bool
     
     var body: some View {
         VStack {
@@ -78,16 +80,32 @@ struct SearchSpotDetailCard: View {
             
             HStack {
                 HStack {
-                    Button(action: {
-                        isStartMoved = true
-                    }, label: {
-                        Text("출발지로 설정")
-                            .font(.system(size: 15, weight: .bold))
-                    })
-                    .frame(width: 130, height: 33)
-                    .foregroundColor(.white)
-                    .background(Capsule()
-                        .fill(.gachonBlue))
+                    if inCategory {
+                        if isBuilding{
+                            Button(action: {
+                                // 캠퍼스 맵 상세보기 내비게이션 이동
+                            }, label: {
+                                Text("상세 정보 보기")
+                                    .font(.system(size: 15, weight: .bold))
+                            })
+                            .frame(width: 130, height: 33)
+                            .foregroundColor(.white)
+                            .background(Capsule()
+                                .fill(.gachonBlue))
+                        }
+                    }
+                    else {
+                        Button(action: {
+                            isStartMoved = true
+                        }, label: {
+                            Text("출발지로 설정")
+                                .font(.system(size: 15, weight: .bold))
+                        })
+                        .frame(width: 130, height: 33)
+                        .foregroundColor(.white)
+                        .background(Capsule()
+                            .fill(.gachonBlue))
+                    }
                 }
                 .frame(width: (UIScreen.main.bounds.width - 30) / 2, alignment: .trailing)
                 .padding(.trailing, 10)
@@ -132,7 +150,7 @@ struct SearchSpotDetailCard: View {
 
 struct SearchSpotDetailCard_Previews: PreviewProvider {
     static var previews: some View {
-        SearchSpotDetailCard(placeName: "전달받은 장소명", placeSummary: "전달받은 요약명")
+        SearchSpotDetailCard(placeName: "전달받은 장소명", placeSummary: "전달받은 요약명", inCategory: true, isBuilding: true)
             .previewLayout(.sizeThatFits)
             .padding()
     }

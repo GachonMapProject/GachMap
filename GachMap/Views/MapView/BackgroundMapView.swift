@@ -53,6 +53,8 @@ struct BackgroundMapView : View {
     @State var selectedPlaceSummary = ""
     @State var selectedImagePath = ""
     
+    @State var isBuilding = false
+    
     
     @State var isARStart = false    // AR 캠퍼스 둘러보기 버튼 실행 유무
     
@@ -84,19 +86,29 @@ struct BackgroundMapView : View {
                                                         longitudinalMeters: 200)
                         self.region = MapCameraPosition.region(region)
                         print("selectedItem : \(selectedItem)")
+                        print("change category : \(selecetedCategory)")
+                        
                         // 뷰 띄우기
+                        if selecetedCategory == "BUILDING" {
+                            isBuilding = true
+                        }else{
+                            isBuilding = false
+                        }
                         selectedPlaceName = location[0].markerData.placeName
                         selectedPlaceSummary = location[0].markerData.placeSummary
                         selectedImagePath = location[0].markerData.mainImagePath ?? ""
                         showSheet = false
                         showDetalView = true
+                        
+                        
                     }
                 }
-                .onChange(of: selecetedCategory){
+                .onChange(of: selecetedCategory){ category in
                     let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700)
                     withAnimation(.easeInOut (duration : 1.0)){
                         self.region = MapCameraPosition.region(region)
                     }
+                    
                     showSheet = true
                     showDetalView = false
                 }
@@ -144,7 +156,7 @@ struct BackgroundMapView : View {
                 } // end of VStack
             } // end of ZStack(alignment : .topTrailing)
             if showDetalView {
-                SearchSpotDetailCard(placeName: selectedPlaceName, placeSummary: selectedPlaceSummary, mainImagePath: selectedImagePath)
+                SearchSpotDetailCard(placeName: selectedPlaceName, placeSummary: selectedPlaceSummary, mainImagePath: selectedImagePath, inCategory: true, isBuilding : isBuilding)
                     .padding(.bottom, 100)
                 
             }
