@@ -99,17 +99,17 @@ class Path {
     ]
     
     let ITtoGlobal : [Node] = [
-        Node(name: "반도체 대학 정문", location: CLLocation(coordinate: CLLocationCoordinate2D(
-            latitude: 37.4509056,
-            longitude: 127.1274748),
-            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+//        Node(name: "반도체 대학 정문", location: CLLocation(coordinate: CLLocationCoordinate2D(
+//            latitude: 37.4509056,
+//            longitude: 127.1274748),
+//            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         Node(name: "파스쿠치 앞", location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4511441,
             longitude: 127.1276190),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         Node(name: "공대-글로벌센터", location: CLLocation(coordinate: CLLocationCoordinate2D(
-            latitude: 37.4513892,
-            longitude: 127.1276172),
+            latitude: 37.451356,
+            longitude: 127.127579),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         Node(name: "글로벌센터 흡연구역 앞", location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4514403,
