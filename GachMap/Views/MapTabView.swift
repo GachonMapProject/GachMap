@@ -23,6 +23,7 @@ enum BuildingCategory: String, CaseIterable {
 
 struct MapTabView: View {
     @Binding var showSearchView: Bool
+    @Binding var showSheet : Bool
     
     let categoryPinItem = ["BUILDING" : pinItem(image: "building.fill", color: Color.blue),
                            "SMOKING" : pinItem(image: "flame.fill", color: Color.brown),
@@ -64,7 +65,7 @@ struct MapTabView: View {
     var body: some View {
 
         ZStack() {
-            BackgroundMapView(selecetedCategory: $selecetedCategory, locations: locations, coreLocation: coreLocation, pinImage : $pinImage, pinColor : $pinColor)
+            BackgroundMapView(showSheet : $showSheet, selecetedCategory: $selecetedCategory, locations: locations, coreLocation: coreLocation, pinImage : $pinImage, pinColor : $pinColor)
                 .ignoresSafeArea()
                 .onChange(of: selecetedCategory){
                     // 핀 이미지, 백그라운드 색 설정

@@ -8,12 +8,19 @@
 import SwiftUI
 
 struct SearchSpotDetailCard: View {
+    var placeId : Int?
     var placeName: String
     var placeSummary: String
     var mainImagePath: String?
     
     @State private var isStartMoved: Bool = false
     @State private var isEndMoved: Bool = false
+    @State var showBuildingDetail = false   // 마커 선택 시 건물 상세 보기
+    
+    var inCategory : Bool
+    var isBuilding : Bool
+    
+    
     
     var body: some View {
         VStack {
@@ -78,16 +85,34 @@ struct SearchSpotDetailCard: View {
             
             HStack {
                 HStack {
-                    Button(action: {
-                        isStartMoved = true
-                    }, label: {
-                        Text("출발지로 설정")
-                            .font(.system(size: 15, weight: .bold))
-                    })
-                    .frame(width: 130, height: 33)
-                    .foregroundColor(.white)
-                    .background(Capsule()
-                        .fill(.gachonBlue))
+                    if inCategory {
+                        if isBuilding{  // 카테고리 마커가 BUILDING인 경우만, 다른 카테고리 시 버튼 x
+                            Button(action: {
+                                if let placeId = placeId {
+                                    showBuildingDetail = true
+                                }
+                            }, label: {
+                                Text("상세 정보 보기")
+                                    .font(.system(size: 15, weight: .bold))
+                            })
+                            .frame(width: 130, height: 33)
+                            .foregroundColor(.white)
+                            .background(Capsule()
+                                .fill(.gachonBlue))
+                        }
+                    }
+                    else {  // 검색으로 들어온 정보 카드 뷰
+                        Button(action: {
+                            isStartMoved = true
+                        }, label: {
+                            Text("출발지로 설정")
+                                .font(.system(size: 15, weight: .bold))
+                        })
+                        .frame(width: 130, height: 33)
+                        .foregroundColor(.white)
+                        .background(Capsule()
+                            .fill(.gachonBlue))
+                    }
                 }
                 .frame(width: (UIScreen.main.bounds.width - 30) / 2, alignment: .trailing)
                 .padding(.trailing, 10)
@@ -127,12 +152,17 @@ struct SearchSpotDetailCard: View {
                 .navigationBarBackButtonHidden()
         }
         
+        NavigationLink("", isActive: $showBuildingDetail) {
+            BuildingDetailView(buildingCode: placeId ?? -1)
+//                .navigationBarBackButtonHidden()
+        }
+        
     }
 }
 
 struct SearchSpotDetailCard_Previews: PreviewProvider {
     static var previews: some View {
-        SearchSpotDetailCard(placeName: "전달받은 장소명", placeSummary: "전달받은 요약명")
+        SearchSpotDetailCard(placeName: "전달받은 장소명", placeSummary: "전달받은 요약명", inCategory: true, isBuilding: true)
             .previewLayout(.sizeThatFits)
             .padding()
     }
