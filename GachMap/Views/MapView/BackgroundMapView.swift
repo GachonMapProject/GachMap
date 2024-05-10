@@ -33,6 +33,7 @@ struct pinItem {
 // CoreLocationEx, Category, [CategoryData]을 받아야 함 
 struct BackgroundMapView : View {
     
+    @Binding var showSheet : Bool
     // 카테고리 추가
     @Binding var selecetedCategory : String
     var locations : [IdentifiableLocation]
@@ -55,7 +56,8 @@ struct BackgroundMapView : View {
     
     @State var isARStart = false    // AR 캠퍼스 둘러보기 버튼 실행 유무
     
-    init(selecetedCategory: Binding<String>, locations: [BuildingMarkerData], coreLocation: CoreLocationEx, pinImage :Binding<String>, pinColor : Binding<Color>) {
+    init(showSheet :Binding<Bool>, selecetedCategory: Binding<String>, locations: [BuildingMarkerData], coreLocation: CoreLocationEx, pinImage :Binding<String>, pinColor : Binding<Color>) {
+        _showSheet = showSheet
         _selecetedCategory = selecetedCategory // Binding 속성에 직접 바인딩
         self.locations = locations.map{IdentifiableLocation(id : $0.placeId, coordinate: CLLocationCoordinate2D(latitude: $0.placeLatitude, longitude: $0.placeLongitude), markerData: $0)}
         self.coreLocation = coreLocation
@@ -86,6 +88,7 @@ struct BackgroundMapView : View {
                         selectedPlaceName = location[0].markerData.placeName
                         selectedPlaceSummary = location[0].markerData.placeSummary
                         selectedImagePath = location[0].markerData.mainImagePath ?? ""
+                        showSheet = false
                         showDetalView = true
                     }
                 }
@@ -94,6 +97,7 @@ struct BackgroundMapView : View {
                     withAnimation(.easeInOut (duration : 1.0)){
                         self.region = MapCameraPosition.region(region)
                     }
+                    showSheet = true
                     showDetalView = false
                 }
                 
@@ -141,7 +145,7 @@ struct BackgroundMapView : View {
             } // end of ZStack(alignment : .topTrailing)
             if showDetalView {
                 SearchSpotDetailCard(placeName: selectedPlaceName, placeSummary: selectedPlaceSummary, mainImagePath: selectedImagePath)
-                    .padding(.bottom, 160)
+                    .padding(.bottom, 100)
                 
             }
         } // end of ZStack

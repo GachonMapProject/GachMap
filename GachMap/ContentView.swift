@@ -26,7 +26,7 @@ struct ContentView: View {
   var body: some View {
       NavigationView {
           TabView(selection: $selectedTab) {
-              MapTabView(showSearchView: $showSearchView)
+              MapTabView(showSearchView: $showSearchView, showSheet : $showSheet)
                   .tabItem {
                       Image(systemName: "map")
                       Text("지도")
