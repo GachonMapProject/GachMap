@@ -69,8 +69,10 @@ class SearchViewModel: ObservableObject {
 // 빈 공간 선택 시 키보드 내리기 추가
 
 struct LocationSearchResultCell: View {
-    // @Binding var searchText: String
+    
     @ObservedObject var viewModel: SearchViewModel
+    @Binding var selectPlaceId: Int?
+    @Binding var triggerNavigation: Bool
     
     var body: some View {
         NavigationView {
@@ -99,7 +101,10 @@ struct LocationSearchResultCell: View {
                     ScrollView {
                         ForEach(viewModel.searchResults, id: \.placeId) { result in
                             
-                            NavigationLink(destination: ResultSelectView(detailViewModel: DetailResultViewModel(placeId: result.placeId))) {
+                            Button(action: {
+                                self.selectPlaceId = result.placeId
+                                                self.triggerNavigation = true
+                            }, label: {
                                 VStack(alignment: .leading) {
                                     HStack {
                                         // 건물명
@@ -120,8 +125,31 @@ struct LocationSearchResultCell: View {
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(EdgeInsets(top: 3, leading: 20, bottom: 0, trailing: 20))
-                            }
-                            .navigationBarBackButtonHidden()
+                            })
+                            
+//                            NavigationLink(destination: ResultSelectView(detailViewModel: DetailResultViewModel(placeId: result.placeId))) {
+//                                VStack(alignment: .leading) {
+//                                    HStack {
+//                                        // 건물명
+//                                        Text(result.placeName)
+//                                            .font(.body)
+//                                            .foregroundColor(.black)
+//                                        Spacer()
+//                                    }
+//                                    
+//                                    // 요약 정보
+//                                    if (result.placeSummary != "\n") {
+//                                        HStack {
+//                                            Text(result.placeSummary)
+//                                                .font(.subheadline)
+//                                                .foregroundColor(.gray)
+//                                        }
+//                                    }
+//                                }
+//                                .frame(maxWidth: .infinity)
+//                                .padding(EdgeInsets(top: 3, leading: 20, bottom: 0, trailing: 20))
+//                            }
+//                            .navigationBarBackButtonHidden()
                             
 //                            Button(action: {
 //                                
@@ -162,6 +190,6 @@ struct LocationSearchResultCell: View {
     } // end of body
 } // end of View struct
 
-#Preview {
-    LocationSearchResultCell(viewModel: SearchViewModel())
-}
+//#Preview {
+//    LocationSearchResultCell(viewModel: SearchViewModel())
+//}

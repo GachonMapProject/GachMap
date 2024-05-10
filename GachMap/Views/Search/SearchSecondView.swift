@@ -15,6 +15,7 @@ struct SearchSecondView: View {
     
     @State private var startSearchText = ""
     @State private var endSearchText = ""
+    @State private var isSearched: Bool = false
     
     @State private var validStartText: Bool = false
     @State private var validEndText: Bool = false
@@ -137,6 +138,7 @@ struct SearchSecondView: View {
                         if (fixedStart && fixedEnd) {
                             // 길안내 뷰로 이동!
                         } else {
+                            isSearched = true
                             performSearch()
                         }
                     }, label: {
@@ -180,16 +182,19 @@ struct SearchSecondView: View {
             .padding(.top, 20)
             // 검색창 끝
             
-            SimpleSearchResultCell(viewModel: simpleSearchViewModel) { selectedPlaceName in
-                if self.activeTextField == "start" {
-                    self.startSearchText = selectedPlaceName
-                    fixedStart = true
-                } else if self.activeTextField == "end" {
-                    self.endSearchText = selectedPlaceName
-                    fixedEnd = true
+            if isSearched {
+                SimpleSearchResultCell(viewModel: simpleSearchViewModel) { selectedPlaceName in
+                    if self.activeTextField == "start" {
+                        self.startSearchText = selectedPlaceName
+                        fixedStart = true
+                    } else if self.activeTextField == "end" {
+                        self.endSearchText = selectedPlaceName
+                        fixedEnd = true
+                    }
                 }
-            }
                 .padding(.top, 15)
+            }
+            
             
         }
         .onAppear {
