@@ -49,6 +49,7 @@ struct BackgroundMapView : View {
     @State var selectedItem : Int? // 마커 선택시 id
     @State var showDetalView = false
     
+    @State var selectedPlaceId = -1
     @State var selectedPlaceName = ""
     @State var selectedPlaceSummary = ""
     @State var selectedImagePath = ""
@@ -85,8 +86,6 @@ struct BackgroundMapView : View {
                                                         latitudinalMeters: 200,
                                                         longitudinalMeters: 200)
                         self.region = MapCameraPosition.region(region)
-                        print("selectedItem : \(selectedItem)")
-                        print("change category : \(selecetedCategory)")
                         
                         // 뷰 띄우기
                         if selecetedCategory == "BUILDING" {
@@ -94,6 +93,7 @@ struct BackgroundMapView : View {
                         }else{
                             isBuilding = false
                         }
+                        selectedPlaceId = location[0].markerData.placeId
                         selectedPlaceName = location[0].markerData.placeName
                         selectedPlaceSummary = location[0].markerData.placeSummary
                         selectedImagePath = location[0].markerData.mainImagePath ?? ""
@@ -156,7 +156,7 @@ struct BackgroundMapView : View {
                 } // end of VStack
             } // end of ZStack(alignment : .topTrailing)
             if showDetalView {
-                SearchSpotDetailCard(placeName: selectedPlaceName, placeSummary: selectedPlaceSummary, mainImagePath: selectedImagePath, inCategory: true, isBuilding : isBuilding)
+                SearchSpotDetailCard(placeId : selectedPlaceId, placeName: selectedPlaceName, placeSummary: selectedPlaceSummary, mainImagePath: selectedImagePath, inCategory: true, isBuilding : isBuilding)
                     .padding(.bottom, 100)
                 
             }

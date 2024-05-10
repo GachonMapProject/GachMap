@@ -8,14 +8,19 @@
 import SwiftUI
 
 struct SearchSpotDetailCard: View {
+    var placeId : Int?
     var placeName: String
     var placeSummary: String
     var mainImagePath: String?
     
     @State private var isStartMoved: Bool = false
     @State private var isEndMoved: Bool = false
+    @State var showBuildingDetail = false   // 마커 선택 시 건물 상세 보기
+    
     var inCategory : Bool
     var isBuilding : Bool
+    
+    
     
     var body: some View {
         VStack {
@@ -81,9 +86,11 @@ struct SearchSpotDetailCard: View {
             HStack {
                 HStack {
                     if inCategory {
-                        if isBuilding{
+                        if isBuilding{  // 카테고리 마커가 BUILDING인 경우만, 다른 카테고리 시 버튼 x
                             Button(action: {
-                                // 캠퍼스 맵 상세보기 내비게이션 이동
+                                if let placeId = placeId {
+                                    showBuildingDetail = true
+                                }
                             }, label: {
                                 Text("상세 정보 보기")
                                     .font(.system(size: 15, weight: .bold))
@@ -94,7 +101,7 @@ struct SearchSpotDetailCard: View {
                                 .fill(.gachonBlue))
                         }
                     }
-                    else {
+                    else {  // 검색으로 들어온 정보 카드 뷰
                         Button(action: {
                             isStartMoved = true
                         }, label: {
@@ -143,6 +150,11 @@ struct SearchSpotDetailCard: View {
         NavigationLink("", isActive: $isEndMoved) {
             SearchSecondView(getStartSearchText: "", getEndSearchText: placeName)
                 .navigationBarBackButtonHidden()
+        }
+        
+        NavigationLink("", isActive: $showBuildingDetail) {
+            BuildingDetailView(buildingCode: placeId ?? -1)
+//                .navigationBarBackButtonHidden()
         }
         
     }
