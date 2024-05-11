@@ -11,7 +11,7 @@ struct PathTimeView: View {
     let width = UIScreen.main.bounds.width / 2.5
     let height = UIScreen.main.bounds.height / 8
     let pathName : String
-    let time : String?
+    let time : Int?
     let textGradient = Gradient(colors: [
         Color(red: 0.1451, green: 0.5412, blue: 0.6314).opacity(1.0),
         Color(red: 0.2078, green: 0.1647, blue: 0.7294).opacity(1.0),
@@ -48,7 +48,7 @@ struct PathTimeView: View {
 
                 Spacer()
                 HStack(alignment: .lastTextBaseline, spacing : 4){
-                    Text(time == nil ? "-" : time!)
+                    Text(time == nil ? "-" : String(time ?? 0))
                         .font(.system(size: 33))
                         .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
                         .bold()
