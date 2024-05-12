@@ -1,84 +1,13 @@
 //
-//  SatisfactionView.swift
+//  SatisfactionButtonView.swift
 //  GachMap
 //
-//  Created by 이수현 on 4/23/24.
+//  Created by 이수현 on 5/12/24.
 //
 
 import SwiftUI
 
-struct SatisfactionView: View {
-    var width = UIScreen.main.bounds.width
-    @State var pathSelect = -1
-    @State var timeSelect = -1
-    @State var submit = false
-    
-    var body: some View {
-        VStack{
-            Spacer()
-            VStack(alignment : .leading){
-                HStack(spacing : 0){
-                    Text("추천 경로")
-                        .bold()
-                    Text("에 대해")
-                    Spacer()
-                }
-                HStack(spacing : 0){
-                    Text("만족")
-                        .bold()
-                    Text("하셨나요?")
-                    Spacer()
-                }
-            } // end of VStack
-            .font(.system(size: 32))
-            .padding(.bottom, 30)
-            
-            Text("경로 만족도 평가는 개인별 소요시간 및 경로 예측도 향상에 큰 도움이 됩니다.")
-                .multilineTextAlignment(.center)
-                .foregroundColor(.gray)
-                .frame(width: width * 0.7)
-                .padding(.bottom, 30)
-            
-            SatisfactionButtonView(name: "경로 평가", select: $pathSelect)
-                .padding(.bottom, 30)
-            
-            SatisfactionButtonView(name: "소요시간 정확도", select: $timeSelect)
-            Spacer()
-            
-            Button(action: {
-                // 데이터 서버에 전달하는 함수 필요
-                submit = true
-            }, label: {
-                Text("확인")
-                    .frame(width: width * 0.7, height: 50)
-                    .foregroundColor(.white)
-            })
-            .background(timeSelect == -1 || pathSelect == -1 ? Color.gray.opacity(0.3) : Color.blue)
-            .multilineTextAlignment(.center)
-            .cornerRadius(15)
-            .shadow(radius: 5, x: 2, y: 2)
-            .font(.system(size: 20))
-            .disabled(timeSelect == -1 || pathSelect == -1)
-            .padding(.bottom, 30)
-            
-            
-        } // end of VStack
-        .frame(width: width * 0.9)
-        .alert(isPresented: $submit) {
-            Alert(title: Text("만족도 조사"), message: Text("소중한 의견 감사드립니다."),
-                  dismissButton: .default(Text("확인")))
-        }
-      
-            
-
-        
-        
-    }
-}
-
-
 struct SatisfactionButtonView: View {
-    
     var name : String
     let selectedGradient = LinearGradient(
         gradient: Gradient(colors: [
@@ -177,6 +106,7 @@ struct SatisfactionButtonView: View {
     }
 }
 
-#Preview {
-    SatisfactionView()
-}
+
+//#Preview {
+//    SatisfactionButtonView()
+//}

@@ -33,11 +33,12 @@ struct ARMainView: View {
     let timer = MyTimer()
 //    let path = Path().homeToAI
     let path : [Node]
-    
-    
-    
+    let departures : Int
+    let arrivals : Int
+    @State var timeList = [TimeList]()
+
     @State var distance : Double?
-    @State var timeList = [Int]()
+//    @State var timeList = [Int]()
     
     var body: some View {
         if coreLocation.location != nil{
@@ -172,7 +173,7 @@ struct ARMainView: View {
                         } // end of if !isEnd
                         else{
                             // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
-                            SatisfactionView()
+                            SatisfactionView(departures: departures, arrivals: arrivals, timeList: timeList)
                         }
                     }
                 }
@@ -302,7 +303,8 @@ struct ARMainView: View {
                     print("timer 시작")
                 }else{
                     let time = timer.seconds
-                    timeList.append(time)
+                    let list = TimeList(firstNodeId: path[index].id, secondNodeId: path[index+1].id, time: time)
+                    timeList.append(list)
                     // timer (노드-노드, 시간) 배열 생성 후 append 하고 만족도 페이지에 넘겨서 Request 요청해야 됨
                     print(path[index-1].name + "~" + path[index].name + "까지 : \(time)초")
                     timer.stopTimer()
@@ -333,7 +335,3 @@ struct ARMainView: View {
         }
     }
 }
-
-
-
-//                                ARView(coreLocation: coreLocation, nextNodeObject: nextNodeObject, bestHorizontalAccuracy: coreLocation.location!.horizontalAccuracy, bestVerticalAccuracy: coreLocation.location!.verticalAccuracy, location : coreLocation.location!, path: path)

@@ -105,8 +105,7 @@ struct ChoosePathView: View {
             }
         }
         else{
-            ARMainView(isAROn: $isAROn, path : nodes[selectedPath])
-//            ARMainView()
+            ARMainView(isAROn: $isAROn, path : nodes[selectedPath], departures: nodes[selectedPath][0].id, arrivals: nodes[selectedPath][nodes[selectedPath].count - 1].id)
         }
     }
     
