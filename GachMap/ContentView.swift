@@ -7,13 +7,19 @@
 
 import SwiftUI
 
+class GlobalViewModel: ObservableObject {
+    @Published var showSearchView: Bool = false
+}
+
 struct ContentView: View {
   
     @State private var showSheet: Bool = false
     @State private var selectedTab = 1
     @State private var showMainView = false
     
-    @State private var showSearchView = false
+    // @State private var showSearchView = false
+    
+    @EnvironmentObject var globalViewModel: GlobalViewModel
     
     // @Binding var isLogin: Bool
     
@@ -26,7 +32,7 @@ struct ContentView: View {
   var body: some View {
       NavigationView {
           TabView(selection: $selectedTab) {
-              MapTabView(showSearchView: $showSearchView)
+              MapTabView(showSearchView: $globalViewModel.showSearchView)
                   .tabItem {
                       Image(systemName: "map")
                       Text("지도")
@@ -34,12 +40,12 @@ struct ContentView: View {
                   .onAppear() {
                       showSheet = true
                   }
-                  .fullScreenCover(isPresented: $showSearchView, onDismiss: {
+                  .fullScreenCover(isPresented: $globalViewModel.showSearchView, onDismiss: {
                       if selectedTab == 1 {
                           showSheet = true
                       }
                   }) {
-                      SearchMainView(showLocationSearchView: $showSearchView)
+                      SearchMainView(showLocationSearchView: $globalViewModel.showSearchView)
                   }
               
               BuildingTabView()

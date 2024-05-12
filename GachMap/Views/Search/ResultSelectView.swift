@@ -155,5 +155,5 @@ struct ResultSelectView: View {
 }
 
 #Preview {
-    ResultSelectView(detailViewModel: DetailResultViewModel(placeId: 111))
+    ResultSelectView(detailViewModel: DetailResultViewModel(placeId: 20))
 }
