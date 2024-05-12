@@ -235,6 +235,6 @@ struct SearchSecondView: View {
     }
 }
 
-#Preview {
-    SearchSecondView(getStartSearchText: "", getEndSearchText: "")
-}
+//#Preview {
+//    SearchSecondView(getStartSearchText: "", getEndSearchText: "")
+//}

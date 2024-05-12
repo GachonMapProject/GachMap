@@ -22,9 +22,11 @@ struct PathTimeView: View {
     let num : Int
     @Binding var selectedPath : Int
     
+    let pathNameDic = ["SHORTEST" : "최단 경로", "OPTIMAL" : "최적 경로", "MUDANG" : "무당이 경로"]
+    
     var body: some View {
         VStack(alignment: .leading){
-            Text(pathName)
+            Text(pathNameDic[pathName] ?? "")
                 .font(.system(size: 23))
                 .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
                 .bold()
