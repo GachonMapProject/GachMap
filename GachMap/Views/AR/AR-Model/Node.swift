@@ -10,5 +10,6 @@ import CoreLocation
 
 struct Node {
     var name : String
+    var id : Int
     var location : CLLocation
 }

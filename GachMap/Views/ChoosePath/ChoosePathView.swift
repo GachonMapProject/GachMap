@@ -18,45 +18,71 @@ import SwiftUI
 import MapKit
 
 struct ChoosePathView: View {
-    let paths = [Path().pathExmaple, Path().pathExmaple1, Path().pathExmaple2]
+//    let paths = [Path().pathExmaple, Path().pathExmaple1, Path().pathExmaple2]
+    
     @State private var region: MKCoordinateRegion
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath : Int = 0   // 선택한 경로
     
     @State var isAROn = false
+    @State var path : [PathTime]
+    var locations = [CLLocation]()
+    var nodes = [[Node]]()
     
-    @State var test : [PathTime]
-    
-    init() {
-        var locations = [CLLocation]()
+    init(paths : [PathData]) {
+        
+        // 로그인 유뮤 가져오기
+        var isLogin = false
+        if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
+           let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
+            print("loginInfo.userCode: \(String(describing: loginInfo.userCode))")
+            print("loginInfo.guestCode: \(String(describing: loginInfo.guestCode))")
+            if loginInfo.userCode != nil {
+                isLogin = true
+            }
+        }
         
         var lines = [[CLLocationCoordinate2D]]()
+        var pathTimes = [PathTime]()
         for path in paths {
             var coordinates = [CLLocationCoordinate2D]()
-            for i in path {
-                locations.append(i.location)
-                coordinates.append(i.location.coordinate)
+            var nodes = [Node]()
+            for i in path.nodeList {
+                let coordinate = CLLocationCoordinate2D(latitude: i.latitude, longitude: i.longitude)
+                coordinates.append(coordinate)
+                
+                let location = CLLocation(coordinate: coordinate, altitude: i.altitude, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())
+                locations.append(location)
+                let node = Node(name: String(i.nodeId), id: i.nodeId, location: location)
+                nodes.append(node)
             }
+            self.nodes.append(nodes)
+            
+            let pathTime = PathTime(pathName: path.routeType, time: path.totalTime, isLogin: isLogin, line: coordinates)
+            pathTimes.append(pathTime)
             lines.append(coordinates)
         }
         self.lineCoordinates = lines
         
-        let centerLatitude = (paths[0][0].location.coordinate.latitude + paths[0][paths[0].count - 1].location.coordinate.latitude) / 2
-        let centerLongitude = (paths[0][0].location.coordinate.longitude + paths[0][paths[0].count - 1].location.coordinate.longitude) / 2
+        let centerLatitude = (paths[0].nodeList[0].latitude + paths[0].nodeList[paths[0].nodeList.count - 1].latitude) / 2
+        let centerLongitude = (paths[0].nodeList[0].longitude + paths[0].nodeList[paths[0].nodeList.count - 1].longitude) / 2
         let center = CLLocationCoordinate2D(latitude: centerLatitude, longitude: centerLongitude)
         let meter = locations[0].distance(from: locations[locations.count - 1]) + 100
         region = MKCoordinateRegion(center: center, latitudinalMeters: meter, longitudinalMeters: meter)
         
-        test = [PathTime(pathName: "최적 경로", time: "33", isLogin: true, line: lines[0]),
-         PathTime(pathName: "최단 경로", time: "3", isLogin: true, line: lines[1]),
-         PathTime(pathName: "무당이 경로", time: nil, isLogin: true, line: lines[2])
-        ]
+        path = pathTimes
+        print("------------------------------------")
+        print(path)
+//        path = [PathTime(pathName: "최적 경로", time: 33, isLogin: isLogin, line: lines[1]),
+//         PathTime(pathName: "최단 경로", time: 3, isLogin: isLogin, line: lines[0]),
+//         PathTime(pathName: "무당이 경로", time: nil, isLogin: isLogin, line: lines[2])
+//        ]
     }
     
     var body: some View {
         if !isAROn {
             ZStack{
-                MapView(region: region, lineCoordinates: test, selectedPath : $selectedPath)
+                MapView(region: region, lineCoordinates: path, selectedPath : $selectedPath)
                     .ignoresSafeArea(.all)
                 
                 VStack{
@@ -73,16 +99,31 @@ struct ChoosePathView: View {
                     
                     AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정
                     Spacer()
-                    PathTimeTestView(selectedPath: $selectedPath, test: test)
+                    PathTimeTestView(selectedPath: $selectedPath, path: path)
                         .padding(.bottom, 10)
                 }
             }
         }
         else{
-            ARMainView(isAROn: $isAROn)
-//            ARMainView()
+            ARMainView(isAROn: $isAROn, path : nodes[selectedPath], departures: nodes[selectedPath][0].id, arrivals: nodes[selectedPath][nodes[selectedPath].count - 1].id)
         }
     }
+    
+//    private func getLoginInfo() -> LoginInfo? {
+//        if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
+//           let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
+//            print("loginInfo.userCode: \(String(describing: loginInfo.userCode))")
+//            print("loginInfo.guestCode: \(String(describing: loginInfo.guestCode))")
+//            if loginInfo.userCode != nil {
+//                isLogin = true
+//            }
+//                
+//            return loginInfo
+//        } else {
+//            print("Login Info not found in UserDefaults")
+//            return nil
+//        }
+//    }
 }
 
 
@@ -214,6 +255,6 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
          return annotationView
      }
 }
-#Preview {
-    ChoosePathView()
-}
+//#Preview {
+//    ChoosePathView()
+//}

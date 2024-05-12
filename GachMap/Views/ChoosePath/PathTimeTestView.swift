@@ -11,7 +11,7 @@ import CoreLocation
 struct PathTime : Identifiable {
     let id = UUID()
     let pathName : String
-    let time : String?
+    let time : Int?
     let isLogin : Bool
     let line : [CLLocationCoordinate2D]
 }
@@ -19,17 +19,17 @@ struct PathTime : Identifiable {
 struct PathTimeTestView: View {
     @Binding var selectedPath : Int
     
-    let test : [PathTime]
+    let path : [PathTime]
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){
 //            ZStack(alignment:.center){
                 LazyHStack{
-                    ForEach(0..<3){ index in
+                    ForEach(0..<2){ index in
                         Button(action: {
                             // 지도에 경로 표시 및 검색창의 텍스트 변경 (위치 포함)
                             selectedPath = index
                         }, label: {
-                            PathTimeView(pathName: test[index].pathName, time:  test[index].time , isLogin: true, num: index, selectedPath: $selectedPath)
+                            PathTimeView(pathName: path[index].pathName, time:  path[index].time , isLogin: true, num: index, selectedPath: $selectedPath)
                                 .scrollTransition(.animated, axis: .horizontal) { content, phase in
                                     content
                                         .opacity(phase.isIdentity ? 1.0 : 0.8)
@@ -39,7 +39,7 @@ struct PathTimeTestView: View {
                                     selectedPath = index
                                 }
                         })
-                        .disabled(test[index].time == nil)
+                        .disabled(path[index].time == nil)
                     }
 
                 } // end of LazyStack
