@@ -16,6 +16,8 @@ class SimpleSearchViewModel: ObservableObject {
     @Published var searchResultNull: Bool = false
     
     @State var placeName: String = ""
+    
+    // 빈 부분 탭하면 키보드 내리기 넣기
 
     // 키워드 검색 결과 가져오기
     func getSearchResult() {
@@ -58,7 +60,7 @@ class SimpleSearchViewModel: ObservableObject {
 struct SimpleSearchResultCell: View {
     // @Binding var searchText: String
     @ObservedObject var viewModel: SimpleSearchViewModel
-    var onSelect: (String) -> Void
+    var onSelect: (String, Int) -> Void
     
     var body: some View {
         NavigationView {
@@ -87,7 +89,7 @@ struct SimpleSearchResultCell: View {
                     ScrollView {
                         ForEach(viewModel.searchResults, id: \.placeId) { result in
                             Button(action: {
-                                self.onSelect(result.placeName)
+                                self.onSelect(result.placeName, result.placeId)
                             }, label: {
                                 VStack(alignment: .leading) {
                                     HStack {
