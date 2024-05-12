@@ -27,6 +27,7 @@ struct ChoosePathView: View {
     @State var isAROn = false
     @State var path : [PathTime]
     var locations = [CLLocation]()
+    var nodes = [[Node]]()
     
     init(paths : [PathData]) {
         
@@ -45,13 +46,17 @@ struct ChoosePathView: View {
         var pathTimes = [PathTime]()
         for path in paths {
             var coordinates = [CLLocationCoordinate2D]()
+            var nodes = [Node]()
             for i in path.nodeList {
                 let coordinate = CLLocationCoordinate2D(latitude: i.latitude, longitude: i.longitude)
                 coordinates.append(coordinate)
                 
                 let location = CLLocation(coordinate: coordinate, altitude: i.altitude, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())
                 locations.append(location)
+                let node = Node(name: String(i.nodeId), id: i.nodeId, location: location)
+                nodes.append(node)
             }
+            self.nodes.append(nodes)
             
             let pathTime = PathTime(pathName: path.routeType, time: path.totalTime, isLogin: isLogin, line: coordinates)
             pathTimes.append(pathTime)
@@ -100,7 +105,7 @@ struct ChoosePathView: View {
             }
         }
         else{
-            ARMainView(isAROn: $isAROn)
+            ARMainView(isAROn: $isAROn, path : nodes[selectedPath])
 //            ARMainView()
         }
     }

@@ -18,29 +18,24 @@ struct ChoosePathTestView: View {
     let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.4514039, longitude: 127.1295702), altitude: 58, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())
     
     var body: some View {
-        HStack{
-            VStack{
-                Text(startLocation)
-                Text(endLocation)
-            }
-            Button(action: {
-                if startLocation == "현재위치" {
-                    getUserLocationPath(location : location, arrival: arrival)
-                }
-                else{
-                    getPath(departure: departure, arrival: arrival)
-                }
-                
-            }, label: {
-                Text("길찾기")
-            })
-        }
-       
         if paths == nil {
-            ProgressView()
-                .onAppear(){
-//                    getPath(departure: departure, arrival: arrival)
+            HStack{
+                VStack{
+                    Text(startLocation)
+                    Text(endLocation)
                 }
+                Button(action: {
+                    if startLocation == "현재위치" {
+                        getUserLocationPath(location : location, arrival: arrival)
+                    }
+                    else{
+                        getPath(departure: departure, arrival: arrival)
+                    }
+                    
+                }, label: {
+                    Text("길찾기")
+                })
+            }
         }
         else{
             ChoosePathView(paths : paths!)
