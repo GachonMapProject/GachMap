@@ -13,8 +13,12 @@ struct SearchSecondView: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    @State private var startSearchText = ""
-    @State private var endSearchText = ""
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    
+    @State private var startSearchText: String = ""
+    @State private var endSearchText: String = ""
+    @State private var startPlaceId: Int?
+    @State private var endPlaceId: Int?
     @State private var isSearched: Bool = false
     
     @State private var validStartText: Bool = false
@@ -27,6 +31,7 @@ struct SearchSecondView: View {
     
     @StateObject private var simpleSearchViewModel = SimpleSearchViewModel()
     @StateObject private var searchViewModel = SearchViewModel()
+    
     @State private var showLocationSearchResultView: Bool = false
     
     var body: some View {
@@ -46,7 +51,7 @@ struct SearchSecondView: View {
                 
                 // 검색창 종료 버튼
                 Button(action: {
-                    
+                    globalViewModel.showSearchView = false
                 }, label: {
                     Image(systemName: "xmark")
                         .font(.title2)
@@ -71,6 +76,7 @@ struct SearchSecondView: View {
                             .font(.title3)
                             .onTapGesture {
                                 self.activeTextField = "start"
+                                isSearched = false
                             }
                             .onSubmit {
                                 performSearch()
@@ -104,6 +110,7 @@ struct SearchSecondView: View {
                             .font(.title3)
                             .onTapGesture {
                                 self.activeTextField = "end"
+                                isSearched = false
                             }
                             .onSubmit {
                                 performSearch()
@@ -136,7 +143,20 @@ struct SearchSecondView: View {
                     Button(action: {
                         // 검색어 전달 API 함수 넣기
                         if (fixedStart && fixedEnd) {
+                            
+                            /* 1. 사용자가 교내에 위치
+                                i) 출발: 현재위치, 도착: 검색 지정 or 현재 위치 -> 내비게이션 사용 가능
+                                ii) 출발: 검색 지정, 도착: 검색 지정 or 현재 위치 -> 따라가기
+                               2. 사용자가 교외에 위치
+                                i) 출발: 현재위치, 도착: 검색 지정 -> 불가능
+                                ii) 출발: 검색 지정, 도착: 검색 지정 -> 따라가기 */
+                            
                             // 길안내 뷰로 이동!
+                            print("출발 placeName: \(startSearchText)")
+                            print("출발 placeId: \(startPlaceId)")
+                            print("도착 placeName: \(endSearchText)")
+                            print("도착 placeId: \(endPlaceId)")
+                            
                         } else {
                             isSearched = true
                             performSearch()
@@ -182,13 +202,41 @@ struct SearchSecondView: View {
             .padding(.top, 20)
             // 검색창 끝
             
+            // 출발 TextField 선택 시에만 현재 위치 버튼 활성화
+            if self.activeTextField == "start" {
+                HStack {
+                    Button(action: {
+                        if self.activeTextField == "start" {
+                            self.startSearchText = "현재 위치"
+                            fixedStart = true
+                        }
+                    }, label: {
+                        Image(systemName: "location.fill")
+                            .font(.system(size: 15))
+                        Text("현재 위치")
+                            .font(.system(size: 15))
+                    })
+                    .foregroundColor(.gray)
+                    .background(
+                        Capsule()
+                            .fill(Color(UIColor.systemGray5))
+                            .frame(width: 100, height: 25))
+                    
+                    Spacer()
+                }
+                .frame(width: UIScreen.main.bounds.width - 55)
+                .padding(.top, 8)
+            }
+            
             if isSearched {
-                SimpleSearchResultCell(viewModel: simpleSearchViewModel) { selectedPlaceName in
+                SimpleSearchResultCell(viewModel: simpleSearchViewModel) { selectedPlaceName, selectedPlaceId in
                     if self.activeTextField == "start" {
                         self.startSearchText = selectedPlaceName
+                        self.startPlaceId = selectedPlaceId
                         fixedStart = true
                     } else if self.activeTextField == "end" {
                         self.endSearchText = selectedPlaceName
+                        self.endPlaceId = selectedPlaceId
                         fixedEnd = true
                     }
                 }
@@ -196,7 +244,7 @@ struct SearchSecondView: View {
             }
             
             
-        }
+        } // 전체 VStack
         .onAppear {
             if !getStartSearchText.isEmpty {
                 startSearchText = getStartSearchText
@@ -214,7 +262,6 @@ struct SearchSecondView: View {
     } // end of body
     
     private func performSearch() {
-        // 검색어 전달 API 함수 넣기
         if activeTextField == "start" {
             searchViewModel.addSearchText(startSearchText)
             simpleSearchViewModel.searchText = startSearchText
@@ -225,7 +272,7 @@ struct SearchSecondView: View {
         
         simpleSearchViewModel.getSearchResult()
         
-        self.showLocationSearchResultView = true
+        // self.showLocationSearchResultView = true
         
         hideKeyboard()
     }
