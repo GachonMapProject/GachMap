@@ -27,6 +27,3 @@ struct GachMapApp: App {
     }
 }
 
-class RootViewModel: ObservableObject {
-    @Published var shouldPopToRoot: Bool = false
-}

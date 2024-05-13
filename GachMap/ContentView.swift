@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-class GlobalViewModel: ObservableObject {
-    @Published var showSearchView: Bool = false
-}
+//class GlobalViewModel: ObservableObject {
+//    @Published var showSearchView: Bool = false
+//}
 
 struct ContentView: View {
   
