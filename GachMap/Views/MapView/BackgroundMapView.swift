@@ -114,6 +114,9 @@ struct BackgroundMapView : View {
                     showSheet = true
                     showDetalView = false
                 }
+                .onDisappear(){
+                    showSheet = false
+                }
                 
                 VStack{
                     //                Spacer()

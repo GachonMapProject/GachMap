@@ -20,6 +20,8 @@ import MapKit
 struct ChoosePathView: View {
 //    let paths = [Path().pathExmaple, Path().pathExmaple1, Path().pathExmaple2]
     
+    @Environment(\.dismiss) private var dismiss
+    
     @State private var region: MKCoordinateRegion
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath : Int = 0   // 선택한 경로
@@ -28,8 +30,12 @@ struct ChoosePathView: View {
     @State var path : [PathTime]
     var locations = [CLLocation]()
     var nodes = [[Node]]()
+    let startText : String
+    let endText : String
     
-    init(paths : [PathData]) {
+    init(paths : [PathData], startText : String, endText : String) {
+        self.startText = startText
+        self.endText = endText
         
         // 로그인 유뮤 가져오기
         var isLogin = false
@@ -71,8 +77,8 @@ struct ChoosePathView: View {
         region = MKCoordinateRegion(center: center, latitudinalMeters: meter, longitudinalMeters: meter)
         
         path = pathTimes
-        print("------------------------------------")
-        print(path)
+//        print("------------------------------------")
+//        print(path)
 //        path = [PathTime(pathName: "최적 경로", time: 33, isLogin: isLogin, line: lines[1]),
 //         PathTime(pathName: "최단 경로", time: 3, isLogin: isLogin, line: lines[0]),
 //         PathTime(pathName: "무당이 경로", time: nil, isLogin: isLogin, line: lines[2])
@@ -84,23 +90,33 @@ struct ChoosePathView: View {
             ZStack{
                 MapView(region: region, lineCoordinates: path, selectedPath : $selectedPath)
                     .ignoresSafeArea(.all)
-                
                 VStack{
-                    ZStack(alignment : .trailing){
-                        SearchMainBar()
-                        Button(action: {
-                            isAROn = true
-                        }, label: {
-                            Text("길안내")
-                        })
-                        .frame(width: 50, height: 50)
-                        
-                    }
-                    
-                    AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정
-                    Spacer()
-                    PathTimeTestView(selectedPath: $selectedPath, path: path)
+                    VStack{
+                        HStack {
+                            // 뒤로 가기 버튼
+                            Button(action: {
+                                dismiss()
+                            }, label: {
+                                Image(systemName: "arrow.left")
+                                    .font(.title2)
+                                    .foregroundColor(.black)
+                            })
+                            
+                            Spacer()
+                        }
+                        .frame(width: UIScreen.main.bounds.width - 40)
+                        .padding(.top, 10)
                         .padding(.bottom, 10)
+                    }
+
+                    
+                    VStack{
+                        SearchPathView(startText: startText, endText: endText) 
+                        AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정
+                        Spacer()
+                        PathTimeTestView(selectedPath: $selectedPath, path: path)
+                            .padding(.bottom, 10)
+                    }
                 }
             }
         }
@@ -258,3 +274,4 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
 //#Preview {
 //    ChoosePathView()
 //}
+

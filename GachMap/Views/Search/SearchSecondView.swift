@@ -274,9 +274,13 @@ struct SearchSecondView: View {
         .background(Color.white)
         // end of 전체 VStack
         
-        NavigationLink(destination: ChoosePathView(paths: paths ?? []), isActive: $goPathView, label: {
-            EmptyView()
-        })
+        if paths != nil{
+            NavigationLink(destination: ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText).navigationBarBackButtonHidden(), isActive: $goPathView, label: {
+                EmptyView()
+            })
+            
+        }
+
         
     } // end of body
     
@@ -302,7 +306,7 @@ struct SearchSecondView: View {
     
     // 현재위치 x
     func getPath(departure : Int, arrival : Int) {
-        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/route?departure=\(departure)&arrival=\(arrival)")
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/route?departures=\(departure)&arrivals=\(arrival)")
         else {
             print("Invalid URL")
             return
@@ -318,9 +322,13 @@ struct SearchSecondView: View {
                     if(value.success == true) {
                         print("지정 위치 경로 가져오기 성공")
                         paths = value.data
-                        goPathView = true
-                        print(paths)
+                        if paths != nil{
+                            goPathView = true
+                            print(paths)
 
+
+                        }
+                       
                     } else {
                         print("지정 위치 경로 가져오기 실패")
 
@@ -329,6 +337,7 @@ struct SearchSecondView: View {
                 case .failure(let error):
                     // 서버 연결 실패할 때도 검색 결과 없음 표시
                     print("서버 연결 실패")
+                    //                            {"success":false,"property":400,"message":"출발지와 도착지가 같습니다.","data":null}
                     print(url)
                     print("Error: \(error.localizedDescription)")
                 }
