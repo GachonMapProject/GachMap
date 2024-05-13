@@ -10,6 +10,9 @@ import SwiftUI
 struct SearchPathView : View {
     let startText : String
     let endText : String
+    @Binding var isAROn : Bool
+    @Binding var isOnlyMapOn : Bool
+    
 //    @State var showRoadSearchAlert = false
     var body: some View {
         // 출발, 도착 두 필드가 모두 true일때만 길찾기 버튼 활성화
@@ -42,12 +45,15 @@ struct SearchPathView : View {
             .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
         
                 Button(action: {
-                    if (startText != "현재 위치"){
-                        /* 현재위치 시작이 아니면 알림 띄우고 지도 따라가기
-                             현재 위치면 AR 길찾기 바로 실행
+                    if (startText == "현재 위치"){
+                        /* 현재위치 시작이 아니면 지도 미리보기
+                            현재위치면 ARMainView
                          */
 //                        showRoadSearchAlert = true
-                        
+                        isAROn = true
+                    }
+                    else{
+                        isOnlyMapOn = true
                     }
                 }, label: {
                     // 길찾기 뷰로 넘기기

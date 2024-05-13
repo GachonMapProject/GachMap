@@ -19,10 +19,7 @@ struct GachMapApp: App {
             ContentView()
                 .environmentObject(globalViewModel)
                 .environmentObject(CoreLocationEx())
-            
-//            StartView()
-//                .environmentObject(CoreLocationEx())
-                
+
             
         }
     }

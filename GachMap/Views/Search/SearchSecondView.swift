@@ -284,9 +284,11 @@ struct SearchSecondView: View {
         // end of 전체 VStack
         
         if paths != nil{
-            NavigationLink(destination: ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText).navigationBarBackButtonHidden(), isActive: $goPathView, label: {
-                EmptyView()
-            })
+            NavigationLink("", isActive: $goPathView){
+                ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText)
+                    .navigationBarBackButtonHidden()
+                    .edgesIgnoringSafeArea(.bottom)
+            }
             
         }
 

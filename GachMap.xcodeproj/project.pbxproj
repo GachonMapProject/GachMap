@@ -120,6 +120,7 @@
 		CB8A6E342BF0BCA20039AC50 /* SatisfactionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8A6E332BF0BCA20039AC50 /* SatisfactionRequest.swift */; };
 		CB8A6E372BF0E6FF0039AC50 /* SatisfactionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8A6E362BF0E6FF0039AC50 /* SatisfactionButtonView.swift */; };
 		CBBE58692BF21F86003B55C4 /* SearchPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE58682BF21F86003B55C4 /* SearchPathView.swift */; };
+		CBBE586B2BF22EEE003B55C4 /* OnlyMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */; };
 		CBC02A6C2BD90D9B005657B9 /* MyTmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */; };
 		CBD855FF2BD7A7F00046597D /* SatisfactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */; };
 		CBDDC9122BCEB62300019FAB /* BackgroundMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */; };
@@ -245,6 +246,7 @@
 		CB8A6E332BF0BCA20039AC50 /* SatisfactionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatisfactionRequest.swift; sourceTree = "<group>"; };
 		CB8A6E362BF0E6FF0039AC50 /* SatisfactionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatisfactionButtonView.swift; sourceTree = "<group>"; };
 		CBBE58682BF21F86003B55C4 /* SearchPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPathView.swift; sourceTree = "<group>"; };
+		CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyMapView.swift; sourceTree = "<group>"; };
 		CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTmer.swift; sourceTree = "<group>"; };
 		CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatisfactionView.swift; sourceTree = "<group>"; };
 		CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMapView.swift; sourceTree = "<group>"; };
@@ -368,6 +370,7 @@
 				8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */,
 				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
 				8B3159D82BD0F53F0049CB5F /* MyPage */,
+				CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -804,6 +807,7 @@
 				CBBE58692BF21F86003B55C4 /* SearchPathView.swift in Sources */,
 				8BC86EC92BDFFE1100051BF0 /* InquireListView.swift in Sources */,
 				8B831C412BCCF60C00A85973 /* Path.swift in Sources */,
+				CBBE586B2BF22EEE003B55C4 /* OnlyMapView.swift in Sources */,
 				8B831C3F2BCCF60C00A85973 /* NextNode.swift in Sources */,
 				8B831C422BCCF60C00A85973 /* StartView.swift in Sources */,
 			);

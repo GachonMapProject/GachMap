@@ -21,12 +21,16 @@ struct ChoosePathView: View {
 //    let paths = [Path().pathExmaple, Path().pathExmaple1, Path().pathExmaple2]
     
     @Environment(\.dismiss) private var dismiss
+//    @EnvironmentObject var coreLocation: CoreLocationEx
+    @EnvironmentObject var globalViewModel: GlobalViewModel
     
     @State private var region: MKCoordinateRegion
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath : Int = 0   // 선택한 경로
     
-    @State var isAROn = false
+    @State var isAROn = false       // 출발지 현재위치일 경우 AR
+    @State var isOnlyMapOn = false  // 출발지 현재위치 아닐 경우 지도 따라가기
+    
     @State var path : [PathTime]
     var locations = [CLLocation]()
     var nodes = [[Node]]()
@@ -91,7 +95,7 @@ struct ChoosePathView: View {
         if !isAROn {
             ZStack{
                 MapView(region: region, lineCoordinates: path, selectedPath : $selectedPath)
-                    .ignoresSafeArea(.all)
+                    .ignoresSafeArea()
                 VStack{
                     VStack{
                         HStack {
@@ -105,15 +109,24 @@ struct ChoosePathView: View {
                             })
                             
                             Spacer()
+                            
+                            // 검색창 종료 버튼
+                            Button(action: {
+                                globalViewModel.showSearchView = false
+                            }, label: {
+                                Image(systemName: "xmark")
+                                    .font(.title2)
+                                    .foregroundColor(.black)
+                            })
                         }
                         .frame(width: UIScreen.main.bounds.width - 40)
-                        .padding(.top, 10)
+//                        .padding(.top, 10)
                         .padding(.bottom, 10)
                     }
 
                     
                     VStack{
-                        SearchPathView(startText: startText, endText: endText) 
+                        SearchPathView(startText: startText, endText: endText, isAROn : $isAROn, isOnlyMapOn : $isOnlyMapOn) 
                         if isLogin{
                             AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정
                         }
@@ -121,6 +134,11 @@ struct ChoosePathView: View {
                         PathTimeTestView(selectedPath: $selectedPath, path: path)
                             .padding(.bottom, 10)
                     }
+                }
+                NavigationLink("", isActive: $isOnlyMapOn) {
+                    OnlyMapView(path: nodes[selectedPath])
+                        .navigationBarBackButtonHidden()
+                        
                 }
             }
         }
