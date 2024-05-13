@@ -19,7 +19,7 @@ struct StartView: View {
             }
         }
         else{
-            ARMainView(isAROn: $isAROn, departures: 0, arrivals: 0)
+//            ARMainView(isAROn: $isAROn, departures: 0, arrivals: 0)
         }
         
     }

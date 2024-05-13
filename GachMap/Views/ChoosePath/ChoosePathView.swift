@@ -21,6 +21,7 @@ struct ChoosePathView: View {
 //    let paths = [Path().pathExmaple, Path().pathExmaple1, Path().pathExmaple2]
     
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var rootViewModel: RootViewModel
     
     @State private var region: MKCoordinateRegion
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
@@ -91,7 +92,7 @@ struct ChoosePathView: View {
     }
     
     var body: some View {
-        if !isAROn {
+//        if !isAROn {
             ZStack{
                 MapView(region: region, lineCoordinates: path, selectedPath : $selectedPath)
                     .ignoresSafeArea()
@@ -112,7 +113,8 @@ struct ChoosePathView: View {
                             // 검색창 종료 버튼
                             Button(action: {
                                 // 버튼을 눌렀을 때 내비게이션 스택을 모두 지우고 root 뷰로 돌아가기
-                               UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
+//                               UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
+                                rootViewModel.shouldPopToRoot = false
                                 print("go rootView")
                             }, label: {
                                 Image(systemName: "xmark")
@@ -137,21 +139,21 @@ struct ChoosePathView: View {
                     }
                 }
                 NavigationLink("", isActive: $isOnlyMapOn) {
-                    OnlyMapView(path: nodes[selectedPath], isOnlyMapOn : $isOnlyMapOn)
+                    OnlyMapView(path: nodes[selectedPath])
                         .navigationBarBackButtonHidden()
                         
                 }
                 NavigationLink("", isActive: $isAROn) {
                     let path = nodes[selectedPath]
-                    ARMainView(isAROn: $isAROn, departures: path[0].id, arrivals: path[path.count - 1].id)
+                    ARMainView(path: path, departures:  path[0].id, arrivals:  path[path.count - 1].id)
                         .navigationBarBackButtonHidden()
                         
                 }
             }
-        }
-        else{
+//        }
+//        else{
 //            ARMainView(isAROn: $isAROn, path : nodes[selectedPath], departures: nodes[selectedPath][0].id, arrivals: nodes[selectedPath][nodes[selectedPath].count - 1].id)
-        }
+//        }
     }
     
 }

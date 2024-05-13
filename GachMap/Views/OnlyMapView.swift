@@ -9,7 +9,6 @@ import SwiftUI
 
 struct OnlyMapView: View {
     let path : [Node]
-    @Binding var isOnlyMapOn : Bool
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var coreLocation : CoreLocationEx
     @State var endInfo = false
