@@ -162,7 +162,6 @@ struct SearchSecondView: View {
                             print("출발 placeId: \(startPlaceId)")
                             print("도착 placeName: \(endSearchText)")
                             print("도착 placeId: \(endPlaceId)")
-                            
                             if let location = coreLocation.location {
                                 if startSearchText == "현재 위치" {
                                     getUserLocationPath(location : location, arrival: endPlaceId ?? 0)

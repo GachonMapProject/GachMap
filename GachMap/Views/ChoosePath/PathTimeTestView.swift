@@ -29,7 +29,7 @@ struct PathTimeTestView: View {
                             // 지도에 경로 표시 및 검색창의 텍스트 변경 (위치 포함)
                             selectedPath = index
                         }, label: {
-                            PathTimeView(pathName: path[index].pathName, time:  path[index].time , isLogin: true, num: index, selectedPath: $selectedPath)
+                            PathTimeView(pathName: path[index].pathName, time:  path[index].time , isLogin: path[index].isLogin, num: index, selectedPath: $selectedPath)
                                 .scrollTransition(.animated, axis: .horizontal) { content, phase in
                                     content
                                         .opacity(phase.isIdentity ? 1.0 : 0.8)

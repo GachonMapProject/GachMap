@@ -32,10 +32,11 @@ struct ChoosePathView: View {
     var nodes = [[Node]]()
     let startText : String
     let endText : String
-    
+    @State var isLogin : Bool = false
     init(paths : [PathData], startText : String, endText : String) {
         self.startText = startText
         self.endText = endText
+        
         
         // 로그인 유뮤 가져오기
         var isLogin = false
@@ -45,6 +46,7 @@ struct ChoosePathView: View {
             print("loginInfo.guestCode: \(String(describing: loginInfo.guestCode))")
             if loginInfo.userCode != nil {
                 isLogin = true
+                self.isLogin = isLogin
             }
         }
         
@@ -112,7 +114,9 @@ struct ChoosePathView: View {
                     
                     VStack{
                         SearchPathView(startText: startText, endText: endText) 
-                        AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정
+                        if isLogin{
+                            AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정
+                        }
                         Spacer()
                         PathTimeTestView(selectedPath: $selectedPath, path: path)
                             .padding(.bottom, 10)
@@ -125,21 +129,6 @@ struct ChoosePathView: View {
         }
     }
     
-//    private func getLoginInfo() -> LoginInfo? {
-//        if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
-//           let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
-//            print("loginInfo.userCode: \(String(describing: loginInfo.userCode))")
-//            print("loginInfo.guestCode: \(String(describing: loginInfo.guestCode))")
-//            if loginInfo.userCode != nil {
-//                isLogin = true
-//            }
-//                
-//            return loginInfo
-//        } else {
-//            print("Login Info not found in UserDefaults")
-//            return nil
-//        }
-//    }
 }
 
 
