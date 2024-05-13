@@ -10,7 +10,7 @@ import SwiftUI
 struct SearchPathView : View {
     let startText : String
     let endText : String
-    @State var showRoadSearchAlert = false
+//    @State var showRoadSearchAlert = false
     var body: some View {
         // 출발, 도착 두 필드가 모두 true일때만 길찾기 버튼 활성화
         HStack(spacing: 0) {
@@ -46,7 +46,7 @@ struct SearchPathView : View {
                         /* 현재위치 시작이 아니면 알림 띄우고 지도 따라가기
                              현재 위치면 AR 길찾기 바로 실행
                          */
-                        showRoadSearchAlert = true
+//                        showRoadSearchAlert = true
                         
                     }
                 }, label: {
@@ -65,11 +65,11 @@ struct SearchPathView : View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(.gachonBlue))
                 .padding(.trailing, 5)
-                .alert(isPresented: $showRoadSearchAlert){
-                    Alert(title: Text("알림"), message: Text("출발 위치가 현재 위치가 아닐 경우, \n경로 미리보기만 가능합니다."), primaryButton: .default(Text("확인"), action: {
-                        // 경로 미리보기로 이동 
-                    }), secondaryButton: .cancel(Text("취소")))
-                }
+//                .alert(isPresented: $showRoadSearchAlert){
+//                    Alert(title: Text("알림"), message: Text("출발 위치가 현재 위치가 아닐 경우, \n경로 미리보기만 가능합니다."), primaryButton: .default(Text("확인"), action: {
+//                        // 경로 미리보기로 이동 
+//                    }), secondaryButton: .cancel(Text("취소")))
+//                }
             
         } // end of HStack
         .frame(width: UIScreen.main.bounds.width - 30, height: 100)

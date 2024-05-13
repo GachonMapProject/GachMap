@@ -40,6 +40,8 @@ struct SearchSecondView: View {
     @State var paths : [PathData]? = nil // 3가지 경로 배열
     @State private var goPathView = false   // 경로 뷰로 이동
     
+    @State var showStartLocationChangeAlert = false // 출발지 - 현재 위치 변경시 알림
+    
     var body: some View {
         
         VStack {
@@ -92,8 +94,9 @@ struct SearchSecondView: View {
                         
                         if(fixedStart) {
                             Button(action: {
-                                fixedStart = false
-                                startSearchText = ""
+                                if startSearchText == "현재 위치"{
+                                    showStartLocationChangeAlert = true
+                                }
                             }, label: {
                                 Image(systemName: "xmark")
                                     .font(.system(size: 12))
@@ -108,6 +111,13 @@ struct SearchSecondView: View {
                         
                     }
                     .frame(height: 47.5)
+                    .alert(isPresented: $showStartLocationChangeAlert){
+                        Alert(title: Text("출발 위치 변경"), message: Text("출발 위치가 현재 위치가 아닐 경우\n경로 미리보기만 가능합니다."), primaryButton: .default(Text("확인"), action: {
+                            fixedStart = false
+                            startSearchText = ""
+                        }),
+                          secondaryButton: .cancel(Text("취소")))
+                    }
                     
                     Divider()
                     
