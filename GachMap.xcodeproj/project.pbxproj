@@ -119,6 +119,8 @@
 		CB8A6E322BEF734C0039AC50 /* ChoosePathTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8A6E312BEF734C0039AC50 /* ChoosePathTestView.swift */; };
 		CB8A6E342BF0BCA20039AC50 /* SatisfactionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8A6E332BF0BCA20039AC50 /* SatisfactionRequest.swift */; };
 		CB8A6E372BF0E6FF0039AC50 /* SatisfactionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8A6E362BF0E6FF0039AC50 /* SatisfactionButtonView.swift */; };
+		CBBE58692BF21F86003B55C4 /* SearchPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE58682BF21F86003B55C4 /* SearchPathView.swift */; };
+		CBBE586B2BF22EEE003B55C4 /* OnlyMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */; };
 		CBC02A6C2BD90D9B005657B9 /* MyTmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */; };
 		CBD855FF2BD7A7F00046597D /* SatisfactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */; };
 		CBDDC9122BCEB62300019FAB /* BackgroundMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */; };
@@ -243,6 +245,8 @@
 		CB8A6E312BEF734C0039AC50 /* ChoosePathTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoosePathTestView.swift; sourceTree = "<group>"; };
 		CB8A6E332BF0BCA20039AC50 /* SatisfactionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatisfactionRequest.swift; sourceTree = "<group>"; };
 		CB8A6E362BF0E6FF0039AC50 /* SatisfactionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatisfactionButtonView.swift; sourceTree = "<group>"; };
+		CBBE58682BF21F86003B55C4 /* SearchPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPathView.swift; sourceTree = "<group>"; };
+		CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyMapView.swift; sourceTree = "<group>"; };
 		CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTmer.swift; sourceTree = "<group>"; };
 		CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatisfactionView.swift; sourceTree = "<group>"; };
 		CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMapView.swift; sourceTree = "<group>"; };
@@ -353,7 +357,6 @@
 			children = (
 				CB8A6E352BF0E6E80039AC50 /* SatisfactionView */,
 				8B831C282BCCF60C00A85973 /* AR */,
-				8B831C042BCCF57700A85973 /* MapTabView.swift */,
 				8BC86EDA2BE89B0F00051BF0 /* MapView */,
 				CBED53B22BE2203A00DDFD0C /* ChoosePath */,
 				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
@@ -366,6 +369,7 @@
 				8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */,
 				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
 				8B3159D82BD0F53F0049CB5F /* MyPage */,
+				CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -470,6 +474,7 @@
 				8BC86EDD2BE8CC5B00051BF0 /* SearchSpotDetailCard.swift */,
 				8BC97A792BEBCA1E0021C544 /* SearchSecondView.swift */,
 				8BD1570F2BECFE0E00C7EA24 /* SimpleSearchResultCell.swift */,
+				CBBE58682BF21F86003B55C4 /* SearchPathView.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -477,6 +482,7 @@
 		8BC86EDA2BE89B0F00051BF0 /* MapView */ = {
 			isa = PBXGroup;
 			children = (
+				8B831C042BCCF57700A85973 /* MapTabView.swift */,
 				CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */,
 				CBDDC9152BCEBF6100019FAB /* BackMapTest.swift */,
 				8BC86EDB2BE89B2300051BF0 /* SpotDetailView.swift */,
@@ -798,8 +804,10 @@
 				CB8A6E302BEF718E0039AC50 /* PathResponse.swift in Sources */,
 				8B3159D52BD041500049CB5F /* ServiceTermsView.swift in Sources */,
 				8B831C2D2BCCF60C00A85973 /* LoginInfo.swift in Sources */,
+				CBBE58692BF21F86003B55C4 /* SearchPathView.swift in Sources */,
 				8BC86EC92BDFFE1100051BF0 /* InquireListView.swift in Sources */,
 				8B831C412BCCF60C00A85973 /* Path.swift in Sources */,
+				CBBE586B2BF22EEE003B55C4 /* OnlyMapView.swift in Sources */,
 				8B831C3F2BCCF60C00A85973 /* NextNode.swift in Sources */,
 				8B831C422BCCF60C00A85973 /* StartView.swift in Sources */,
 			);
@@ -937,7 +945,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = XW6H6BYJ53;
+				DEVELOPMENT_TEAM = X7TYNR98TC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;

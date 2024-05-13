@@ -47,7 +47,7 @@ struct MapTabView: View {
     
     // CoreLocationEx, Category, [CategoryData]을 받아야 함
     
-    @ObservedObject var coreLocation = CoreLocationEx()
+    @EnvironmentObject var coreLocation : CoreLocationEx
     @State var category = "BUILDING" // 선택한 카테고리 넘겨주기
     @State var selecetedCategory = "BUILDING"
 //    var locations = [CategoryData(placeId: 1, placeName: "1-1", placeLatitude: 37.4508817, placeLongitude: 127.1274769, placeSummary: "Sum"),
@@ -65,7 +65,7 @@ struct MapTabView: View {
     var body: some View {
 
         ZStack() {
-            BackgroundMapView(showSheet : $showSheet, selecetedCategory: $selecetedCategory, locations: locations, coreLocation: coreLocation, pinImage : $pinImage, pinColor : $pinColor)
+            BackgroundMapView(showSheet : $showSheet, selecetedCategory: $selecetedCategory, locations: locations, pinImage : $pinImage, pinColor : $pinColor)
                 .ignoresSafeArea()
                 .onChange(of: selecetedCategory){
                     // 핀 이미지, 백그라운드 색 설정

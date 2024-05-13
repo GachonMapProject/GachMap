@@ -38,7 +38,7 @@ struct ChoosePathTestView: View {
             }
         }
         else{
-            ChoosePathView(paths : paths!)
+//            ChoosePathView(paths : paths!)
         }
        
     }

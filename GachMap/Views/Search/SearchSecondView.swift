@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Alamofire
+import CoreLocation
 
 struct SearchSecondView: View {
     var getStartSearchText: String
@@ -14,11 +16,12 @@ struct SearchSecondView: View {
     @Environment(\.dismiss) private var dismiss
     
     @EnvironmentObject var globalViewModel: GlobalViewModel
+    @EnvironmentObject var coreLocation : CoreLocationEx
     
     @State private var startSearchText: String = ""
     @State private var endSearchText: String = ""
-    @State private var startPlaceId: Int?
-    @State private var endPlaceId: Int?
+    @State var startPlaceId: Int?
+    @State var endPlaceId: Int?
     @State private var isSearched: Bool = false
     
     @State private var validStartText: Bool = false
@@ -33,6 +36,11 @@ struct SearchSecondView: View {
     @StateObject private var searchViewModel = SearchViewModel()
     
     @State private var showLocationSearchResultView: Bool = false
+    
+    @State var paths : [PathData]? = nil // 3가지 경로 배열
+    @State private var goPathView = false   // 경로 뷰로 이동
+    
+    @State var showStartLocationChangeAlert = false // 출발지 - 현재 위치 변경시 알림
     
     var body: some View {
         
@@ -86,8 +94,9 @@ struct SearchSecondView: View {
                         
                         if(fixedStart) {
                             Button(action: {
-                                fixedStart = false
-                                startSearchText = ""
+                                if startSearchText == "현재 위치"{
+                                    showStartLocationChangeAlert = true
+                                }
                             }, label: {
                                 Image(systemName: "xmark")
                                     .font(.system(size: 12))
@@ -102,6 +111,13 @@ struct SearchSecondView: View {
                         
                     }
                     .frame(height: 47.5)
+                    .alert(isPresented: $showStartLocationChangeAlert){
+                        Alert(title: Text("출발 위치 변경"), message: Text("출발 위치가 현재 위치가 아닐 경우\n경로 미리보기만 가능합니다."), primaryButton: .default(Text("확인"), action: {
+                            fixedStart = false
+                            startSearchText = ""
+                        }),
+                          secondaryButton: .cancel(Text("취소")))
+                    }
                     
                     Divider()
                     
@@ -156,6 +172,14 @@ struct SearchSecondView: View {
                             print("출발 placeId: \(startPlaceId)")
                             print("도착 placeName: \(endSearchText)")
                             print("도착 placeId: \(endPlaceId)")
+                            if let location = coreLocation.location {
+                                if startSearchText == "현재 위치" {
+                                    getUserLocationPath(location : location, arrival: endPlaceId ?? 0)
+                                } else{
+                                    getPath(departure: startPlaceId ?? 0, arrival: endPlaceId ?? 0)
+                                }
+                            }
+
                             
                         } else {
                             isSearched = true
@@ -259,6 +283,16 @@ struct SearchSecondView: View {
         .background(Color.white)
         // end of 전체 VStack
         
+        if paths != nil{
+            NavigationLink("", isActive: $goPathView){
+                ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText)
+                    .navigationBarBackButtonHidden()
+                    .edgesIgnoringSafeArea(.bottom)
+            }
+            
+        }
+
+        
     } // end of body
     
     private func performSearch() {
@@ -279,6 +313,82 @@ struct SearchSecondView: View {
     
     private func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
+    // 현재위치 x
+    func getPath(departure : Int, arrival : Int) {
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/route?departures=\(departure)&arrivals=\(arrival)")
+        else {
+            print("Invalid URL")
+            return
+        }
+        
+        AF.request(url, method: .get)
+            .validate()
+            .responseDecodable(of: PathResponse.self) { response in
+//                print("Response: \(response)")
+                print("URL : \(url)")
+                switch response.result {
+                case .success(let value):
+                    if(value.success == true) {
+                        print("지정 위치 경로 가져오기 성공")
+                        paths = value.data
+                        if paths != nil{
+                            goPathView = true
+                            print(paths)
+
+
+                        }
+                       
+                    } else {
+                        print("지정 위치 경로 가져오기 실패")
+
+                    }
+                    
+                case .failure(let error):
+                    // 서버 연결 실패할 때도 검색 결과 없음 표시
+                    print("서버 연결 실패")
+                    //                            {"success":false,"property":400,"message":"출발지와 도착지가 같습니다.","data":null}
+                    print(url)
+                    print("Error: \(error.localizedDescription)")
+                }
+            }
+    }
+    
+    // 현재위치 o
+    func getUserLocationPath(location : CLLocation, arrival : Int) {
+//    http://ceprj.gachon.ac.kr:60002/map/route-now/{placeId}?latitude=37.44535&longitude=127.12673&altitude=54
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/route-now/\(arrival)?latitude=\(location.coordinate.latitude)&longitude=\(location.coordinate.longitude)&altitude=\(location.altitude)")
+        else {
+            print("Invalid URL")
+            return
+        }
+        
+        AF.request(url, method: .get)
+            .validate()
+            .responseDecodable(of: PathResponse.self) { response in
+//                print("Response: \(response)")
+                print("URL : \(url)")
+                switch response.result {
+                case .success(let value):
+//                    print(value)
+                    if(value.success == true) {
+                        print("현재위치 - 경로 가져오기 성공")
+                        paths = value.data
+                        goPathView = true
+
+                    } else {
+                        print("현재위치 - 경로 가져오기 실패")
+
+                    }
+                    
+                case .failure(let error):
+                    // 서버 연결 실패할 때도 검색 결과 없음 표시
+                    print("서버 연결 실패")
+                    print(url)
+                    print("Error: \(error.localizedDescription)")
+                }
+            }
     }
 }
 

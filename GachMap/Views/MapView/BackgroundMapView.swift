@@ -37,7 +37,7 @@ struct BackgroundMapView : View {
     // 카테고리 추가
     @Binding var selecetedCategory : String
     var locations : [IdentifiableLocation]
-    @ObservedObject var coreLocation : CoreLocationEx
+    @EnvironmentObject var coreLocation : CoreLocationEx
 
     @State var region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
 
@@ -61,11 +61,11 @@ struct BackgroundMapView : View {
     
     @GestureState private var isTapOutside: Bool = false    // 탭 제스처
     
-    init(showSheet :Binding<Bool>, selecetedCategory: Binding<String>, locations: [BuildingMarkerData], coreLocation: CoreLocationEx, pinImage :Binding<String>, pinColor : Binding<Color>) {
+    init(showSheet :Binding<Bool>, selecetedCategory: Binding<String>, locations: [BuildingMarkerData], pinImage :Binding<String>, pinColor : Binding<Color>) {
         _showSheet = showSheet
         _selecetedCategory = selecetedCategory // Binding 속성에 직접 바인딩
         self.locations = locations.map{IdentifiableLocation(id : $0.placeId, coordinate: CLLocationCoordinate2D(latitude: $0.placeLatitude, longitude: $0.placeLongitude), markerData: $0)}
-        self.coreLocation = coreLocation
+//        self.coreLocation = coreLocation
         _pinColor = pinColor
         _pinImage = pinImage
     }

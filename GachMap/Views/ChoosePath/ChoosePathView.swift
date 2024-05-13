@@ -20,16 +20,27 @@ import MapKit
 struct ChoosePathView: View {
 //    let paths = [Path().pathExmaple, Path().pathExmaple1, Path().pathExmaple2]
     
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var rootViewModel: RootViewModel
+    
     @State private var region: MKCoordinateRegion
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath : Int = 0   // 선택한 경로
     
-    @State var isAROn = false
+    @State var isAROn = false       // AR 찾다 돌아갈 때 다시 이전 화면으로 돌아감
+    @State var isOnlyAROn = false   // 출발지 현재위치일 경우 AR
+    @State var isOnlyMapOn = false  // 출발지 현재위치 아닐 경우 지도 따라가기
+    
     @State var path : [PathTime]
     var locations = [CLLocation]()
     var nodes = [[Node]]()
-    
-    init(paths : [PathData]) {
+    let startText : String
+    let endText : String
+    @State var isLogin : Bool = false
+    init(paths : [PathData], startText : String, endText : String) {
+        self.startText = startText
+        self.endText = endText
+        
         
         // 로그인 유뮤 가져오기
         var isLogin = false
@@ -39,6 +50,7 @@ struct ChoosePathView: View {
             print("loginInfo.guestCode: \(String(describing: loginInfo.guestCode))")
             if loginInfo.userCode != nil {
                 isLogin = true
+                self.isLogin = isLogin
             }
         }
         
@@ -71,8 +83,8 @@ struct ChoosePathView: View {
         region = MKCoordinateRegion(center: center, latitudinalMeters: meter, longitudinalMeters: meter)
         
         path = pathTimes
-        print("------------------------------------")
-        print(path)
+//        print("------------------------------------")
+//        print(path)
 //        path = [PathTime(pathName: "최적 경로", time: 33, isLogin: isLogin, line: lines[1]),
 //         PathTime(pathName: "최단 경로", time: 3, isLogin: isLogin, line: lines[0]),
 //         PathTime(pathName: "무당이 경로", time: nil, isLogin: isLogin, line: lines[2])
@@ -80,50 +92,70 @@ struct ChoosePathView: View {
     }
     
     var body: some View {
-        if !isAROn {
+//        if !isAROn {
             ZStack{
                 MapView(region: region, lineCoordinates: path, selectedPath : $selectedPath)
-                    .ignoresSafeArea(.all)
-                
+                    .ignoresSafeArea()
                 VStack{
-                    ZStack(alignment : .trailing){
-                        SearchMainBar()
-                        Button(action: {
-                            isAROn = true
-                        }, label: {
-                            Text("길안내")
-                        })
-                        .frame(width: 50, height: 50)
-                        
-                    }
-                    
-                    AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정
-                    Spacer()
-                    PathTimeTestView(selectedPath: $selectedPath, path: path)
+                    VStack{
+                        HStack {
+                            // 뒤로 가기 버튼
+                            Button(action: {
+                                dismiss()
+                            }, label: {
+                                Image(systemName: "arrow.left")
+                                    .font(.title2)
+                                    .foregroundColor(.black)
+                            })
+                            
+                            Spacer()
+                            
+                            // 검색창 종료 버튼
+                            Button(action: {
+                                // 버튼을 눌렀을 때 내비게이션 스택을 모두 지우고 root 뷰로 돌아가기
+//                               UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
+                                rootViewModel.shouldPopToRoot = false
+                                print("go rootView")
+                            }, label: {
+                                Image(systemName: "xmark")
+                                    .font(.title2)
+                                    .foregroundColor(.black)
+                            })
+                        }
+                        .frame(width: UIScreen.main.bounds.width - 40)
+//                        .padding(.top, 10)
                         .padding(.bottom, 10)
+                    }
+
+                    
+                    VStack{
+                        SearchPathView(startText: startText, endText: endText, isAROn : $isAROn, isOnlyMapOn : $isOnlyMapOn) 
+                        if isLogin{
+                            AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정
+                        }
+                        Spacer()
+                        PathTimeTestView(selectedPath: $selectedPath, path: path)
+                            .padding(.bottom, 10)
+                    }
+                }
+                NavigationLink("", isActive: $isOnlyMapOn) {
+                    OnlyMapView(path: nodes[selectedPath])
+                        .navigationBarBackButtonHidden()
+                        
+                }
+                NavigationLink("", isActive: $isAROn) {
+                    let path = nodes[selectedPath]
+                    ARMainView(path: path, departures:  path[0].id, arrivals:  path[path.count - 1].id)
+                        .navigationBarBackButtonHidden()
+                        
                 }
             }
-        }
-        else{
-            ARMainView(isAROn: $isAROn, path : nodes[selectedPath], departures: nodes[selectedPath][0].id, arrivals: nodes[selectedPath][nodes[selectedPath].count - 1].id)
-        }
+//        }
+//        else{
+//            ARMainView(isAROn: $isAROn, path : nodes[selectedPath], departures: nodes[selectedPath][0].id, arrivals: nodes[selectedPath][nodes[selectedPath].count - 1].id)
+//        }
     }
     
-//    private func getLoginInfo() -> LoginInfo? {
-//        if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
-//           let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
-//            print("loginInfo.userCode: \(String(describing: loginInfo.userCode))")
-//            print("loginInfo.guestCode: \(String(describing: loginInfo.guestCode))")
-//            if loginInfo.userCode != nil {
-//                isLogin = true
-//            }
-//                
-//            return loginInfo
-//        } else {
-//            print("Login Info not found in UserDefaults")
-//            return nil
-//        }
-//    }
 }
 
 
@@ -258,3 +290,4 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
 //#Preview {
 //    ChoosePathView()
 //}
+

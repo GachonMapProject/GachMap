@@ -143,12 +143,12 @@ struct SearchSpotDetailCard: View {
         )
         
         NavigationLink("", isActive: $isStartMoved) {
-            SearchSecondView(getStartSearchText: placeName, getEndSearchText: "")
+            SearchSecondView(getStartSearchText: placeName, getEndSearchText: "", startPlaceId : placeId)
                 .navigationBarBackButtonHidden()
         }
         
         NavigationLink("", isActive: $isEndMoved) {
-            SearchSecondView(getStartSearchText: "", getEndSearchText: placeName)
+            SearchSecondView(getStartSearchText: "현재 위치", getEndSearchText: placeName, endPlaceId: placeId)
                 .navigationBarBackButtonHidden()
         }
         

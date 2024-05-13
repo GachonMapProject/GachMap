@@ -11,9 +11,10 @@ import MapKit
 
 struct ARMainView: View {
 
-    @Binding var isAROn : Bool
+//    @Binding var isAROn : Bool
     // 전역으로 CoreLocationEx 인스턴스 생성
-    @ObservedObject var coreLocation = CoreLocationEx()
+    @EnvironmentObject var coreLocation : CoreLocationEx
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var nextNodeObject = NextNodeObject()
     @State private var isARViewVisible = true // ARView의 on/off 상태 변수
     @State private var isEnd = false // 안내 종료 상태 변수
@@ -31,7 +32,7 @@ struct ARMainView: View {
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
     let timer = MyTimer()
-//    let path = Path().homeToAI
+//    let path = Path().ITtoGachon
     let path : [Node]
     let departures : Int
     let arrivals : Int
@@ -40,14 +41,16 @@ struct ARMainView: View {
     @State var distance : Double?
 //    @State var timeList = [Int]()
     
+    
     var body: some View {
-        if coreLocation.location != nil{
+//        if coreLocation.location != nil{
             VStack{
                 if !trueNorthAlertOn {
                     if !selectedTrueNorth {
                         ProgressView()
                             .onAppear(){
                                 trueNorthAlert()
+                                
                             }
                     }
                     else{
@@ -99,11 +102,11 @@ struct ARMainView: View {
                                 ZStack(alignment: .topTrailing){
                                     VStack(spacing : 0){
                                         ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
-                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                        AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }.edgesIgnoringSafeArea(.all)
                                     
                                     if !isARViewVisible {
-                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                        AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }
                                     
                                     HStack {
@@ -147,7 +150,7 @@ struct ARMainView: View {
                             } // end of if !onlyMap
                             else{
                                 ZStack(alignment: .topTrailing){
-                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                    AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     
                                     Button(){
                                         EndButtonAlert()
@@ -189,10 +192,10 @@ struct ARMainView: View {
                     checkDistance(location: location)
                 }
             }
-        } // end of coreLocation.location != nil
-        else {
-            ProgressView("Waiting for location accuracy...")
-        }
+//        } // end of coreLocation.location != nil
+//        else {
+//            ProgressView("Waiting for location accuracy...")
+//        }
     }
     
     // GPS 알림
@@ -222,7 +225,9 @@ struct ARMainView: View {
             self.checkSecondTime?.invalidate()
             self.checkTime?.invalidate()
             
-            self.isAROn = false  // 이전 화면으로 돌아감
+//            self.isAROn = false  // 이전 화면으로 돌아감
+            dismiss()
+            
         })
         
         UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
