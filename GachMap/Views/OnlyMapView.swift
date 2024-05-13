@@ -9,10 +9,11 @@ import SwiftUI
 
 struct OnlyMapView: View {
     let path : [Node]
+    @Binding var isOnlyMapOn : Bool
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var coreLocation : CoreLocationEx
-    @EnvironmentObject var globalViewModel: GlobalViewModel
     @State var endInfo = false
+
     
     let checkRotation = CheckRotation()
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
@@ -48,7 +49,7 @@ struct OnlyMapView: View {
                     .padding(.top, 10)
                     .alert(isPresented: $endInfo){
                         Alert(title: Text("경로 미리보기 종료"), message: Text("경로 미리보기를 종료하시겠습니까?"),  primaryButton: .default(Text("종료").bold(), action: {
-                            globalViewModel.showSearchView = false
+                            dismiss()
                         }),
                           secondaryButton: .cancel(Text("취소")))
                     }

@@ -357,7 +357,6 @@
 			children = (
 				CB8A6E352BF0E6E80039AC50 /* SatisfactionView */,
 				8B831C282BCCF60C00A85973 /* AR */,
-				8B831C042BCCF57700A85973 /* MapTabView.swift */,
 				8BC86EDA2BE89B0F00051BF0 /* MapView */,
 				CBED53B22BE2203A00DDFD0C /* ChoosePath */,
 				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
@@ -483,6 +482,7 @@
 		8BC86EDA2BE89B0F00051BF0 /* MapView */ = {
 			isa = PBXGroup;
 			children = (
+				8B831C042BCCF57700A85973 /* MapTabView.swift */,
 				CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */,
 				CBDDC9152BCEBF6100019FAB /* BackMapTest.swift */,
 				8BC86EDB2BE89B2300051BF0 /* SpotDetailView.swift */,

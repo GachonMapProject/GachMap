@@ -21,14 +21,13 @@ struct ChoosePathView: View {
 //    let paths = [Path().pathExmaple, Path().pathExmaple1, Path().pathExmaple2]
     
     @Environment(\.dismiss) private var dismiss
-//    @EnvironmentObject var coreLocation: CoreLocationEx
-    @EnvironmentObject var globalViewModel: GlobalViewModel
     
     @State private var region: MKCoordinateRegion
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath : Int = 0   // 선택한 경로
     
-    @State var isAROn = false       // 출발지 현재위치일 경우 AR
+    @State var isAROn = false       // AR 찾다 돌아갈 때 다시 이전 화면으로 돌아감
+    @State var isOnlyAROn = false   // 출발지 현재위치일 경우 AR
     @State var isOnlyMapOn = false  // 출발지 현재위치 아닐 경우 지도 따라가기
     
     @State var path : [PathTime]
@@ -112,7 +111,9 @@ struct ChoosePathView: View {
                             
                             // 검색창 종료 버튼
                             Button(action: {
-                                globalViewModel.showSearchView = false
+                                // 버튼을 눌렀을 때 내비게이션 스택을 모두 지우고 root 뷰로 돌아가기
+                               UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
+                                print("go rootView")
                             }, label: {
                                 Image(systemName: "xmark")
                                     .font(.title2)
@@ -136,7 +137,13 @@ struct ChoosePathView: View {
                     }
                 }
                 NavigationLink("", isActive: $isOnlyMapOn) {
-                    OnlyMapView(path: nodes[selectedPath])
+                    OnlyMapView(path: nodes[selectedPath], isOnlyMapOn : $isOnlyMapOn)
+                        .navigationBarBackButtonHidden()
+                        
+                }
+                NavigationLink("", isActive: $isAROn) {
+                    let path = nodes[selectedPath]
+                    ARMainView(isAROn: $isAROn, departures: path[0].id, arrivals: path[path.count - 1].id)
                         .navigationBarBackButtonHidden()
                         
                 }

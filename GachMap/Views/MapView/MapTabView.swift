@@ -136,9 +136,6 @@ struct MapTabView: View {
                 
                 Spacer()
             }
-            .onDisappear(){
-                showSheet = false
-            }
             
 
         }
