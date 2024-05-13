@@ -9,7 +9,7 @@ import SwiftUI
 import CoreLocation
 
 struct ARReadyView: View {
-    @ObservedObject var coreLocation : CoreLocationEx
+    @EnvironmentObject var coreLocation : CoreLocationEx
     @Binding var trueNorthAlertOn : Bool 
     @State var selectedNorthAlertOn : Bool = false
     @State private var selectedTrueNorth = false

@@ -13,7 +13,7 @@ class GlobalViewModel: ObservableObject {
 
 struct ContentView: View {
   
-    @State private var showSheet: Bool = false
+    @State  var showSheet: Bool = false
     @State private var selectedTab = 1
     @State private var showMainView = false
     
@@ -32,7 +32,7 @@ struct ContentView: View {
   var body: some View {
       NavigationView {
           TabView(selection: $selectedTab) {
-              MapTabView(showSearchView: $globalViewModel.showSearchView)
+              MapTabView(showSearchView: $globalViewModel.showSearchView, showSheet : $showSheet)
                   .tabItem {
                       Image(systemName: "map")
                       Text("지도")

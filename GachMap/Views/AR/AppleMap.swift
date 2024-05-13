@@ -15,20 +15,20 @@ class CustomAnnotation: NSObject, MKAnnotation, Identifiable{
 }
 
 struct AppleMapView : View{
-    @ObservedObject var coreLocation : CoreLocationEx
+    @EnvironmentObject var coreLocation : CoreLocationEx
     let path : [Node]
     @Binding var isARViewVisible: Bool
     @State private var appleMap: AppleMap
     let rotationList : [Rotation]
     let onlyMap : Bool
 
-    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, rotationList : [Rotation], onlyMap : Bool) {
-        self.coreLocation = coreLocation
+    init(path: [Node], isARViewVisible: Binding<Bool>, rotationList : [Rotation], onlyMap : Bool, coreLocation : CoreLocationEx) {
         self.path = path
         self._isARViewVisible = isARViewVisible
         self.rotationList = rotationList
-        _appleMap = State(initialValue: AppleMap(coreLocation: coreLocation, path: path))
         self.onlyMap = onlyMap
+        
+        _appleMap = State(initialValue: AppleMap(path: path, coreLocation: coreLocation))
     }
     var body: some View {
         ZStack(alignment: .bottomTrailing){
@@ -125,12 +125,13 @@ struct AppleMap: UIViewRepresentable {
     var mapView = MKMapView()
     let region: MKCoordinateRegion
     let lineCoordinates: [CLLocationCoordinate2D]
-    let coreLocation : CoreLocationEx
     @State var isCameraFixed : Bool = true
+    @EnvironmentObject var coreLocation : CoreLocationEx
     
     // coreLocation이 변경될 때마다 init 됨
-    init(coreLocation: CoreLocationEx, path : [Node]) {
-        self.coreLocation = coreLocation
+    init(path : [Node], coreLocation : CoreLocationEx) {
+//        @EnvironmentObject var coreLocation : CoreLocationEx
+        
         region = MKCoordinateRegion(
             center: coreLocation.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
             latitudinalMeters: 200,

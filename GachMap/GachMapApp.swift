@@ -10,12 +10,20 @@ import SwiftUI
 @main
 struct GachMapApp: App {
     @StateObject private var globalViewModel = GlobalViewModel()
+//    @EnvironmentObject private var coreLocation = CoreLocationEx()
     
     var body: some Scene {
         WindowGroup {
 //            SearchMainView(showLocationSearchView: Binding.constant(true))
+            
             ContentView()
                 .environmentObject(globalViewModel)
+                .environmentObject(CoreLocationEx())
+            
+//            StartView()
+//                .environmentObject(CoreLocationEx())
+                
+            
         }
     }
 }

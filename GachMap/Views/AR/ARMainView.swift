@@ -13,7 +13,7 @@ struct ARMainView: View {
 
     @Binding var isAROn : Bool
     // 전역으로 CoreLocationEx 인스턴스 생성
-    @ObservedObject var coreLocation = CoreLocationEx()
+    @EnvironmentObject var coreLocation : CoreLocationEx
     @ObservedObject var nextNodeObject = NextNodeObject()
     @State private var isARViewVisible = true // ARView의 on/off 상태 변수
     @State private var isEnd = false // 안내 종료 상태 변수
@@ -31,8 +31,8 @@ struct ARMainView: View {
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
     let timer = MyTimer()
-//    let path = Path().homeToAI
-    let path : [Node]
+    let path = Path().ITtoGachon
+//    let path : [Node]
     let departures : Int
     let arrivals : Int
     @State var timeList = [TimeList]()
@@ -41,7 +41,7 @@ struct ARMainView: View {
 //    @State var timeList = [Int]()
     
     var body: some View {
-        if coreLocation.location != nil{
+//        if coreLocation.location != nil{
             VStack{
                 if !trueNorthAlertOn {
                     if !selectedTrueNorth {
@@ -99,11 +99,11 @@ struct ARMainView: View {
                                 ZStack(alignment: .topTrailing){
                                     VStack(spacing : 0){
                                         ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
-                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                        AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }.edgesIgnoringSafeArea(.all)
                                     
                                     if !isARViewVisible {
-                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                        AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }
                                     
                                     HStack {
@@ -147,7 +147,7 @@ struct ARMainView: View {
                             } // end of if !onlyMap
                             else{
                                 ZStack(alignment: .topTrailing){
-                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                    AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     
                                     Button(){
                                         EndButtonAlert()
@@ -189,10 +189,10 @@ struct ARMainView: View {
                     checkDistance(location: location)
                 }
             }
-        } // end of coreLocation.location != nil
-        else {
-            ProgressView("Waiting for location accuracy...")
-        }
+//        } // end of coreLocation.location != nil
+//        else {
+//            ProgressView("Waiting for location accuracy...")
+//        }
     }
     
     // GPS 알림

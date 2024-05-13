@@ -83,7 +83,7 @@ struct SatisfactionView: View {
                 
                 Button(action: {
                     // 데이터 서버에 전달하는 함수 필요
-                    let param = SatisfactionRequest(userId: 574163367434699508, guestId: loginInfo.guestCode, departures: departures, arrivals: arrivals, satisfactionRoute: arr[pathSelect] ?? "", satisfactionTime: arr[timeSelect] ?? "", temperature: temp, rainPrecipitation: rainPrecipitation, rainPrecipitationProbability: rainPrecipitationProbability, timeList: [TimeList(firstNodeId: 326, secondNodeId: 327, time: 2)])
+                    let param = SatisfactionRequest(userId: 574163367434699508, guestId: loginInfo.guestCode, departures: 326, arrivals: 329, satisfactionRoute: arr[pathSelect] ?? "", satisfactionTime: arr[timeSelect] ?? "", temperature: temp, rainPrecipitation: rainPrecipitation, rainPrecipitationProbability: rainPrecipitationProbability, timeList: [TimeList(firstNodeId: 326, secondNodeId: 327, time: 2), TimeList(firstNodeId: 327, secondNodeId: 328, time: 12), TimeList(firstNodeId: 328, secondNodeId: 329, time: 22)])
                     print("param : \(param)")
                     postSatifactionData(parameter : param)
                     
