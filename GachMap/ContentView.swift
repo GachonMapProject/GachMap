@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-class GlobalViewModel: ObservableObject {
-    @Published var showSearchView: Bool = false
-}
+//class GlobalViewModel: ObservableObject {
+//    @Published var showSearchView: Bool = false
+//}
 
 struct ContentView: View {
   
@@ -20,7 +20,7 @@ struct ContentView: View {
     // @State private var showSearchView = false
     
     @EnvironmentObject var globalViewModel: GlobalViewModel
-    @EnvironmentObject var rootViewModel: RootViewModel
+//    @EnvironmentObject var navi: NavigationController
     
     // @Binding var isLogin: Bool
     
@@ -98,13 +98,6 @@ struct ContentView: View {
           
       } // end of NavigationStack
       .toolbar(.visible, for: .tabBar)
-      .onReceive(rootViewModel.$shouldPopToRoot) { shouldPop in
-           if shouldPop {
-               // 모든 스택을 비우고 ContentView로 이동하는 로직 추가
-               // 예시: self.selectedTab = 1 // ContentView의 루트 탭으로 이동
-               rootViewModel.shouldPopToRoot = false // 다시 false로 설정하여 이벤트가 한 번만 발생하도록 합니다.
-           }
-       }
       // 나중에 문제되면 위에 코드 삭제하기
      
       

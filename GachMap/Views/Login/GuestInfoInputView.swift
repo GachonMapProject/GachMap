@@ -29,7 +29,7 @@ struct GuestInfoInputView: View {
     @Binding var showGuestInfoInputView: Bool
 
     @State private var showEndAlert: Bool = false
-    @State private var isEnd: Bool = false
+    @State private var guestInfoEnd: Bool = false
     @State private var showEscapeAlert: Bool = false
     @State private var isLoginViewActive: Bool = false
     @State private var alertMessage: String = ""
@@ -351,7 +351,7 @@ struct GuestInfoInputView: View {
                     switch activeGuestInfoInputAlert {
                     case .ok:
                         return Alert(title: Text("알림"), message: Text(alertMessage),
-                                     dismissButton: .default(Text("확인"), action: { isEnd = true }))
+                                     dismissButton: .default(Text("확인"), action: { guestInfoEnd = true }))
                         
                     case .error:
                         return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
@@ -360,7 +360,7 @@ struct GuestInfoInputView: View {
                 }
                 // end of 같이 가기 Button
                 
-                NavigationLink("", isActive: $isEnd) {
+                NavigationLink("", isActive: $guestInfoEnd) {
                     PrimaryView()
                         .navigationBarBackButtonHidden(true)
                 }

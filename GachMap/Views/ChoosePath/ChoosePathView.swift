@@ -21,7 +21,8 @@ struct ChoosePathView: View {
 //    let paths = [Path().pathExmaple, Path().pathExmaple1, Path().pathExmaple2]
     
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var rootViewModel: RootViewModel
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    @EnvironmentObject var navi: NavigationController
     
     @State private var region: MKCoordinateRegion
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
@@ -92,7 +93,7 @@ struct ChoosePathView: View {
     }
     
     var body: some View {
-//        if !isAROn {
+        if !isAROn && !isOnlyMapOn {
             ZStack{
                 MapView(region: region, lineCoordinates: path, selectedPath : $selectedPath)
                     .ignoresSafeArea()
@@ -113,8 +114,9 @@ struct ChoosePathView: View {
                             // 검색창 종료 버튼
                             Button(action: {
                                 // 버튼을 눌렀을 때 내비게이션 스택을 모두 지우고 root 뷰로 돌아가기
-//                               UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
-                                rootViewModel.shouldPopToRoot = false
+                                dismiss()
+                                globalViewModel.showSearchView = false
+                                
                                 print("go rootView")
                             }, label: {
                                 Image(systemName: "xmark")
@@ -123,13 +125,13 @@ struct ChoosePathView: View {
                             })
                         }
                         .frame(width: UIScreen.main.bounds.width - 40)
-//                        .padding(.top, 10)
+                        //                        .padding(.top, 10)
                         .padding(.bottom, 10)
                     }
-
+                    
                     
                     VStack{
-                        SearchPathView(startText: startText, endText: endText, isAROn : $isAROn, isOnlyMapOn : $isOnlyMapOn) 
+                        SearchPathView(startText: startText, endText: endText, isAROn : $isAROn, isOnlyMapOn : $isOnlyMapOn)
                         if isLogin{
                             AIDescriptionView() // 로그인 유무에 따라 바뀌게 설정
                         }
@@ -138,22 +140,26 @@ struct ChoosePathView: View {
                             .padding(.bottom, 10)
                     }
                 }
-                NavigationLink("", isActive: $isOnlyMapOn) {
-                    OnlyMapView(path: nodes[selectedPath])
-                        .navigationBarBackButtonHidden()
-                        
-                }
-                NavigationLink("", isActive: $isAROn) {
-                    let path = nodes[selectedPath]
-                    ARMainView(path: path, departures:  path[0].id, arrivals:  path[path.count - 1].id)
-                        .navigationBarBackButtonHidden()
-                        
-                }
-            }
-//        }
-//        else{
-//            ARMainView(isAROn: $isAROn, path : nodes[selectedPath], departures: nodes[selectedPath][0].id, arrivals: nodes[selectedPath][nodes[selectedPath].count - 1].id)
-//        }
+//                NavigationLink("", isActive: $isOnlyMapOn) {
+//                    OnlyMapView(path: nodes[selectedPath])
+//                        .navigationBarBackButtonHidden()
+//                    
+//                }
+//                NavigationLink("", isActive: $isAROn) {
+//                    let path = nodes[selectedPath]
+//                    ARMainView(path: path, departures:  path[0].id, arrivals:  path[path.count - 1].id)
+//                        .navigationBarBackButtonHidden()
+//                    
+//                }
+            } // end of ZStack
+        }
+        else if isAROn && !isOnlyMapOn{
+            let path = nodes[selectedPath]
+            ARMainView(isAROn : $isAROn, path: path, departures:  path[0].id, arrivals:  path[path.count - 1].id)
+        }
+        else if !isAROn && isOnlyMapOn {
+            OnlyMapView(path: nodes[selectedPath])
+        }
     }
     
 }
