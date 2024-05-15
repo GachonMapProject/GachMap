@@ -9,6 +9,10 @@ import SwiftUI
 import Alamofire
 
 struct SatisfactionView: View {
+    
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    
     var width = UIScreen.main.bounds.width
     let arr = [1 : "매우불만족", 2 : "불만족", 3 : "보통", 4 : "만족", 5 : "매우만족"]
     let weatherData = WeatherData()
@@ -25,6 +29,7 @@ struct SatisfactionView: View {
     @State var temp = 0.0
     @State var rainPrecipitation = 0.0
     @State var rainPrecipitationProbability = 0
+    
     
     // 날씨, 유저 아이디(게스트아이디) 추가 필요함
     
@@ -84,8 +89,9 @@ struct SatisfactionView: View {
                 Button(action: {
                     // 데이터 서버에 전달하는 함수 필요
                     let param = SatisfactionRequest(userId: 574163367434699508, guestId: loginInfo.guestCode, departures: 326, arrivals: 329, satisfactionRoute: arr[pathSelect] ?? "", satisfactionTime: arr[timeSelect] ?? "", temperature: temp, rainPrecipitation: rainPrecipitation, rainPrecipitationProbability: rainPrecipitationProbability, timeList: [TimeList(firstNodeId: 326, secondNodeId: 327, time: 2), TimeList(firstNodeId: 327, secondNodeId: 328, time: 12), TimeList(firstNodeId: 328, secondNodeId: 329, time: 22)])
-                    print("param : \(param)")
-                    postSatifactionData(parameter : param)
+//                    print("param : \(param)")
+//                    postSatifactionData(parameter : param)
+                    submit = true
                     
                 }, label: {
                     Text("확인")
@@ -105,7 +111,9 @@ struct SatisfactionView: View {
             .frame(width: width * 0.9)
             .alert(isPresented: $submit) {
                 Alert(title: Text("만족도 조사"), message: Text("소중한 의견 감사드립니다."),
-                      dismissButton: .default(Text("확인")))
+                      dismissButton: .default(Text("확인")){
+                        dismiss()
+                })
             }
           
         }

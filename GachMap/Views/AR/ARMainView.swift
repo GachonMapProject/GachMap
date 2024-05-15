@@ -23,6 +23,8 @@ struct ARMainView: View {
     @State private var trueNorthAlertOn = false
     @State private var checkTime: Timer? // AR init 후 시간 체크
     @State private var selectedTrueNorth = false
+    
+    
     let intervalTime : Double = 7.0
     
     @State private var checkSecondTime: Timer?
@@ -33,6 +35,7 @@ struct ARMainView: View {
     
     let timer = MyTimer()
 //    let path = Path().ITtoGachon
+    @Binding var isAROn : Bool // ChoosePathView로 돌아갈 때
     let path : [Node]
     let departures : Int
     let arrivals : Int
@@ -147,7 +150,7 @@ struct ARMainView: View {
                                     checkSecondTime?.invalidate()
                                     checkTime?.invalidate()
                                 }
-                            } // end of if !onlyMap
+                            } // end of if !onlyMap (지도만 이용)
                             else{
                                 ZStack(alignment: .topTrailing){
                                     AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
@@ -183,7 +186,7 @@ struct ARMainView: View {
                
             
             }  // end of VStack
-            .onChange(of: coreLocation.location!) { location in
+            .onChange(of: coreLocation.location ?? CLLocation(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), altitude: 0)) { location in
                 if !isARViewReady {
                     checkLocationAccuracy()
                 }
@@ -226,7 +229,8 @@ struct ARMainView: View {
             self.checkTime?.invalidate()
             
 //            self.isAROn = false  // 이전 화면으로 돌아감
-            dismiss()
+//            dismiss()
+            isAROn = false
             
         })
         

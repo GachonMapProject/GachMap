@@ -20,7 +20,7 @@ struct ContentView: View {
     // @State private var showSearchView = false
     
     @EnvironmentObject var globalViewModel: GlobalViewModel
-    @EnvironmentObject var navi: NavigationController
+//    @EnvironmentObject var navi: NavigationController
     
     // @Binding var isLogin: Bool
     

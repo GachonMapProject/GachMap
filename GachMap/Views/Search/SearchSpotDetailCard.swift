@@ -22,6 +22,8 @@ struct SearchSpotDetailCard: View {
     
     
     
+    
+    
     var body: some View {
         VStack {
             HStack {

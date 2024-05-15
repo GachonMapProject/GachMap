@@ -24,6 +24,8 @@ struct GachMapApp: App {
 
 //            test1()
 //                .environmentObject(naviagionController)
+            
+//            ContentView1()
         }
     }
 }

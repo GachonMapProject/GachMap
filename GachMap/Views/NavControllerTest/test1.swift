@@ -22,7 +22,7 @@ struct test1: View {
                 })
                 
                 NavigationLink("", isActive: self.$nav.goInfo){
-                    test2()
+//                    test2()
                 }
             }
             .onAppear(){
