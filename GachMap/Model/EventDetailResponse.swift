@@ -15,13 +15,13 @@ struct EventDetailResponse: Decodable {
 }
 
 struct EventDetail: Decodable {
-    var eventInfoId: Int
-    var eventCode: Int
+    var eventLocationId: Int
     var eventName: String
-    var eventPlaceName: String
     var eventLatitude: Double
     var eventLongitude: Double
     var eventAltitude: Double
+    var eventId: Int
+    var eventPlaceName: String
 }
 
 

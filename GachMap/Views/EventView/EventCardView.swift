@@ -22,7 +22,7 @@ struct EventCardView : View {
     
     init(event: EventList) {
         self.event = event
-        self.eventDetail = [EventDetail(eventInfoId: 0, eventCode: 0, eventName: "", eventPlaceName: "", eventLatitude: 0, eventLongitude: 0, eventAltitude: 0)]
+        self.eventDetail = [EventDetail(eventLocationId: 0, eventName: "", eventLatitude: 0, eventLongitude: 0, eventAltitude: 0, eventId: 0, eventPlaceName: "")]
     }
     
     var body: some View {
