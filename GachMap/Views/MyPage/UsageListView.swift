@@ -9,6 +9,10 @@ import SwiftUI
 import Alamofire
 
 class UsageListViewModel: ObservableObject {
+    
+    @State var showErrorAlert: Bool = false
+    @State var alertMessage: String = ""
+    
     @Published var usages: [RouteHistoryData] = []
     
     init() {
@@ -49,12 +53,18 @@ class UsageListViewModel: ObservableObject {
                         print("Data fetched: \(self.usages)")
                     } else {
                         print("1:1 문의 리스트 가져오기 실패")
+                        
+                        self.alertMessage = "정보를 불러오는데 실패했습니다.\n다시 시도해주세요."
+                        self.showErrorAlert = true
                     }
                     
                 case .failure(let error):
                     print("서버 연결 실패")
                     print(url)
                     print("Error: \(error.localizedDescription)")
+                    
+                    self.alertMessage = "서버 연결에 실패했습니다"
+                    self.showErrorAlert = true
                 }
             }
     }
@@ -62,17 +72,34 @@ class UsageListViewModel: ObservableObject {
 
 struct UsageListView: View {
     
+    
+    
     @StateObject private var viewModel = UsageListViewModel()
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                ForEach(viewModel.usages, id: \.historyId) { usages in
-                    UsageListCell(usages: usages)
-                        .frame(width: UIScreen.main.bounds.width)
-                        .padding(.top, 10)
+            HStack {
+                if viewModel.usages.isEmpty {
+                    VStack(spacing: 10) {
+                        Image(systemName: "exclamationmark.circle")
+                            .font(.system(size: 60))
+                            .foregroundColor(.gray)
+                        
+                        Text("이용내역 없음")
+                            .font(.system(size: 20))
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        ForEach(viewModel.usages, id: \.historyId) { usages in
+                            UsageListCell(usages: usages)
+                                .frame(width: UIScreen.main.bounds.width)
+                                .padding(.top, 10)
+                        }
+                    }
                 }
             }
             .toolbar {
@@ -99,7 +126,12 @@ struct UsageListView: View {
                     .padding(.trailing, 8)
                 }
             } // end of .toolbar
+            
+            
         } // end of NavigationView
+        .alert(isPresented: $viewModel.showErrorAlert) {
+            Alert(title: Text("오류"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("확인")))
+        }
     } // end of body
 } // end of View struct
 

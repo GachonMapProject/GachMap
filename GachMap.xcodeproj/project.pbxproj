@@ -22,6 +22,7 @@
 		8B5369012BD37F5C007B8984 /* UserPasswordCheckRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369002BD37F5C007B8984 /* UserPasswordCheckRequest.swift */; };
 		8B5369032BD37F6D007B8984 /* UserPasswordCheckResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369022BD37F6D007B8984 /* UserPasswordCheckResponse.swift */; };
 		8B5369072BD38B55007B8984 /* UserIdInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369062BD38B55007B8984 /* UserIdInjection.swift */; };
+		8B5BD2292BF50A7A009C238E /* ShowSafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5BD2282BF50A7A009C238E /* ShowSafariView.swift */; };
 		8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */; };
 		8B831BE02BCCEFF600A85973 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDF2BCCEFF600A85973 /* ContentView.swift */; };
 		8B831BE22BCCEFF700A85973 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B831BE12BCCEFF700A85973 /* Assets.xcassets */; };
@@ -59,7 +60,7 @@
 		8B831C492BCD3F4D00A85973 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C482BCD3F4D00A85973 /* SplashScreen.swift */; };
 		8B831C4B2BCD46DF00A85973 /* PrimaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C4A2BCD46DF00A85973 /* PrimaryView.swift */; };
 		8B831C712BCE0A9200A85973 /* GuestDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */; };
-		8B831C732BCE0AB300A85973 /* StudentDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */; };
+		8B831C732BCE0AB300A85973 /* UserDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831C722BCE0AB300A85973 /* UserDashboardView.swift */; };
 		8BA84B602BCF8DD000ACD5E2 /* InfoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84B5F2BCF8DD000ACD5E2 /* InfoInputView.swift */; };
 		8BA84B622BCF964800ACD5E2 /* SegmentedControlHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA84B612BCF964800ACD5E2 /* SegmentedControlHelper.swift */; };
 		8BC86EAE2BDE629600051BF0 /* SearchMainBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC86EAD2BDE629600051BF0 /* SearchMainBar.swift */; };
@@ -141,6 +142,7 @@
 		8B5369002BD37F5C007B8984 /* UserPasswordCheckRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordCheckRequest.swift; sourceTree = "<group>"; };
 		8B5369022BD37F6D007B8984 /* UserPasswordCheckResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordCheckResponse.swift; sourceTree = "<group>"; };
 		8B5369062BD38B55007B8984 /* UserIdInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdInjection.swift; sourceTree = "<group>"; };
+		8B5BD2282BF50A7A009C238E /* ShowSafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowSafariView.swift; sourceTree = "<group>"; };
 		8B831BDA2BCCEFF600A85973 /* GachMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GachMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GachMapApp.swift; sourceTree = "<group>"; };
 		8B831BDF2BCCEFF600A85973 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -179,7 +181,7 @@
 		8B831C482BCD3F4D00A85973 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		8B831C4A2BCD46DF00A85973 /* PrimaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryView.swift; sourceTree = "<group>"; };
 		8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestDashboardView.swift; sourceTree = "<group>"; };
-		8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentDashboardView.swift; sourceTree = "<group>"; };
+		8B831C722BCE0AB300A85973 /* UserDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDashboardView.swift; sourceTree = "<group>"; };
 		8BA84B5F2BCF8DD000ACD5E2 /* InfoInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoInputView.swift; sourceTree = "<group>"; };
 		8BA84B612BCF964800ACD5E2 /* SegmentedControlHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlHelper.swift; sourceTree = "<group>"; };
 		8BC86EAD2BDE629600051BF0 /* SearchMainBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMainBar.swift; sourceTree = "<group>"; };
@@ -354,7 +356,7 @@
 				CB4CE38F2BCD3F3500E0611B /* Weather */,
 				8B831C002BCCF57700A85973 /* Login */,
 				8B831C022BCCF57700A85973 /* DashboardView.swift */,
-				8B831C722BCE0AB300A85973 /* StudentDashboardView.swift */,
+				8B831C722BCE0AB300A85973 /* UserDashboardView.swift */,
 				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
 				8B3159D82BD0F53F0049CB5F /* MyPage */,
 				CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */,
@@ -445,6 +447,7 @@
 				8B831C2B2BCCF60C00A85973 /* MapTestView.swift */,
 				8BA84B612BCF964800ACD5E2 /* SegmentedControlHelper.swift */,
 				8BC86EC02BDFC33400051BF0 /* CustomDropdown.swift */,
+				8B5BD2282BF50A7A009C238E /* ShowSafariView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -702,6 +705,7 @@
 				CBC02A6C2BD90D9B005657B9 /* MyTmer.swift in Sources */,
 				8B831C0D2BCCF57700A85973 /* MapTabView.swift in Sources */,
 				CB0D26FE2BCE8F8300800459 /* EventDetailResponse.swift in Sources */,
+				8B5BD2292BF50A7A009C238E /* ShowSafariView.swift in Sources */,
 				8B831C0C2BCCF57700A85973 /* EventTabView.swift in Sources */,
 				CB2E456E2BD4DF38009DB796 /* ARCLViewController.swift in Sources */,
 				CB4EF61D2BCFA07C00BDC73A /* BuildingDetailView.swift in Sources */,
@@ -710,7 +714,7 @@
 				8B5369032BD37F6D007B8984 /* UserPasswordCheckResponse.swift in Sources */,
 				8B3159D12BCFE7190049CB5F /* SignUpView.swift in Sources */,
 				CBED53B12BE2178E00DDFD0C /* AIDescriptionView.swift in Sources */,
-				8B831C732BCE0AB300A85973 /* StudentDashboardView.swift in Sources */,
+				8B831C732BCE0AB300A85973 /* UserDashboardView.swift in Sources */,
 				8B5368FB2BD2BF73007B8984 /* UserInquiryResponse.swift in Sources */,
 				CB7C69882BE10C9100C277AE /* ChoosePathView.swift in Sources */,
 				8B831C3A2BCCF60C00A85973 /* ARView.swift in Sources */,

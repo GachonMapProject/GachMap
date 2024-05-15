@@ -20,9 +20,8 @@ struct WeatherView: View {
         VStack{
             VStack(alignment: .leading){
                 Text("🌡️ 날씨")
-                    .font(.system(size: 20))
-                    .bold()
-                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 0))
+                    .font(.system(size: 20, weight: .bold))
+                    .padding(EdgeInsets(top: 13, leading: 10, bottom: 0, trailing: 0))
                 Spacer()
                 VStack{
                     Text(image)
@@ -40,15 +39,15 @@ struct WeatherView: View {
                 Spacer()
                 Text("📍 복정동 \n  \(AMPM) \(time)시 기준")
                     .lineSpacing(5)
-                    .font(.system(size: 15))
+                    .font(.system(size: 13))
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 0))
             }
            
         }
         .frame(width: 137, height: 258)
         .background(Color.white)
-        .cornerRadius(15)
-        .shadow(radius: 7, x: 2, y: 2) // 그림자를 적용할 부모 뷰에 그림자 추가
+        .cornerRadius(13)
+        //.shadow(radius: 7, x: 2, y: 2) // 그림자를 적용할 부모 뷰에 그림자 추가
         .onAppear(){
             weatherData.WeatherDataRequest { newWeather in
                 if let newWeather = newWeather {

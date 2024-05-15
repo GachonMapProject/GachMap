@@ -13,6 +13,9 @@ import Alamofire
 class InquireListViewModel: ObservableObject {
     @Published var inquiries: [InquireListData] = []
     
+    @State var showErrorAlert: Bool = false
+    @State var alertMessage: String = ""
+    
     init() {
         getInquireList()
     }
@@ -51,12 +54,18 @@ class InquireListViewModel: ObservableObject {
                         print("Data fetched: \(self.inquiries)")
                     } else {
                         print("1:1 문의 리스트 가져오기 실패")
+                        
+                        self.showErrorAlert = true
+                        self.alertMessage = "정보를 불러오는데 실패했습니다.\n다시 시도해주세요."
                     }
                     
                 case .failure(let error):
                     print("서버 연결 실패")
                     print(url)
                     print("Error: \(error.localizedDescription)")
+                    
+                    self.showErrorAlert = true
+                    self.alertMessage = "서버 연결에 실패했습니다."
                 }
             }
     }
@@ -69,12 +78,26 @@ struct InquireListView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                ForEach(viewModel.inquiries, id: \.inquiryId) { inquiry in
-                    InquireListCell(inquiry: inquiry)
+            HStack {
+                if viewModel.inquiries.isEmpty {
+                    VStack(spacing: 10) {
+                        Image(systemName: "exclamationmark.circle")
+                            .font(.system(size: 60))
+                            .foregroundColor(.gray)
+                        
+                        Text("문의내역 없음")
+                            .font(.system(size: 20))
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        ForEach(viewModel.inquiries, id: \.inquiryId) { inquiry in
+                            InquireListCell(inquiry: inquiry)
+                        }
+                    }
                 }
-                
-            } // end of ScrollView
+            } // end of HStack
             .padding(.top, 15)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -104,6 +127,9 @@ struct InquireListView: View {
             } // end of .toolbar
 //            .naigationBarTitle("문의내역 조회", displayMode: .inline)
         } // end of NavigationView
+        .alert(isPresented: $viewModel.showErrorAlert) {
+            Alert(title: Text("오류"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("확인")))
+        }
         
     } // end of body
     

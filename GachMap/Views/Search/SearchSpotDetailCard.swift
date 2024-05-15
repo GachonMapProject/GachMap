@@ -78,31 +78,35 @@ struct SearchSpotDetailCard: View {
             
             HStack {
                 HStack {
-                    Button(action: {
-                        isStartMoved = true
-                    }, label: {
-                        Text("출발지로 설정")
-                            .font(.system(size: 15, weight: .bold))
-                    })
-                    .frame(width: 130, height: 33)
-                    .foregroundColor(.white)
-                    .background(Capsule()
-                        .fill(.gachonBlue))
+                    if (placeName != "기본 위치") {
+                        Button(action: {
+                            isStartMoved = true
+                        }, label: {
+                            Text("출발지로 설정")
+                                .font(.system(size: 15, weight: .bold))
+                        })
+                        .frame(width: 130, height: 33)
+                        .foregroundColor(.white)
+                        .background(Capsule()
+                            .fill(.gachonBlue))
+                    }
                 }
                 .frame(width: (UIScreen.main.bounds.width - 30) / 2, alignment: .trailing)
                 .padding(.trailing, 10)
                 
                 HStack {
-                    Button(action: {
-                        isEndMoved = true
-                    }, label: {
-                        Text("도착지로 설정")
-                            .font(.system(size: 15, weight: .bold))
-                    })
-                    .frame(width: 130, height: 33)
-                    .foregroundColor(.white)
-                    .background(Capsule()
-                        .fill(.gachonBlue))
+                    if (placeName != "기본 위치") {
+                        Button(action: {
+                            isEndMoved = true
+                        }, label: {
+                            Text("도착지로 설정")
+                                .font(.system(size: 15, weight: .bold))
+                        })
+                        .frame(width: 130, height: 33)
+                        .foregroundColor(.white)
+                        .background(Capsule()
+                            .fill(.gachonBlue))
+                    }
                 }
                 .frame(width: (UIScreen.main.bounds.width - 30) / 2, alignment: .leading)
                 .padding(.leading, 10)

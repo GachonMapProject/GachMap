@@ -78,7 +78,9 @@ struct SearchSecondView: View {
                                 self.activeTextField = "start"
                                 isSearched = false
                             }
+                            .submitLabel(.search)
                             .onSubmit {
+                                isSearched = true
                                 performSearch()
                             }
                         
@@ -112,7 +114,9 @@ struct SearchSecondView: View {
                                 self.activeTextField = "end"
                                 isSearched = false
                             }
+                            .submitLabel(.search)
                             .onSubmit {
+                                isSearched = true
                                 performSearch()
                             }
                         
@@ -150,6 +154,8 @@ struct SearchSecondView: View {
                                2. 사용자가 교외에 위치
                                 i) 출발: 현재위치, 도착: 검색 지정 -> 불가능
                                 ii) 출발: 검색 지정, 도착: 검색 지정 -> 따라가기 */
+                            
+                            // 도착 선택하면 출발을 무조건 현재위치로 지정
                             
                             // 길안내 뷰로 이동!
                             print("출발 placeName: \(startSearchText)")

@@ -13,9 +13,7 @@ struct GachMapApp: App {
     
     var body: some Scene {
         WindowGroup {
-//            SearchMainView(showLocationSearchView: Binding.constant(true))
-            ContentView()
-                .environmentObject(globalViewModel)
+            SplashScreen()
         }
     }
 }

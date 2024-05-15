@@ -12,6 +12,8 @@ struct RecentSearchCell: View {
     @State private var showAlert: Bool = false
     @ObservedObject var viewModel: SearchViewModel
     
+    var onSearchSelect: (String) -> Void
+    
     var body: some View {
         VStack {
             HStack {
@@ -39,7 +41,7 @@ struct RecentSearchCell: View {
                     VStack {
                         HStack {
                             Button(action: {
-                                
+                                onSearchSelect(search)
                             }, label: {
                                 Text(search)
                                     .font(.body)
