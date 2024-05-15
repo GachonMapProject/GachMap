@@ -34,7 +34,7 @@ struct InfoInputView: View {
     @State private var walkSpeed = ""
     
     @State private var showEndAlert: Bool = false
-    @State private var isEnd: Bool = false
+    @State private var loginInfoEnd: Bool = false
     @State private var alertMessage: String = ""
     
     @State private var activeInfoInputAlert: ActiveInfoInputAlert = .ok
@@ -307,7 +307,7 @@ struct InfoInputView: View {
                         switch activeInfoInputAlert {
                         case .ok:
                             return Alert(title: Text("알림"), message: Text(alertMessage),
-                                         dismissButton: .default(Text("확인"), action: { isEnd = true }))
+                                         dismissButton: .default(Text("확인"), action: { loginInfoEnd = true }))
                             
                         case .error:
                             return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
@@ -316,7 +316,7 @@ struct InfoInputView: View {
                     }
                     // end of 같이 가기 Button
                     
-                    NavigationLink("", isActive: $isEnd) {
+                    NavigationLink("", isActive: $loginInfoEnd) {
                         PrimaryView()
                             .navigationBarBackButtonHidden(true)
                     }

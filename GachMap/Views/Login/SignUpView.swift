@@ -27,7 +27,7 @@ struct SignUpView: View {
     @State private var rePassword = ""
     @State private var hashedPassword = ""
     @State private var isFull: Bool = false
-    @State private var isActive: Bool = false // 뷰 이동 용
+    @State private var goInfo: Bool = false // 뷰 이동 용
     
     @State private var isIdValid: Bool = false
     @State private var showAlert: Bool = false
@@ -457,7 +457,7 @@ struct SignUpView: View {
                                 isFull.toggle()
                             }
                             
-                            isActive = true
+                            goInfo = true
                             
                         }, label: {
                             Text("다음")
@@ -475,7 +475,7 @@ struct SignUpView: View {
                         })
                         .disabled(!isButtonEnabled())
                         
-                        NavigationLink(destination: InfoInputView(showSignUpView: $showSignUpView, username: $username, hashedPassword: $hashedPassword), isActive: $isActive) {
+                        NavigationLink(destination: InfoInputView(showSignUpView: $showSignUpView, username: $username, hashedPassword: $hashedPassword), isActive: $goInfo) {
                             EmptyView()
                         }
                     }

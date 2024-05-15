@@ -21,7 +21,7 @@ struct ChoosePathView: View {
 //    let paths = [Path().pathExmaple, Path().pathExmaple1, Path().pathExmaple2]
     
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var rootViewModel: RootViewModel
+    @EnvironmentObject var navi: NavigationController
     
     @State private var region: MKCoordinateRegion
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
@@ -113,8 +113,8 @@ struct ChoosePathView: View {
                             // 검색창 종료 버튼
                             Button(action: {
                                 // 버튼을 눌렀을 때 내비게이션 스택을 모두 지우고 root 뷰로 돌아가기
-//                               UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
-                                rootViewModel.shouldPopToRoot = false
+
+                                
                                 print("go rootView")
                             }, label: {
                                 Image(systemName: "xmark")

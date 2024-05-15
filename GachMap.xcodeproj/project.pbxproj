@@ -122,7 +122,11 @@
 		CBBE58692BF21F86003B55C4 /* SearchPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE58682BF21F86003B55C4 /* SearchPathView.swift */; };
 		CBBE586B2BF22EEE003B55C4 /* OnlyMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */; };
 		CBBE586E2BF265A0003B55C4 /* GlobalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE586D2BF265A0003B55C4 /* GlobalViewModel.swift */; };
-		CBBE58702BF265C4003B55C4 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE586F2BF265C4003B55C4 /* RootViewModel.swift */; };
+		CBBE58702BF265C4003B55C4 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE586F2BF265C4003B55C4 /* NavigationController.swift */; };
+		CBBE58732BF489C8003B55C4 /* test1.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE58722BF489C8003B55C4 /* test1.swift */; };
+		CBBE58752BF489D0003B55C4 /* test2.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE58742BF489D0003B55C4 /* test2.swift */; };
+		CBBE58772BF489D8003B55C4 /* test3.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE58762BF489D8003B55C4 /* test3.swift */; };
+		CBBE58792BF489DF003B55C4 /* test4.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBE58782BF489DF003B55C4 /* test4.swift */; };
 		CBC02A6C2BD90D9B005657B9 /* MyTmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */; };
 		CBD855FF2BD7A7F00046597D /* SatisfactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */; };
 		CBDDC9122BCEB62300019FAB /* BackgroundMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */; };
@@ -250,7 +254,11 @@
 		CBBE58682BF21F86003B55C4 /* SearchPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPathView.swift; sourceTree = "<group>"; };
 		CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlyMapView.swift; sourceTree = "<group>"; };
 		CBBE586D2BF265A0003B55C4 /* GlobalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalViewModel.swift; sourceTree = "<group>"; };
-		CBBE586F2BF265C4003B55C4 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
+		CBBE586F2BF265C4003B55C4 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		CBBE58722BF489C8003B55C4 /* test1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test1.swift; sourceTree = "<group>"; };
+		CBBE58742BF489D0003B55C4 /* test2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test2.swift; sourceTree = "<group>"; };
+		CBBE58762BF489D8003B55C4 /* test3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test3.swift; sourceTree = "<group>"; };
+		CBBE58782BF489DF003B55C4 /* test4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test4.swift; sourceTree = "<group>"; };
 		CBC02A6B2BD90D9B005657B9 /* MyTmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTmer.swift; sourceTree = "<group>"; };
 		CBD855FE2BD7A7F00046597D /* SatisfactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatisfactionView.swift; sourceTree = "<group>"; };
 		CBDDC9112BCEB62300019FAB /* BackgroundMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMapView.swift; sourceTree = "<group>"; };
@@ -360,6 +368,7 @@
 		8B831C062BCCF57700A85973 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CBBE58712BF489B2003B55C4 /* NavControllerTest */,
 				CB8A6E352BF0E6E80039AC50 /* SatisfactionView */,
 				8B831C282BCCF60C00A85973 /* AR */,
 				8BC86EDA2BE89B0F00051BF0 /* MapView */,
@@ -572,11 +581,22 @@
 			isa = PBXGroup;
 			children = (
 				CBBE586D2BF265A0003B55C4 /* GlobalViewModel.swift */,
-				CBBE586F2BF265C4003B55C4 /* RootViewModel.swift */,
+				CBBE586F2BF265C4003B55C4 /* NavigationController.swift */,
 				8B831C212BCCF60C00A85973 /* CoreLocation.swift */,
 				8B831C242BCCF60C00A85973 /* NextNode.swift */,
 			);
 			path = ObservableObject;
+			sourceTree = "<group>";
+		};
+		CBBE58712BF489B2003B55C4 /* NavControllerTest */ = {
+			isa = PBXGroup;
+			children = (
+				CBBE58722BF489C8003B55C4 /* test1.swift */,
+				CBBE58742BF489D0003B55C4 /* test2.swift */,
+				CBBE58762BF489D8003B55C4 /* test3.swift */,
+				CBBE58782BF489DF003B55C4 /* test4.swift */,
+			);
+			path = NavControllerTest;
 			sourceTree = "<group>";
 		};
 		CBED53B22BE2203A00DDFD0C /* ChoosePath */ = {
@@ -720,6 +740,7 @@
 				CB4EF6212BCFD5C000BDC73A /* BuildingDetailResponse.swift in Sources */,
 				8BA84B602BCF8DD000ACD5E2 /* InfoInputView.swift in Sources */,
 				8BC97A782BEB979F0021C544 /* ResultSelectView.swift in Sources */,
+				CBBE58792BF489DF003B55C4 /* test4.swift in Sources */,
 				8BC86EE82BE90DD800051BF0 /* CategoryButton.swift in Sources */,
 				8BC86EEA2BE93AA800051BF0 /* BuildingMarkerResponse.swift in Sources */,
 				CB0D26F72BCE681F00800459 /* EventListResponse.swift in Sources */,
@@ -758,6 +779,7 @@
 				CB7C69882BE10C9100C277AE /* ChoosePathView.swift in Sources */,
 				8B831C3A2BCCF60C00A85973 /* ARView.swift in Sources */,
 				CBDDC9142BCEB6CB00019FAB /* PlaceCategoryResponse.swift in Sources */,
+				CBBE58772BF489D8003B55C4 /* test3.swift in Sources */,
 				8B831C322BCCF60C00A85973 /* UserInfoRequest.swift in Sources */,
 				8B831C072BCCF57700A85973 /* GuestInfoInputView.swift in Sources */,
 				8B831C082BCCF57700A85973 /* LoginView.swift in Sources */,
@@ -813,15 +835,17 @@
 				CB2E45702BD4DF70009DB796 /* LocationAnnotationNode.swift in Sources */,
 				8BC86EAE2BDE629600051BF0 /* SearchMainBar.swift in Sources */,
 				CB6DF8D42BE8909A00DC8BC5 /* ARReadyView.swift in Sources */,
+				CBBE58752BF489D0003B55C4 /* test2.swift in Sources */,
 				8BC86EAE2BDE629600051BF0 /* SearchMainBar.swift in Sources */,
 				8B5368F32BD25EB7007B8984 /* IdDuplicationResponse.swift in Sources */,
-				CBBE58702BF265C4003B55C4 /* RootViewModel.swift in Sources */,
+				CBBE58702BF265C4003B55C4 /* NavigationController.swift in Sources */,
 				8BC86EEC2BEA044800051BF0 /* RouteHistoryResponse.swift in Sources */,
 				CB8A6E302BEF718E0039AC50 /* PathResponse.swift in Sources */,
 				8B3159D52BD041500049CB5F /* ServiceTermsView.swift in Sources */,
 				8B831C2D2BCCF60C00A85973 /* LoginInfo.swift in Sources */,
 				CBBE58692BF21F86003B55C4 /* SearchPathView.swift in Sources */,
 				8BC86EC92BDFFE1100051BF0 /* InquireListView.swift in Sources */,
+				CBBE58732BF489C8003B55C4 /* test1.swift in Sources */,
 				8B831C412BCCF60C00A85973 /* Path.swift in Sources */,
 				CBBE586B2BF22EEE003B55C4 /* OnlyMapView.swift in Sources */,
 				8B831C3F2BCCF60C00A85973 /* NextNode.swift in Sources */,
