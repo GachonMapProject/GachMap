@@ -315,7 +315,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let hypotenuse = sqrt(pow(length, 2) + pow(altitudeDifference, 2))
        
        
-        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(hypotenuse), chamferRadius: 0)
+        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(length), chamferRadius: 0)
         box.firstMaterial?.diffuse.contents = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
         box.firstMaterial?.transparency = 0.9 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
         let node = SCNNode(geometry: box)
@@ -334,11 +334,24 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
 //        xAngle = -angle
 
 
-        // 실린더 기울기 (라디안)
-        let angle = -atan(altitudeDifference / length)
-        node.eulerAngles.x = Float(angle)
-        xAngle = angle
+//        // 실린더 기울기 (라디안)
+//        let angle = atan(altitudeDifference / length)
+//        node.eulerAngles.x = Float(angle)
+//        xAngle = -angle
+//
+//
+//        let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
+//        let yAngle = atan(dirVector.x / dirVector.z)
+//        print("placeBox - yAngle : \(yAngle)")
+//        self.yAngle = yAngle
+//       
+//       node.eulerAngles.y = yAngle
+        
 
+        // 실릴더 기울기
+        let angle = acos(length / hypotenuse)
+        node.eulerAngles.x = Float(-angle)
+        xAngle = -angle
 
         let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
         let yAngle = atan(dirVector.x / dirVector.z)
@@ -346,6 +359,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         self.yAngle = yAngle
        
        node.eulerAngles.y = yAngle
+
 
        return node
    } // end of placeBox
@@ -432,7 +446,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             for child in scene.rootNode.childNodes {
                 child.scale = SCNVector3(scale, scale, scale)
                 if middle {
-                    child.eulerAngles.x = xAngle
+                    child.eulerAngles.x = .pi / 2 + xAngle 
                     child.eulerAngles.y = yAngle
                 }
                 else{
