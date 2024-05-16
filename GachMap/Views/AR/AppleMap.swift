@@ -15,20 +15,20 @@ class CustomAnnotation: NSObject, MKAnnotation, Identifiable{
 }
 
 struct AppleMapView : View{
-    @ObservedObject var coreLocation : CoreLocationEx
+    @EnvironmentObject var coreLocation : CoreLocationEx
     let path : [Node]
     @Binding var isARViewVisible: Bool
     @State private var appleMap: AppleMap
     let rotationList : [Rotation]
     let onlyMap : Bool
 
-    init(coreLocation: CoreLocationEx, path: [Node], isARViewVisible: Binding<Bool>, rotationList : [Rotation], onlyMap : Bool) {
-        self.coreLocation = coreLocation
+    init(path: [Node], isARViewVisible: Binding<Bool>, rotationList : [Rotation], onlyMap : Bool, coreLocation : CoreLocationEx) {
         self.path = path
         self._isARViewVisible = isARViewVisible
         self.rotationList = rotationList
-        _appleMap = State(initialValue: AppleMap(coreLocation: coreLocation, path: path))
         self.onlyMap = onlyMap
+        
+        _appleMap = State(initialValue: AppleMap(path: path, coreLocation: coreLocation, isOnlyMapOn: false))
     }
     var body: some View {
         ZStack(alignment: .bottomTrailing){
@@ -125,14 +125,15 @@ struct AppleMap: UIViewRepresentable {
     var mapView = MKMapView()
     let region: MKCoordinateRegion
     let lineCoordinates: [CLLocationCoordinate2D]
-    let coreLocation : CoreLocationEx
     @State var isCameraFixed : Bool = true
+    @EnvironmentObject var coreLocation : CoreLocationEx
+    let isOnlyMapOn : Bool
     
     // coreLocation이 변경될 때마다 init 됨
-    init(coreLocation: CoreLocationEx, path : [Node]) {
-        self.coreLocation = coreLocation
+    init(path : [Node], coreLocation : CoreLocationEx, isOnlyMapOn : Bool) {
+        self.isOnlyMapOn = isOnlyMapOn
         region = MKCoordinateRegion(
-            center: coreLocation.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            center: isOnlyMapOn ? path[0].location.coordinate : coreLocation.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
             latitudinalMeters: 200,
             longitudinalMeters: 200
         )
@@ -191,11 +192,11 @@ struct AppleMap: UIViewRepresentable {
       
       
 //      view.setUserTrackingMode(.followWithHeading, animated: true)
-      if isCameraFixed {
+      if isCameraFixed && !isOnlyMapOn{
           
 //          print("updateUIView - isCameraFixed (true)")
           if let userLocation = coreLocation.location {
-              let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
+              let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 150, longitudinalMeters: 150)
               mapView.region = region
           }
       }

@@ -22,7 +22,7 @@ struct EventCardView : View {
     
     init(event: EventList) {
         self.event = event
-        self.eventDetail = [EventDetail(eventInfoId: 0, eventCode: 0, eventName: "", eventPlaceName: "", eventLatitude: 0, eventLongitude: 0, eventAltitude: 0)]
+        self.eventDetail = [EventDetail(eventLocationId: 0, eventName: "", eventLatitude: 0, eventLongitude: 0, eventAltitude: 0, eventId: 0, eventPlaceName: "")]
     }
     
     var body: some View {
@@ -122,7 +122,7 @@ struct EventCardView : View {
 //        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/event/\(eventId)")
         guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/event/\(eventId)")
         else {
-            print("Invalid URL")
+            print("getEventDetail - Invalid URL")
             return
         }
         print(url)

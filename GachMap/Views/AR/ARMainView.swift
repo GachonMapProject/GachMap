@@ -11,9 +11,10 @@ import MapKit
 
 struct ARMainView: View {
 
-    @Binding var isAROn : Bool
+//    @Binding var isAROn : Bool
     // 전역으로 CoreLocationEx 인스턴스 생성
-    @ObservedObject var coreLocation = CoreLocationEx()
+    @EnvironmentObject var coreLocation : CoreLocationEx
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var nextNodeObject = NextNodeObject()
     @State private var isARViewVisible = true // ARView의 on/off 상태 변수
     @State private var isEnd = false // 안내 종료 상태 변수
@@ -22,6 +23,8 @@ struct ARMainView: View {
     @State private var trueNorthAlertOn = false
     @State private var checkTime: Timer? // AR init 후 시간 체크
     @State private var selectedTrueNorth = false
+    
+    
     let intervalTime : Double = 7.0
     
     @State private var checkSecondTime: Timer?
@@ -31,21 +34,26 @@ struct ARMainView: View {
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
     let timer = MyTimer()
-    let path = Path().homeToAI
-    
-    
-    
+//    let path = Path().ITtoGachon
+    @Binding var isAROn : Bool // ChoosePathView로 돌아갈 때
+    let path : [Node]
+    let departures : Int
+    let arrivals : Int
+    @State var timeList = [TimeList]()
+
     @State var distance : Double?
-    @State var timeList = [Int]()
+//    @State var timeList = [Int]()
+    
     
     var body: some View {
-        if coreLocation.location != nil{
+//        if coreLocation.location != nil{
             VStack{
                 if !trueNorthAlertOn {
                     if !selectedTrueNorth {
                         ProgressView()
                             .onAppear(){
                                 trueNorthAlert()
+                                
                             }
                     }
                     else{
@@ -97,11 +105,11 @@ struct ARMainView: View {
                                 ZStack(alignment: .topTrailing){
                                     VStack(spacing : 0){
                                         ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
-                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                        AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }.edgesIgnoringSafeArea(.all)
                                     
                                     if !isARViewVisible {
-                                        AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                        AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }
                                     
                                     HStack {
@@ -142,10 +150,10 @@ struct ARMainView: View {
                                     checkSecondTime?.invalidate()
                                     checkTime?.invalidate()
                                 }
-                            } // end of if !onlyMap
+                            } // end of if !onlyMap (지도만 이용)
                             else{
                                 ZStack(alignment: .topTrailing){
-                                    AppleMapView(coreLocation: coreLocation, path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap)
+                                    AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     
                                     Button(){
                                         EndButtonAlert()
@@ -171,14 +179,14 @@ struct ARMainView: View {
                         } // end of if !isEnd
                         else{
                             // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
-                            SatisfactionView()
+                            SatisfactionView(departures: departures, arrivals: arrivals, timeList: timeList)
                         }
                     }
                 }
                
             
             }  // end of VStack
-            .onChange(of: coreLocation.location!) { location in
+            .onChange(of: coreLocation.location ?? CLLocation(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), altitude: 0)) { location in
                 if !isARViewReady {
                     checkLocationAccuracy()
                 }
@@ -187,10 +195,10 @@ struct ARMainView: View {
                     checkDistance(location: location)
                 }
             }
-        } // end of coreLocation.location != nil
-        else {
-            ProgressView("Waiting for location accuracy...")
-        }
+//        } // end of coreLocation.location != nil
+//        else {
+//            ProgressView("Waiting for location accuracy...")
+//        }
     }
     
     // GPS 알림
@@ -220,7 +228,10 @@ struct ARMainView: View {
             self.checkSecondTime?.invalidate()
             self.checkTime?.invalidate()
             
-            self.isAROn = false  // 이전 화면으로 돌아감
+//            self.isAROn = false  // 이전 화면으로 돌아감
+//            dismiss()
+            isAROn = false
+            
         })
         
         UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
@@ -301,7 +312,8 @@ struct ARMainView: View {
                     print("timer 시작")
                 }else{
                     let time = timer.seconds
-                    timeList.append(time)
+                    let list = TimeList(firstNodeId: path[index].id, secondNodeId: path[index+1].id, time: time)
+                    timeList.append(list)
                     // timer (노드-노드, 시간) 배열 생성 후 append 하고 만족도 페이지에 넘겨서 Request 요청해야 됨
                     print(path[index-1].name + "~" + path[index].name + "까지 : \(time)초")
                     timer.stopTimer()
@@ -332,7 +344,3 @@ struct ARMainView: View {
         }
     }
 }
-
-
-
-//                                ARView(coreLocation: coreLocation, nextNodeObject: nextNodeObject, bestHorizontalAccuracy: coreLocation.location!.horizontalAccuracy, bestVerticalAccuracy: coreLocation.location!.verticalAccuracy, location : coreLocation.location!, path: path)

@@ -7,19 +7,20 @@
 
 import SwiftUI
 
-class GlobalViewModel: ObservableObject {
-    @Published var showSearchView: Bool = false
-}
+//class GlobalViewModel: ObservableObject {
+//    @Published var showSearchView: Bool = false
+//}
 
 struct ContentView: View {
   
-    @State private var showSheet: Bool = false
+    @State  var showSheet: Bool = false
     @State private var selectedTab = 1
     @State private var showMainView = false
     
     // @State private var showSearchView = false
     
     @EnvironmentObject var globalViewModel: GlobalViewModel
+//    @EnvironmentObject var navi: NavigationController
     
     // @Binding var isLogin: Bool
     
@@ -30,9 +31,9 @@ struct ContentView: View {
 //    }
   
   var body: some View {
-      NavigationView {
+      NavigationView() {
           TabView(selection: $selectedTab) {
-              MapTabView(showSearchView: $globalViewModel.showSearchView)
+              MapTabView(showSearchView: $globalViewModel.showSearchView, showSheet : $showSheet)
                   .tabItem {
                       Image(systemName: "map")
                       Text("지도")

@@ -26,6 +26,16 @@ struct EventList: Decodable {
     var eventImagePath: String
 }
 
+//"data": {
+//  "eventList": [
+//    {
+//      "eventId": 1,
+//      "eventName": "가천대학교 축구리그",
+//      "eventLink": "https://www.instagram.com/p/C4zwuIOv4ga/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+//      "eventInfo": "새로운 에너지가 충만한 2024년, 우리의 열정이 폭발하는 이곳 [2024 가천대학교 축구리그: G-LEAGUE]",
+//      "eventImagePath": "http://ceprj.gachon.ac.kr:60002/image/SoccerEvent.png"
+//    },
+
 //{
 //    "success": true,
 //    "property": 200,

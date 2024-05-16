@@ -150,7 +150,7 @@ struct ResultSelectView: View {
                     
                     Spacer()
                     
-                    SearchSpotDetailCard(placeName: detailViewModel.detailResults.placeName, placeSummary: detailViewModel.detailResults.placeSummary, mainImagePath: detailViewModel.detailResults.mainImagePath)
+                    SearchSpotDetailCard(placeName: detailViewModel.detailResults.placeName, placeSummary: detailViewModel.detailResults.placeSummary, mainImagePath: detailViewModel.detailResults.mainImagePath, inCategory : false, isBuilding: false)
                         //.padding(.bottom)
                 }
                 // 검색창 및 카드뷰 끝

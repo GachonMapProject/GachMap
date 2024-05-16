@@ -9,59 +9,59 @@ import Foundation
 import CoreLocation
 class Path {
     let pathExmaple : [Node] = [
-        Node(name: "startNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "startNode", id: 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.450600,
             longitude: 127.127626),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         
-        Node(name: "반도체대학 앞 동산 횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "반도체대학 앞 동산 횡단보도", id: 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.450136,
             longitude: 127.129374),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         
-        Node(name: "lastNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "lastNode", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.450535,
             longitude: 127.129554),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
     ]
     
     let pathExmaple1 : [Node] = [
-        Node(name: "startNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "startNode", id : 0,  location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.450600,
             longitude: 127.127626),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         
-        Node(name: "세븐", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "세븐", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.451362,
             longitude: 127.127521),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "가천관 삼거리", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "가천관 삼거리",id : 0,  location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.450856,
             longitude: 127.129614),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         
-        Node(name: "lastNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "lastNode",id : 0,  location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.450535,
             longitude: 127.129554),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
     ]
     
     let pathExmaple2 : [Node] = [
-        Node(name: "startNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "startNode", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.450600,
             longitude: 127.127626),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         
-        Node(name: "횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "횡단보도", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.450440,
             longitude: 127.127581),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "가천관 횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "가천관 횡단보도",id : 0,  location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.450023,
             longitude: 127.129291),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         
-        Node(name: "lastNode", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "lastNode",id : 0,  location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.450535,
             longitude: 127.129554),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
@@ -76,23 +76,23 @@ class Path {
 //            latitude: 37.4506271,
 //            longitude: 127.1274554),
 //            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "반도체대학 앞 동산 횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "반도체대학 앞 동산 횡단보도", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.45062308,
             longitude: 127.1276374),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "광장계단 근처", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "광장계단 근처", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.45048746,
             longitude: 127.1280814),
             altitude: 56.1, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "가천관 - 공과대학 횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "가천관 - 공과대학 횡단보도", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.45019238,
             longitude: 127.1292529),
             altitude: 66.2, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "공과대학 - 가천관 횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "공과대학 - 가천관 횡단보도", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.45003035,
             longitude: 127.129184),
             altitude: 66.2, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "바나연 코너 횡단보도", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "바나연 코너 횡단보도", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4503820,
             longitude: 127.1280018),
             altitude: 56.0, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
@@ -103,19 +103,19 @@ class Path {
 //            latitude: 37.4509056,
 //            longitude: 127.1274748),
 //            altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "파스쿠치 앞", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "파스쿠치 앞", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4511441,
             longitude: 127.1276190),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "공대-글로벌센터", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "공대-글로벌센터", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.451356,
             longitude: 127.127579),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "글로벌센터 흡연구역 앞", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "글로벌센터 흡연구역 앞", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4514403,
             longitude: 127.1273917),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "글로벌센터 정문", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "글로벌센터 정문", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4517364,
             longitude: 127.1274469),
             altitude: 55.8, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
@@ -123,67 +123,67 @@ class Path {
     ]
     
     let homeToAI : [Node] = [
-        Node(name: "1", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "1", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4550932,
             longitude: 127.1278891),
             altitude: 34.2088904, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "2", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "2", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4547923,
             longitude: 127.1279073),
             altitude: 34.4858192, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "3", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "3", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4548058,
             longitude: 127.1287922),
             altitude: 37.0070698, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "4", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "4",id : 0,  location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4552869,
             longitude: 127.1293650),
             altitude: 37.7882867, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "5", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "5", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4550233,
             longitude: 127.1297266),
             altitude: 39.0347311, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "6", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "6", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4548862,
             longitude: 127.1300610),
             altitude: 39.4468345, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "7", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "7", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4547786,
             longitude: 127.1306543),
             altitude: 40.1306543, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "8", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "8", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4550956,
             longitude: 127.1307173),
             altitude: 43.2198522, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "9", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "9", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4550196,
             longitude: 127.1312346),
             altitude: 42.1312346, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "10", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "10", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4550713,
             longitude: 127.1314970),
             altitude: 43.9502033, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "11", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "11",id : 0,  location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4549904,
             longitude: 127.1319162),
             altitude: 48.8436239, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "12", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "12", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4550636,
             longitude: 127.1319774),
             altitude: 48.8436239, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "13", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "13", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4554228,
             longitude: 127.1320045),
             altitude: 45.8039285, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "14", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "14",id : 0,  location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4554967,
             longitude: 127.1322877),
             altitude: 43.7873648, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "15", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "15", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4550021,
             longitude: 127.1331962),
             altitude: 53.4987379, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "16", location: CLLocation(coordinate: CLLocationCoordinate2D(
+        Node(name: "16", id : 0, location: CLLocation(coordinate: CLLocationCoordinate2D(
             latitude: 37.4550924,
             longitude: 127.1333371),
             altitude: 53.4987379, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
@@ -210,18 +210,18 @@ class Path {
 //    ]
     
     let Library : [Node] = [
-        Node(name: "L-1", location: CLLocation(coordinate: CLLocationCoordinate2D(
-            latitude: 37.4526132,
-            longitude: 127.1329152),
-            altitude: 78.1330068, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "L-2", location: CLLocation(coordinate: CLLocationCoordinate2D(
-            latitude: 37.4527370,
-            longitude: 127.1329290),
-            altitude: 123.2, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "L-3", location: CLLocation(coordinate: CLLocationCoordinate2D(
-            latitude: 37.4527942,
-            longitude: 127.1330613),
-            altitude: 75.3932716, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+//        Node(name: "L-1", location: CLLocation(coordinate: CLLocationCoordinate2D(
+//            latitude: 37.4526132,
+//            longitude: 127.1329152),
+//            altitude: 78.1330068, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+//        Node(name: "L-2", location: CLLocation(coordinate: CLLocationCoordinate2D(
+//            latitude: 37.4527370,
+//            longitude: 127.1329290),
+//            altitude: 123.2, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+//        Node(name: "L-3", location: CLLocation(coordinate: CLLocationCoordinate2D(
+//            latitude: 37.4527942,
+//            longitude: 127.1330613),
+//            altitude: 75.3932716, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
 //        Node(name: "L-2", location: CLLocation(coordinate: CLLocationCoordinate2D(
 //            latitude: 37.4527370,
 //            longitude: 127.1329290),
@@ -230,14 +230,14 @@ class Path {
 //            latitude: 37.4527942,
 //            longitude: 127.1330613),
 //            altitude: 75.3932716, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "L-4", location: CLLocation(coordinate: CLLocationCoordinate2D(
-            latitude: 37.4526397,
-            longitude: 127.1330479),
-            altitude: 75.4579715, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
-        Node(name: "L-5", location: CLLocation(coordinate: CLLocationCoordinate2D(
-            latitude: 37.4524433,
-            longitude: 127.1331701),
-            altitude: 83.7085116, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+//        Node(name: "L-4", location: CLLocation(coordinate: CLLocationCoordinate2D(
+//            latitude: 37.4526397,
+//            longitude: 127.1330479),
+//            altitude: 75.4579715, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
+//        Node(name: "L-5", location: CLLocation(coordinate: CLLocationCoordinate2D(
+//            latitude: 37.4524433,
+//            longitude: 127.1331701),
+//            altitude: 83.7085116, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())),
         
 //
 //        Node(name: "L-1", latitude: 37.4526132, longitude: 127.1329152, altitude: 78.1330068,

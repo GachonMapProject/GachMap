@@ -4,7 +4,7 @@ import ARKit
 struct ARView: View {
     
     // 전역으로 CoreLocationEx 인스턴스 생성
-    @ObservedObject var coreLocation: CoreLocationEx
+    @EnvironmentObject var coreLocation: CoreLocationEx
     @ObservedObject var nextNodeObject : NextNodeObject
     @State var bestHorizontalAccuracy : CLLocationAccuracy
     @State var bestVerticalAccuracy : CLLocationAccuracy
@@ -15,7 +15,7 @@ struct ARView: View {
     
     var body: some View {
         VStack{
-            ARViewContainer(path: path, location : location, coreLocation: coreLocation, nextNodeObject : nextNodeObject, bestHorizontalAccuracy: bestHorizontalAccuracy, bestVerticalAccuracy: bestVerticalAccuracy)
+            ARViewContainer(path: path, location : location, nextNodeObject : nextNodeObject, bestHorizontalAccuracy: bestHorizontalAccuracy, bestVerticalAccuracy: bestVerticalAccuracy)
             .edgesIgnoringSafeArea(.all)
 //            Text("bestHorizontalAccuracy : \(bestHorizontalAccuracy)")
 //            Text("bestVerticalAccuracy : \(bestVerticalAccuracy)")
@@ -57,7 +57,7 @@ struct ARViewContainer: UIViewRepresentable {
     
     var path : [Node] // 경로
     var location : CLLocation
-    @ObservedObject var coreLocation : CoreLocationEx
+    @EnvironmentObject var coreLocation : CoreLocationEx
     @ObservedObject var nextNodeObject : NextNodeObject
     @State private var stepData = [Step]()
     @State var sourcePosition = SCNVector3(x: 0, y: 0, z: 0)            // 출발지 상대적 위치

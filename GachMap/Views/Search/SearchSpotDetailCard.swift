@@ -8,12 +8,21 @@
 import SwiftUI
 
 struct SearchSpotDetailCard: View {
+    var placeId : Int?
     var placeName: String
     var placeSummary: String
     var mainImagePath: String?
     
     @State private var isStartMoved: Bool = false
     @State private var isEndMoved: Bool = false
+    @State var showBuildingDetail = false   // 마커 선택 시 건물 상세 보기
+    
+    var inCategory : Bool
+    var isBuilding : Bool
+    
+    
+    
+    
     
     var body: some View {
         VStack {
@@ -78,7 +87,23 @@ struct SearchSpotDetailCard: View {
             
             HStack {
                 HStack {
-                    if (placeName != "기본 위치") {
+                    if inCategory {
+                        if isBuilding{  // 카테고리 마커가 BUILDING인 경우만, 다른 카테고리 시 버튼 x
+                            Button(action: {
+                                if let placeId = placeId {
+                                    showBuildingDetail = true
+                                }
+                            }, label: {
+                                Text("상세 정보 보기")
+                                    .font(.system(size: 15, weight: .bold))
+                            })
+                            .frame(width: 130, height: 33)
+                            .foregroundColor(.white)
+                            .background(Capsule()
+                                .fill(.gachonBlue))
+                        }
+                    }
+                    else {  // 검색으로 들어온 정보 카드 뷰
                         Button(action: {
                             isStartMoved = true
                         }, label: {
@@ -122,13 +147,18 @@ struct SearchSpotDetailCard: View {
         )
         
         NavigationLink("", isActive: $isStartMoved) {
-            SearchSecondView(getStartSearchText: placeName, getEndSearchText: "")
+            SearchSecondView(getStartSearchText: placeName, getEndSearchText: "", startPlaceId : placeId)
                 .navigationBarBackButtonHidden()
         }
         
         NavigationLink("", isActive: $isEndMoved) {
-            SearchSecondView(getStartSearchText: "", getEndSearchText: placeName)
+            SearchSecondView(getStartSearchText: "현재 위치", getEndSearchText: placeName, endPlaceId: placeId)
                 .navigationBarBackButtonHidden()
+        }
+        
+        NavigationLink("", isActive: $showBuildingDetail) {
+            BuildingDetailView(buildingCode: placeId ?? -1)
+//                .navigationBarBackButtonHidden()
         }
         
     }
@@ -136,7 +166,7 @@ struct SearchSpotDetailCard: View {
 
 struct SearchSpotDetailCard_Previews: PreviewProvider {
     static var previews: some View {
-        SearchSpotDetailCard(placeName: "전달받은 장소명", placeSummary: "전달받은 요약명")
+        SearchSpotDetailCard(placeName: "전달받은 장소명", placeSummary: "전달받은 요약명", inCategory: true, isBuilding: true)
             .previewLayout(.sizeThatFits)
             .padding()
     }

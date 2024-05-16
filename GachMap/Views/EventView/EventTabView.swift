@@ -99,7 +99,7 @@ struct EventTabView: View {
 //        guard let url = URL(string: "https://af0b-58-121-110-235.ngrok-free.app/event/list")
         guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/event/list")
         else {
-            print("Invalid URL")
+            print("getEventList - Invalid URL")
             return
         }
             
@@ -120,6 +120,8 @@ struct EventTabView: View {
                     }
                     else {
                         nilData = true
+                        print("nilData")
+                        
                     }
                             
                         

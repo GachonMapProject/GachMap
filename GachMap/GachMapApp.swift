@@ -10,6 +10,8 @@ import SwiftUI
 @main
 struct GachMapApp: App {
     @StateObject private var globalViewModel = GlobalViewModel()
+    @StateObject private var naviagionController = NavigationController()
+//    @EnvironmentObject private var coreLocation = CoreLocationEx()
     
     var body: some Scene {
         WindowGroup {
@@ -17,3 +19,4 @@ struct GachMapApp: App {
         }
     }
 }
+
