@@ -34,7 +34,28 @@ struct InquireListCell: View {
             return ""
         }
     }
-
+    
+    func formatCreateDt(_ createDt: String) -> String? {
+        // 입력 문자열을 Date 객체로 변환하는 DateFormatter 설정
+        let inputDateFormatter = DateFormatter()
+        inputDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        inputDateFormatter.locale = Locale(identifier: "ko_KR")
+        
+        // 문자열을 Date 객체로 변환
+        if let date = inputDateFormatter.date(from: createDt) {
+            // Date 객체를 원하는 형식의 문자열로 변환하는 DateFormatter 설정
+            let outputDateFormatter = DateFormatter()
+            outputDateFormatter.dateFormat = "yyyy년 M월 d일(E) HH시 mm분"
+            outputDateFormatter.locale = Locale(identifier: "ko_KR")
+            
+            // Date 객체를 원하는 형식의 문자열로 변환
+            let formattedDateString = outputDateFormatter.string(from: date)
+            return formattedDateString
+        } else {
+            // 변환에 실패한 경우 nil 반환
+            return nil
+        }
+    }
     
     var body: some View {
         // 버튼 시작
@@ -53,7 +74,7 @@ struct InquireListCell: View {
                     Text(inquiry.inquiryTitle)
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(.black)
-                    Text(inquiry.createDt)
+                    Text(formatCreateDt(inquiry.createDt) ?? inquiry.createDt)
                         .font(.system(size: 15))
                         .foregroundColor(.gray)
                 }

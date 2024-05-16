@@ -11,6 +11,28 @@ struct UsageListCell: View {
     
     var usages: RouteHistoryData
     
+    func formatCreateDt(_ createDt: String) -> String? {
+        // 입력 문자열을 Date 객체로 변환하는 DateFormatter 설정
+        let inputDateFormatter = DateFormatter()
+        inputDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        inputDateFormatter.locale = Locale(identifier: "ko_KR")
+        
+        // 문자열을 Date 객체로 변환
+        if let date = inputDateFormatter.date(from: createDt) {
+            // Date 객체를 원하는 형식의 문자열로 변환하는 DateFormatter 설정
+            let outputDateFormatter = DateFormatter()
+            outputDateFormatter.dateFormat = "yyyy년 M월 d일(E) a h시 mm분"
+            outputDateFormatter.locale = Locale(identifier: "ko_KR")
+            
+            // Date 객체를 원하는 형식의 문자열로 변환
+            let formattedDateString = outputDateFormatter.string(from: date)
+            return formattedDateString
+        } else {
+            // 변환에 실패한 경우 nil 반환
+            return nil
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack {
@@ -25,7 +47,7 @@ struct UsageListCell: View {
                 //2024-03-25T...
                 Text("날짜")
                     .font(.system(size: 15))
-                Text(usages.createDt)
+                Text(formatCreateDt(usages.createDt) ?? usages.createDt)
                     .font(.system(size: 15, weight: .bold))
             }
             HStack {

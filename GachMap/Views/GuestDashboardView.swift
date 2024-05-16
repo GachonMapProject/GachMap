@@ -9,105 +9,153 @@ import SwiftUI
 
 struct GuestDashboardView: View {
     var body: some View {
-        VStack() {
-            VStack {
+        
+        VStack {
+            VStack(spacing: 2) {
+                
                 HStack {
-                    
-                    HStack(spacing: 5) {
-                        Text("가천대학교 방문을")
+                    VStack(alignment: .leading) {
+                        HStack(spacing: 6) {
+                            Text("가천대학교")
+                                .font(.system(size: 28, weight: .black))
+                                .foregroundColor(.gachonBlue)
+                            Text("방문을")
+                                .font(.system(size: 28))
+                        }
+                        Text("환영합니다!")
                             .font(.system(size: 28, weight: .bold))
                     }
-                    .frame(alignment: .leading)
-                    .padding(.leading, 17)
                     
                     Spacer()
                     
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 7, style: .continuous)
-                            .fill(.cyan)
+                    Button(action: {
                         
-                        HStack {
+                    }, label: {
+                        VStack(spacing: 5) {
+                            Image(systemName: "iphone.and.arrow.forward")
+                                .font(.system(size: 18, weight: .bold))
                             Text("로그인")
-                                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                            Image(systemName: "person.circle")
-                                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                                .font(.system(size: 15, weight: .bold))
                         }
-                        
-                    }
-                    .frame(width: 95, height: 31, alignment: .trailing)
-                    .padding(.trailing, 17)
-                } // H1
-                
-                Spacer()
-                
-                HStack {
-                    Text("환영합니다!")
-                        .font(.system(size: 28, weight: .bold))
-                } // H2
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 17)
+                        .foregroundColor(.white)
+                        .frame(width: 80, height: 60)
+                        .background(
+                            RoundedRectangle(cornerRadius: 7)
+                                .fill(.gachonBlue))
+                    })
+                }
+                .padding(EdgeInsets(top: 0, leading: 17, bottom: 0, trailing: 17))
                 
             } // V1
             
-            VStack(spacing: 2) {
+            VStack(spacing: 13) {
                 HStack() {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .fill(.orange)
-                            .shadow(radius: 7, x: 2, y: 2)
-                            .frame(width: 193, height: 258)
+                    Button(action: {
                         
-                        Text("AR 길찾기")
-                    }
+                    }, label: {
+                        ZStack {
+                            Image("MuhanPointRight")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 180)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                            
+                            VStack(alignment: .leading, spacing: 3) {
+                                HStack {
+                                    Text("🧭 AR 길찾기")
+                                        .font(.system(size: 20, weight: .bold))
+                                        .foregroundColor(.white)
+                                    Spacer()
+                                }
+                                
+                                Text("가천대 구석구석 AR 길찾기")
+                                    .font(.system(size: 15))
+                                    .foregroundColor(.white)
+                                    .padding(.leading, 3)
+                                Spacer()
+                            }
+                            .frame(maxHeight: .infinity)
+                            .padding(EdgeInsets(top: 13, leading: 10, bottom: 0, trailing: 0))
+                        }
+                    })
+                    .frame(width: 193, height: 258)
+                    .background(
+                        RoundedRectangle(cornerRadius: 13)
+                            .fill(.dashboardBlue)
+                            .shadow(radius: 7, x: 2, y: 2)
+                    )
+                    
+                    
                     Spacer()
+                    
                     WeatherView()
+                        .shadow(radius: 7, x: 2, y: 2)
                 } // H3
                 
-                Spacer()
+                //Spacer()
                 
                 HStack {
                     
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .fill(.blue)
-                            .shadow(radius: 7, x: 2, y: 2)
-                            .frame(width: 131, height: 103)
+                    Button(action: {
                         
-                        Text("캠퍼스맵")
-                    }
+                    }, label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text("🏢")
+                                Text("캠퍼스 맵")
+                                Spacer()
+                            }
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.black)
+                            Spacer()
+                        }
+                        .padding(EdgeInsets(top: 13, leading: 15, bottom: 0, trailing: 0))
+                    })
+                    .frame(width: 131, height: 103)
+                    .background(
+                        RoundedRectangle(cornerRadius: 13)
+                            .fill(.white)
+                            .shadow(radius: 7, x: 2, y: 2)
+                    )
                     
                     Spacer()
                     
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .fill(.blue)
-                            .shadow(radius: 7, x: 2, y: 2)
-                            .frame(width: 198, height: 103)
+                    Button(action: {
                         
-                        Text("행사 안내")
-                    }
+                    }, label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text("🎉")
+                                Text("행사 안내")
+                                Spacer()
+                            }
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.white)
+                            Spacer()
+                        }
+                        .padding(EdgeInsets(top: 13, leading: 15, bottom: 0, trailing: 0))
+                    })
+                    .frame(width: 198, height: 103)
+                    .background(
+                        RoundedRectangle(cornerRadius: 13)
+                            .fill(.dashboardPink)
+                            .shadow(radius: 7, x: 2, y: 2)
+                    )
                 } // H4
                 
-                Spacer()
-                
-                HStack {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .fill(.gray)
-                            .shadow(radius: 7, x: 2, y: 2)
-                            .frame(width: 343, height: 500)
-                        
-                        Text("행사 안내")
-                    }
-                }
+                Image("gach1000")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(.top, 30)
             }
             .frame(width: 343) // V2
             
         }
         .padding(.top, 20)// V3
-    }
-}
+        
+    } // end of body
+} // end of View struct
 
 #Preview {
-    ContentView()
+    GuestDashboardView()
 }

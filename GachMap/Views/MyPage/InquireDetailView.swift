@@ -63,6 +63,31 @@ struct InquireDetailView: View {
     @State private var inquireDetail: String = ""
     @State private var answerDetail: String = ""
     
+    @State private var showErrorAlert: Bool = false
+    @State private var alertMessage: String = ""
+    
+    func formatCreateDt(_ createDt: String) -> String? {
+        // 입력 문자열을 Date 객체로 변환하는 DateFormatter 설정
+        let inputDateFormatter = DateFormatter()
+        inputDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        inputDateFormatter.locale = Locale(identifier: "ko_KR")
+        
+        // 문자열을 Date 객체로 변환
+        if let date = inputDateFormatter.date(from: createDt) {
+            // Date 객체를 원하는 형식의 문자열로 변환하는 DateFormatter 설정
+            let outputDateFormatter = DateFormatter()
+            outputDateFormatter.dateFormat = "yyyy년 M월 d일(E) HH시 mm분"
+            outputDateFormatter.locale = Locale(identifier: "ko_KR")
+            
+            // Date 객체를 원하는 형식의 문자열로 변환
+            let formattedDateString = outputDateFormatter.string(from: date)
+            return formattedDateString
+        } else {
+            // 변환에 실패한 경우 nil 반환
+            return nil
+        }
+    }
+    
     // 문의 상세 정보 가져오기
     private func getInquireDetail() {
         guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/inquiry/\(inquiryId)")
@@ -91,12 +116,18 @@ struct InquireDetailView: View {
                         
                     } else {
                         print("1:1 문의 상세 정보 가져오기 실패")
+                        
+                        alertMessage = "정보를 불러오는데 실패했습니다.\n다시 시도해주세요."
+                        showErrorAlert = true
                     }
                     
                 case .failure(let error):
                     print("서버 연결 실패")
                     print(url)
                     print("Error: \(error.localizedDescription)")
+                    
+                    alertMessage = "서버 연결에 실패했습니다."
+                    showErrorAlert = true
                 }
             }
     }
@@ -182,15 +213,27 @@ struct InquireDetailView: View {
                             Spacer()
                         }
                         
-                        TextField("", text: $inquireDate)
-                            .padding(.leading)
-                            .multilineTextAlignment(.leading)
-                            .disabled(true)
-                            .frame(height: 45)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(.systemGray6))
-                            )
+                        if let formattedDate = formatCreateDt(inquireDate) {
+                            TextField("", text: .constant(formattedDate))
+                                .padding(.leading)
+                                .multilineTextAlignment(.leading)
+                                .disabled(true)
+                                .frame(height: 45)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color(.systemGray6))
+                                )
+                        } else {
+                            TextField("", text: .constant(inquireDate))
+                                .padding(.leading)
+                                .multilineTextAlignment(.leading)
+                                .disabled(true)
+                                .frame(height: 45)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color(.systemGray6))
+                                )
+                        }
                     }
                     .padding(.top, 10)
                     
@@ -261,6 +304,9 @@ struct InquireDetailView: View {
                 } // end of ScrollView
                 
             } // 전체 VStack 끝
+            .alert(isPresented: $showErrorAlert) {
+                Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인"), action: { dismiss() }))
+            }
             .frame(width: UIScreen.main.bounds.width - 30)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

@@ -84,7 +84,10 @@ struct SearchMainView: View {
                     LocationSearchResultCell(viewModel: searchViewModel, selectPlaceId: $selectedPlaceId, triggerNavigation: $isNavigationTriggered)
                         .padding(.top, 15)
                 } else {
-                    RecentSearchCell(viewModel: searchViewModel, searchText: $searchText)
+                    RecentSearchCell(viewModel: searchViewModel) { selectedSearch in
+                        self.searchText = selectedSearch
+                        performSearch()
+                    }
                         .padding(.top, 15)
                 }
                 

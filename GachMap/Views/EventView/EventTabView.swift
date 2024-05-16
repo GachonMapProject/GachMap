@@ -51,7 +51,7 @@ struct EventTabView: View {
                         }
                         .padding(EdgeInsets(top: 5, leading: 10, bottom: 0, trailing: 10))
                         
-                        ScrollView(.horizontal) { // 수평 스크롤로 설정
+                        ScrollView(.horizontal, showsIndicators: false) { // 수평 스크롤로 설정
                             ZStack(alignment : .leading){
                                 LazyHStack {
                                     ForEach(eventList.indices) { index in
