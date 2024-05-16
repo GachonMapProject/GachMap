@@ -17,6 +17,7 @@ struct PrimaryView: View {
                     if loginInfo.userCode != nil || loginInfo.guestCode != nil {
                         ContentView()
                             .environmentObject(GlobalViewModel())
+                            .environmentObject(CoreLocationEx())
                     } else {
                         LoginView()
                     }

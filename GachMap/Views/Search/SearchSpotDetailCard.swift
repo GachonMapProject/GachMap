@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SearchSpotDetailCard: View {
-    var placeId : Int?
+    var placeId : Int
     var placeName: String
     var placeSummary: String
     var mainImagePath: String?
@@ -19,10 +19,6 @@ struct SearchSpotDetailCard: View {
     
     var inCategory : Bool
     var isBuilding : Bool
-    
-    
-    
-    
     
     var body: some View {
         VStack {
@@ -90,9 +86,10 @@ struct SearchSpotDetailCard: View {
                     if inCategory {
                         if isBuilding{  // 카테고리 마커가 BUILDING인 경우만, 다른 카테고리 시 버튼 x
                             Button(action: {
-                                if let placeId = placeId {
-                                    showBuildingDetail = true
-                                }
+//                                if let placeId = placeId {
+//                                    showBuildingDetail = true
+//                                }
+                                showBuildingDetail = true
                             }, label: {
                                 Text("상세 정보 보기")
                                     .font(.system(size: 15, weight: .bold))
@@ -147,12 +144,12 @@ struct SearchSpotDetailCard: View {
         )
         
         NavigationLink("", isActive: $isStartMoved) {
-            SearchSecondView(getStartSearchText: placeName, getEndSearchText: "", startPlaceId : placeId)
+            SearchSecondView(getStartSearchText: placeName, getEndSearchText: "", getStartPlaceId : placeId, getEndPlaceId: -1)
                 .navigationBarBackButtonHidden()
         }
         
         NavigationLink("", isActive: $isEndMoved) {
-            SearchSecondView(getStartSearchText: "현재 위치", getEndSearchText: placeName, endPlaceId: placeId)
+            SearchSecondView(getStartSearchText: "현재 위치", getEndSearchText: placeName, getStartPlaceId: -1, getEndPlaceId: placeId)
                 .navigationBarBackButtonHidden()
         }
         
@@ -166,7 +163,7 @@ struct SearchSpotDetailCard: View {
 
 struct SearchSpotDetailCard_Previews: PreviewProvider {
     static var previews: some View {
-        SearchSpotDetailCard(placeName: "전달받은 장소명", placeSummary: "전달받은 요약명", inCategory: true, isBuilding: true)
+        SearchSpotDetailCard(placeId: 6, placeName: "전달받은 장소명", placeSummary: "전달받은 요약명", inCategory: true, isBuilding: true)
             .previewLayout(.sizeThatFits)
             .padding()
     }
