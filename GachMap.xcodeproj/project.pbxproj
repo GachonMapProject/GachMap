@@ -23,6 +23,7 @@
 		8B5369032BD37F6D007B8984 /* UserPasswordCheckResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369022BD37F6D007B8984 /* UserPasswordCheckResponse.swift */; };
 		8B5369072BD38B55007B8984 /* UserIdInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369062BD38B55007B8984 /* UserIdInjection.swift */; };
 		8B5BD2292BF50A7A009C238E /* ShowSafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5BD2282BF50A7A009C238E /* ShowSafariView.swift */; };
+		8B5BD22B2BF5DCBF009C238E /* middleArrow2.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 8B5BD22A2BF5DCBF009C238E /* middleArrow2.usdz */; };
 		8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */; };
 		8B831BE02BCCEFF600A85973 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDF2BCCEFF600A85973 /* ContentView.swift */; };
 		8B831BE22BCCEFF700A85973 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B831BE12BCCEFF700A85973 /* Assets.xcassets */; };
@@ -155,6 +156,7 @@
 		8B5369022BD37F6D007B8984 /* UserPasswordCheckResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordCheckResponse.swift; sourceTree = "<group>"; };
 		8B5369062BD38B55007B8984 /* UserIdInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdInjection.swift; sourceTree = "<group>"; };
 		8B5BD2282BF50A7A009C238E /* ShowSafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowSafariView.swift; sourceTree = "<group>"; };
+		8B5BD22A2BF5DCBF009C238E /* middleArrow2.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = middleArrow2.usdz; sourceTree = "<group>"; };
 		8B831BDA2BCCEFF600A85973 /* GachMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GachMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GachMapApp.swift; sourceTree = "<group>"; };
 		8B831BDF2BCCEFF600A85973 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -439,6 +441,7 @@
 			children = (
 				8B831C182BCCF60C00A85973 /* middleArrow.usdz */,
 				8B831C192BCCF60C00A85973 /* Pin.usdz */,
+				8B5BD22A2BF5DCBF009C238E /* middleArrow2.usdz */,
 				8B831C1A2BCCF60C00A85973 /* right.usdz */,
 				8B831C1B2BCCF60C00A85973 /* threeArrows.usdz */,
 			);
@@ -675,6 +678,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B831BE52BCCEFF700A85973 /* Preview Assets.xcassets in Resources */,
+				8B5BD22B2BF5DCBF009C238E /* middleArrow2.usdz in Resources */,
 				8B831C342BCCF60C00A85973 /* middleArrow.usdz in Resources */,
 				8B831BE22BCCEFF700A85973 /* Assets.xcassets in Resources */,
 				8B831C352BCCF60C00A85973 /* Pin.usdz in Resources */,

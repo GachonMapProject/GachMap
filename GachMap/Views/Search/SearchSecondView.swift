@@ -53,6 +53,9 @@ struct SearchSecondView: View {
                     // 뒤로 가기 버튼
                     Button(action: {
                         dismiss()
+                        if globalViewModel.showDetailView == true {
+                            globalViewModel.showDetailView.toggle()
+                        }
                     }, label: {
                         Image(systemName: "arrow.left")
                             .font(.title2)
@@ -61,14 +64,17 @@ struct SearchSecondView: View {
                     
                     Spacer()
                     
-                    // 검색창 종료 버튼
-                    Button(action: {
-                        globalViewModel.showSearchView = false
-                    }, label: {
-                        Image(systemName: "xmark")
-                            .font(.title2)
-                            .foregroundColor(.black)
-                    })
+                    if globalViewModel.showSearchView == true {
+                        // 검색창 종료 버튼
+                        Button(action: {
+                            globalViewModel.showSearchView = false
+                        }, label: {
+                            Image(systemName: "xmark")
+                                .font(.title2)
+                                .foregroundColor(.black)
+                        })
+                    }
+                    
                 }
                 .frame(width: UIScreen.main.bounds.width - 40)
                 .padding(.top, 10)
@@ -203,7 +209,7 @@ struct SearchSecondView: View {
                             if (fixedStart && fixedEnd) {
                                 // 길찾기 뷰로 넘기기
                                 VStack(spacing: 5) {
-                                    Image(systemName: "arrow.triangle.turn.up.right.circle.fill")
+                                    Image(systemName: "location.magnifyingglass")
                                         .font(.title2)
                                         .foregroundColor(.white)
                                     Text("길찾기")
@@ -419,6 +425,8 @@ struct SearchSecondView: View {
     }
 }
 
-//#Preview {
-//    SearchSecondView(getStartSearchText: "", getEndSearchText: "")
-//}
+#Preview {
+    SearchSecondView(getStartSearchText: "", getEndSearchText: "", getStartPlaceId: 10, getEndPlaceId: 20)
+        .environmentObject(GlobalViewModel())
+        .environmentObject(CoreLocationEx())
+}
