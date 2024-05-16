@@ -22,7 +22,7 @@ struct PathTimeView: View {
     let num : Int
     @Binding var selectedPath : Int
     
-    let pathNameDic = ["SHORTEST" : "최단 경로", "OPTIMAL" : "최적 경로", "MUDANG" : "무당이 경로"]
+    let pathNameDic = ["SHORTEST" : "최단 경로", "OPTIMAL" : "최적 경로", "busRoute" : "무당이 경로"]
     
     var body: some View {
         VStack(alignment: .leading){

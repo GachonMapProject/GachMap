@@ -45,6 +45,7 @@ struct SearchSecondView: View {
     
     @State var showStartLocationChangeAlert = false // 출발지 - 현재 위치 변경시 알림
     
+    
     var body: some View {
         if !goPathView{
             VStack {
@@ -185,8 +186,9 @@ struct SearchSecondView: View {
                                 print("도착 placeName: \(endSearchText)")
                                 print("도착 placeId: \(endPlaceId)")
                                 if let location = coreLocation.location {
+                                    let location1 = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.449878, longitude: 127.126999), altitude: 55, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())
                                     if startSearchText == "현재 위치" {
-                                        getUserLocationPath(location : location, arrival: endPlaceId ?? 0)
+                                        getUserLocationPath(location : location1, arrival: endPlaceId ?? 0)
                                     } else{
                                         getPath(departure: startPlaceId ?? 0, arrival: endPlaceId ?? 0)
                                     }
@@ -309,7 +311,7 @@ struct SearchSecondView: View {
         }
         else {
             if paths != nil{
-                ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText)
+                ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText, goPathView: $goPathView)
 //                .navigationBarBackButtonHidden()
 //                .edgesIgnoringSafeArea(.bottom)
             
