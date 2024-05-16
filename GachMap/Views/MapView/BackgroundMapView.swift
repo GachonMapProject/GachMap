@@ -33,6 +33,8 @@ struct pinItem {
 // CoreLocationEx, Category, [CategoryData]을 받아야 함 
 struct BackgroundMapView : View {
     
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    
     @Binding var showSheet : Bool
     // 카테고리 추가
     @Binding var selecetedCategory : String
@@ -100,7 +102,7 @@ struct BackgroundMapView : View {
                         selectedPlaceSummary = location[0].markerData.placeSummary
                         selectedImagePath = location[0].markerData.mainImagePath ?? ""
                         showSheet = false
-                        showDetalView = true
+                        globalViewModel.showDetailView = true
                         
                         
                     }
@@ -112,7 +114,7 @@ struct BackgroundMapView : View {
                     }
                     
                     showSheet = true
-                    showDetalView = false
+                    globalViewModel.showDetailView = false
                 }
                 
                 VStack{
@@ -157,7 +159,7 @@ struct BackgroundMapView : View {
                     Spacer()
                 } // end of VStack
             } // end of ZStack(alignment : .topTrailing)
-            if showDetalView {
+            if globalViewModel.showDetailView {
                 SearchSpotDetailCard(placeId : selectedPlaceId, placeName: selectedPlaceName, placeSummary: selectedPlaceSummary, mainImagePath: selectedImagePath, inCategory: true, isBuilding : isBuilding)
                     .padding(.bottom, 100)
                 
@@ -166,7 +168,7 @@ struct BackgroundMapView : View {
         .gesture(
             TapGesture()
                 .onEnded { _ in
-                    self.showDetalView = false
+                    self.globalViewModel.showDetailView = false
                     self.showSheet = true
                 }
                 .updating($isTapOutside) { value, state, _ in

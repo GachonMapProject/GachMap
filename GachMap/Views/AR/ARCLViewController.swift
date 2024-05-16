@@ -210,7 +210,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         // boxNode 위에 화살표 노드 생성
         for point in midPoints {
 //            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
-            let arrow = makeUsdzNode(fileName: "middleArrow", scale : 0.003, middle: true)
+            let arrow = makeUsdzNode(fileName: "middleArrow2", scale : 0.003, middle: true)
             let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.39)
             let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
             arrowNode.constraints = nil
@@ -346,7 +346,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         // boxNode 위에 화살표 노드 생성
         for point in midPoints {
 //            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
-            let arrow = makeUsdzNode(fileName: "middleArrow", scale : 0.003, middle: true)
+            let arrow = makeUsdzNode(fileName: "middleArrow2", scale : 0.003, middle: true)
             let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.39)
             let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
             arrowNode.constraints = nil
