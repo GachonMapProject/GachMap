@@ -296,7 +296,6 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
          return annotationView
      }
 }
-//#Preview {
-//    ChoosePathView()
-//}
-
+#Preview {
+    ChoosePathView(paths: [GachMap.PathData(routeType: "SHORTEST", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "OPTIMAL", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "busRoute", totalTime: nil, nodeList: [])], startText: "기본", endText: "기본", goPathView: Binding.constant(true))
+}
