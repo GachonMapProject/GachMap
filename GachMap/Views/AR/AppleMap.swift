@@ -126,11 +126,12 @@ struct AppleMap: UIViewRepresentable {
     let region: MKCoordinateRegion
     let lineCoordinates: [CLLocationCoordinate2D]
     @State var isCameraFixed : Bool = true
-    @EnvironmentObject var coreLocation : CoreLocationEx
+    @ObservedObject var coreLocation : CoreLocationEx
     let isOnlyMapOn : Bool
     
     // coreLocation이 변경될 때마다 init 됨
     init(path : [Node], coreLocation : CoreLocationEx, isOnlyMapOn : Bool) {
+        self.coreLocation = coreLocation
         self.isOnlyMapOn = isOnlyMapOn
         region = MKCoordinateRegion(
             center: isOnlyMapOn ? path[0].location.coordinate : coreLocation.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
@@ -141,9 +142,10 @@ struct AppleMap: UIViewRepresentable {
         lineCoordinates =  path.map{CLLocationCoordinate2D(latitude: $0.location.coordinate.latitude, longitude: $0.location.coordinate.longitude)
         }
     }
+    
     // 현재 위치를 기반으로 지도의 중심을 설정하는 함수
     func setRegionToUserLocation() {
-        if let userLocation = coreLocation.location {
+        if let userLocation = self.coreLocation.location {
             let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
             mapView.region = region
         }
@@ -166,7 +168,7 @@ struct AppleMap: UIViewRepresentable {
         }
         
         // 경로 중간 노드 표시 (출발, 도착 제외)
-        if let middleImage = UIImage(systemName: "circlebadge"){
+        if let middleImage = UIImage(named: "circlebadge"){
             for i in 1..<lineCoordinates.count - 1{
                 let middleAnnotation = CustomAnnotation(customImage: middleImage, coordinate: lineCoordinates[i], reuseIdentifier: "middle")
                 mapView.addAnnotation(middleAnnotation)
@@ -175,8 +177,8 @@ struct AppleMap: UIViewRepresentable {
       
         
         // 도착지 표시 마커 추가
-        if let destinationImage = UIImage(systemName: "endMarker") {
-            let destinationAnnotation = CustomAnnotation(customImage: destinationImage, coordinate: lineCoordinates.last!, reuseIdentifier: "destination")
+        if let destinationImage = UIImage(named: "endMarker") {
+            let destinationAnnotation = CustomAnnotation(customImage: destinationImage, coordinate: lineCoordinates.last!, reuseIdentifier: "end")
             mapView.addAnnotation(destinationAnnotation)
         }
         
@@ -274,7 +276,7 @@ class Coordinator: NSObject, MKMapViewDelegate {
                     annotationView.centerOffset = CGPoint(x: 0, y: -20)
                     return annotationView
                 }
-            } else if  customAnnotation.reuseIdentifier == "destination" {
+            } else if  customAnnotation.reuseIdentifier == "end" {
                 if let image = UIImage(named: "endMarker") {
                     let size = CGSize(width: 30, height: 41) // 원하는 크기로 설정
                     let renderer = UIGraphicsImageRenderer(size: size)

@@ -73,8 +73,11 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         rebuildSceneLocationView()  // SceneLocationView() 재구성
         
         // 노드 추가 함수
-        addNodes(path : path)
-        sceneLocationView?.run()    // SceneLocationView 시작
+        DispatchQueue.main.async {
+            self.addNodes(path : self.path)
+            self.sceneLocationView?.run()    // SceneLocationView 시작
+        }
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -318,8 +321,8 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
 
         // 실릴더 기울기
         let angle = acos(length / hypotenuse)
-        node.eulerAngles.x = Float(-angle)
-        xAngle = -angle
+        node.eulerAngles.x = Float(angle)
+        xAngle = angle
 
         let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
         let yAngle = atan(dirVector.x / dirVector.z)
