@@ -15,7 +15,10 @@ struct GachMapApp: App {
     
     var body: some Scene {
         WindowGroup {
-            SplashScreen()
+//            SplashScreen()
+            ContentView()
+                .environmentObject(GlobalViewModel())
+                .environmentObject(CoreLocationEx())
         }
     }
 }
