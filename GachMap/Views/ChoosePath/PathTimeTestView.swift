@@ -24,7 +24,7 @@ struct PathTimeTestView: View {
         ScrollView(.horizontal, showsIndicators: false){
 //            ZStack(alignment:.center){
                 LazyHStack{
-                    ForEach(0..<2){ index in
+                    ForEach(0..<path.count){ index in
                         Button(action: {
                             // 지도에 경로 표시 및 검색창의 텍스트 변경 (위치 포함)
                             selectedPath = index

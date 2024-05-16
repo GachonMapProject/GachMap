@@ -28,17 +28,18 @@ struct ChoosePathView: View {
     @State var path: [PathTime]
     var locations = [CLLocation]()
     var nodes = [[Node]]()
-    let startText: String
-    let endText: String
-    @State var isLogin: Bool = false
+    let startText : String
+    let endText : String
+    @State var isLogin : Bool = false
+    @Binding var goPathView : Bool
     
-    // CLLocationManager 인스턴스 추가
-    @StateObject private var locationManager = LocationManager()
-
-    init(paths: [PathData], startText: String, endText: String) {
+    init(paths : [PathData], startText : String, endText : String, goPathView : Binding<Bool>) {
         self.startText = startText
         self.endText = endText
-
+        _goPathView = goPathView
+        
+        
+        // 로그인 유뮤 가져오기
         var isLogin = false
         if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
            let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
@@ -89,7 +90,7 @@ struct ChoosePathView: View {
                     VStack {
                         HStack {
                             Button(action: {
-                                dismiss()
+                                goPathView = false
                             }, label: {
                                 Image(systemName: "arrow.left")
                                     .font(.title2)
@@ -322,6 +323,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         currentLocation = location.coordinate
     }
 }
+
 
 #Preview {
     ChoosePathView(paths: [GachMap.PathData(routeType: "SHORTEST", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "OPTIMAL", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "busRoute", totalTime: nil, nodeList: [])], startText: "기본", endText: "기본")

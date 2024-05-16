@@ -41,7 +41,7 @@ struct BackgroundMapView : View {
     var locations : [IdentifiableLocation]
     @EnvironmentObject var coreLocation : CoreLocationEx
 
-    @State var region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
+    @State var region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.452894, longitude: 127.131643), latitudinalMeters: 1000, longitudinalMeters: 1000))
 
     
     // category에 따라 바꿔줘야 됨
@@ -108,7 +108,7 @@ struct BackgroundMapView : View {
                     }
                 }
                 .onChange(of: selecetedCategory){ category in
-                    let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700)
+                    let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.452894, longitude: 127.131643), latitudinalMeters: 1000, longitudinalMeters: 1000)
                     withAnimation(.easeInOut (duration : 1.0)){
                         self.region = MapCameraPosition.region(region)
                     }
@@ -125,7 +125,7 @@ struct BackgroundMapView : View {
                             isARStart.toggle()
                         },
                                label: {Text("AR")})
-                        .frame(width: 45, height: 50)
+                        .frame(width: 45, height: 45)
                         .foregroundColor(.gray)
                         .bold()
                         
@@ -135,7 +135,7 @@ struct BackgroundMapView : View {
                             // 버튼을 누를 때 현재 위치를 중심으로 지도의 중심을 설정하는 함수 호출
                             setRegionToUserLocation()
                         }, label: {Image(systemName: "scope")})
-                        .frame(width: 45, height: 50)
+                        .frame(width: 45, height: 45)
                         .foregroundColor(.gray)
                         .bold()
                         
@@ -144,18 +144,18 @@ struct BackgroundMapView : View {
                         Button(action: {
                             // 버튼을 누를 때 기존 지도 중심으로 설정
                             withAnimation(.easeInOut(duration: 1.0)){
-                                region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.4507128, longitude: 127.13045), latitudinalMeters: 700, longitudinalMeters: 700))
+                                region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.452894, longitude: 127.131643), latitudinalMeters: 1000, longitudinalMeters: 1000))
                             }
                         }, label: {Image(systemName: "graduationcap")})
-                        .frame(width: 45, height: 50)
+                        .frame(width: 45, height: 45)
                         .foregroundColor(.gray)
                         .bold()
                         
                     }
-                    .frame(width: 45, height: 150)
+                    .frame(width: 45, height: 135)
                     .background(.white)
                     .cornerRadius(15)
-                    .padding(EdgeInsets(top: 200, leading: 0, bottom: 0, trailing: 20))  // bottomTrailing 마진 추가
+                    .padding(EdgeInsets(top: 180, leading: 0, bottom: 0, trailing: 10))  // bottomTrailing 마진 추가
                     Spacer()
                 } // end of VStack
             } // end of ZStack(alignment : .topTrailing)

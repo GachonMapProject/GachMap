@@ -20,7 +20,7 @@ class GetIntermediateCoordinate {
                 start: path[i],
                 end: path[i+1],
                 next: path[next],
-                name: String(i+1)
+                name: String(path[i].id)
             )
             
             steps.append(step)

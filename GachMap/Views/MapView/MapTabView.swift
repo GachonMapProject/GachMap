@@ -96,7 +96,7 @@ struct MapTabView: View {
                             }
                         }
                         .padding(.leading, 20)
-                        .padding(.top, 20)
+                        .padding(.top, 15)
                         .padding(.trailing, 20)
                     } // end of ScrollView of 카테고리 버튼
                 }
