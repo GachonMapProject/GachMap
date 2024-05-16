@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct NavigationInfoView: View {
+    @EnvironmentObject var globalViewModel : GlobalViewModel
+    
     let rotationDic = ["우회전" : "arrowshape.turn.up.right.circle.fill",
                        "좌회전" : "arrowshape.turn.up.left.circle.fill",
                        "직진" : "arrow.up.circle.fill"]
     @State var distance : Int = 0
     @State var rotation : String = "우회전"
-    @State var nodeName = "반도체대학"
 
     var body: some View {
         HStack{
@@ -25,7 +26,7 @@ struct NavigationInfoView: View {
                 .aspectRatio(contentMode: .fit) // 이미지의 비율을 유지하면서 부모 뷰에 맞게 조정
             
             VStack(alignment: .leading){
-                Text(nodeName)
+                Text(globalViewModel.destination)
                     .font(.system(size: 16))
                 Text("\(rotation) 후 \(distance)m 이동")
                     .font(.system(size: 20))

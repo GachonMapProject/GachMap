@@ -193,6 +193,7 @@ struct SearchSecondView: View {
                                 print("도착 placeId: \(endPlaceId)")
                                 if let location = coreLocation.location {
                                     let location1 = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.449878, longitude: 127.126999), altitude: 55, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())
+                                    self.globalViewModel.destination = endSearchText
                                     if startSearchText == "현재 위치" {
                                         getUserLocationPath(location : location, arrival: endPlaceId ?? 0)
                                     } else{

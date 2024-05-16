@@ -10,14 +10,15 @@ import SwiftUI
 struct PrimaryView: View {
     // @State private var loginInfo: LoginInfo? = nil
     //@State var isLogin = false
+
     
     var body: some View {
             Group {
                 if let loginInfo = getLoginInfo() {
                     if loginInfo.userCode != nil || loginInfo.guestCode != nil {
                         ContentView()
-                            .environmentObject(GlobalViewModel())
-                            .environmentObject(CoreLocationEx())
+//                            .environmentObject(GlobalViewModel())
+//                            .environmentObject(CoreLocationEx())
                     } else {
                         LoginView()
                     }
