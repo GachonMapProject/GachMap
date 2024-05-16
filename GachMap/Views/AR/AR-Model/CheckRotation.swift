@@ -80,5 +80,6 @@ struct CheckRotation {
 struct Rotation : Identifiable{
     var id : UUID = UUID()
     var rotation : String
+//    var destination : String
     var distance : Double
 }

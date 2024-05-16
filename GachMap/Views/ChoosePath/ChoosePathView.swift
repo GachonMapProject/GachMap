@@ -15,6 +15,7 @@ class CustomPathAnnotation: NSObject, MKAnnotation {
 struct ChoosePathView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var globalViewModel: GlobalViewModel
+    @EnvironmentObject var coreLocation: CoreLocationEx
     @EnvironmentObject var navi: NavigationController
 
     @State private var region: MKCoordinateRegion
@@ -37,6 +38,7 @@ struct ChoosePathView: View {
         self.startText = startText
         self.endText = endText
         _goPathView = goPathView
+        
         
         
         // 로그인 유뮤 가져오기
@@ -83,7 +85,7 @@ struct ChoosePathView: View {
     var body: some View {
         if !isAROn && !isOnlyMapOn {
             ZStack {
-                MapView(region: region, lineCoordinates: path, selectedPath: $selectedPath, currentLocation: $locationManager.currentLocation, startText: startText)
+                MapView(region: region, lineCoordinates: path, selectedPath: $selectedPath, currentLocation: coreLocation.location?.coordinate, startText: startText)
                     .ignoresSafeArea()
                 
                 VStack {
@@ -160,7 +162,7 @@ struct MapView: UIViewRepresentable {
     let region: MKCoordinateRegion
     let lineCoordinates: [PathTime]
     @Binding var selectedPath: Int
-    @Binding var currentLocation: CLLocationCoordinate2D?
+    @State var currentLocation: CLLocationCoordinate2D?
     let startText: String
 
     func makeUIView(context: Context) -> MKMapView {
@@ -226,8 +228,9 @@ struct MapView: UIViewRepresentable {
       polyline.title = "Path\(selectedPath)"
       view.addOverlay(polyline)
       
-      addMapMarker(for: lineCoordinates.first?.line.first, with: "start", to: view)
-      addMapMarker(for: lineCoordinates.first?.line.last, with: "end", to: view)
+//      addMapMarker(for: lineCoordinates.first?.line.first, with: "start", to: view)
+      
+//      addMapMarker(for: lineCoordinates.first?.line.last, with: "end", to: view)
         if startText == "현재 위치" {
             if let currentLocation = currentLocation {
                 addMapMarker(for: currentLocation, with: "start", to: view)
@@ -330,21 +333,21 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
     }
 }
 
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-    private let manager = CLLocationManager()
-    @Published var currentLocation: CLLocationCoordinate2D?
-    override init() {
-        super.init()
-        manager.delegate = self
-        manager.requestWhenInUseAuthorization()
-        manager.startUpdatingLocation()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.first else { return }
-        currentLocation = location.coordinate
-    }
-}
+//class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+//    private let manager = CLLocationManager()
+//    @Published var currentLocation: CLLocationCoordinate2D?
+//    override init() {
+//        super.init()
+//        manager.delegate = self
+//        manager.requestWhenInUseAuthorization()
+//        manager.startUpdatingLocation()
+//    }
+//    
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        guard let location = locations.first else { return }
+//        currentLocation = location.coordinate
+//    }
+//}
 
 
 //#Preview {

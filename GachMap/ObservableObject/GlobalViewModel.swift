@@ -10,4 +10,5 @@ import Foundation
 class GlobalViewModel: ObservableObject {
     @Published var showSearchView: Bool = false
     @Published var showDetailView: Bool = false
+    @Published var destination: String = ""
 }
