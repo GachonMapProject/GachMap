@@ -307,22 +307,38 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let endVector = makeSCNVector(currnetLocation: currentLocation, location: end)      // 다음 노드 상대 좌표
         
         let length = startVector.distance(receiver: endVector)
-       
+        
        // 출발지와 목적지 간의 고도 차이 계산
         let altitudeDifference = Float(start.altitude - end.altitude)
+        
+//        빗변 (hypotenuse)는 평면 거리 (length)와 고도 차이 (altitudeDifference)의 제곱합의 제곱근
+        let hypotenuse = sqrt(pow(length, 2) + pow(altitudeDifference, 2))
        
-        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(length), chamferRadius: 0)
+       
+        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(hypotenuse), chamferRadius: 0)
         box.firstMaterial?.diffuse.contents = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
         box.firstMaterial?.transparency = 0.9 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
         let node = SCNNode(geometry: box)
 
-        // 빗변
-        let hypotenuse = sqrt(pow(length, 2) + pow(altitudeDifference, 2))
+        
+        /* 필요한 수학 공식:
+        고도 차이와 거리 간의 각도 (xAngle): atan2(고도 차이, 거리)
+        두 위치 간의 방향 각도 (yAngle): atan2(두 지점 간의 x 좌표 차이, 두 지점 간의 z 좌표 차이)
+        
+         */
+//        let hypotenuse = sqrt(pow(length, 2) + pow(altitudeDifference, 2))
+//
+//        // 실릴더 기울기
+//        let angle = atan2(altitudeDifference, length)
+//        node.eulerAngles.x = Float(-angle)
+//        xAngle = -angle
 
-        // 실릴더 기울기
-        let angle = acos(length / hypotenuse)
+
+        // 실린더 기울기 (라디안)
+        let angle = -atan(altitudeDifference / length)
         node.eulerAngles.x = Float(angle)
         xAngle = angle
+
 
         let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
         let yAngle = atan(dirVector.x / dirVector.z)
@@ -416,7 +432,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             for child in scene.rootNode.childNodes {
                 child.scale = SCNVector3(scale, scale, scale)
                 if middle {
-                    child.eulerAngles.x = -xAngle 
+                    child.eulerAngles.x = xAngle
                     child.eulerAngles.y = yAngle
                 }
                 else{

@@ -217,6 +217,8 @@ struct MapView: UIViewRepresentable {
       context.coordinator.parent = self
       view.removeOverlays(view.overlays) // 모든 오버레이를 삭제하여 다시 그리도록 유도
       for (index, lineCoordinate) in lineCoordinates.enumerated() {
+          guard index != selectedPath else { continue } // 이미 추가한 selectedPath는 건너뜁니다.
+               
           let polyline = MKPolyline(coordinates: lineCoordinate.line, count: lineCoordinate.line.count)
           if index == 0 && lineCoordinate.time != nil{
               polyline.title = "Path0"
@@ -230,6 +232,9 @@ struct MapView: UIViewRepresentable {
           }
         view.addOverlay(polyline)
        }
+      let polyline = MKPolyline(coordinates: lineCoordinates[selectedPath].line, count: lineCoordinates[selectedPath].line.count)
+      polyline.title = "Path\(selectedPath)"
+      view.addOverlay(polyline)
       
       addMapMarker(for: lineCoordinates.first?.line.first, with: "start", to: view)
       addMapMarker(for: lineCoordinates.first?.line.last, with: "end", to: view)
@@ -259,6 +264,7 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         print("mapView : \(parent.selectedPath)")
+
         guard let polyline = overlay as? MKPolyline else {
             return MKOverlayRenderer()
         }
@@ -269,19 +275,23 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
             if parent.selectedPath == 0 {
                 renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
             } else {
-                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+//                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+                renderer.strokeColor = UIColor(.gray).withAlphaComponent(0.5)
             }
         } else if polyline.title == "Path1" {
             if parent.selectedPath == 1 {
                 renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
             } else {
-                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+//                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+                renderer.strokeColor = UIColor(.gray).withAlphaComponent(0.5)
             }
         } else if polyline.title == "Path2" {
             if parent.selectedPath == 2 {
-                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
+                renderer.strokeColor = UIColor(red: 0.8569, green: 0.2157, blue: 0.1804, alpha: 1)
             } else {
-                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+//                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+                renderer.strokeColor = UIColor(.gray).withAlphaComponent(0.5)
+
             }
         }
 
