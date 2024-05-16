@@ -10,6 +10,8 @@ import SwiftUI
 struct UsageListCell: View {
     
     var usages: RouteHistoryData
+    @State var minutes = 0
+    @State var seconds = 0
     
     func formatCreateDt(_ createDt: String) -> String? {
         // 입력 문자열을 Date 객체로 변환하는 DateFormatter 설정
@@ -33,6 +35,12 @@ struct UsageListCell: View {
         }
     }
     
+    // 입력받은 총 초를 분과 초로 변환
+    func convertTime(totalTime : Int) {
+        minutes = totalTime / 60
+        seconds = totalTime % 60
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack {
@@ -42,6 +50,9 @@ struct UsageListCell: View {
                     .font(.system(size: 17, weight: .bold))
             }
             .padding(.bottom, 7)
+            .onAppear(){
+                convertTime(totalTime: usages.totalTime)
+            }
             
             HStack {
                 //2024-03-25T...
@@ -63,9 +74,10 @@ struct UsageListCell: View {
                     .font(.system(size: 15, weight: .bold))
             }
             HStack {
+                
                 Text("총 소요시간")
                     .font(.system(size: 15))
-                Text(usages.totalTime)
+                Text("\(minutes)분 \(seconds)초")
                     .font(.system(size: 15, weight: .bold))
             }
             HStack {
@@ -73,7 +85,7 @@ struct UsageListCell: View {
                     Text("경로 평가")
                         .font(.system(size: 15))
                         .padding(.trailing, 7)
-                    Text(usages.satisfactionRoute)
+                    Text(String(usages.satisfactionRoute))
                         .font(.system(size: 15, weight: .bold))
                     Text("/5")
                         .font(.system(size: 13))
@@ -84,7 +96,7 @@ struct UsageListCell: View {
                     Text("소요시간 만족도")
                         .font(.system(size: 15))
                         .padding(.trailing, 7)
-                    Text(usages.satisfactionTime)
+                    Text(String(usages.satisfactionTime))
                         .font(.system(size: 15, weight: .bold))
                     Text("/5")
                         .font(.system(size: 13))

@@ -115,6 +115,8 @@ struct InquireListCell: View {
             }
         })
         .frame(width: UIScreen.main.bounds.width - 30, height: 45)
+        Divider()
+            .frame(width: UIScreen.main.bounds.width - 30)
         // 버튼 끝
         
         NavigationLink("", isActive: $isMoved) {

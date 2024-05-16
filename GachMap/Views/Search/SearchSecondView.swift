@@ -44,6 +44,7 @@ struct SearchSecondView: View {
     @State private var goPathView = false   // 경로 뷰로 이동
     
     @State var showStartLocationChangeAlert = false // 출발지 - 현재 위치 변경시 알림
+    @State var showSamePathAlert = false
     
     
     var body: some View {
@@ -235,6 +236,10 @@ struct SearchSecondView: View {
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(.gachonBlue))
                         .padding(.trailing, 5)
+                        .alert(isPresented: $showSamePathAlert){
+                            Alert(title: Text("오류"), message: Text("출발 위치와 도착 위치가 같습니다."), dismissButton: .default(Text("확인"), action: {
+                            }))
+                        }
                     }
                     
                 } // end of HStack (검색창)
@@ -376,6 +381,7 @@ struct SearchSecondView: View {
                        
                     } else {
                         print("지정 위치 경로 가져오기 실패")
+                        showSamePathAlert = true
 
                     }
                     
@@ -413,6 +419,7 @@ struct SearchSecondView: View {
 
                     } else {
                         print("현재위치 - 경로 가져오기 실패")
+                        showSamePathAlert = true
 
                     }
                     

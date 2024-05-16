@@ -11,7 +11,7 @@ struct PathResponse: Decodable {
     var success: Bool
     var property: Int
     var message: String
-    var data: [PathData]
+    var data: [PathData]?
 }
 
 struct PathData: Decodable {

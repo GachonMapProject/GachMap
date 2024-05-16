@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct PathTimeView: View {
-    let width = UIScreen.main.bounds.width / 2.5
+    let width = UIScreen.main.bounds.width / 2.3
     let height = UIScreen.main.bounds.height / 8
     let pathName : String
     let time : Int?
     let textGradient = Gradient(colors: [
-        Color(red: 0.1451, green: 0.5412, blue: 0.6314).opacity(1.0),
-        Color(red: 0.2078, green: 0.1647, blue: 0.7294).opacity(1.0),
-        Color(red: 0.1412, green: 0.5373, blue: 0.6275).opacity(1.0)
+        Color(red: 0.9686, green: 0.3608, blue: 0.1686).opacity(1.0),
+        Color(red: 1.0, green: 0.0, blue: 0.0).opacity(1.0),
+        Color(red: 0.9882, green: 0.1137, blue: 0.4824).opacity(1.0),
+        Color(red: 0.8471, green: 0.0118, blue: 0.9176).opacity(1.0)
+
     ])
     
     let isLogin : Bool
@@ -27,29 +29,38 @@ struct PathTimeView: View {
     var body: some View {
         VStack(alignment: .leading){
             Text(pathNameDic[pathName] ?? "")
-                .font(.system(size: 23))
+                .font(.system(size: 20, weight: .bold))
                 .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
-                .bold()
-                .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 0))
+                .padding(EdgeInsets(top: 10, leading: 8, bottom: 0, trailing: 0))
             Spacer()
             HStack(alignment: .lastTextBaseline){
                 if isLogin && time != nil{
-                    Text("AI 예측")
-                        .font(.system(size: 20))
-                        .bold()
-                        .foregroundColor(.clear) // 텍스트 자체는 투명하게 설정합니다.
-                        .overlay(
-                            LinearGradient(
-                                gradient: textGradient,
-                                startPoint: .trailing,
-                                endPoint: .leading
+                    HStack(spacing : 0){
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(Color(red: 0.9686, green: 0.3608, blue: 0.1686).opacity(1.0))
+                        
+                        Text("AI 예측")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.clear) // 텍스트 자체는 투명하게 설정합니다.
+                            .overlay(
+                                LinearGradient(
+                                    gradient: textGradient,
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                                .mask(Text("AI 예측")
+                                    .font(.system(size: 16, weight: .bold))
+                                )
                             )
-                            .mask(Text("AI 예측")).bold()
-                        )
+                    }
+                    .padding(.leading, 8)
                 }
-
+                
                 Spacer()
-                HStack(alignment: .lastTextBaseline, spacing : 4){
+                    
+   
+                HStack(alignment: .lastTextBaseline, spacing : 2){
                     Text(time == nil ? "-" : String(time ?? 0))
                         .font(.system(size: 33))
                         .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
@@ -59,16 +70,17 @@ struct PathTimeView: View {
                         .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
                         .bold()
                 }
+                .padding(EdgeInsets(top: 0, leading: 8, bottom: 10, trailing: 8))
                 
             }
-            .padding(EdgeInsets(top: 0, leading: 5, bottom: 10, trailing: 10))
+            
         }
         .frame(width: width, height: height)
         .background(time != nil ? .white : Color(red: 0.8, green: 0.8, blue: 0.8))
         .cornerRadius(15)
         .shadow(radius: 5, x: 2, y: 2)
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(selectedPath == num ? Color.blue : Color.clear, lineWidth: selectedPath == num ? 3 : 1)
         )
     }
