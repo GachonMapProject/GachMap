@@ -13,6 +13,9 @@ struct SearchSecondView: View {
     var getStartSearchText: String
     var getEndSearchText: String
     
+    var getStartPlaceId: Int
+    var getEndPlaceId: Int
+    
     @Environment(\.dismiss) private var dismiss
     
     @EnvironmentObject var globalViewModel: GlobalViewModel
@@ -20,8 +23,8 @@ struct SearchSecondView: View {
     
     @State private var startSearchText: String = ""
     @State private var endSearchText: String = ""
-    @State var startPlaceId: Int?
-    @State var endPlaceId: Int?
+    @State private var startPlaceId: Int?
+    @State private var endPlaceId: Int?
     @State private var isSearched: Bool = false
     
     @State private var validStartText: Bool = false
@@ -82,11 +85,14 @@ struct SearchSecondView: View {
                         HStack {
                             TextField("출발", text: $startSearchText)
                                 .font(.title3)
+                                .disabled(fixedStart)
                                 .onTapGesture {
                                     self.activeTextField = "start"
                                     isSearched = false
                                 }
+                                .submitLabel(.search)
                                 .onSubmit {
+                                    isSearched = true
                                     performSearch()
                                 }
                             
@@ -96,6 +102,9 @@ struct SearchSecondView: View {
                                 Button(action: {
                                     if startSearchText == "현재 위치"{
                                         showStartLocationChangeAlert = true
+                                    } else {
+                                        fixedStart = false
+                                        startSearchText = ""
                                     }
                                 }, label: {
                                     Image(systemName: "xmark")
@@ -124,11 +133,14 @@ struct SearchSecondView: View {
                         HStack {
                             TextField("도착", text: $endSearchText)
                                 .font(.title3)
+                                .disabled(fixedEnd)
                                 .onTapGesture {
                                     self.activeTextField = "end"
                                     isSearched = false
                                 }
+                                .submitLabel(.search)
                                 .onSubmit {
+                                    isSearched = true
                                     performSearch()
                                 }
                             
@@ -272,10 +284,12 @@ struct SearchSecondView: View {
             .onAppear {
                 if !getStartSearchText.isEmpty {
                     startSearchText = getStartSearchText
+                    startPlaceId = getStartPlaceId
                     fixedStart = true
                 }
                 if !getEndSearchText.isEmpty {
                     endSearchText = getEndSearchText
+                    endPlaceId = getEndPlaceId
                     fixedEnd = true
                 }
             }
@@ -293,7 +307,7 @@ struct SearchSecondView: View {
 //            }
 
         }
-        else{
+        else {
             if paths != nil{
                 ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText)
 //                .navigationBarBackButtonHidden()
