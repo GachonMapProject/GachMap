@@ -119,11 +119,14 @@ struct SimpleSearchResultCell: View {
                         
                     } // end of ScrollView
                 } // end of 검색 기록 전체 영역
+                .onTapGesture {
+                    endTextEditing()
+                }
             } // end of else
             
         } // end of NavigationView
         .navigationBarBackButtonHidden()
-               
+        
     } // end of body
 } // end of View struct
 

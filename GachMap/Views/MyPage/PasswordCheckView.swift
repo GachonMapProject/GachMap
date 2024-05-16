@@ -10,6 +10,7 @@ import Alamofire
 import CryptoKit
 
 struct PasswordCheckView: View {
+    @Environment(\.dismiss) private var dismiss
     
     @State private var showEscapeAlert: Bool = false
     @Binding var showModifyView: Bool
@@ -149,7 +150,8 @@ struct PasswordCheckView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        showEscapeAlert = true
+                        // showEscapeAlert = true
+                        dismiss()
                     }, label: {
                         Image(systemName: "xmark")
                             .font(.system(size: 12, weight: .bold))

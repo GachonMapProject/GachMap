@@ -28,9 +28,9 @@ class DetailResultViewModel: ObservableObject {
     @Published var detailResults: SearchDetailData
     var placeId: Int
     
-    lazy var places: [Place] = [
-            Place(name: detailResults.placeName, coordinate: CLLocationCoordinate2D(latitude: detailResults.placeLatitude, longitude: detailResults.placeLongitude))
-        ]
+//    lazy var places: [Place] = [
+//            Place(name: detailResults.placeName, coordinate: CLLocationCoordinate2D(latitude: detailResults.placeLatitude, longitude: detailResults.placeLongitude))
+//        ]
     
     init(placeId: Int) {
         self.placeId = placeId
@@ -75,21 +75,26 @@ class DetailResultViewModel: ObservableObject {
 struct ResultSelectView: View {
     
     @Environment(\.dismiss) private var dismiss
-    
     @ObservedObject var detailViewModel: DetailResultViewModel
     
-    @State var region: MKCoordinateRegion
-    @State private var selectedResult: MKMapItem?
-    
-    init(detailViewModel: DetailResultViewModel) {
-        self._detailViewModel = ObservedObject(initialValue: detailViewModel)
-        self._region = State(initialValue: MKCoordinateRegion(
-            center: CLLocationCoordinate2D(
-                latitude: detailViewModel.detailResults.placeLatitude,
-                longitude: detailViewModel.detailResults.placeLongitude),
-            span: MKCoordinateSpan(latitudeDelta: 0.004, longitudeDelta: 0.004)
-        ))
-    }
+//    @Environment(\.dismiss) private var dismiss
+//    @ObservedObject var detailViewModel: DetailResultViewModel
+//    
+//    let locationCoordinate: [Place]
+//    @State var destination: Place
+//    
+//    @State var region: MKCoordinateRegion
+//    @State private var selectedResult: MKMapItem?
+//    
+//    init(detailViewModel: DetailResultViewModel) {
+//        self._detailViewModel = ObservedObject(initialValue: detailViewModel)
+//        self._region = State(initialValue: MKCoordinateRegion(
+//            center: CLLocationCoordinate2D(
+//                latitude: detailViewModel.detailResults.placeLatitude,
+//                longitude: detailViewModel.detailResults.placeLongitude),
+//            span: MKCoordinateSpan(latitudeDelta: 0.004, longitudeDelta: 0.004)
+//        ))
+//    }
     
     var body: some View {
         NavigationView {
@@ -102,17 +107,21 @@ struct ResultSelectView: View {
 //                                                              longitude: detailViewModel.detailResults.placeLongitude))
 //                }
                 
-                Map(coordinateRegion: $region, annotationItems: detailViewModel.places) { place in
+//                Map(coordinateRegion: $region, annotationItems: detailViewModel.places) { place in
+//                    MapMarker(coordinate: place.coordinate, tint: .gachonSky)
+//                }
+//                .ignoresSafeArea()
+                
+                Map(coordinateRegion: .constant(MKCoordinateRegion(
+                    center: CLLocationCoordinate2D(latitude: detailViewModel.detailResults.placeLatitude, longitude: detailViewModel.detailResults.placeLongitude),
+                    span: MKCoordinateSpan(latitudeDelta: 0.004, longitudeDelta: 0.004))),
+                    annotationItems: [Place(name: detailViewModel.detailResults.placeName, coordinate: CLLocationCoordinate2D(latitude: detailViewModel.detailResults.placeLatitude, longitude: detailViewModel.detailResults.placeLongitude))]) { place in
                     MapMarker(coordinate: place.coordinate, tint: .gachonSky)
                 }
                 .ignoresSafeArea()
                 
                 // 검색창 및 카드뷰
                 VStack {
-//                    if showSearchBar {
-//                        SearchBar(text: $searchText)
-//                    }
-    
                     HStack {
                         Button(action: {
                             withAnimation(.spring()) {
@@ -141,7 +150,7 @@ struct ResultSelectView: View {
                     
                     Spacer()
                     
-                    SearchSpotDetailCard(placeName: detailViewModel.detailResults.placeName, placeSummary: detailViewModel.detailResults.placeSummary, mainImagePath: detailViewModel.detailResults.mainImagePath, inCategory : false, isBuilding: false)
+                    SearchSpotDetailCard(placeId: detailViewModel.detailResults.placeId, placeName: detailViewModel.detailResults.placeName, placeSummary: detailViewModel.detailResults.placeSummary, mainImagePath: detailViewModel.detailResults.mainImagePath, inCategory : false, isBuilding: false)
                         //.padding(.bottom)
                 }
                 // 검색창 및 카드뷰 끝
@@ -155,5 +164,5 @@ struct ResultSelectView: View {
 }
 
 #Preview {
-    ResultSelectView(detailViewModel: DetailResultViewModel(placeId: 20))
+    ResultSelectView(detailViewModel: DetailResultViewModel(placeId: 121))
 }

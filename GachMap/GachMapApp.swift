@@ -15,17 +15,7 @@ struct GachMapApp: App {
     
     var body: some Scene {
         WindowGroup {
-//            SearchMainView(showLocationSearchView: Binding.constant(true))
-            
-            ContentView()
-                .environmentObject(globalViewModel)
-                .environmentObject(CoreLocationEx())
-                .environmentObject(naviagionController)
-
-//            test1()
-//                .environmentObject(naviagionController)
-            
-//            ContentView1()
+            SplashScreen()
         }
     }
 }

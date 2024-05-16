@@ -9,6 +9,10 @@ import SwiftUI
 import Alamofire
 
 struct ProfileTabView: View {
+    @State private var showNoticeWeb = false
+    @State private var showFaqWeb = false
+    private let noticeUrl = "https://gachgaja.notion.site/5e5222698b854281892b3e5559e4e1a3"
+    private let faqUrl = "https://gachgaja.notion.site/FAQ-5dda2bff6e2a49faa3575cb2e5d237dc"
     
     // @Binding var isLogin: Bool
     var tabBarHeight = UITabBarController().tabBar.frame.size.height
@@ -27,6 +31,7 @@ struct ProfileTabView: View {
     @State private var isLoginMove: Bool = false
  
     @State private var showLogoutAlert: Bool = false
+    @State private var showErrorAlert: Bool = false
     
     //@State private var loginInfo: LoginInfo? = nil
     @State private var userInfo: UserInquiryResponse?
@@ -35,28 +40,11 @@ struct ProfileTabView: View {
     @State private var username = ""
     @State private var userNickname = ""
     
-//    // LoginInfo에 저장된 정보 불러오기
-//    private func getLoginInfo() {
-//        if let savedData = UserDefaults.standard.data(forKey: "loginInfo") {
-//            if let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
-//                // userCode가 저장되어 있다면 출력
-//                if let userCode = loginInfo.userCode {
-//                    print("userCode: \(userCode)")
-//                } else {
-//                    print("userCode: Not set")
-//                }
-//                
-//                // guestCode가 저장되어 있다면 출력
-//                if let guestCode = loginInfo.guestCode {
-//                    print("guestCode: \(guestCode)")
-//                } else {
-//                    print("guestCode: Not set")
-//                }
-//            }
-//        } else {
-//            print("Login Info not found in UserDefaults")
-//        }
-//    }
+    func openURL(urlString: String) {
+            if let url = URL(string: urlString) {
+                UIApplication.shared.open(url)
+            }
+        }
     
     // LoginInfo에 저장된 userCode 가져오기
     func getUserCodeFromUserDefaults() -> String? {
@@ -95,11 +83,12 @@ struct ProfileTabView: View {
                         
                     } else {
                         print("회원 정보 요청 실패")
-                        // showErrorAlert = true
+                        showErrorAlert = true
                     }
                     
                 case .failure(let error):
                     print("Error: \(error.localizedDescription)")
+                    showErrorAlert = true
                 }
             }
     } // end of getUserInfoInquiry()
@@ -126,7 +115,7 @@ struct ProfileTabView: View {
                 /// 나중에 !=로 바꾸기!! 꼭!!!!!
                 if (userCode != nil) {
                     VStack { // 전체 내용 VStack
-                        
+                        // 회원 뷰
                         // 상단 파란 박스 부분 VStack
                         VStack {
                             Image("MyPageTitle")
@@ -203,31 +192,53 @@ struct ProfileTabView: View {
                                 
                                 Spacer()
                                 
-                                VStack(spacing: 10) {
-                                    Image(systemName: "megaphone.fill")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.gachonBlue)
-                                    Text("공지사항")
-                                        .font(.system(size: 15, weight: .bold))
+                                Button(action: {
+                                    showNoticeWeb = true
+                                }, label: {
+                                    VStack(spacing: 10) {
+                                        Image(systemName: "megaphone.fill")
+                                            .font(.system(size: 20))
+                                            .foregroundColor(.gachonBlue)
+                                        Text("공지사항")
+                                            .font(.system(size: 15, weight: .bold))
+                                            .foregroundColor(.black)
+                                    }
+                                    .frame(width: (UIScreen.main.bounds.width - 70) / 3, height: 75)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(.white))
+                                })
+                                .sheet(isPresented: $showNoticeWeb) {
+                                    if let url = URL(string: noticeUrl) {
+                                        SafariView(url: url)
+                                            .edgesIgnoringSafeArea(.all)
+                                    }
                                 }
-                                .frame(width: (UIScreen.main.bounds.width - 70) / 3, height: 75)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(.white))
                                 
                                 Spacer()
                                 
-                                VStack(spacing: 10) {
-                                    Image(systemName: "questionmark.bubble.fill")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.gachonBlue)
-                                    Text("FAQ")
-                                        .font(.system(size: 15, weight: .bold))
+                                Button(action: {
+                                    showFaqWeb = true
+                                }, label: {
+                                    VStack(spacing: 10) {
+                                        Image(systemName: "questionmark.bubble.fill")
+                                            .font(.system(size: 20))
+                                            .foregroundColor(.gachonBlue)
+                                        Text("FAQ")
+                                            .font(.system(size: 15, weight: .bold))
+                                            .foregroundColor(.black)
+                                    }
+                                    .frame(width: (UIScreen.main.bounds.width - 70) / 3, height: 75)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(.white))
+                                })
+                                .sheet(isPresented: $showFaqWeb) {
+                                    if let url = URL(string: faqUrl) {
+                                        SafariView(url: url)
+                                            .edgesIgnoringSafeArea(.all)
+                                    }
                                 }
-                                .frame(width: (UIScreen.main.bounds.width - 70) / 3, height: 75)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(.white))
                             }
                             .frame(width: UIScreen.main.bounds.width - 50)
                             .padding(.top, 20)
@@ -394,6 +405,10 @@ struct ProfileTabView: View {
                             // end of 회원탈퇴 버튼
                         } // end of ScrollView
                         .padding(.bottom, tabBarHeight)
+                        .alert(isPresented: $showErrorAlert) {
+                            Alert(title: Text("오류"), message: Text("서버 연결에 실패했습니다."), dismissButton: .default(Text("확인")))
+                        }
+
                         //.ignoresSafeArea()
    
                     } // 전체 내용 VStack
@@ -463,7 +478,7 @@ struct ProfileTabView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(UIColor.systemGray6))
             .navigationBarBackButtonHidden()
-   
+               
         } // end of NavigationView
         .onAppear {
             getUserInfoInquiry()

@@ -7,9 +7,11 @@
 
 class CustomPathAnnotation: NSObject, MKAnnotation {
     let coordinate: CLLocationCoordinate2D
+    let name : String
 
-    init(coordinate: CLLocationCoordinate2D) {
+    init(coordinate: CLLocationCoordinate2D, name :String) {
         self.coordinate = coordinate
+        self.name = name
     }
 }
 
@@ -146,13 +148,13 @@ struct ChoosePathView: View {
 //                NavigationLink("", isActive: $isOnlyMapOn) {
 //                    OnlyMapView(path: nodes[selectedPath])
 //                        .navigationBarBackButtonHidden()
-//                    
+//
 //                }
 //                NavigationLink("", isActive: $isAROn) {
 //                    let path = nodes[selectedPath]
 //                    ARMainView(path: path, departures:  path[0].id, arrivals:  path[path.count - 1].id)
 //                        .navigationBarBackButtonHidden()
-//                    
+//
 //                }
             } // end of ZStack
         }
@@ -196,7 +198,7 @@ struct MapView: UIViewRepresentable {
        }
       
       addMapMarker(for: lineCoordinates.first?.line.first, with: "start", to: mapView)
-      addMapMarker(for: lineCoordinates.last?.line.last, with: "end", to: mapView)
+      addMapMarker(for: lineCoordinates.first?.line.last, with: "end", to: mapView)
    
 
     return mapView
@@ -222,13 +224,13 @@ struct MapView: UIViewRepresentable {
        }
       
       addMapMarker(for: lineCoordinates.first?.line.first, with: "start", to: view)
-      addMapMarker(for: lineCoordinates.last?.line.last, with: "end", to: view)
+      addMapMarker(for: lineCoordinates.first?.line.last, with: "end", to: view)
 
   }
     
     private func addMapMarker(for coordinate: CLLocationCoordinate2D?, with title: String, to mapView: MKMapView) {
         guard let coordinate = coordinate else { return }
-        let annotation = CustomPathAnnotation(coordinate: coordinate)
+        let annotation = CustomPathAnnotation(coordinate: coordinate, name: title)
         mapView.addAnnotation(annotation)
     }
 
@@ -284,18 +286,31 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
          guard let customPathAnnotation = annotation as? CustomPathAnnotation else { return nil }
          let reuseIdentifier = "customPathAnnotation"
          var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
+        let image = customPathAnnotation.name == "start" ? "startMarker" : "endMarker"
 
          if annotationView == nil {
              annotationView = MKAnnotationView(annotation: customPathAnnotation, reuseIdentifier: reuseIdentifier)
-             annotationView?.image = UIImage(named: "PathDot") // Set custom marker image based on annotation title
+             if let image = UIImage(named: image) {
+                 let size = CGSize(width: 30, height: 41) // 원하는 크기로 설정
+                 let renderer = UIGraphicsImageRenderer(size: size)
+                 let resizedImage = renderer.image { context in
+                     image.draw(in: CGRect(origin: .zero, size: size))
+                 }
+                 annotationView?.image = resizedImage
+                 annotationView?.centerOffset = CGPoint(x: 0, y: -20)
+             }
              annotationView?.canShowCallout = false
          } else {
              annotationView?.annotation = annotation
          }
+        
+        
 
          return annotationView
      }
 }
+
+
 #Preview {
-    ChoosePathView(paths: [GachMap.PathData(routeType: "SHORTEST", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "OPTIMAL", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "busRoute", totalTime: nil, nodeList: [])], startText: "기본", endText: "기본", goPathView: Binding.constant(true))
+    ChoosePathView(paths: [GachMap.PathData(routeType: "SHORTEST", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "OPTIMAL", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "busRoute", totalTime: nil, nodeList: [])], startText: "기본", endText: "기본")
 }

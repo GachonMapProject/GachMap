@@ -103,12 +103,12 @@ struct EventDetailView: View {
                 } // end of ZStack
                 
             } // end of VStack
+            
         
             // 검색창으로 넘길 때, destination의 정보를 같이 넘겨줘야 됨
             NavigationLink(destination: Text("검색뷰 : \(destination.placeName) \n 위치 : \(destination.coordinate.latitude), \(destination.coordinate.longitude)"), isActive: $isSearch) {
                 EmptyView()
             }
-//            .navigationTitle(eventDetail[0].eventName)
         } // end of NavigationView
     }
 }
