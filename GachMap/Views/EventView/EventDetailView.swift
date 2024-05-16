@@ -82,24 +82,25 @@ struct EventDetailView: View {
                     .shadow(radius: 7, x: 2, y: 2)
                     .padding()
                     
-                    VStack{
-                        Spacer()
-                        // 검색창으로 넘길 때, destination의 정보를 같이 넘겨줘야 됨
-                        Button(action: {
-                            isSearch = true
-                            
-                        }, label: {
-                            Text("도착지 설정")
-                                .font(.system(size: 16))
-                                .bold()
-                        })
-                        .frame(width: 200, height: 40)
-                        .foregroundColor(.white)
-                        .background(Capsule()
-                        .fill(Color(UIColor.systemBlue)))
-                        .shadow(radius: 7, x: 2, y: 2)
-                        .padding()
-                    }
+                    // 도착지로 설정 살리기!!
+//                    VStack{
+//                        Spacer()
+//                        // 검색창으로 넘길 때, destination의 정보를 같이 넘겨줘야 됨
+//                        Button(action: {
+//                            isSearch = true
+//                            
+//                        }, label: {
+//                            Text("도착지 설정")
+//                                .font(.system(size: 16))
+//                                .bold()
+//                        })
+//                        .frame(width: 200, height: 40)
+//                        .foregroundColor(.white)
+//                        .background(Capsule()
+//                        .fill(Color(UIColor.systemBlue)))
+//                        .shadow(radius: 7, x: 2, y: 2)
+//                        .padding()
+//                    }
                 } // end of ZStack
                 
             } // end of VStack

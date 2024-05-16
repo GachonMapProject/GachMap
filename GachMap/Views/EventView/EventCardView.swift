@@ -37,9 +37,8 @@ struct EventCardView : View {
                     }, label: {
                         AsyncImage(url: URL(string: event.eventImagePath)) { image in
                             image.resizable()
-                                .frame(width: screenWidth)
-                                .scaledToFit()
-                                //.aspectRatio(contentMode: .fill)
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: screenWidth, alignment: .top)
                             } placeholder: {
                                 ProgressView()
                         }
@@ -49,6 +48,9 @@ struct EventCardView : View {
                     } message: {
                         Text("서버 통신에 실패했습니다.")
                     }
+//                    .sheet(isPresented: $haveLocationData) {
+//                        EventDetailView(eventDetail: eventDetail)
+//                    }
                     
                     NavigationLink(destination: EventDetailView(eventDetail: eventDetail), isActive: $haveLocationData) {
                         EmptyView()
@@ -62,16 +64,14 @@ struct EventCardView : View {
                                 Spacer()
                                 VStack(alignment : .leading){
                                     Text(event.eventName)
-                                        .font(.system(size: 24))
+                                        .font(.system(size: 24, weight: .bold))
                                         .foregroundStyle(.white)
-                                        .bold()
                                         .multilineTextAlignment(.leading)
                                     
                                     ScrollView(){
                                         Text(event.eventInfo)
                                             .font(.system(size: 13))
                                             .foregroundStyle(.white)
-                                            .bold()
                                             
                                         
                                     }
@@ -79,7 +79,7 @@ struct EventCardView : View {
                                     
                                 }
                                 .frame(height: screenHeight / 5, alignment: .leading)
-                                .padding(EdgeInsets(top: 0, leading: 10, bottom: 40, trailing: 20))
+                                .padding(EdgeInsets(top: 0, leading: 30, bottom: 40, trailing: 30))
                                 
                                 
                             }
@@ -91,14 +91,13 @@ struct EventCardView : View {
                                     }
                                 }, label: {
                                     Text("더 알아보기")
-                                        .font(.system(size: 16))
-                                        .bold()
+                                        .font(.system(size: 16, weight: .bold))
                                 })
                                 .frame(width: 120, height: 30)
                                 .foregroundColor(.white)
                                 .background(Capsule()
                                     .fill(Color(UIColor.systemBlue)))
-                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 10))
+                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 35))
                             }
                             
                         }
@@ -152,4 +151,8 @@ struct EventCardView : View {
                 } // end of switch
         } // end of AF.request
     }
+}
+
+#Preview {
+    EventTabView()
 }

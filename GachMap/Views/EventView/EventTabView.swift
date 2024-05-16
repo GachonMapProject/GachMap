@@ -20,8 +20,6 @@ struct EventTabView: View {
     @State var currentIndex : Int = 0   // 현재 행사의 인덱스 번호 (위에 바 중 색 변경할 인덱스)
     @State var serverAlert = false  // 서버 통신 실패 알림
     @State var nilData = false      // data가 없을 때 알림
-
-
     
     var body: some View {
         NavigationView {
@@ -40,27 +38,47 @@ struct EventTabView: View {
             else{
                 if !nilData {
                     VStack{
-                        HStack{
-                            ForEach(1...eventList.count, id: \.self){index in
-                                Rectangle()
-                                    .cornerRadius(10)
-                                    .frame(height: index == currentIndex ? 5 : 3)
-                                    .foregroundColor(index == currentIndex ? .gachonBlue : .gray)
-                                    .animation(.easeInOut)  // 애니메이션 적용
+                        // 상단 제목 영억
+                        VStack {
+                            Image("EventTabTitle")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(maxWidth: UIScreen.main.bounds.width - 50, alignment: .leading)
+                                .frame(height: 32)
+                                .padding(.top, 10)
+                            
+                            HStack{
+                                ForEach(1...eventList.count, id: \.self){index in
+                                    Rectangle()
+                                        .cornerRadius(5)
+                                        .frame(height: index == currentIndex ? 5 : 3)
+                                        .foregroundColor(index == currentIndex ? .white : Color(UIColor.systemGray3))
+                                        //.animation(.easeInOut)  // 애니메이션 적용
+                                }
                             }
+                            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
                         }
-                        .padding(EdgeInsets(top: 5, leading: 10, bottom: 0, trailing: 10))
+                        .frame(maxWidth: .infinity)
+                        //.frame(height: 330)
+                        .background(
+                            LinearGradient(gradient: Gradient(colors: [.gachonBlue2,. gachonBlue]), startPoint: .top, endPoint: .bottom)
+                        )
+                        
                         
                         ScrollView(.horizontal, showsIndicators: false) { // 수평 스크롤로 설정
                             ZStack(alignment : .leading){
                                 LazyHStack {
                                     ForEach(eventList.indices) { index in
                                         EventCardView(event: eventList[index])
+                                            .background(Color.white)
+                                                    .cornerRadius(15)
+                                                    .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                                                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
                                             .frame(width: screenWidth)
                                             .scrollTransition(.animated, axis: .horizontal) { content, phase in
                                                 content
-                                                    .opacity(phase.isIdentity ? 1.0 : 0.8)
-                                                    .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+                                                    .opacity(phase.isIdentity ? 1.0 : 0.9)
+                                                    .scaleEffect(phase.isIdentity ? 1.0 : 0.95)
                                             }
                                     }
                                 }
@@ -81,7 +99,7 @@ struct EventTabView: View {
                             currentIndex = Int(value / screenWidth * -1 + 1)
                         }
                     }
-                    .navigationTitle("교내 행사")
+                    .background(Color(UIColor.systemGray6))
                 }
                 else {
                     Text("현재 진행 중인 행사가 없습니다.")
