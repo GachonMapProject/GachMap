@@ -113,7 +113,7 @@ struct ProfileTabView: View {
                 let userCode = getUserCodeFromUserDefaults()
                 
                 /// 나중에 !=로 바꾸기!! 꼭!!!!!
-                if (userCode == nil) {
+                if (userCode != nil) {
                     VStack { // 전체 내용 VStack
                         // 회원 뷰
                         // 상단 파란 박스 부분 VStack
