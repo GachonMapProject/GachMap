@@ -42,6 +42,7 @@ struct SearchSecondView: View {
     
     @State var showStartLocationChangeAlert = false // 출발지 - 현재 위치 변경시 알림
     
+    
     var body: some View {
         if !goPathView{
             VStack {
@@ -295,7 +296,7 @@ struct SearchSecondView: View {
         }
         else{
             if paths != nil{
-                ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText)
+                ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText, goPathView: $goPathView)
 //                .navigationBarBackButtonHidden()
 //                .edgesIgnoringSafeArea(.bottom)
             

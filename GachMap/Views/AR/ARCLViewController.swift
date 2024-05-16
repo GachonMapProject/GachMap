@@ -134,8 +134,11 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
 //         경로 노드마다 띄울 텍스트 설정 (여기도 0부터 시작이 아닌 인덱스 번호부터 시작하도록)
         for i in 0..<stepData.count - 1 {
-            let nodeName = "node-\(stepData[i].locationName)"
-            placeMiddleNode(currentLocation: currentLocation, start : stepData[i].startLocation, end: stepData[i].endLocation, next : stepData[i].nextLocation, nodeName: nodeName, index : i)
+//            let nodeName = "node-\(stepData[i].locationName)"
+            if stepData[i].locationName != "0"{
+                placeMiddleNode(currentLocation: currentLocation, start : stepData[i].startLocation, end: stepData[i].endLocation, next : stepData[i].nextLocation, nodeName: stepData[i].locationName, index : i)
+            }
+        
         }
         placeDestinationNode(currentLocation : currentLocation) // 목적지 노드
         
@@ -198,6 +201,8 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         middleNode.name = "\(index)-0"
         boxNode.name = "\(index)-1"
         naviNode.name = "\(index)-2"
+        
+        
         addScenewideNodeSettings(middleNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: middleNode)
         addScenewideNodeSettings(boxNode)
