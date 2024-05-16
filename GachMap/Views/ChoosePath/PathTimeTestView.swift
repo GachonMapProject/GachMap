@@ -43,7 +43,7 @@ struct PathTimeTestView: View {
                     }
 
                 } // end of LazyStack
-                .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
+                .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 30))
                 .scrollTargetLayout()
                 
 //            } // end of ZStack

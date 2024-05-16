@@ -109,7 +109,7 @@ struct ChoosePathView: View {
                             Spacer()
                             
                             Button(action: {
-                                // dismiss()
+                                dismiss()
                                 globalViewModel.showSearchView = false
                             }, label: {
                                 Image(systemName: "xmark")
@@ -205,7 +205,6 @@ struct MapView: UIViewRepresentable {
     }
 
   func updateUIView(_ view: MKMapView, context: Context) {
-      print(selectedPath)
       context.coordinator.parent = self
       view.removeOverlays(view.overlays) // 모든 오버레이를 삭제하여 다시 그리도록 유도
       for (index, lineCoordinate) in lineCoordinates.enumerated() {

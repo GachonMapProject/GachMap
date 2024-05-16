@@ -106,6 +106,12 @@ struct SatisfactionView: View {
                 .font(.system(size: 20))
                 .disabled(timeSelect == -1 || pathSelect == -1)
                 .padding(.bottom, 30)
+                .alert(isPresented: $serverAlert) {
+                    Alert(title: Text("알림"), message: Text("서버 연결에 실패했습니다."),
+                          dismissButton: .default(Text("확인")){
+                            dismiss()
+                    })
+                }
                 
                 
             } // end of VStack
@@ -116,12 +122,7 @@ struct SatisfactionView: View {
                         dismiss()
                 })
             }
-            .alert(isPresented: $serverAlert) {
-                Alert(title: Text("알림"), message: Text("서버 연결에 실패했습니다."),
-                      dismissButton: .default(Text("확인")){
-                        dismiss()
-                })
-            }
+   
           
         }
     }
