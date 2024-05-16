@@ -139,8 +139,18 @@ struct ChoosePathView: View {
             }
         } else if isAROn && !isOnlyMapOn {
             let path = nodes[selectedPath]
-            ARMainView(isAROn: $isAROn, path: path, departures: path[0].id, arrivals: path[path.count - 1].id)
-        } else if !isAROn && isOnlyMapOn {
+//            if selectedPath == 2 {
+//                ARMainView(isAROn : $isAROn, path: path.filter{$0.id != 0}, departures:  path[0].id, arrivals:  path[path.count - 1].id)
+//            }
+//            else{
+//                ARMainView(isAROn : $isAROn, path: path, departures:  path[0].id, arrivals:  path[path.count - 1].id)
+//            }
+            ARMainView(isAROn : $isAROn, path: path, departures:  path[0].id, arrivals:  path[path.count - 1].id)
+           
+
+        }
+        else if !isAROn && isOnlyMapOn {
+
             OnlyMapView(path: nodes[selectedPath])
         }
     }
@@ -192,24 +202,32 @@ struct MapView: UIViewRepresentable {
         return mapView
     }
 
-    func updateUIView(_ view: MKMapView, context: Context) {
-        context.coordinator.parent = self
-        view.removeOverlays(view.overlays)
-        for (index, lineCoordinate) in lineCoordinates.enumerated() {
-            let polyline = MKPolyline(coordinates: lineCoordinate.line, count: lineCoordinate.line.count)
-            if index == 0 && lineCoordinate.time != nil {
-                polyline.title = "Path0"
-                polyline.subtitle = "Path0"
-            } else if index == 1 && lineCoordinate.time != nil {
-                polyline.title = "Path1"
-                polyline.subtitle = "Path1"
-            } else if index == 2 && lineCoordinate.time != nil {
-                polyline.title = "Path2"
-                polyline.subtitle = "Path2"
-            }
-            view.addOverlay(polyline)
-        }
-
+  func updateUIView(_ view: MKMapView, context: Context) {
+      print(selectedPath)
+      context.coordinator.parent = self
+      view.removeOverlays(view.overlays) // 모든 오버레이를 삭제하여 다시 그리도록 유도
+      for (index, lineCoordinate) in lineCoordinates.enumerated() {
+          guard index != selectedPath else { continue } // 이미 추가한 selectedPath는 건너뜁니다.
+               
+          let polyline = MKPolyline(coordinates: lineCoordinate.line, count: lineCoordinate.line.count)
+          if index == 0 && lineCoordinate.time != nil{
+              polyline.title = "Path0"
+              polyline.subtitle = "Path0" // Optional subtitle, not required
+          } else if index == 1 && lineCoordinate.time != nil {
+              polyline.title = "Path1"
+              polyline.subtitle = "Path1" // Optional subtitle, not required
+          }else if index == 2 && lineCoordinate.time != nil{
+              polyline.title = "Path2"
+              polyline.subtitle = "Path2" // Optional subtitle, not required
+          }
+        view.addOverlay(polyline)
+       }
+      let polyline = MKPolyline(coordinates: lineCoordinates[selectedPath].line, count: lineCoordinates[selectedPath].line.count)
+      polyline.title = "Path\(selectedPath)"
+      view.addOverlay(polyline)
+      
+      addMapMarker(for: lineCoordinates.first?.line.first, with: "start", to: view)
+      addMapMarker(for: lineCoordinates.first?.line.last, with: "end", to: view)
         if startText == "현재 위치" {
             if let currentLocation = currentLocation {
                 addMapMarker(for: currentLocation, with: "start", to: view)
@@ -260,21 +278,25 @@ class PathCoordinator: NSObject, MKMapViewDelegate {
             if parent.selectedPath == 0 {
                 renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
             } else {
-                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+//                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+                renderer.strokeColor = UIColor(.gray).withAlphaComponent(0.5)
             }
             renderer.lineWidth = 8
         } else if polyline.title == "Path1" {
             if parent.selectedPath == 1 {
                 renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
             } else {
-                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+//                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+                renderer.strokeColor = UIColor(.gray).withAlphaComponent(0.5)
             }
             renderer.lineWidth = 8
         } else if polyline.title == "Path2" {
             if parent.selectedPath == 2 {
-                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
+                renderer.strokeColor = UIColor(red: 0.8569, green: 0.2157, blue: 0.1804, alpha: 1)
             } else {
-                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+//                renderer.strokeColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 0.5)
+                renderer.strokeColor = UIColor(.gray).withAlphaComponent(0.5)
+
             }
             renderer.lineWidth = 8
         }
@@ -325,6 +347,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 }
 
 
-#Preview {
-    ChoosePathView(paths: [GachMap.PathData(routeType: "SHORTEST", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "OPTIMAL", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "busRoute", totalTime: nil, nodeList: [])], startText: "기본", endText: "기본")
-}
+//#Preview {
+//    ChoosePathView(paths: [GachMap.PathData(routeType: "SHORTEST", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "OPTIMAL", totalTime: Optional(0), nodeList: [GachMap.NodeList(nodeId: 281, latitude: 37.45092, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 282, latitude: 37.45061, longitude: 127.12745, altitude: 55.8), GachMap.NodeList(nodeId: 186, latitude: 37.45068, longitude: 127.12719, altitude: 56.8)]), GachMap.PathData(routeType: "busRoute", totalTime: nil, nodeList: [])], startText: "기본", endText: "기본", goPathView: <#Binding<Bool>#>)
+//}

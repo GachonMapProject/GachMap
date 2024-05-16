@@ -29,6 +29,7 @@ struct SatisfactionView: View {
     @State var temp = 0.0
     @State var rainPrecipitation = 0.0
     @State var rainPrecipitationProbability = 0
+    @State var serverAlert = false
     
     
     // 날씨, 유저 아이디(게스트아이디) 추가 필요함
@@ -88,9 +89,9 @@ struct SatisfactionView: View {
                 
                 Button(action: {
                     // 데이터 서버에 전달하는 함수 필요
-                    let param = SatisfactionRequest(userId: 574163367434699508, guestId: loginInfo.guestCode, departures: 326, arrivals: 329, satisfactionRoute: arr[pathSelect] ?? "", satisfactionTime: arr[timeSelect] ?? "", temperature: temp, rainPrecipitation: rainPrecipitation, rainPrecipitationProbability: rainPrecipitationProbability, timeList: [TimeList(firstNodeId: 326, secondNodeId: 327, time: 2), TimeList(firstNodeId: 327, secondNodeId: 328, time: 12), TimeList(firstNodeId: 328, secondNodeId: 329, time: 22)])
-//                    print("param : \(param)")
-//                    postSatifactionData(parameter : param)
+                    let param = SatisfactionRequest(userId: loginInfo.userCode, guestId: loginInfo.guestCode, departures: departures, arrivals: arrivals, satisfactionRoute: arr[pathSelect] ?? "", satisfactionTime: arr[timeSelect] ?? "", temperature: temp, rainPrecipitation: rainPrecipitation, rainPrecipitationProbability: rainPrecipitationProbability, timeList: timeList)
+                    print("param : \(param)")
+                    postSatifactionData(parameter : param)
                     submit = true
                     
                 }, label: {
@@ -111,6 +112,12 @@ struct SatisfactionView: View {
             .frame(width: width * 0.9)
             .alert(isPresented: $submit) {
                 Alert(title: Text("만족도 조사"), message: Text("소중한 의견 감사드립니다."),
+                      dismissButton: .default(Text("확인")){
+                        dismiss()
+                })
+            }
+            .alert(isPresented: $serverAlert) {
+                Alert(title: Text("알림"), message: Text("서버 연결에 실패했습니다."),
                       dismissButton: .default(Text("확인")){
                         dismiss()
                 })
@@ -160,7 +167,7 @@ struct SatisfactionView: View {
                     } else {
                         print("만족도 저장 실패")
                         print("value.message: \(value.message)")
-
+                        submit = true
 //                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
 //                        showAlert = true
                         
@@ -172,6 +179,7 @@ struct SatisfactionView: View {
 //                    alertMessage = "서버 연결에 실패했습니다."
 //                    showAlert = true
                     print("Error: \(error.localizedDescription)")
+                    serverAlert = true
             } // end of switch
         } // end of AF.request
     } // end of postData()

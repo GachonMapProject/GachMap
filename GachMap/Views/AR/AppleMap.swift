@@ -126,11 +126,12 @@ struct AppleMap: UIViewRepresentable {
     let region: MKCoordinateRegion
     let lineCoordinates: [CLLocationCoordinate2D]
     @State var isCameraFixed : Bool = true
-    @EnvironmentObject var coreLocation : CoreLocationEx
+    @ObservedObject var coreLocation : CoreLocationEx
     let isOnlyMapOn : Bool
     
     // coreLocation이 변경될 때마다 init 됨
     init(path : [Node], coreLocation : CoreLocationEx, isOnlyMapOn : Bool) {
+        self.coreLocation = coreLocation
         self.isOnlyMapOn = isOnlyMapOn
         region = MKCoordinateRegion(
             center: isOnlyMapOn ? path[0].location.coordinate : coreLocation.location?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
@@ -141,9 +142,10 @@ struct AppleMap: UIViewRepresentable {
         lineCoordinates =  path.map{CLLocationCoordinate2D(latitude: $0.location.coordinate.latitude, longitude: $0.location.coordinate.longitude)
         }
     }
+    
     // 현재 위치를 기반으로 지도의 중심을 설정하는 함수
     func setRegionToUserLocation() {
-        if let userLocation = coreLocation.location {
+        if let userLocation = self.coreLocation.location {
             let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
             mapView.region = region
         }
@@ -160,13 +162,13 @@ struct AppleMap: UIViewRepresentable {
         mapView.addOverlay(polyline)
 
         // 출발지 표시 마커 추가
-        if let startImage = UIImage(named: "Start3") {
+        if let startImage = UIImage(named: "startMarker") {
             let startAnnotation = CustomAnnotation(customImage: startImage, coordinate: lineCoordinates.first!, reuseIdentifier: "start")
             mapView.addAnnotation(startAnnotation)
         }
         
         // 경로 중간 노드 표시 (출발, 도착 제외)
-        if let middleImage = UIImage(systemName: "circlebadge"){
+        if let middleImage = UIImage(named: "circlebadge"){
             for i in 1..<lineCoordinates.count - 1{
                 let middleAnnotation = CustomAnnotation(customImage: middleImage, coordinate: lineCoordinates[i], reuseIdentifier: "middle")
                 mapView.addAnnotation(middleAnnotation)
@@ -175,10 +177,8 @@ struct AppleMap: UIViewRepresentable {
       
         
         // 도착지 표시 마커 추가
-        if let destinationImage = UIImage(systemName: "flag.fill") {
-            let resizedImage = destinationImage.resize(targetSize: CGSize(width: 40, height: 40))
-            let coloredResizedImage = resizedImage.withTintColor(.red)
-            let destinationAnnotation = CustomAnnotation(customImage: destinationImage, coordinate: lineCoordinates.last!, reuseIdentifier: "destination")
+        if let destinationImage = UIImage(named: "endMarker") {
+            let destinationAnnotation = CustomAnnotation(customImage: destinationImage, coordinate: lineCoordinates.last!, reuseIdentifier: "end")
             mapView.addAnnotation(destinationAnnotation)
         }
         
@@ -258,31 +258,56 @@ class Coordinator: NSObject, MKMapViewDelegate {
             if customAnnotation.reuseIdentifier == "middle" {
                 // 중간 노드 어노테이션일 때
                 if let middleImage = UIImage(named: "middleNode"){
-//                    let resizedImage = middleImage.resize(targetSize: CGSize(width: 100, height: 100))
+                    //                    let resizedImage = middleImage.resize(targetSize: CGSize(width: 100, height: 100))
                     let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "middle")
                     annotationView.image = middleImage
                     annotationView.frame.size = CGSize(width: 15, height: 15)
                     return annotationView
                 }
             } else if customAnnotation.reuseIdentifier == "start" {
-                // 출발지 어노테이션일 때
-                if let startImage = UIImage(named: "Start3") {
-                    let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "start")
-                    annotationView.image = startImage
-                    annotationView.frame.size = CGSize(width: 40, height: 30)
+                if let image = UIImage(named: "startMarker") {
+                    let size = CGSize(width: 30, height: 41) // 원하는 크기로 설정
+                    let renderer = UIGraphicsImageRenderer(size: size)
+                    let resizedImage = renderer.image { context in
+                        image.draw(in: CGRect(origin: .zero, size: size))
+                    }
+                    let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: customAnnotation.reuseIdentifier)
+                    annotationView.image = resizedImage
+                    annotationView.centerOffset = CGPoint(x: 0, y: -20)
                     return annotationView
                 }
-            } else if customAnnotation.reuseIdentifier == "destination" {
-                // 도착지 어노테이션일 때
-                if let destinationImage = UIImage(systemName: "flag.fill") {
-                    let coloredImage = destinationImage.withTintColor(.red)
-                    let resizedImage = coloredImage.resize(targetSize: CGSize(width: 40, height: 40))
-                    let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "destination")
+            } else if  customAnnotation.reuseIdentifier == "end" {
+                if let image = UIImage(named: "endMarker") {
+                    let size = CGSize(width: 30, height: 41) // 원하는 크기로 설정
+                    let renderer = UIGraphicsImageRenderer(size: size)
+                    let resizedImage = renderer.image { context in
+                        image.draw(in: CGRect(origin: .zero, size: size))
+                    }
+                    let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: customAnnotation.reuseIdentifier)
                     annotationView.image = resizedImage
-                    annotationView.frame.size = CGSize(width: 30, height: 30)
+                    annotationView.centerOffset = CGPoint(x: 0, y: -20)
                     return annotationView
                 }
             }
+//            } else if customAnnotation.reuseIdentifier == "start" {
+//                // 출발지 어노테이션일 때
+//                if let startImage = UIImage(named: "Start3") {
+//                    let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "start")
+//                    annotationView.image = startImage
+//                    annotationView.frame.size = CGSize(width: 40, height: 30)
+//                    return annotationView
+//                }
+//            } else if customAnnotation.reuseIdentifier == "destination" {
+//                // 도착지 어노테이션일 때
+//                if let destinationImage = UIImage(systemName: "flag.fill") {
+//                    let coloredImage = destinationImage.withTintColor(.red)
+//                    let resizedImage = coloredImage.resize(targetSize: CGSize(width: 40, height: 40))
+//                    let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "destination")
+//                    annotationView.image = resizedImage
+//                    annotationView.frame.size = CGSize(width: 30, height: 30)
+//                    return annotationView
+//                }
+//            }
         }
 
         return nil

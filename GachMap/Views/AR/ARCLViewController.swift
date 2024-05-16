@@ -32,6 +32,8 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     public var continuallyUpdatePositionAndScale = false
     public var annotationHeightAdjustmentFactor = 1.1
     
+    var difAltitude = 0.0
+    
     init(path : [Node], nextNodeObject : NextNodeObject, rotationList : [Rotation]) {
         self.path = path
         self.nextNodeObject = nextNodeObject
@@ -71,8 +73,11 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         rebuildSceneLocationView()  // SceneLocationView() 재구성
         
         // 노드 추가 함수
-        addNodes(path : path)
-        sceneLocationView?.run()    // SceneLocationView 시작
+        DispatchQueue.main.async {
+            self.addNodes(path : self.path)
+            self.sceneLocationView?.run()    // SceneLocationView 시작
+        }
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -115,6 +120,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         let altitude = currentLocation.altitude                 // ARCL에서 측정한 고도
         let difAltitude = altitude - path[index].location.altitude // 현재 인덱스와 고도를 맞춤
+        self.difAltitude = difAltitude
         print("difAltitude : \(difAltitude), altitude : \(altitude)")
         
         
@@ -135,8 +141,13 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
 //         경로 노드마다 띄울 텍스트 설정 (여기도 0부터 시작이 아닌 인덱스 번호부터 시작하도록)
         for i in 0..<stepData.count - 1 {
 //            let nodeName = "node-\(stepData[i].locationName)"
-            if stepData[i].locationName != "0"{
-                placeMiddleNode(currentLocation: currentLocation, start : stepData[i].startLocation, end: stepData[i].endLocation, next : stepData[i].nextLocation, nodeName: stepData[i].locationName, index : i)
+            print(stepData[i])
+            let start = stepData[i].startLocation
+            let end = stepData[i].endLocation
+            let next = stepData[i].nextLocation
+            if stepData[i].locationName != "0" && start.altitude != difAltitude && end.altitude != difAltitude && next.altitude != difAltitude{
+                print("locationName : \(stepData[i].locationName)")
+                placeMiddleNode(currentLocation: currentLocation, start : start, end: end, next : next, nodeName: stepData[i].locationName, index : i)
             }
         
         }
@@ -173,7 +184,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     
 //    목적지 노드를 AR 환경에 배치
     private func placeMiddleNode(currentLocation: CLLocation, start :CLLocation, end: CLLocation, next : CLLocation, nodeName: String, index : Int) {
-    
+
         // CheckRotation을 통해 rotationList를 받아와서 회전 방향 설정하면 될듯?
         let fileName = rotationList[index].rotation == "우회전" ? "MuhanPointRight" : rotationList[index].rotation == "좌회전" ? "MuhanPointLeft" : "MuhanMiddle"
 
@@ -202,7 +213,9 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         boxNode.name = "\(index)-1"
         naviNode.name = "\(index)-2"
         
+        var names : [String] = [middleNode.name ?? "", boxNode.name ?? "", naviNode.name ?? ""]
         
+
         addScenewideNodeSettings(middleNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: middleNode)
         addScenewideNodeSettings(boxNode)
@@ -210,7 +223,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         addScenewideNodeSettings(naviNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: naviNode)
         
-        var names : [String] = [middleNode.name ?? "", boxNode.name ?? "", naviNode.name ?? ""]
+
         
         // boxNode 위에 화살표 노드 생성
         for point in midPoints {
@@ -226,6 +239,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             
         }
         nextNodeObject.nodeNames[index+1] = names
+       
 
     } // end of placeDestinationNode()
     
@@ -293,22 +307,38 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let endVector = makeSCNVector(currnetLocation: currentLocation, location: end)      // 다음 노드 상대 좌표
         
         let length = startVector.distance(receiver: endVector)
-       
+        
        // 출발지와 목적지 간의 고도 차이 계산
         let altitudeDifference = Float(start.altitude - end.altitude)
+        
+//        빗변 (hypotenuse)는 평면 거리 (length)와 고도 차이 (altitudeDifference)의 제곱합의 제곱근
+        let hypotenuse = sqrt(pow(length, 2) + pow(altitudeDifference, 2))
        
-        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(length), chamferRadius: 0)
+       
+        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(hypotenuse), chamferRadius: 0)
         box.firstMaterial?.diffuse.contents = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
         box.firstMaterial?.transparency = 0.9 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
         let node = SCNNode(geometry: box)
 
-        // 빗변
-        let hypotenuse = sqrt(pow(length, 2) + pow(altitudeDifference, 2))
+        
+        /* 필요한 수학 공식:
+        고도 차이와 거리 간의 각도 (xAngle): atan2(고도 차이, 거리)
+        두 위치 간의 방향 각도 (yAngle): atan2(두 지점 간의 x 좌표 차이, 두 지점 간의 z 좌표 차이)
+        
+         */
+//        let hypotenuse = sqrt(pow(length, 2) + pow(altitudeDifference, 2))
+//
+//        // 실릴더 기울기
+//        let angle = atan2(altitudeDifference, length)
+//        node.eulerAngles.x = Float(-angle)
+//        xAngle = -angle
 
-        // 실릴더 기울기
-        let angle = acos(length / hypotenuse)
-        node.eulerAngles.x = Float(-angle)
-        xAngle = -angle
+
+        // 실린더 기울기 (라디안)
+        let angle = -atan(altitudeDifference / length)
+        node.eulerAngles.x = Float(angle)
+        xAngle = angle
+
 
         let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
         let yAngle = atan(dirVector.x / dirVector.z)
@@ -402,7 +432,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             for child in scene.rootNode.childNodes {
                 child.scale = SCNVector3(scale, scale, scale)
                 if middle {
-                    child.eulerAngles.x = -xAngle 
+                    child.eulerAngles.x = xAngle
                     child.eulerAngles.y = yAngle
                 }
                 else{

@@ -24,6 +24,8 @@ struct ARMainView: View {
     @State private var checkTime: Timer? // AR init 후 시간 체크
     @State private var selectedTrueNorth = false
     
+    @State private var showGPSAlertBool = false
+    
     
     let intervalTime : Double = 7.0
     
@@ -187,11 +189,13 @@ struct ARMainView: View {
             
             }  // end of VStack
             .onChange(of: coreLocation.location ?? CLLocation(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0), altitude: 0)) { location in
-                if !isARViewReady {
+                if !isARViewReady && !showGPSAlertBool{
+                    print("checkAccuracy")
                     checkLocationAccuracy()
                 }
-                else {
+                else if isARViewReady {
                     // 사용자 현재 위치와 다음 노드까지의 거리를 구하는 함수
+                    print("checkDistance")
                     checkDistance(location: location)
                 }
             }
@@ -203,10 +207,12 @@ struct ARMainView: View {
     
     // GPS 알림
     func showGPSAlert() {
+        showGPSAlertBool = true
         let alert = UIAlertController(title: "알림", message: "GPS 신호가 불안정합니다. \n실내 혹은 높은 건물 주변은 \nGPS 신호가 불안정 할 수 있습니다.", preferredStyle: .actionSheet)
         
         alert.addAction(UIAlertAction(title: "재시도", style: .default) { _ in
             // '재시도' 버튼을 누르면 타이머를 다시 시작하고 초기화를 시도합니다.
+            showGPSAlertBool = false
             self.checkTime?.invalidate()
             self.checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
                 showGPSAlert()
