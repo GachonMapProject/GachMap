@@ -160,7 +160,15 @@ struct ChoosePathView: View {
         }
         else if isAROn && !isOnlyMapOn{
             let path = nodes[selectedPath]
+//            if selectedPath == 2 {
+//                ARMainView(isAROn : $isAROn, path: path.filter{$0.id != 0}, departures:  path[0].id, arrivals:  path[path.count - 1].id)
+//            }
+//            else{
+//                ARMainView(isAROn : $isAROn, path: path, departures:  path[0].id, arrivals:  path[path.count - 1].id)
+//            }
             ARMainView(isAROn : $isAROn, path: path, departures:  path[0].id, arrivals:  path[path.count - 1].id)
+           
+
         }
         else if !isAROn && isOnlyMapOn {
             OnlyMapView(path: nodes[selectedPath])

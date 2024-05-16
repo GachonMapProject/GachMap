@@ -32,6 +32,8 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     public var continuallyUpdatePositionAndScale = false
     public var annotationHeightAdjustmentFactor = 1.1
     
+    var difAltitude = 0.0
+    
     init(path : [Node], nextNodeObject : NextNodeObject, rotationList : [Rotation]) {
         self.path = path
         self.nextNodeObject = nextNodeObject
@@ -115,6 +117,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         let altitude = currentLocation.altitude                 // ARCL에서 측정한 고도
         let difAltitude = altitude - path[index].location.altitude // 현재 인덱스와 고도를 맞춤
+        self.difAltitude = difAltitude
         print("difAltitude : \(difAltitude), altitude : \(altitude)")
         
         
@@ -135,8 +138,13 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
 //         경로 노드마다 띄울 텍스트 설정 (여기도 0부터 시작이 아닌 인덱스 번호부터 시작하도록)
         for i in 0..<stepData.count - 1 {
 //            let nodeName = "node-\(stepData[i].locationName)"
-            if stepData[i].locationName != "0"{
-                placeMiddleNode(currentLocation: currentLocation, start : stepData[i].startLocation, end: stepData[i].endLocation, next : stepData[i].nextLocation, nodeName: stepData[i].locationName, index : i)
+            print(stepData[i])
+            let start = stepData[i].startLocation
+            let end = stepData[i].endLocation
+            let next = stepData[i].nextLocation
+            if stepData[i].locationName != "0" && start.altitude != difAltitude && end.altitude != difAltitude && next.altitude != difAltitude{
+                print("locationName : \(stepData[i].locationName)")
+                placeMiddleNode(currentLocation: currentLocation, start : start, end: end, next : next, nodeName: stepData[i].locationName, index : i)
             }
         
         }
@@ -173,7 +181,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     
 //    목적지 노드를 AR 환경에 배치
     private func placeMiddleNode(currentLocation: CLLocation, start :CLLocation, end: CLLocation, next : CLLocation, nodeName: String, index : Int) {
-    
+
         // CheckRotation을 통해 rotationList를 받아와서 회전 방향 설정하면 될듯?
         let fileName = rotationList[index].rotation == "우회전" ? "MuhanPointRight" : rotationList[index].rotation == "좌회전" ? "MuhanPointLeft" : "MuhanMiddle"
 
@@ -202,7 +210,9 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         boxNode.name = "\(index)-1"
         naviNode.name = "\(index)-2"
         
+        var names : [String] = [middleNode.name ?? "", boxNode.name ?? "", naviNode.name ?? ""]
         
+
         addScenewideNodeSettings(middleNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: middleNode)
         addScenewideNodeSettings(boxNode)
@@ -210,7 +220,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         addScenewideNodeSettings(naviNode)
         sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: naviNode)
         
-        var names : [String] = [middleNode.name ?? "", boxNode.name ?? "", naviNode.name ?? ""]
+
         
         // boxNode 위에 화살표 노드 생성
         for point in midPoints {
@@ -226,6 +236,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             
         }
         nextNodeObject.nodeNames[index+1] = names
+       
 
     } // end of placeDestinationNode()
     
