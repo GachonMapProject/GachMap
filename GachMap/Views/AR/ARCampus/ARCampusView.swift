@@ -27,6 +27,23 @@ struct ARCampusView: View {
                 }
         }
         else {
+            ZStack(alignment : .topTrailing){
+                ARCampusWrapperView(ARInfo: ARInfo)
+                
+                Button(action: {
+                    dismiss()
+                }, label: {
+                    Image(systemName: "xmark.circle")
+                        .foregroundColor(.white)
+                    Text("둘러보기 종료")
+                        .foregroundStyle(.white)
+                })
+                .padding(8)
+                .background(.blue)
+                .bold()
+                .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
+                .padding(EdgeInsets(top: 40, leading: 0, bottom: 0, trailing: 20))
+            }
             
         }
        

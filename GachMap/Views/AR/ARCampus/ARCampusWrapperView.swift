@@ -7,12 +7,18 @@
 
 import SwiftUI
 
-struct ARCampusWrapperView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+import SwiftUI
+import CoreLocation
 
-#Preview {
-    ARCampusWrapperView()
+struct ARCampusWrapperView: UIViewControllerRepresentable {
+    let ARInfo : [ARInfo]
+    
+    
+    func makeUIViewController(context: Context) -> ARCampusController {
+        return ARCampusController(ARInfo: ARInfo)
+    }
+    
+    func updateUIViewController(_ uiViewController: ARCampusController, context: Context) {
+
+    }
 }
