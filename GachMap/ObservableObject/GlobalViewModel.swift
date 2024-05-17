@@ -11,4 +11,14 @@ class GlobalViewModel: ObservableObject {
     @Published var showSearchView: Bool = false
     @Published var showDetailView: Bool = false
     @Published var destination: String = ""
+    @Published var destinationId : Int = 0
+    
+    // ARCaompusView
+    @Published var isARStart : Bool = false
+    
+    // 행사 디테일 -> 목적지 설정
+    @Published var selectedDestination = false
+    @Published var latitude : Double = 0.0
+    @Published var longitude : Double = 0.0
+    @Published var altitude : Double = 0.0
 }

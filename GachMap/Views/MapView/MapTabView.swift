@@ -48,6 +48,7 @@ struct MapTabView: View {
     // CoreLocationEx, Category, [CategoryData]을 받아야 함
     
     @EnvironmentObject var coreLocation : CoreLocationEx
+    @EnvironmentObject var globalViewModel : GlobalViewModel
     @State var category = "BUILDING" // 선택한 카테고리 넘겨주기
     @State var selecetedCategory = "BUILDING"
 //    var locations = [CategoryData(placeId: 1, placeName: "1-1", placeLatitude: 37.4508817, placeLongitude: 127.1274769, placeSummary: "Sum"),
@@ -137,7 +138,11 @@ struct MapTabView: View {
                 Spacer()
             }
             
-
+            NavigationLink("", isActive: $globalViewModel.isARStart) {
+                ARCampusView()
+                    .edgesIgnoringSafeArea(.all)
+                    .navigationBarBackButtonHidden()
+            }
         }
         
     }
