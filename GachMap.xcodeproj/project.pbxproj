@@ -382,9 +382,9 @@
 		8B831C062BCCF57700A85973 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				8B831C282BCCF60C00A85973 /* AR */,
 				CBBE58712BF489B2003B55C4 /* NavControllerTest */,
 				CB8A6E352BF0E6E80039AC50 /* SatisfactionView */,
-				8B831C282BCCF60C00A85973 /* AR */,
 				8BC86EDA2BE89B0F00051BF0 /* MapView */,
 				CBED53B22BE2203A00DDFD0C /* ChoosePath */,
 				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
@@ -397,7 +397,6 @@
 				8B831C722BCE0AB300A85973 /* UserDashboardView.swift */,
 				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
 				8B3159D82BD0F53F0049CB5F /* MyPage */,
-				CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -636,6 +635,7 @@
 				CB7C69872BE10C9100C277AE /* ChoosePathView.swift */,
 				CBED53B02BE2178E00DDFD0C /* AIDescriptionView.swift */,
 				CB8A6E312BEF734C0039AC50 /* ChoosePathTestView.swift */,
+				CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */,
 			);
 			path = ChoosePath;
 			sourceTree = "<group>";

@@ -140,7 +140,7 @@ struct MapTabView: View {
             
             NavigationLink("", isActive: $globalViewModel.isARStart) {
                 ARCampusView()
-                    .edgesIgnoringSafeArea(.all)
+//                    .edgesIgnoringSafeArea(.all)
                     .navigationBarBackButtonHidden()
             }
         }
