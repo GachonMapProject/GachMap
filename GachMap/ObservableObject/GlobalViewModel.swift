@@ -21,4 +21,5 @@ class GlobalViewModel: ObservableObject {
     @Published var latitude : Double = 0.0
     @Published var longitude : Double = 0.0
     @Published var altitude : Double = 0.0
+    
 }

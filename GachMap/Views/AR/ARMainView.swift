@@ -15,7 +15,9 @@ struct ARMainView: View {
     // 전역으로 CoreLocationEx 인스턴스 생성
     @EnvironmentObject var coreLocation : CoreLocationEx
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var nextNodeObject = NextNodeObject()
+    @EnvironmentObject var nextNodeObject : NextNodeObject
+    @EnvironmentObject var timer : MyTimer
+    
     @State private var isARViewVisible = true // ARView의 on/off 상태 변수
     @State private var isEnd = false // 안내 종료 상태 변수
     @State private var isARViewReady = false    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
@@ -35,7 +37,7 @@ struct ARMainView: View {
     let checkRotation = CheckRotation()
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
-    let timer = MyTimer()
+//    let timer = MyTimer()
 //    let path = Path().ITtoGachon
     @Binding var isAROn : Bool // ChoosePathView로 돌아갈 때
     let path : [Node]
@@ -174,10 +176,10 @@ struct ARMainView: View {
                                 }
                             }
                             
-//                            Text(String(format: "남은 거리: %.2f", distance ?? 0.0))
-//                            Text("다음 인덱스 : \(nextNodeObject.nextIndex)")
-//                            Text("측정 시간 : \(timer.seconds)")
-//                            Text("시간 리스트 : \(String(describing: timeList))")
+                            Text(String(format: "남은 거리: %.2f", distance ?? 0.0))
+                            Text("다음 인덱스 : \(nextNodeObject.nextIndex)")
+                            Text("측정 시간 : \(timer.seconds)")
+                            Text("시간 리스트 : \(String(describing: timeList))")
                         } // end of if !isEnd
                         else{
                             // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
@@ -193,7 +195,7 @@ struct ARMainView: View {
                     print("checkAccuracy")
                     checkLocationAccuracy()
                 }
-                else if isARViewReady {
+                else if isARViewReady && !isEnd{
                     // 사용자 현재 위치와 다음 노드까지의 거리를 구하는 함수
                     print("checkDistance")
                     checkDistance(location: location)
@@ -305,9 +307,10 @@ struct ARMainView: View {
     // 사용자 위치가 바뀔 떄마다 호출 (다음 노드까지의 거리 계산)
     func checkDistance(location : CLLocation){
         let index = nextNodeObject.nextIndex
+        print("index : \(index)")
         
         // 마지막 노드에 도착 이후부터는 실행 안 되게
-        if index != path.count {
+        if index < path.count {
             let distance = location.distance(from: path[index].location)
             self.distance = distance
             if distance <= 5 {
@@ -316,20 +319,25 @@ struct ARMainView: View {
                 if index == 0 {
                     timer.startTimer()  // 첫 노드 근처에 오면 타이머 시작
                     print("timer 시작")
+                    nextNodeObject.increment()
                 }else{
                     let time = timer.seconds
-                    let list = TimeList(firstNodeId: path[index].id, secondNodeId: path[index+1].id, time: time)
+                    let list = TimeList(firstNodeId: path[index - 1].id, secondNodeId: path[index].id, time: time)
                     timeList.append(list)
                     // timer (노드-노드, 시간) 배열 생성 후 append 하고 만족도 페이지에 넘겨서 Request 요청해야 됨
                     print(path[index-1].name + "~" + path[index].name + "까지 : \(time)초")
                     timer.stopTimer()
                     timer.startTimer()
+                    nextNodeObject.increment()
                 }
-                nextNodeObject.increment()
+                
+                
+                print("nextNodeObject.nextIndex : \(nextNodeObject.nextIndex)")
             } // end of (if distance <= 5 )
         }
         else{
             // 목적지에 도착하면 timer.stopTimer()
+            EndButtonAlert()
             timer.stopTimer()
         }
     }   // end of checkDistance()

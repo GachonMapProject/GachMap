@@ -201,9 +201,11 @@ struct SearchSecondView: View {
                                       
                                     if startSearchText == "현재 위치" {
                                         let param = PathRequest(latitude: latitude, longitude: longitude, altitude: altitude, placeId: endPlaceId ?? 0, isDepartures: true)
+                                        print("param : \(param)")
                                         postPath(location : location, parameters: param)
                                     } else if endSearchText == "현재 위치"{
                                         let param = PathRequest(latitude: latitude, longitude: longitude, altitude: altitude, placeId: endPlaceId ?? 0, isDepartures: false)
+                                        print("param : \(param)")
                                         postPath(location : location, parameters: param)
                                     } else{
                                         getPath(departure: startPlaceId ?? 0, arrival: endPlaceId ?? 0)
@@ -321,15 +323,6 @@ struct SearchSecondView: View {
             .frame(maxHeight: .infinity, alignment: .top)
             .background(Color.white)
             // end of 전체 VStack
-            
-//            if paths != nil{
-//                NavigationLink("", isActive: $goPathView){
-//                    ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText)
-//                        .navigationBarBackButtonHidden()
-//                        .edgesIgnoringSafeArea(.bottom)
-//                }
-//                
-//            }
 
         }
         else {

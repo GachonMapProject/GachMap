@@ -12,9 +12,9 @@ struct SatisfactionView: View {
     
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var globalViewModel: GlobalViewModel
-    
+
     var width = UIScreen.main.bounds.width
-    let arr = [1 : "매우불만족", 2 : "불만족", 3 : "보통", 4 : "만족", 5 : "매우만족"]
+    let arr = [1 : "veryUnsatisfied", 2 : "unsatisfied", 3 : "normal", 4 : "satisfied", 5 : "verySatisfied"]
     let weatherData = WeatherData()
     @State var ready = false
     
@@ -171,10 +171,6 @@ struct SatisfactionView: View {
                         print("value.message: \(value.message)")
                         message = "만족도 저장 실패"
                         submit = true
-//                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
-//                        showAlert = true
-                        
-//                        print("showAlert: \(showAlert)")
                     }
                 
                 case .failure(let error):

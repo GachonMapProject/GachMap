@@ -17,7 +17,7 @@ struct ChoosePathView: View {
     @EnvironmentObject var globalViewModel: GlobalViewModel
     @EnvironmentObject var coreLocation: CoreLocationEx
     @EnvironmentObject var navi: NavigationController
-
+    
     @State private var region: MKCoordinateRegion
     @State private var lineCoordinates: [[CLLocationCoordinate2D]]
     @State var selectedPath: Int = 0
