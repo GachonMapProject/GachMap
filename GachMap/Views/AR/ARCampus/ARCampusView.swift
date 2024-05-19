@@ -37,8 +37,8 @@ struct ARCampusView: View {
 //                if !selectedTrueNorth {
 //                    ProgressView()
 //                        .onAppear(){
-////                            trueNorthAlert()
-//                            showTrueNorthAlert = true
+//                            trueNorthAlert()
+////                            showTrueNorthAlert = true
 ////                            getARCampus()
 //                        }
 //                }

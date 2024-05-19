@@ -107,7 +107,7 @@ struct ARMainView: View {
                             if !onlyMap{    // 지도만 이용 상태변수
                                 ZStack(alignment: .topTrailing){
                                     VStack(spacing : 0){
-                                        ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
+                                        ARCLViewControllerWrapper(path: path, rotationList : rotationList ?? [])
                                         AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }.edgesIgnoringSafeArea(.all)
                                     
@@ -247,6 +247,7 @@ struct ARMainView: View {
             // 확인 액션 추가
             alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
                 timer.stopTimer() // 안내 종료 누르면 타이머 stop
+                nextNodeObject.nextIndex = 0
                 isEnd = true      // 확인을 눌렀을 때의 처리: 다음 페이지로 이동
             })
             
