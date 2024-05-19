@@ -79,8 +79,7 @@ struct ARMainView: View {
                       .bold()
                       .font(.system(size: 20))
                     }
-
-                }
+                } // end of if !trueNorthAlertOn
                 else{
                     if !isARViewReady {
                         Image(systemName: "antenna.radiowaves.left.and.right")
@@ -201,10 +200,6 @@ struct ARMainView: View {
                     checkDistance(location: location)
                 }
             }
-//        } // end of coreLocation.location != nil
-//        else {
-//            ProgressView("Waiting for location accuracy...")
-//        }
     }
     
     // GPS 알림
