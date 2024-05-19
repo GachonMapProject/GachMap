@@ -23,12 +23,20 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
     public var continuallyUpdatePositionAndScale = false
     public var annotationHeightAdjustmentFactor = 1.1
     
-    var difAltitude = 0.0
+    var difAltitude : Double
     let ARInfo : [ARInfo]
     
     init(ARInfo : [ARInfo]){
-        self.ARInfo = ARInfo
+        guard ARInfo.count > 1 else {
+               fatalError("ARInfo array must contain at least two elements.")
+           }
+
+        // Assign the ARInfo array excluding the first element
+        self.ARInfo = Array(ARInfo[1...])
+        self.difAltitude = ARInfo[0].placeAltitude
         super.init(nibName: nil, bundle: nil)
+        
+        
     }
     
     required init?(coder: NSCoder) {
@@ -109,33 +117,34 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
             return
         }
         
-        let dispatchGroup = DispatchGroup()
-        var annotationNodes = [LocationAnnotationNode]()
-        
+//        let dispatchGroup = DispatchGroup()
+//        var annotationNodes = [LocationAnnotationNode]()
+//        
         for info in ARInfo {
-            dispatchGroup.enter()
+//            dispatchGroup.enter()
             let coordinate = CLLocationCoordinate2D(latitude: info.placeLatitude, longitude: info.placeLongitude)
-            let location = CLLocation(coordinate: coordinate, altitude: info.plaecAltitude)
+            let location = CLLocation(coordinate: coordinate, altitude: info.placeAltitude)
             
-            confidureImagefromURL(info.arImagePath) { [weak self] image in
+            confidureImagefromURL(info.arImagePath ?? "") { [weak self] image in
                 guard let self = self, let image = image else {
-                    dispatchGroup.leave()
+//                    dispatchGroup.leave()
                     return
                 }
                 
                 let annotationNode = LocationAnnotationNode(location: location, image: image)
                 addScenewideNodeSettings(annotationNode)
-                annotationNodes.append(annotationNode)
-                dispatchGroup.leave()
+                self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+//                annotationNodes.append(annotationNode)
+//                dispatchGroup.leave()
             }
         }
         
-        dispatchGroup.notify(queue: .main) {
-            // 모든 노드가 추가된 후 UI 업데이트
-            for node in annotationNodes {
-                self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: node)
-            }
-        }
+//        dispatchGroup.notify(queue: .main) {
+//            // 모든 노드가 추가된 후 UI 업데이트
+//            for node in annotationNodes {
+//                self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: node)
+//            }
+//        }
     }
     
     private func confidureImagefromURL(_ url: String, completion: @escaping (UIImage?) -> Void) {

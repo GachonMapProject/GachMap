@@ -10,7 +10,8 @@ import CoreLocation
 
 struct ARCLViewControllerWrapper: UIViewControllerRepresentable {
     
-    @ObservedObject var nextNodeObject : NextNodeObject
+//    @ObservedObject var nextNodeObject : NextNodeObject
+    @EnvironmentObject var nextNodeObject : NextNodeObject
     var path : [Node]
     var rotationList : [Rotation]
     
@@ -20,7 +21,11 @@ struct ARCLViewControllerWrapper: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: ARCLViewController, context: Context) {
         // NextNodeObject.nextIndex가 변경될 때마다 호출 -> scene에 노드를 추가하는 함수를 호출해야 할듯
-//        uiViewController.addNodes(path: path)
+        if nextNodeObject.nextIndex != 0 {
+            uiViewController.addNodes(path: path)
+        }
+        
+        
 //        uiViewController.checkNode()
     }
 }
