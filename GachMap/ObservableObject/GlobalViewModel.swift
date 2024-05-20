@@ -9,8 +9,16 @@ import Foundation
 
 class GlobalViewModel: ObservableObject {
     @Published var showSearchView: Bool = false
+    @Published var selectedTab: Int = 1
+    @Published var showSheet: Bool = false
+    
     @Published var showDetailView: Bool = false
     @Published var destination: String = ""
+    
+    @Published var isLogin: Bool = false
+    
+    @Published var showUsageListView: Bool = false
+
     @Published var destinationId : Int = 0
     
     // ARCaompusView
@@ -20,6 +28,5 @@ class GlobalViewModel: ObservableObject {
     @Published var selectedDestination = false
     @Published var latitude : Double = 0.0
     @Published var longitude : Double = 0.0
-    @Published var altitude : Double = 0.0
-    
+    @Published var altitude : Double = 0.0  
 }

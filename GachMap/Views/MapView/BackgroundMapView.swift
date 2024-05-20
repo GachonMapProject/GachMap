@@ -75,7 +75,7 @@ struct BackgroundMapView : View {
     var body: some View {
         ZStack(alignment : .bottom){
             ZStack(alignment : .topTrailing){
-                Map(position: $region, selection: $selectedItem){
+                Map(position: $region, selection: $selectedItem) {
                     UserAnnotation() // 사용자 현재 위치
                     ForEach(locations){ location in
                         Marker(location.markerData.placeName, systemImage: pinImage, coordinate: location.coordinate)
@@ -191,5 +191,7 @@ struct BackgroundMapView : View {
     }
 }
 
-
-
+#Preview {
+  ContentView()
+        .environmentObject(GlobalViewModel())
+}

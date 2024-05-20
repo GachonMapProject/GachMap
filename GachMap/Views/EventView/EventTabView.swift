@@ -40,14 +40,14 @@ struct EventTabView: View {
             else{
                 if !nilData {
                     VStack{
-                        // 상단 제목 영억
+                        // 상단 제목 영역
                         VStack {
                             Image("EventTabTitle")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(maxWidth: UIScreen.main.bounds.width - 50, alignment: .leading)
                                 .frame(height: 32)
-                                .padding(.top, 10)
+                                .padding(.top, 21)
                             
                             HStack{
                                 ForEach(1...eventList.count, id: \.self){index in

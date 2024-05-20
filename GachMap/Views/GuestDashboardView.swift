@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct GuestDashboardView: View {
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    
+    @State private var isLoginMove: Bool = false
+    
     var body: some View {
         
         VStack {
@@ -29,7 +33,9 @@ struct GuestDashboardView: View {
                     Spacer()
                     
                     Button(action: {
+                        UserDefaults.standard.removeObject(forKey: "loginInfo")
                         
+                        isLoginMove = true
                     }, label: {
                         VStack(spacing: 5) {
                             Image(systemName: "iphone.and.arrow.forward")
@@ -43,6 +49,10 @@ struct GuestDashboardView: View {
                             RoundedRectangle(cornerRadius: 7)
                                 .fill(.gachonBlue))
                     })
+                    .fullScreenCover(isPresented: $isLoginMove) {
+                        PrimaryView()
+                            .navigationBarBackButtonHidden()
+                    }
                 }
                 .padding(EdgeInsets(top: 0, leading: 17, bottom: 0, trailing: 17))
                 
@@ -51,7 +61,7 @@ struct GuestDashboardView: View {
             VStack(spacing: 13) {
                 HStack() {
                     Button(action: {
-                        
+                        globalViewModel.showSearchView = true
                     }, label: {
                         ZStack {
                             Image("MuhanPointRight")
@@ -97,7 +107,7 @@ struct GuestDashboardView: View {
                 HStack {
                     
                     Button(action: {
-                        
+                        globalViewModel.selectedTab = 2
                     }, label: {
                         HStack {
                             VStack(alignment: .leading, spacing: 3) {
@@ -121,7 +131,7 @@ struct GuestDashboardView: View {
                     Spacer()
                     
                     Button(action: {
-                        
+                        globalViewModel.selectedTab = 3
                     }, label: {
                         HStack {
                             VStack(alignment: .leading, spacing: 3) {
@@ -158,4 +168,5 @@ struct GuestDashboardView: View {
 
 #Preview {
     GuestDashboardView()
+        .environmentObject(GlobalViewModel())
 }

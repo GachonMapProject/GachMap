@@ -59,11 +59,11 @@ struct InquireListCell: View {
     
     var body: some View {
         // 버튼 시작
-        Button(action: {
-            isMoved = true
+        NavigationLink(destination: {
+            InquireDetailView(inquiryId: inquiry.inquiryId)
+                .navigationBarBackButtonHidden()
         }, label: {
             HStack {
-                
                 Text(selectedInquiryCategory(category: inquiry.inquiryCategory))
                     .font(.system(size: 15, weight: .bold))
                     .foregroundColor(.gachonBlue)
@@ -115,17 +115,14 @@ struct InquireListCell: View {
             }
         })
         .frame(width: UIScreen.main.bounds.width - 30, height: 45)
+
+        
         Divider()
             .frame(width: UIScreen.main.bounds.width - 30)
-        // 버튼 끝
-        
-        NavigationLink("", isActive: $isMoved) {
-            InquireDetailView(inquiryId: inquiry.inquiryId)
-                .navigationBarBackButtonHidden()
-        }
+ 
     }
 }
 
-//#Preview {
-//    InquireListCell()
-//}
+#Preview {
+    InquireListCell(inquiry: InquireListData(inquiryId: 2, inquiryCategory: "Node", createDt: "2024-05-08T23:06:08.697767", inquiryProgress: true, userId: 569153915064443390, inquiryTitle: "테스트"))
+}
