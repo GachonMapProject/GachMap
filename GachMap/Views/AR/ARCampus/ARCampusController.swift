@@ -73,8 +73,8 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
         // 노드 추가 함수
         DispatchQueue.main.async {
             self.addNodes(ARInfo : self.ARInfo)
-            self.sceneLocationView?.run()    // SceneLocationView 시작
         }
+//        self.sceneLocationView?.run()    // SceneLocationView 시작
 
     }
     
@@ -106,9 +106,8 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
     
     // 노드 추가 함수
     func addNodes(ARInfo: [ARInfo]) {
-        
         sceneLocationView?.removeAllNodes()
-        
+
         // 현재 위치 가져오기
         guard let currentLocation = sceneLocationView?.sceneLocationManager.currentLocation else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
@@ -116,70 +115,82 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
             }
             return
         }
+
         let difAltitude = currentLocation.altitude - nearAltitude // 현재 측정된 고도와 주변 노드 고도의 차이
         print("difAltitude : \(difAltitude)")
-                
+
+        let dispatchGroup = DispatchGroup()
+
         for info in ARInfo {
             let coordinate = CLLocationCoordinate2D(latitude: info.placeLatitude, longitude: info.placeLongitude)
             let distance = currentLocation.distance(from: CLLocation(coordinate: coordinate, altitude: info.placeAltitude))
             print("distance : \(distance)")
-            
+
             // 현재 위치로부터 500미터 이하만 보여주기
             if distance < 500 {
                 let originalAltitude = info.placeAltitude + (info.buildingHeight ?? 0) // 건물 높이 추가
                 let updatedAltitude = originalAltitude + difAltitude // 고도 수정 + 위치 추가해야 함
-                
+
                 let location = CLLocation(coordinate: coordinate, altitude: updatedAltitude)
                 
+                dispatchGroup.enter()
                 configureImageFromURL(info.arImagePath ?? "") { [weak self] image in
                     guard let self = self, let image = image else {
-                        print("iamge - error")
+                        print("image - error")
+                        dispatchGroup.leave()
                         return
                     }
                     print(info.arImagePath, "성공")
                     let annotationNode = LocationAnnotationNode(location: location, image: image)
-                    addScenewideNodeSettings(annotationNode)
-                    sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                    self.addScenewideNodeSettings(annotationNode)
+                    self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                    dispatchGroup.leave()
                 }
             }
-
         }
 
+        dispatchGroup.notify(queue: .main) {
+            print("All nodes added")
+            self.sceneLocationView?.run()    // SceneLocationView 시작
+        }
     }
-    
+
     private func configureImageFromURL(_ url: String, completion: @escaping (UIImage?) -> Void) {
         guard let url = URL(string: url) else {
             completion(nil)
             return
         }
-        
+
         let request = AF.request(url, method: .get)
-        
+
         request.responseData { response in
             switch response.result {
             case .success(let imageData):
                 if let image = UIImage(data: imageData) {
                     // original w, h : 3810.0, 1200.0
-                    let targetHeight: CGFloat = 800
-                    let scale = targetHeight / image.size.height
-                    let targetWidth = image.size.width * scale
-                    
+                    let targetWidth: CGFloat = 2000
+                    let scale = targetWidth / image.size.width
+//                    let scale = 1
+//                    let targetWidth = image.size.height * scale
+                    let targetHeight = image.size.height * scale
+
                     UIGraphicsBeginImageContextWithOptions(CGSize(width: targetWidth, height: targetHeight), false, 0.0)
                     image.draw(in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
                     let newImage = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
-                    
+
                     completion(newImage)
                 } else {
                     completion(nil)
                 }
-                
+
             case .failure(let error):
                 print(error)
                 completion(nil)
             }
         }
     }
+
     
     
     

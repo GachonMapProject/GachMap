@@ -30,6 +30,7 @@ struct ARCampusView: View {
 //    @State private var showReloadAlert = false
 //    @State private var showServerErrorAlert = false
     @State private var showTrueNorthAlert = true
+
     
     var body: some View {
         VStack {
@@ -95,6 +96,7 @@ struct ARCampusView: View {
                 }
                 else {
                     if ARInfo != nil {
+                        
                         ZStack(alignment: .topTrailing) {
                             ARCampusWrapperView(ARInfo: ARInfo ?? [])
                                 .edgesIgnoringSafeArea(.all)
