@@ -50,6 +50,7 @@ struct EventCardView : View {
                     }
 //                    .sheet(isPresented: $haveLocationData) {
 //                        EventDetailView(eventDetail: eventDetail)
+//                            .presentationDragIndicator(.visible)
 //                    }
                     
                     NavigationLink(destination: EventDetailView(eventDetail: eventDetail), isActive: $haveLocationData) {
