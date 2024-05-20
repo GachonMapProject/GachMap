@@ -29,17 +29,25 @@ struct ARCampusView: View {
 //    @State private var showGPSAlert = false
 //    @State private var showReloadAlert = false
 //    @State private var showServerErrorAlert = false
-//    @State private var showTrueNorthAlert = false
+    @State private var showTrueNorthAlert = true
     
     var body: some View {
         VStack {
 //            if !trueNorthAlertOn {
 //                if !selectedTrueNorth {
 //                    ProgressView()
-//                        .onAppear(){
-//                            trueNorthAlert()
-////                            showTrueNorthAlert = true
-////                            getARCampus()
+//                        .alert(isPresented: $showTrueNorthAlert) {
+//                            Alert(
+//                                title: Text("진북 설정"),
+//                                message: Text("나침반을 진북으로 설정하면\n향상된 AR 서비스를 이용하실 수 있습니다."),
+//                                primaryButton: .default(Text("확인")) {
+//                                    trueNorthAlertOn = true
+//                                },
+//                                secondaryButton: .default(Text("설정으로 이동")) {
+//                                    selectedTrueNorth = true
+//                                    openSettings()
+//                                }
+//                            )
 //                        }
 //                }
 //                else{

@@ -48,6 +48,8 @@ struct ARMainView: View {
     @State var distance : Double?
 //    @State var timeList = [Int]()
     
+    @State var showTrueNorthAlert = true
+    
     
     var body: some View {
 //        if coreLocation.location != nil{
@@ -55,9 +57,18 @@ struct ARMainView: View {
                 if !trueNorthAlertOn {
                     if !selectedTrueNorth {
                         ProgressView()
-                            .onAppear(){
-                                trueNorthAlert()
-                                
+                            .alert(isPresented: $showTrueNorthAlert) {
+                                Alert(
+                                    title: Text("진북 설정"),
+                                    message: Text("나침반을 진북으로 설정하면\n향상된 AR 서비스를 이용하실 수 있습니다."),
+                                    primaryButton: .default(Text("확인")) {
+                                        trueNorthAlertOn = true
+                                    },
+                                    secondaryButton: .default(Text("설정으로 이동")) {
+                                        selectedTrueNorth = true
+                                        openSettings()
+                                    }
+                                )
                             }
                     }
                     else{
@@ -186,6 +197,8 @@ struct ARMainView: View {
                         }
                     }
                 }
+                
+  
                
             
             }  // end of VStack
