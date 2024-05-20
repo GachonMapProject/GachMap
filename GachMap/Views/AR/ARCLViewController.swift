@@ -11,9 +11,12 @@ import ARCL
 import CoreLocation
 import MapKit
 import ARKit
+import Alamofire
+import AlamofireImage
 
 
 class ARCLViewController: UIViewController, ARSCNViewDelegate {
+    private let imageCache = AutoPurgingImageCache()
     var sceneLocationView: SceneLocationView?
     var path : [Node]
     var stepData = [Step]()
@@ -21,6 +24,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     var rotationList : [Rotation]
     var xAngle : Float = 0.0
     var yAngle : Float = 0.0
+    let ARInfo : [ARInfo]
 //    var nodeNames : [Int : [String]] = [:]
     
     public var locationEstimateMethod = LocationEstimateMethod.mostRelevantEstimate // 위치 추정 방법
@@ -34,10 +38,11 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     
     var difAltitude = 0.0
     
-    init(path : [Node], nextNodeObject : NextNodeObject, rotationList : [Rotation]) {
+    init(path : [Node], nextNodeObject : NextNodeObject, rotationList : [Rotation], ARInfo : [ARInfo]) {
         self.path = path
         self.nextNodeObject = nextNodeObject
         self.rotationList = rotationList
+        self.ARInfo = ARInfo
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -65,18 +70,20 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
      }
     
     override func viewWillAppear(_ animated: Bool) {
-        checkCameraAccess()         // 카메라 허용 확인
+
+        
+        // 노드 추가 함수
+        DispatchQueue.main.async {
+            self.checkCameraAccess()         // 카메라 허용 확인
+            self.rebuildSceneLocationView()  // SceneLocationView() 재구성
+            self.addNodes(path : self.path)
+//            self.sceneLocationView?.run()    // SceneLocationView 시작
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        rebuildSceneLocationView()  // SceneLocationView() 재구성
-        
-        // 노드 추가 함수
-        DispatchQueue.main.async {
-            self.addNodes(path : self.path)
-            self.sceneLocationView?.run()    // SceneLocationView 시작
-        }
+
 
     }
     
@@ -107,6 +114,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     // 노드 추가 함수
     func addNodes(path : [Node]){
         var path = path
+        stepData = [Step]()
         sceneLocationView?.removeAllNodes()
         
         // 현재 위치 가져오기
@@ -152,6 +160,43 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         }
         placeDestinationNode(currentLocation : currentLocation) // 목적지 노드
+        
+        let dispatchGroup = DispatchGroup()
+        var nodes = [LocationAnnotationNode]()
+        for info in ARInfo {
+            let coordinate = CLLocationCoordinate2D(latitude: info.placeLatitude, longitude: info.placeLongitude)
+            let distance = currentLocation.distance(from: CLLocation(coordinate: coordinate, altitude: info.placeAltitude))
+            print("distance : \(distance)")
+
+            // 현재 위치로부터 500미터 이하만 보여주기
+            if distance < 500 {
+                let originalAltitude = info.placeAltitude + (info.buildingHeight ?? 0) // 건물 높이 추가
+                let updatedAltitude = originalAltitude + difAltitude // 고도 수정 + 위치 추가해야 함
+
+                let location = CLLocation(coordinate: coordinate, altitude: updatedAltitude)
+                
+                dispatchGroup.enter()
+                configureImageFromURL(info.arImagePath ?? "") { [weak self] image in
+                    guard let self = self, let image = image else {
+                        print("image - error")
+                        dispatchGroup.leave()
+                        return
+                    }
+                    print(info.arImagePath, "성공")
+                    let annotationNode = LocationAnnotationNode(location: location, image: image)
+                    self.addScenewideNodeSettings(annotationNode)
+//                    self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                    nodes.append(annotationNode)
+                    dispatchGroup.leave()
+                }
+            }
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            print("All nodes added")
+            nodes.map{self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: $0)}
+            self.sceneLocationView?.run()    // SceneLocationView 시작
+        }
         
     } // end of addNodes()
     
@@ -229,7 +274,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         for point in midPoints {
 //            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
             let arrow = makeUsdzNode(fileName: "middleArrow2", scale : 0.003, middle: true)
-            let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.39)
+            let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.35)
             let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
             arrowNode.constraints = nil
             arrowNode.name = ("\(index)-\(point.coordinate.latitude)")
@@ -277,27 +322,6 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         node.transform = transformationMatrix
         return node.position
     }
-    
-//    func placeArrow(xAngle: Float, yAngle: Float) -> SCNNode {
-//        print("placeArrow - xAngle :\(xAngle), yAngle: \(yAngle)")
-//        let textName = "⋀"
-//        
-//        // 텍스트 생성
-//        let text = SCNText(string: textName, extrusionDepth: 0.02)
-//        text.font = UIFont.systemFont(ofSize: 3) // 폰트 크기 및 두께 설정
-//        
-//        // 텍스트 머티리얼 설정 (흰색으로 변경)
-//        let material = SCNMaterial()
-//        material.diffuse.contents = UIColor.white
-//        text.firstMaterial = material
-//        
-//        // SCNNode 생성 및 텍스트 노드 추가
-//        let textNode = SCNNode(geometry: text)
-//        textNode.eulerAngles.x = .pi / 2 + xAngle
-//        textNode.eulerAngles.y = yAngle
-//        
-//        return textNode
-//    }
 
 
     
@@ -306,16 +330,20 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let startVector = makeSCNVector(currnetLocation: currentLocation, location: start)  // 현재 노드 상대 좌표
         let endVector = makeSCNVector(currnetLocation: currentLocation, location: end)      // 다음 노드 상대 좌표
         
-        let length = startVector.distance(receiver: endVector)
+//        let length = startVector.distance(receiver: endVector)
+        let length = Float(start.distance(from: end))
         
        // 출발지와 목적지 간의 고도 차이 계산
         let altitudeDifference = Float(start.altitude - end.altitude)
+        
+        // 평면 거리 계산 (XY 평면에서의 거리)
+       let horizontalDistance = sqrt(pow(endVector.x - startVector.x, 2) + pow(endVector.z - startVector.z, 2))
         
 //        빗변 (hypotenuse)는 평면 거리 (length)와 고도 차이 (altitudeDifference)의 제곱합의 제곱근
         let hypotenuse = sqrt(pow(length, 2) + pow(altitudeDifference, 2))
        
        
-        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(length), chamferRadius: 0)
+        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(horizontalDistance), chamferRadius: 0)
         box.firstMaterial?.diffuse.contents = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
         box.firstMaterial?.transparency = 0.9 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
         let node = SCNNode(geometry: box)
@@ -349,16 +377,29 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
 
         // 실릴더 기울기
-        let angle = acos(length / hypotenuse)
-        node.eulerAngles.x = Float(-angle)
-        xAngle = -angle
-
-        let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
-        let yAngle = atan(dirVector.x / dirVector.z)
-        print("placeBox - yAngle : \(yAngle)")
+//        let angle = acos(length / hypotenuse)
+//        node.eulerAngles.x = Float(-angle)
+//        xAngle = -angle
+//
+//        let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
+//        let yAngle = atan(dirVector.x / dirVector.z)
+//        print("placeBox - yAngle : \(yAngle)")
+//        self.yAngle = yAngle
+//       
+//       node.eulerAngles.y = yAngle
+        
+        // x축 회전 각도 계산 (고도 차이와 평면 거리 간의 각도)
+        let xAngle = atan2(altitudeDifference, horizontalDistance)
+        node.eulerAngles.x = xAngle
+        self.xAngle = xAngle
+        
+        // 방향 벡터 계산 (출발지와 목적지 간의 벡터)
+        let directionVector = SCNVector3(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
+        
+        // y축 회전 각도 계산 (방향 벡터의 x와 z 좌표를 사용)
+        let yAngle = atan2(directionVector.x, directionVector.z)
+        node.eulerAngles.y = yAngle
         self.yAngle = yAngle
-       
-       node.eulerAngles.y = yAngle
 
 
        return node
@@ -447,7 +488,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
                 child.scale = SCNVector3(scale, scale, scale)
                 if middle {
 //                    child.eulerAngles.x = .pi / 2 - xAngle
-                    child.eulerAngles.x = -xAngle - .pi / 2
+                    child.eulerAngles.x = xAngle + .pi / 2
                     child.eulerAngles.y = yAngle
                 }
                 else{
@@ -590,6 +631,42 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
                 if node.name == names {
                     node.isHidden = false
                 }
+            }
+        }
+    }
+    
+    private func configureImageFromURL(_ url: String, completion: @escaping (UIImage?) -> Void) {
+        guard let url = URL(string: url) else {
+            completion(nil)
+            return
+        }
+
+        let request = AF.request(url, method: .get)
+
+        request.responseData { response in
+            switch response.result {
+            case .success(let imageData):
+                if let image = UIImage(data: imageData) {
+                    // original w, h : 3810.0, 1200.0
+                    let targetWidth: CGFloat = 2000
+                    let scale = targetWidth / image.size.width
+//                    let scale = 1
+//                    let targetWidth = image.size.height * scale
+                    let targetHeight = image.size.height * scale
+
+                    UIGraphicsBeginImageContextWithOptions(CGSize(width: targetWidth, height: targetHeight), false, 0.0)
+                    image.draw(in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
+                    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+                    UIGraphicsEndImageContext()
+
+                    completion(newImage)
+                } else {
+                    completion(nil)
+                }
+
+            case .failure(let error):
+                print(error)
+                completion(nil)
             }
         }
     }

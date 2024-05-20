@@ -8,4 +8,6 @@ target 'GachMap' do
   # Pods for GachMap
  pod 'Alamofire'
  pod 'ARCL'
+ pod 'AlamofireImage'
+
 end

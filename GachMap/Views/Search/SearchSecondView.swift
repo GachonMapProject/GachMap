@@ -200,7 +200,13 @@ struct SearchSecondView: View {
                                     self.globalViewModel.destination = endSearchText
                                       
                                     if startSearchText == "현재 위치" {
-                                        let param = PathRequest(latitude: latitude, longitude: longitude, altitude: altitude, placeId: endPlaceId ?? 0, isDepartures: true)
+                                        var param = PathRequest(isDepartures: true)
+                                        if latitude != nil {
+                                            param = PathRequest(latitude: latitude, longitude: longitude, altitude: altitude, isDepartures: true)
+                                        } else{
+                                            param = PathRequest(placeId : endPlaceId ?? 0, isDepartures: true)
+                                        }
+                                       
                                         print("param : \(param)")
                                         postPath(location : location, parameters: param)
                                     } else if endSearchText == "현재 위치"{
