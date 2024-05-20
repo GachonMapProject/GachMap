@@ -443,7 +443,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
                 child.scale = SCNVector3(scale, scale, scale)
                 if middle {
 //                    child.eulerAngles.x = .pi / 2 - xAngle
-                    child.eulerAngles.x = -xAngle - .pi / 2
+                    child.eulerAngles.x = xAngle + .pi / 2
                     child.eulerAngles.y = yAngle
                 }
                 else{

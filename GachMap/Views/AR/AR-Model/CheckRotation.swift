@@ -44,7 +44,7 @@ struct CheckRotation {
                 print("angleInDegrees : \(angleInDegrees)")
                 
                 
-                let rotation = angleInDegrees < -200 ? "좌회전" : angleInDegrees > 200 ? "우회전" : "직진"
+                let rotation = angleInDegrees < -300 ? "좌회전" : angleInDegrees > 300 ? "우회전" : "직진"
                 let distance = distanceBetweenCoordinate(source: step.endLocation, destination: step.nextLocation)
 
                 rotationData.append(Rotation(rotation: rotation, distance: distance))
