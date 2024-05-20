@@ -322,7 +322,7 @@ struct ARMainView: View {
         if index < path.count {
             let distance = location.distance(from: path[index].location)
             self.distance = distance
-            if distance <= 5 {
+            if distance <= 15 {
                 print("\(path[index].name) - 5m 이내 ")
                 // timer 로직 추가
                 if index == 0 {

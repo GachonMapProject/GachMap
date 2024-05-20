@@ -107,6 +107,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     // 노드 추가 함수
     func addNodes(path : [Node]){
         var path = path
+        stepData = [Step]()
         sceneLocationView?.removeAllNodes()
         
         // 현재 위치 가져오기

@@ -25,8 +25,31 @@ struct ARCLViewControllerWrapper: UIViewControllerRepresentable {
 //            uiViewController.addNodes(path: path)
 //        }
         
+        if nextNodeObject.nextIndex != context.coordinator.lastIndex && nextNodeObject.nextIndex != 0 {
+            DispatchQueue.main.async {
+                uiViewController.addNodes(path: path)
+                context.coordinator.lastIndex = nextNodeObject.nextIndex
+            }
+            
+ 
+        }
+        
         
 //        uiViewController.checkNode()
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject {
+        var parent: ARCLViewControllerWrapper
+        var lastIndex: Int = 0
+        
+        init(_ parent: ARCLViewControllerWrapper) {
+            self.parent = parent
+            self.lastIndex = parent.nextNodeObject.nextIndex
+        }
     }
 }
 

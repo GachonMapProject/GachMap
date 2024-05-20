@@ -118,15 +118,12 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
         }
         let difAltitude = currentLocation.altitude - nearAltitude // 현재 측정된 고도와 주변 노드 고도의 차이
         print("difAltitude : \(difAltitude)")
-        
-//        let dispatchGroup = DispatchGroup()
-//        var annotationNodes = [LocationAnnotationNode]()
-//        
+                
         for info in ARInfo {
-//            dispatchGroup.enter()
             let coordinate = CLLocationCoordinate2D(latitude: info.placeLatitude, longitude: info.placeLongitude)
             let distance = currentLocation.distance(from: CLLocation(coordinate: coordinate, altitude: info.placeAltitude))
             print("distance : \(distance)")
+            
             // 현재 위치로부터 500미터 이하만 보여주기
             if distance < 500 {
                 let originalAltitude = info.placeAltitude + (info.buildingHeight ?? 0) // 건물 높이 추가
@@ -136,7 +133,6 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
                 
                 configureImageFromURL(info.arImagePath ?? "") { [weak self] image in
                     guard let self = self, let image = image else {
-    //                    dispatchGroup.leave()
                         print("iamge - error")
                         return
                     }
@@ -144,19 +140,11 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
                     let annotationNode = LocationAnnotationNode(location: location, image: image)
                     addScenewideNodeSettings(annotationNode)
                     sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
-    //                annotationNodes.append(annotationNode)
-    //                dispatchGroup.leave()
                 }
             }
 
         }
-        
-//        dispatchGroup.notify(queue: .main) {
-//            // 모든 노드가 추가된 후 UI 업데이트
-//            for node in annotationNodes {
-//                self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: node)
-//            }
-//        }
+
     }
     
     private func configureImageFromURL(_ url: String, completion: @escaping (UIImage?) -> Void) {
