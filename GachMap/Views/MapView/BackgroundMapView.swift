@@ -59,7 +59,7 @@ struct BackgroundMapView : View {
     @State var isBuilding = false
     
     
-    @State var isARStart = false    // AR 캠퍼스 둘러보기 버튼 실행 유무
+//    @State var isARStart = false    // AR 캠퍼스 둘러보기 버튼 실행 유무
     
     @GestureState private var isTapOutside: Bool = false    // 탭 제스처
     
@@ -122,7 +122,8 @@ struct BackgroundMapView : View {
                     VStack(spacing: 0){
                         Button(action: {
                             // AR 캠퍼스 둘러보기 기능 추가해야 함
-                            isARStart.toggle()
+                            showSheet = false
+                            globalViewModel.isARStart = true
                         },
                                label: {Text("AR")})
                         .frame(width: 45, height: 45)

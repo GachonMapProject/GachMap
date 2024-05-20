@@ -9,6 +9,8 @@ import SwiftUI
 import Alamofire
 
 struct EventTabView: View {
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    
     var tabBarHeight = UITabBarController().tabBar.frame.size.height
     var screenWidth = UIScreen.main.bounds.width
     var screenHeight = UIScreen.main.bounds.height
@@ -22,7 +24,7 @@ struct EventTabView: View {
     @State var nilData = false      // data가 없을 때 알림
     
     var body: some View {
-        NavigationView {
+//        NavigationView {
             if !apiConnection {
                 ProgressView()
                     .onAppear(){
@@ -64,6 +66,11 @@ struct EventTabView: View {
                             LinearGradient(gradient: Gradient(colors: [.gachonBlue2,. gachonBlue]), startPoint: .top, endPoint: .bottom)
                         )
                         
+                        NavigationLink("", isActive: $globalViewModel.selectedDestination) {
+                            SearchSecondView(getStartSearchText: "현재 위치", getEndSearchText: globalViewModel.destination, getStartPlaceId: -1, getEndPlaceId: globalViewModel.destinationId, latitude: globalViewModel.latitude, longitude: globalViewModel.longitude, altitude: globalViewModel.altitude)
+                                .navigationBarBackButtonHidden()
+                        }
+                        
                         
                         ScrollView(.horizontal, showsIndicators: false) { // 수평 스크롤로 설정
                             ZStack(alignment : .leading){
@@ -100,13 +107,16 @@ struct EventTabView: View {
                         }
                     }
                     .background(Color(UIColor.systemGray6))
+                    
                 }
                 else {
                     Text("현재 진행 중인 행사가 없습니다.")
                         .navigationTitle("교내 행사")
                 }
             }  // end of else
-        } // end of NavigationView
+
+//        } // end of NavigationView
+  
     }
        
     

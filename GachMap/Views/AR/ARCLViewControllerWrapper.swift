@@ -10,18 +10,47 @@ import CoreLocation
 
 struct ARCLViewControllerWrapper: UIViewControllerRepresentable {
     
-    @ObservedObject var nextNodeObject : NextNodeObject
+//    @ObservedObject var nextNodeObject : NextNodeObject
+    @EnvironmentObject var nextNodeObject : NextNodeObject
     var path : [Node]
     var rotationList : [Rotation]
+    let ARInfo : [ARInfo]
     
     func makeUIViewController(context: Context) -> ARCLViewController {
-        return ARCLViewController(path: path, nextNodeObject : nextNodeObject, rotationList : rotationList)
+        return ARCLViewController(path: path, nextNodeObject : nextNodeObject, rotationList : rotationList, ARInfo : ARInfo)
     }
     
     func updateUIViewController(_ uiViewController: ARCLViewController, context: Context) {
         // NextNodeObject.nextIndex가 변경될 때마다 호출 -> scene에 노드를 추가하는 함수를 호출해야 할듯
-//        uiViewController.addNodes(path: path)
+//        if nextNodeObject.nextIndex != 0 {
+//            uiViewController.addNodes(path: path)
+//        }
+        
+//        if nextNodeObject.nextIndex != context.coordinator.lastIndex && nextNodeObject.nextIndex != 0 {
+//            DispatchQueue.main.async {
+//                uiViewController.addNodes(path: path)
+//                context.coordinator.lastIndex = nextNodeObject.nextIndex
+//            }
+//            
+// 
+//        }
+        
+        
 //        uiViewController.checkNode()
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject {
+        var parent: ARCLViewControllerWrapper
+        var lastIndex: Int = 0
+        
+        init(_ parent: ARCLViewControllerWrapper) {
+            self.parent = parent
+            self.lastIndex = parent.nextNodeObject.nextIndex
+        }
     }
 }
 

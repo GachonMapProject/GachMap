@@ -46,6 +46,10 @@ struct SearchSecondView: View {
     @State var showStartLocationChangeAlert = false // 출발지 - 현재 위치 변경시 알림
     @State var showSamePathAlert = false
     
+    var latitude : Double?
+    var longitude : Double?
+    var altitude : Double?
+    
     
     var body: some View {
         if !goPathView{
@@ -193,13 +197,28 @@ struct SearchSecondView: View {
                                 print("도착 placeName: \(endSearchText)")
                                 print("도착 placeId: \(endPlaceId)")
                                 if let location = coreLocation.location {
-                                    let location1 = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.449878, longitude: 127.126999), altitude: 55, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())
                                     self.globalViewModel.destination = endSearchText
+                                      
                                     if startSearchText == "현재 위치" {
-                                        getUserLocationPath(location : location, arrival: endPlaceId ?? 0)
+                                        var param = PathRequest(isDepartures: true)
+                                        if latitude != nil {
+                                            param = PathRequest(latitude: latitude, longitude: longitude, altitude: altitude, isDepartures: true)
+                                        } else{
+                                            param = PathRequest(placeId : endPlaceId ?? 0, isDepartures: true)
+                                        }
+                                       
+                                        print("param : \(param)")
+                                        postPath(location : location, parameters: param)
+                                    } else if endSearchText == "현재 위치"{
+                                        let param = PathRequest(latitude: latitude, longitude: longitude, altitude: altitude, placeId: endPlaceId ?? 0, isDepartures: false)
+                                        print("param : \(param)")
+                                        postPath(location : location, parameters: param)
                                     } else{
                                         getPath(departure: startPlaceId ?? 0, arrival: endPlaceId ?? 0)
                                     }
+                                    
+                                    
+                                  
                                 }
 
                                 
@@ -310,15 +329,6 @@ struct SearchSecondView: View {
             .frame(maxHeight: .infinity, alignment: .top)
             .background(Color.white)
             // end of 전체 VStack
-            
-//            if paths != nil{
-//                NavigationLink("", isActive: $goPathView){
-//                    ChoosePathView(paths: paths ?? [], startText: startSearchText, endText: endSearchText)
-//                        .navigationBarBackButtonHidden()
-//                        .edgesIgnoringSafeArea(.bottom)
-//                }
-//                
-//            }
 
         }
         else {
@@ -365,7 +375,6 @@ struct SearchSecondView: View {
         AF.request(url, method: .get)
             .validate()
             .responseDecodable(of: PathResponse.self) { response in
-//                print("Response: \(response)")
                 print("URL : \(url)")
                 switch response.result {
                 case .success(let value):
@@ -396,15 +405,15 @@ struct SearchSecondView: View {
     }
     
     // 현재위치 o
-    func getUserLocationPath(location : CLLocation, arrival : Int) {
-//    http://ceprj.gachon.ac.kr:60002/map/route-now/{placeId}?latitude=37.44535&longitude=127.12673&altitude=54
-        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/route-now/\(arrival)?latitude=\(location.coordinate.latitude)&longitude=\(location.coordinate.longitude)&altitude=\(location.altitude)")
+    func postPath(location : CLLocation, parameters : PathRequest) {
+
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/route-now?latitude=\(location.coordinate.latitude)&longitude=\(location.coordinate.longitude)&altitude=\(location.altitude)")
         else {
             print("Invalid URL")
             return
         }
         
-        AF.request(url, method: .get)
+        AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default)
             .validate()
             .responseDecodable(of: PathResponse.self) { response in
 //                print("Response: \(response)")
@@ -433,8 +442,8 @@ struct SearchSecondView: View {
     }
 }
 
-#Preview {
-    SearchSecondView(getStartSearchText: "", getEndSearchText: "", getStartPlaceId: 10, getEndPlaceId: 20)
-        .environmentObject(GlobalViewModel())
-        .environmentObject(CoreLocationEx())
-}
+//#Preview {
+//    SearchSecondView(getStartSearchText: "", getEndSearchText: "", getStartPlaceId: 10, getEndPlaceId: 20)
+//        .environmentObject(GlobalViewModel())
+//        .environmentObject(CoreLocationEx())
+//}

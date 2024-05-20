@@ -92,6 +92,11 @@
 		8BC97A7A2BEBCA1E0021C544 /* SearchSecondView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC97A792BEBCA1E0021C544 /* SearchSecondView.swift */; };
 		8BD157102BECFE0E00C7EA24 /* SimpleSearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD1570F2BECFE0E00C7EA24 /* SimpleSearchResultCell.swift */; };
 		A34506E4E7DFA2C6F58F6EBE /* Pods_GachMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE0964287E09D08847B86CA /* Pods_GachMap.framework */; };
+		CB0A6ABF2BF77121006F2F23 /* ARImageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0A6ABE2BF77121006F2F23 /* ARImageResponse.swift */; };
+		CB0A6AC12BF77203006F2F23 /* ARCampusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0A6AC02BF77203006F2F23 /* ARCampusView.swift */; };
+		CB0A6AC42BF776B2006F2F23 /* ARCampusWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0A6AC32BF776B2006F2F23 /* ARCampusWrapperView.swift */; };
+		CB0A6AC62BF776E5006F2F23 /* ARCampusController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0A6AC52BF776E5006F2F23 /* ARCampusController.swift */; };
+		CB0A6AC82BF78B6D006F2F23 /* PathRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0A6AC72BF78B6D006F2F23 /* PathRequest.swift */; };
 		CB0D26F72BCE681F00800459 /* EventListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26F62BCE681F00800459 /* EventListResponse.swift */; };
 		CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26FB2BCE8EE500800459 /* EventDetailView.swift */; };
 		CB0D26FE2BCE8F8300800459 /* EventDetailResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0D26FD2BCE8F8300800459 /* EventDetailResponse.swift */; };
@@ -226,6 +231,11 @@
 		8BC97A772BEB979F0021C544 /* ResultSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultSelectView.swift; sourceTree = "<group>"; };
 		8BC97A792BEBCA1E0021C544 /* SearchSecondView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSecondView.swift; sourceTree = "<group>"; };
 		8BD1570F2BECFE0E00C7EA24 /* SimpleSearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleSearchResultCell.swift; sourceTree = "<group>"; };
+		CB0A6ABE2BF77121006F2F23 /* ARImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARImageResponse.swift; sourceTree = "<group>"; };
+		CB0A6AC02BF77203006F2F23 /* ARCampusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCampusView.swift; sourceTree = "<group>"; };
+		CB0A6AC32BF776B2006F2F23 /* ARCampusWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCampusWrapperView.swift; sourceTree = "<group>"; };
+		CB0A6AC52BF776E5006F2F23 /* ARCampusController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCampusController.swift; sourceTree = "<group>"; };
+		CB0A6AC72BF78B6D006F2F23 /* PathRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathRequest.swift; sourceTree = "<group>"; };
 		CB0D26F62BCE681F00800459 /* EventListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListResponse.swift; sourceTree = "<group>"; };
 		CB0D26FB2BCE8EE500800459 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		CB0D26FD2BCE8F8300800459 /* EventDetailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailResponse.swift; sourceTree = "<group>"; };
@@ -378,6 +388,7 @@
 				CBBE58712BF489B2003B55C4 /* NavControllerTest */,
 				CB8A6E352BF0E6E80039AC50 /* SatisfactionView */,
 				8B831C282BCCF60C00A85973 /* AR */,
+
 				CBED53B22BE2203A00DDFD0C /* ChoosePath */,
 				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
 				8BC86EAC2BDE628800051BF0 /* Search */,
@@ -389,7 +400,6 @@
 				8B831C722BCE0AB300A85973 /* UserDashboardView.swift */,
 				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
 				8B3159D82BD0F53F0049CB5F /* MyPage */,
-				CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -432,9 +442,11 @@
 				8BC86EEB2BEA044800051BF0 /* RouteHistoryResponse.swift */,
 				8BC97A732BEB7A480021C544 /* SearchKeywordResponse.swift */,
 				8BC97A752BEB7A530021C544 /* SearchDetailResponse.swift */,
+				CB0A6AC72BF78B6D006F2F23 /* PathRequest.swift */,
 				CB8A6E2F2BEF718E0039AC50 /* PathResponse.swift */,
 				CB8A6E332BF0BCA20039AC50 /* SatisfactionRequest.swift */,
 				8B5BAA902BFB6AAD00038B76 /* TopNodeResponse.swift */,
+				CB0A6ABE2BF77121006F2F23 /* ARImageResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -454,6 +466,7 @@
 		8B831C282BCCF60C00A85973 /* AR */ = {
 			isa = PBXGroup;
 			children = (
+				CB0A6AC22BF77696006F2F23 /* ARCampus */,
 				8B831C1C2BCCF60C00A85973 /* Usdz */,
 				CB2E45732BD4E146009DB796 /* Extension */,
 				CB2E457C2BD4F46C009DB796 /* AR-Model */,
@@ -512,6 +525,16 @@
 				8BC86EE72BE90DD800051BF0 /* CategoryButton.swift */,
 			);
 			path = MapView;
+			sourceTree = "<group>";
+		};
+		CB0A6AC22BF77696006F2F23 /* ARCampus */ = {
+			isa = PBXGroup;
+			children = (
+				CB0A6AC02BF77203006F2F23 /* ARCampusView.swift */,
+				CB0A6AC32BF776B2006F2F23 /* ARCampusWrapperView.swift */,
+				CB0A6AC52BF776E5006F2F23 /* ARCampusController.swift */,
+			);
+			path = ARCampus;
 			sourceTree = "<group>";
 		};
 		CB0D26F82BCE8EA200800459 /* EventView */ = {
@@ -616,6 +639,7 @@
 				CB7C69872BE10C9100C277AE /* ChoosePathView.swift */,
 				CBED53B02BE2178E00DDFD0C /* AIDescriptionView.swift */,
 				CB8A6E312BEF734C0039AC50 /* ChoosePathTestView.swift */,
+				CBBE586A2BF22EEE003B55C4 /* OnlyMapView.swift */,
 			);
 			path = ChoosePath;
 			sourceTree = "<group>";
@@ -778,6 +802,7 @@
 				8B5BD2292BF50A7A009C238E /* ShowSafariView.swift in Sources */,
 				8B831C0C2BCCF57700A85973 /* EventTabView.swift in Sources */,
 				CB2E456E2BD4DF38009DB796 /* ARCLViewController.swift in Sources */,
+				CB0A6AC42BF776B2006F2F23 /* ARCampusWrapperView.swift in Sources */,
 				CB4EF61D2BCFA07C00BDC73A /* BuildingDetailView.swift in Sources */,
 				8BC86ECD2BE124C200051BF0 /* InquireListCell.swift in Sources */,
 				CB8A6E342BF0BCA20039AC50 /* SatisfactionRequest.swift in Sources */,
@@ -804,6 +829,7 @@
 				CB2E457B2BD4E28F009DB796 /* ARCLViewControllerWrapper.swift in Sources */,
 				CB2E45722BD4E015009DB796 /* SCNNode+Extension.swift in Sources */,
 				8B831C0E2BCCF57700A85973 /* ProfileTabView.swift in Sources */,
+				CB0A6ABF2BF77121006F2F23 /* ARImageResponse.swift in Sources */,
 				CB4CE3932BCD3F9C00E0611B /* ConvertGrid_GPS.swift in Sources */,
 				CB2E45792BD4E1B6009DB796 /* Double+Extension.swift in Sources */,
 				8BA84B622BCF964800ACD5E2 /* SegmentedControlHelper.swift in Sources */,
@@ -812,6 +838,7 @@
 				CB7C69862BE0CA0A00C277AE /* PathTimeTestView.swift in Sources */,
 				CB4EF61F2BCFD4C800BDC73A /* BuildingListResponse.swift in Sources */,
 				8BC86EE02BE8EF5D00051BF0 /* InquireSendRequest.swift in Sources */,
+				CB0A6AC82BF78B6D006F2F23 /* PathRequest.swift in Sources */,
 				8BC97A7A2BEBCA1E0021C544 /* SearchSecondView.swift in Sources */,
 				CBDDC9122BCEB62300019FAB /* BackgroundMapView.swift in Sources */,
 				8BC86ECB2BE1248400051BF0 /* InquireDetailView.swift in Sources */,
@@ -847,7 +874,9 @@
 				CB2E45702BD4DF70009DB796 /* LocationAnnotationNode.swift in Sources */,
 				8BC86EAE2BDE629600051BF0 /* SearchMainBar.swift in Sources */,
 				CB6DF8D42BE8909A00DC8BC5 /* ARReadyView.swift in Sources */,
+				CB0A6AC12BF77203006F2F23 /* ARCampusView.swift in Sources */,
 				CBBE58752BF489D0003B55C4 /* test2.swift in Sources */,
+				CB0A6AC62BF776E5006F2F23 /* ARCampusController.swift in Sources */,
 				8BC86EAE2BDE629600051BF0 /* SearchMainBar.swift in Sources */,
 				8B5368F32BD25EB7007B8984 /* IdDuplicationResponse.swift in Sources */,
 				CBBE58702BF265C4003B55C4 /* NavigationController.swift in Sources */,

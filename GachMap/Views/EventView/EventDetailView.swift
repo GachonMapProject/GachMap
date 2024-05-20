@@ -12,24 +12,27 @@ import MapKit
 struct IdentifiableCoordinate: Identifiable {
     var id = UUID().uuidString
     var coordinate: CLLocationCoordinate2D
+    var altitude : Double
     var placeName : String
 }
 
 
 struct EventDetailView: View {
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var globalViewModel : GlobalViewModel
+    
     let eventDetail : [EventDetail]
     let eventCoordinate : [IdentifiableCoordinate] // 행사 위치의 좌표들
     @State var destination : IdentifiableCoordinate
     
     @State var region : MapCameraPosition
-    @State var isSearch = false
     @State var selectedItem : String? // 마커 선택시 id
     
     init(eventDetail : [EventDetail]){
         self.eventDetail = eventDetail
         self.eventCoordinate = eventDetail.map{
             IdentifiableCoordinate(coordinate: CLLocationCoordinate2D(latitude: $0.eventLatitude, longitude: $0.eventLongitude),
-                                   placeName: $0.eventPlaceName)
+                                   altitude: $0.eventAltitude, placeName: $0.eventPlaceName)
         }
         self.destination = eventCoordinate[0]
  
@@ -40,7 +43,7 @@ struct EventDetailView: View {
     }
 
     var body: some View {
-        NavigationView {
+//        NavigationView {
             VStack{
                 ZStack(alignment : .top){
                     Map(position: $region, selection: $selectedItem){
@@ -83,35 +86,38 @@ struct EventDetailView: View {
                     .padding()
                     
                     // 도착지로 설정 살리기!!
-//                    VStack{
-//                        Spacer()
-//                        // 검색창으로 넘길 때, destination의 정보를 같이 넘겨줘야 됨
-//                        Button(action: {
-//                            isSearch = true
-//                            
-//                        }, label: {
-//                            Text("도착지 설정")
-//                                .font(.system(size: 16))
-//                                .bold()
-//                        })
-//                        .frame(width: 200, height: 40)
-//                        .foregroundColor(.white)
-//                        .background(Capsule()
-//                        .fill(Color(UIColor.systemBlue)))
-//                        .shadow(radius: 7, x: 2, y: 2)
-//                        .padding()
-//                    }
+                    VStack{
+                        Spacer()
+                        // 검색창으로 넘길 때, destination의 정보를 같이 넘겨줘야 됨
+                        Button(action: {
+                            dismiss()
+                            globalViewModel.latitude = destination.coordinate.latitude
+                            globalViewModel.longitude = destination.coordinate.longitude
+                            globalViewModel.altitude = destination.altitude
+                            globalViewModel.selectedDestination = true
+                            globalViewModel.destination = destination.placeName
+                            print(globalViewModel.selectedDestination)
+                            
+                            
+                        }, label: {
+                            Text("도착지 설정")
+                                .font(.system(size: 16))
+                                .bold()
+                        })
+                        .frame(width: 200, height: 40)
+                        .foregroundColor(.white)
+                        .background(Capsule()
+                        .fill(Color(UIColor.systemBlue)))
+                        .shadow(radius: 7, x: 2, y: 2)
+                        .padding()
+                    }
                 } // end of ZStack
-                
+                        
             } // end of VStack
-            
         
-            // 검색창으로 넘길 때, destination의 정보를 같이 넘겨줘야 됨
-            NavigationLink(destination: Text("검색뷰 : \(destination.placeName) \n 위치 : \(destination.coordinate.latitude), \(destination.coordinate.longitude)"), isActive: $isSearch) {
-                EmptyView()
-            }
-        } // end of NavigationView
+//        } // end of NavigationView
     }
+    
 }
 
 

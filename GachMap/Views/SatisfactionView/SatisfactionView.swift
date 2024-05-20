@@ -12,9 +12,9 @@ struct SatisfactionView: View {
     
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var globalViewModel: GlobalViewModel
-    
+
     var width = UIScreen.main.bounds.width
-    let arr = [1 : "매우불만족", 2 : "불만족", 3 : "보통", 4 : "만족", 5 : "매우만족"]
+    let arr = [1 : "veryUnsatisfied", 2 : "unsatisfied", 3 : "normal", 4 : "satisfied", 5 : "verySatisfied"]
     let weatherData = WeatherData()
     @State var ready = false
     
@@ -30,6 +30,7 @@ struct SatisfactionView: View {
     @State var rainPrecipitation = 0.0
     @State var rainPrecipitationProbability = 0
     @State var serverAlert = false
+    @State var message = ""
     
     
     // 날씨, 유저 아이디(게스트아이디) 추가 필요함
@@ -117,7 +118,7 @@ struct SatisfactionView: View {
             } // end of VStack
             .frame(width: width * 0.9)
             .alert(isPresented: $submit) {
-                Alert(title: Text("만족도 조사"), message: Text("소중한 의견 감사드립니다."),
+                Alert(title: Text("만족도 조사"), message: Text(message),
                       dismissButton: .default(Text("확인")){
                         dismiss()
                 })
@@ -162,17 +163,14 @@ struct SatisfactionView: View {
                     if (value.success == true) {
                         print("만족도 저장 완료")
                         print("value.success: \(value.success)")
-                        
+                        message = "만족도 저장 완료"
                         submit = true
    
                     } else {
                         print("만족도 저장 실패")
                         print("value.message: \(value.message)")
+                        message = "만족도 저장 실패"
                         submit = true
-//                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
-//                        showAlert = true
-                        
-//                        print("showAlert: \(showAlert)")
                     }
                 
                 case .failure(let error):

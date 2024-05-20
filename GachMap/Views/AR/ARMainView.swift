@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import Alamofire
 
 
 struct ARMainView: View {
@@ -15,7 +16,9 @@ struct ARMainView: View {
     // 전역으로 CoreLocationEx 인스턴스 생성
     @EnvironmentObject var coreLocation : CoreLocationEx
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var nextNodeObject = NextNodeObject()
+    @EnvironmentObject var nextNodeObject : NextNodeObject
+    @EnvironmentObject var timer : MyTimer
+    
     @State private var isARViewVisible = true // ARView의 on/off 상태 변수
     @State private var isEnd = false // 안내 종료 상태 변수
     @State private var isARViewReady = false    // 일정 정확도 이내일 때만 ARView 표시를 위한 상태 변수
@@ -25,6 +28,7 @@ struct ARMainView: View {
     @State private var selectedTrueNorth = false
     
     @State private var showGPSAlertBool = false
+    @State var ARInfo: [ARInfo]? = nil
     
     
     let intervalTime : Double = 7.0
@@ -35,7 +39,7 @@ struct ARMainView: View {
     let checkRotation = CheckRotation()
     @State var rotationList: [Rotation]? = nil      // 중간 노드의 회전과 거리를 나타낸 배열
     
-    let timer = MyTimer()
+//    let timer = MyTimer()
 //    let path = Path().ITtoGachon
     @Binding var isAROn : Bool // ChoosePathView로 돌아갈 때
     let path : [Node]
@@ -46,6 +50,8 @@ struct ARMainView: View {
     @State var distance : Double?
 //    @State var timeList = [Int]()
     
+    @State var showTrueNorthAlert = true
+    
     
     var body: some View {
 //        if coreLocation.location != nil{
@@ -54,8 +60,20 @@ struct ARMainView: View {
                     if !selectedTrueNorth {
                         ProgressView()
                             .onAppear(){
-                                trueNorthAlert()
-                                
+                                getARCampus()
+                            }
+                            .alert(isPresented: $showTrueNorthAlert) {
+                                Alert(
+                                    title: Text("진북 설정"),
+                                    message: Text("나침반을 진북으로 설정하면\n향상된 AR 서비스를 이용하실 수 있습니다."),
+                                    primaryButton: .default(Text("확인")) {
+                                        trueNorthAlertOn = true
+                                    },
+                                    secondaryButton: .default(Text("설정으로 이동")) {
+                                        selectedTrueNorth = true
+                                        openSettings()
+                                    }
+                                )
                             }
                     }
                     else{
@@ -77,8 +95,7 @@ struct ARMainView: View {
                       .bold()
                       .font(.system(size: 20))
                     }
-
-                }
+                } // end of if !trueNorthAlertOn
                 else{
                     if !isARViewReady {
                         Image(systemName: "antenna.radiowaves.left.and.right")
@@ -106,7 +123,7 @@ struct ARMainView: View {
                             if !onlyMap{    // 지도만 이용 상태변수
                                 ZStack(alignment: .topTrailing){
                                     VStack(spacing : 0){
-                                        ARCLViewControllerWrapper(nextNodeObject: nextNodeObject, path: path, rotationList : rotationList ?? [])
+                                        ARCLViewControllerWrapper(path: path, rotationList : rotationList ?? [], ARInfo: ARInfo ?? [])
                                         AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }.edgesIgnoringSafeArea(.all)
                                     
@@ -174,10 +191,10 @@ struct ARMainView: View {
                                 }
                             }
                             
-//                            Text(String(format: "남은 거리: %.2f", distance ?? 0.0))
-//                            Text("다음 인덱스 : \(nextNodeObject.nextIndex)")
-//                            Text("측정 시간 : \(timer.seconds)")
-//                            Text("시간 리스트 : \(String(describing: timeList))")
+                            Text(String(format: "남은 거리: %.2f", distance ?? 0.0))
+                            Text("다음 인덱스 : \(nextNodeObject.nextIndex)")
+                            Text("측정 시간 : \(timer.seconds)")
+                            Text("시간 리스트 : \(String(describing: timeList))")
                         } // end of if !isEnd
                         else{
                             // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
@@ -185,6 +202,8 @@ struct ARMainView: View {
                         }
                     }
                 }
+                
+  
                
             
             }  // end of VStack
@@ -193,16 +212,12 @@ struct ARMainView: View {
                     print("checkAccuracy")
                     checkLocationAccuracy()
                 }
-                else if isARViewReady {
+                else if isARViewReady && !isEnd{
                     // 사용자 현재 위치와 다음 노드까지의 거리를 구하는 함수
                     print("checkDistance")
                     checkDistance(location: location)
                 }
             }
-//        } // end of coreLocation.location != nil
-//        else {
-//            ProgressView("Waiting for location accuracy...")
-//        }
     }
     
     // GPS 알림
@@ -250,6 +265,7 @@ struct ARMainView: View {
             // 확인 액션 추가
             alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
                 timer.stopTimer() // 안내 종료 누르면 타이머 stop
+                nextNodeObject.nextIndex = 0
                 isEnd = true      // 확인을 눌렀을 때의 처리: 다음 페이지로 이동
             })
             
@@ -295,6 +311,19 @@ struct ARMainView: View {
         // 경고 창을 현재 화면에 표시
         UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
     }
+    
+    func ServerAlert(){
+        // 버튼을 눌렀을 때 경고 창 표시
+        let alert = UIAlertController(title: "오류", message: "서버 연결에 실패했습니다.", preferredStyle: .alert)
+            
+        // 확인 액션 추가
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+                dismiss()
+            })
+
+        // 경고 창을 현재 화면에 표시
+        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
 
     private func openSettings() {
         if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
@@ -302,12 +331,15 @@ struct ARMainView: View {
         }
     }
     
+    
+    
     // 사용자 위치가 바뀔 떄마다 호출 (다음 노드까지의 거리 계산)
     func checkDistance(location : CLLocation){
         let index = nextNodeObject.nextIndex
+        print("index : \(index)")
         
         // 마지막 노드에 도착 이후부터는 실행 안 되게
-        if index != path.count {
+        if index < path.count {
             let distance = location.distance(from: path[index].location)
             self.distance = distance
             if distance <= 5 {
@@ -316,20 +348,25 @@ struct ARMainView: View {
                 if index == 0 {
                     timer.startTimer()  // 첫 노드 근처에 오면 타이머 시작
                     print("timer 시작")
+                    nextNodeObject.increment()
                 }else{
                     let time = timer.seconds
-                    let list = TimeList(firstNodeId: path[index].id, secondNodeId: path[index+1].id, time: time)
+                    let list = TimeList(firstNodeId: path[index - 1].id, secondNodeId: path[index].id, time: time)
                     timeList.append(list)
                     // timer (노드-노드, 시간) 배열 생성 후 append 하고 만족도 페이지에 넘겨서 Request 요청해야 됨
                     print(path[index-1].name + "~" + path[index].name + "까지 : \(time)초")
                     timer.stopTimer()
                     timer.startTimer()
+                    nextNodeObject.increment()
                 }
-                nextNodeObject.increment()
+                
+                
+                print("nextNodeObject.nextIndex : \(nextNodeObject.nextIndex)")
             } // end of (if distance <= 5 )
         }
         else{
             // 목적지에 도착하면 timer.stopTimer()
+            EndButtonAlert()
             timer.stopTimer()
         }
     }   // end of checkDistance()
@@ -348,5 +385,44 @@ struct ARMainView: View {
                 }
             }
         }
+    }
+    
+    // AR 건물 리스트 가져오기
+    func getARCampus() {
+        
+        guard let location = coreLocation.location else{
+            print("location x")
+            return
+        }
+// http://ceprj.gachon.ac.kr:60002/map/ar?latitude=37.44535&longitude=127.12673&altitude=54
+        
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/ar?latitude=\(location.coordinate.latitude)&longitude=\(location.coordinate.longitude)&altitude=\(location.altitude)") else {
+            print("getARCampus - Invalid URL")
+            return
+        }
+        
+        // Alamofire를 사용하여 Get 요청 생성
+        AF.request(url, method: .get)
+            .validate()
+            .responseDecodable(of: ARImageResponse.self) { response in
+                // 에러 처리
+                switch response.result {
+                case .success(let value):
+                    // 성공적인 응답 처리
+                    if let data = value.data {
+                        print(data)
+                        print("getARCampus() - AR 리스트 가져오기 성공")
+                        ARInfo = data
+                    } else {
+                        print("nilData")
+                        ServerAlert()
+                    }
+                    
+                case .failure(let error):
+                    // 에러 응답 처리
+                    print("Error: \(error.localizedDescription)")
+                    ServerAlert()
+                }
+            }
     }
 }
