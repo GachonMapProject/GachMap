@@ -14,9 +14,10 @@ struct ARCLViewControllerWrapper: UIViewControllerRepresentable {
     @EnvironmentObject var nextNodeObject : NextNodeObject
     var path : [Node]
     var rotationList : [Rotation]
+    let ARInfo : [ARInfo]
     
     func makeUIViewController(context: Context) -> ARCLViewController {
-        return ARCLViewController(path: path, nextNodeObject : nextNodeObject, rotationList : rotationList)
+        return ARCLViewController(path: path, nextNodeObject : nextNodeObject, rotationList : rotationList, ARInfo : ARInfo)
     }
     
     func updateUIViewController(_ uiViewController: ARCLViewController, context: Context) {
@@ -25,14 +26,14 @@ struct ARCLViewControllerWrapper: UIViewControllerRepresentable {
 //            uiViewController.addNodes(path: path)
 //        }
         
-        if nextNodeObject.nextIndex != context.coordinator.lastIndex && nextNodeObject.nextIndex != 0 {
-            DispatchQueue.main.async {
-                uiViewController.addNodes(path: path)
-                context.coordinator.lastIndex = nextNodeObject.nextIndex
-            }
-            
- 
-        }
+//        if nextNodeObject.nextIndex != context.coordinator.lastIndex && nextNodeObject.nextIndex != 0 {
+//            DispatchQueue.main.async {
+//                uiViewController.addNodes(path: path)
+//                context.coordinator.lastIndex = nextNodeObject.nextIndex
+//            }
+//            
+// 
+//        }
         
         
 //        uiViewController.checkNode()

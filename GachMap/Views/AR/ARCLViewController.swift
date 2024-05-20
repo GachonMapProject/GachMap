@@ -11,6 +11,7 @@ import ARCL
 import CoreLocation
 import MapKit
 import ARKit
+import Alamofire
 
 
 class ARCLViewController: UIViewController, ARSCNViewDelegate {
@@ -21,6 +22,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     var rotationList : [Rotation]
     var xAngle : Float = 0.0
     var yAngle : Float = 0.0
+    let ARInfo : [ARInfo]
 //    var nodeNames : [Int : [String]] = [:]
     
     public var locationEstimateMethod = LocationEstimateMethod.mostRelevantEstimate // 위치 추정 방법
@@ -34,10 +36,11 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     
     var difAltitude = 0.0
     
-    init(path : [Node], nextNodeObject : NextNodeObject, rotationList : [Rotation]) {
+    init(path : [Node], nextNodeObject : NextNodeObject, rotationList : [Rotation], ARInfo : [ARInfo]) {
         self.path = path
         self.nextNodeObject = nextNodeObject
         self.rotationList = rotationList
+        self.ARInfo = ARInfo
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -65,18 +68,20 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
      }
     
     override func viewWillAppear(_ animated: Bool) {
-        checkCameraAccess()         // 카메라 허용 확인
+
+        
+        // 노드 추가 함수
+        DispatchQueue.main.async {
+            self.checkCameraAccess()         // 카메라 허용 확인
+            self.rebuildSceneLocationView()  // SceneLocationView() 재구성
+            self.addNodes(path : self.path)
+//            self.sceneLocationView?.run()    // SceneLocationView 시작
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        rebuildSceneLocationView()  // SceneLocationView() 재구성
-        
-        // 노드 추가 함수
-        DispatchQueue.main.async {
-            self.addNodes(path : self.path)
-            self.sceneLocationView?.run()    // SceneLocationView 시작
-        }
+
 
     }
     
@@ -153,6 +158,41 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
         }
         placeDestinationNode(currentLocation : currentLocation) // 목적지 노드
+        
+        let dispatchGroup = DispatchGroup()
+
+        for info in ARInfo {
+            let coordinate = CLLocationCoordinate2D(latitude: info.placeLatitude, longitude: info.placeLongitude)
+            let distance = currentLocation.distance(from: CLLocation(coordinate: coordinate, altitude: info.placeAltitude))
+            print("distance : \(distance)")
+
+            // 현재 위치로부터 500미터 이하만 보여주기
+            if distance < 500 {
+                let originalAltitude = info.placeAltitude + (info.buildingHeight ?? 0) // 건물 높이 추가
+                let updatedAltitude = originalAltitude + difAltitude // 고도 수정 + 위치 추가해야 함
+
+                let location = CLLocation(coordinate: coordinate, altitude: updatedAltitude)
+                
+                dispatchGroup.enter()
+                configureImageFromURL(info.arImagePath ?? "") { [weak self] image in
+                    guard let self = self, let image = image else {
+                        print("image - error")
+                        dispatchGroup.leave()
+                        return
+                    }
+                    print(info.arImagePath, "성공")
+                    let annotationNode = LocationAnnotationNode(location: location, image: image)
+                    self.addScenewideNodeSettings(annotationNode)
+                    self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                    dispatchGroup.leave()
+                }
+            }
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            print("All nodes added")
+            self.sceneLocationView?.run()    // SceneLocationView 시작
+        }
         
     } // end of addNodes()
     
@@ -587,6 +627,42 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
                 if node.name == names {
                     node.isHidden = false
                 }
+            }
+        }
+    }
+    
+    private func configureImageFromURL(_ url: String, completion: @escaping (UIImage?) -> Void) {
+        guard let url = URL(string: url) else {
+            completion(nil)
+            return
+        }
+
+        let request = AF.request(url, method: .get)
+
+        request.responseData { response in
+            switch response.result {
+            case .success(let imageData):
+                if let image = UIImage(data: imageData) {
+                    // original w, h : 3810.0, 1200.0
+                    let targetWidth: CGFloat = 2000
+                    let scale = targetWidth / image.size.width
+//                    let scale = 1
+//                    let targetWidth = image.size.height * scale
+                    let targetHeight = image.size.height * scale
+
+                    UIGraphicsBeginImageContextWithOptions(CGSize(width: targetWidth, height: targetHeight), false, 0.0)
+                    image.draw(in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
+                    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+                    UIGraphicsEndImageContext()
+
+                    completion(newImage)
+                } else {
+                    completion(nil)
+                }
+
+            case .failure(let error):
+                print(error)
+                completion(nil)
             }
         }
     }

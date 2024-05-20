@@ -64,10 +64,6 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         checkCameraAccess()         // 카메라 허용 확인
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         rebuildSceneLocationView()  // SceneLocationView() 재구성
         
         // 노드 추가 함수
@@ -75,6 +71,10 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
             self.addNodes(ARInfo : self.ARInfo)
         }
 //        self.sceneLocationView?.run()    // SceneLocationView 시작
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
 
     }
     

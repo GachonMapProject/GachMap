@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import Alamofire
 
 
 struct ARMainView: View {
@@ -27,6 +28,7 @@ struct ARMainView: View {
     @State private var selectedTrueNorth = false
     
     @State private var showGPSAlertBool = false
+    @State var ARInfo: [ARInfo]? = nil
     
     
     let intervalTime : Double = 7.0
@@ -57,6 +59,9 @@ struct ARMainView: View {
                 if !trueNorthAlertOn {
                     if !selectedTrueNorth {
                         ProgressView()
+                            .onAppear(){
+                                getARCampus()
+                            }
                             .alert(isPresented: $showTrueNorthAlert) {
                                 Alert(
                                     title: Text("진북 설정"),
@@ -118,7 +123,7 @@ struct ARMainView: View {
                             if !onlyMap{    // 지도만 이용 상태변수
                                 ZStack(alignment: .topTrailing){
                                     VStack(spacing : 0){
-                                        ARCLViewControllerWrapper(path: path, rotationList : rotationList ?? [])
+                                        ARCLViewControllerWrapper(path: path, rotationList : rotationList ?? [], ARInfo: ARInfo ?? [])
                                         AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }.edgesIgnoringSafeArea(.all)
                                     
@@ -306,12 +311,27 @@ struct ARMainView: View {
         // 경고 창을 현재 화면에 표시
         UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
     }
+    
+    func ServerAlert(){
+        // 버튼을 눌렀을 때 경고 창 표시
+        let alert = UIAlertController(title: "오류", message: "서버 연결에 실패했습니다.", preferredStyle: .alert)
+            
+        // 확인 액션 추가
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+                dismiss()
+            })
+
+        // 경고 창을 현재 화면에 표시
+        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
 
     private func openSettings() {
         if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsURL)
         }
     }
+    
+    
     
     // 사용자 위치가 바뀔 떄마다 호출 (다음 노드까지의 거리 계산)
     func checkDistance(location : CLLocation){
@@ -322,7 +342,7 @@ struct ARMainView: View {
         if index < path.count {
             let distance = location.distance(from: path[index].location)
             self.distance = distance
-            if distance <= 15 {
+            if distance <= 5 {
                 print("\(path[index].name) - 5m 이내 ")
                 // timer 로직 추가
                 if index == 0 {
@@ -365,5 +385,44 @@ struct ARMainView: View {
                 }
             }
         }
+    }
+    
+    // AR 건물 리스트 가져오기
+    func getARCampus() {
+        
+        guard let location = coreLocation.location else{
+            print("location x")
+            return
+        }
+// http://ceprj.gachon.ac.kr:60002/map/ar?latitude=37.44535&longitude=127.12673&altitude=54
+        
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/ar?latitude=\(location.coordinate.latitude)&longitude=\(location.coordinate.longitude)&altitude=\(location.altitude)") else {
+            print("getARCampus - Invalid URL")
+            return
+        }
+        
+        // Alamofire를 사용하여 Get 요청 생성
+        AF.request(url, method: .get)
+            .validate()
+            .responseDecodable(of: ARImageResponse.self) { response in
+                // 에러 처리
+                switch response.result {
+                case .success(let value):
+                    // 성공적인 응답 처리
+                    if let data = value.data {
+                        print(data)
+                        print("getARCampus() - AR 리스트 가져오기 성공")
+                        ARInfo = data
+                    } else {
+                        print("nilData")
+                        ServerAlert()
+                    }
+                    
+                case .failure(let error):
+                    // 에러 응답 처리
+                    print("Error: \(error.localizedDescription)")
+                    ServerAlert()
+                }
+            }
     }
 }
