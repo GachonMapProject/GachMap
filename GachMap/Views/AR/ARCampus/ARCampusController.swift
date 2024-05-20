@@ -10,9 +10,11 @@ import UIKit
 import ARKit
 import ARCL
 import Alamofire
+import AlamofireImage
 
 class ARCampusController: UIViewController, ARSCNViewDelegate {
     var sceneLocationView: SceneLocationView?
+    private let imageCache = AutoPurgingImageCache()
     
     public var locationEstimateMethod = LocationEstimateMethod.mostRelevantEstimate // 위치 추정 방법
     public var arTrackingType = SceneLocationView.ARTrackingType.worldTracking // AR 추적 타입 (orientation : 방향 추적, world : 평면 추적)
@@ -121,6 +123,7 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
 
         let dispatchGroup = DispatchGroup()
 
+        var nodes = [LocationAnnotationNode]()
         for info in ARInfo {
             let coordinate = CLLocationCoordinate2D(latitude: info.placeLatitude, longitude: info.placeLongitude)
             let distance = currentLocation.distance(from: CLLocation(coordinate: coordinate, altitude: info.placeAltitude))
@@ -143,7 +146,8 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
                     print(info.arImagePath, "성공")
                     let annotationNode = LocationAnnotationNode(location: location, image: image)
                     self.addScenewideNodeSettings(annotationNode)
-                    self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                    nodes.append(annotationNode)
+//                    self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
                     dispatchGroup.leave()
                 }
             }
@@ -151,6 +155,7 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
 
         dispatchGroup.notify(queue: .main) {
             print("All nodes added")
+            nodes.map{self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: $0)}
             self.sceneLocationView?.run()    // SceneLocationView 시작
         }
     }
@@ -161,29 +166,33 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
             return
         }
 
-        let request = AF.request(url, method: .get)
+        // 이미지 캐시에서 이미지를 가져옵니다.
+        if let cachedImage = imageCache.image(withIdentifier: url.absoluteString) {
+            completion(cachedImage)
+            return
+        }
 
-        request.responseData { response in
+        // 이미지를 다운로드하고 캐시에 저장합니다.
+        AF.request(url, method: .get).responseImage { response in
             switch response.result {
-            case .success(let imageData):
-                if let image = UIImage(data: imageData) {
-                    // original w, h : 3810.0, 1200.0
-                    let targetWidth: CGFloat = 2000
-                    let scale = targetWidth / image.size.width
-//                    let scale = 1
-//                    let targetWidth = image.size.height * scale
-                    let targetHeight = image.size.height * scale
+            case .success(let image):
+                // 이미지 크기를 최적화합니다.
+                let targetWidth: CGFloat = 2000
+                let scale = targetWidth / image.size.width
+                let targetHeight = image.size.height * scale
 
-                    UIGraphicsBeginImageContextWithOptions(CGSize(width: targetWidth, height: targetHeight), false, 0.0)
-                    image.draw(in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
-                    let newImage = UIGraphicsGetImageFromCurrentImageContext()
-                    UIGraphicsEndImageContext()
+                UIGraphicsBeginImageContextWithOptions(CGSize(width: targetWidth, height: targetHeight), false, 0.0)
+                image.draw(in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
+                let newImage = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
 
-                    completion(newImage)
-                } else {
-                    completion(nil)
+//                 이미지를 캐시에 저장합니다.
+                if let newImage = newImage {
+                    self.imageCache.add(image, withIdentifier: url.absoluteString)
                 }
-
+                self.imageCache.add(image, withIdentifier: url.absoluteString)
+                
+                completion(newImage)
             case .failure(let error):
                 print(error)
                 completion(nil)

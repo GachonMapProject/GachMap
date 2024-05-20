@@ -12,9 +12,11 @@ import CoreLocation
 import MapKit
 import ARKit
 import Alamofire
+import AlamofireImage
 
 
 class ARCLViewController: UIViewController, ARSCNViewDelegate {
+    private let imageCache = AutoPurgingImageCache()
     var sceneLocationView: SceneLocationView?
     var path : [Node]
     var stepData = [Step]()
@@ -160,7 +162,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         placeDestinationNode(currentLocation : currentLocation) // 목적지 노드
         
         let dispatchGroup = DispatchGroup()
-
+        var nodes = [LocationAnnotationNode]()
         for info in ARInfo {
             let coordinate = CLLocationCoordinate2D(latitude: info.placeLatitude, longitude: info.placeLongitude)
             let distance = currentLocation.distance(from: CLLocation(coordinate: coordinate, altitude: info.placeAltitude))
@@ -183,7 +185,8 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
                     print(info.arImagePath, "성공")
                     let annotationNode = LocationAnnotationNode(location: location, image: image)
                     self.addScenewideNodeSettings(annotationNode)
-                    self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+//                    self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
+                    nodes.append(annotationNode)
                     dispatchGroup.leave()
                 }
             }
@@ -191,6 +194,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
 
         dispatchGroup.notify(queue: .main) {
             print("All nodes added")
+            nodes.map{self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: $0)}
             self.sceneLocationView?.run()    // SceneLocationView 시작
         }
         
