@@ -8,10 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-  
-    @State  var showSheet: Bool = false
-    @State private var selectedTab = 1
-    @State private var showMainView = false
     
     @EnvironmentObject var globalViewModel: GlobalViewModel
     
@@ -21,18 +17,18 @@ struct ContentView: View {
   
   var body: some View {
       NavigationView() {
-          TabView(selection: $selectedTab) {
-              MapTabView(showSearchView: $globalViewModel.showSearchView, showSheet : $showSheet)
+          TabView(selection: $globalViewModel.selectedTab) {
+              MapTabView(showSearchView: $globalViewModel.showSearchView, showSheet : $globalViewModel.showSheet)
                   .tabItem {
                       Image(systemName: "map")
                       Text("지도")
                   }.tag(1)
                   .onAppear() {
-                      showSheet = true
+                      globalViewModel.showSheet = true
                   }
                   .fullScreenCover(isPresented: $globalViewModel.showSearchView, onDismiss: {
-                      if selectedTab == 1 {
-                          showSheet = true
+                      if globalViewModel.selectedTab == 1 {
+                          globalViewModel.showSheet = true
                       }
                   }) {
                       SearchMainView(showLocationSearchView: $globalViewModel.showSearchView)
@@ -44,7 +40,7 @@ struct ContentView: View {
                       Text("캠퍼스 맵")
                   }.tag(2)
                   .onAppear() {
-                      showSheet = false
+                      globalViewModel.showSheet = false
                   }
               
               EventTabView()
@@ -53,7 +49,7 @@ struct ContentView: View {
                       Text("교내 행사")
                   }.tag(3)
                   .onAppear() {
-                      showSheet = false
+                      globalViewModel.showSheet = false
                   }
               
               ProfileTabView()
@@ -62,14 +58,14 @@ struct ContentView: View {
                       Text("마이 페이지")
                   }.tag(4)
                   .onAppear() {
-                      showSheet = false
+                      globalViewModel.showSheet = false
                   }
                   .navigationBarBackButtonHidden(true)
               
         }
         .ignoresSafeArea()
         .accentColor(.gachonBlue)
-        .sheet(isPresented: $showSheet) {
+        .sheet(isPresented: $globalViewModel.showSheet) {
           ScrollView(.vertical, content: {
             VStack(alignment: .leading, spacing: 15, content: {
               DashboardView()

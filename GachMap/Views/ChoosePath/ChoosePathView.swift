@@ -109,8 +109,13 @@ struct ChoosePathView: View {
                             Spacer()
                             
                             Button(action: {
-                                dismiss()
-                                globalViewModel.showSearchView = false
+                                // dismiss()
+                                if globalViewModel.showDetailView == true {
+                                    globalViewModel.showDetailView.toggle()
+                                } else {
+                                    globalViewModel.showSearchView = false
+                                }
+//
                             }, label: {
                                 Image(systemName: "xmark")
                                     .font(.title2)

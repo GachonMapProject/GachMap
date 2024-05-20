@@ -9,10 +9,11 @@ import SwiftUI
 import Alamofire
 
 struct UserDashboardView: View {
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    
     @State private var currentIndex = UserDefaults.standard.integer(forKey: "currentIndex")
     let texts = ["오늘도 화이팅💪", "열정과 노력,\n그 모든 순간이 빛나길", "도전하는 당신, 응원합니다!", "멋진 추억이 될 오늘 하루", "지식의 여정을 함께 걸어요!", "새로운 배움과 함께하는 활기찬 하루!", "오늘도 열공하는 하루!📚", "배움의 즐거움, 함께 나누어요!", "열정과 노력, 그 모든 순간이 빛나길!", "새로운 배움의 하루, 함께 시작해요!"]
     let timer = Timer.publish(every: 88400, on: .main, in: .common).autoconnect()
-    
     
     @State private var userInfo: UserInquiryResponse?
     @State private var isLoading: Bool = false
@@ -23,6 +24,8 @@ struct UserDashboardView: View {
     @State private var isMoveSearch: Bool = false
     
     @State private var isConnectedServer: Bool = false
+    
+    @State private var topNodes: [TopNodeData] = []
     
     // LoginInfo에 저장된 userCode 가져오기
     func getUserCodeFromUserDefaults() -> String? {
@@ -71,8 +74,43 @@ struct UserDashboardView: View {
             }
     } // end of getUserInfoInquiry()
     
+    // Top3 Node 데이터 가져오기
+    private func getTopNodeList() {
+        isLoading = true
+        
+        guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/history/top-nodes")
+        else {
+            print("Invalid URL")
+            return
+        }
+        
+        AF.request(url, method: .get)
+            .validate()
+            .responseDecodable(of: TopNodeResponse.self) { response in
+                isLoading = false
+                
+                switch response.result {
+                case .success(let value):
+                    if (value.success == true) {
+                        print("인기 장소 요청 성공")
+                        print(value)
+                        
+                        self.topNodes = value.data
+                        
+                    } else {
+                        print("인기 장소 요청 실패")
+                    }
+                    
+                case .failure(let error):
+                    print("서버 연결 실패")
+                    print("Error: \(error.localizedDescription)")
+                }
+            }
+    }
+    
     var body: some View {
         HStack {
+            // !로 바꾸기
             if !isConnectedServer {
                 VStack(spacing: 5) {
                     Image(systemName: "network.slash")
@@ -119,7 +157,7 @@ struct UserDashboardView: View {
                     VStack(spacing: 13) {
                         HStack() {
                             Button(action: {
-                                
+                                globalViewModel.showSearchView = true
                             }, label: {
                                 ZStack {
                                     Image("muhanEarth_dashboard")
@@ -166,7 +204,7 @@ struct UserDashboardView: View {
                         HStack {
                             
                             Button(action: {
-                                isMoveUsageList = true
+                                globalViewModel.showUsageListView = true
                             }, label: {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 3) {
@@ -186,16 +224,23 @@ struct UserDashboardView: View {
                                     .fill(.white)
                                     .shadow(radius: 7, x: 2, y: 2)
                             )
-                            
-                            NavigationLink("", isActive: $isMoveUsageList) {
+                            .fullScreenCover(isPresented: $globalViewModel.showUsageListView, onDismiss: {
+                                if globalViewModel.selectedTab == 1 {
+                                    globalViewModel.showSheet = true
+                                }
+                            }) {
                                 UsageListView()
-                                    .navigationBarBackButtonHidden()
                             }
+                            
+//                            NavigationLink("", isActive: $isMoveUsageList) {
+//                                UsageListView()
+//                                    .navigationBarBackButtonHidden()
+//                            }
                             
                             Spacer()
                             
                             Button(action: {
-                                isMoveEvent = true
+                                globalViewModel.selectedTab = 3
                             }, label: {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 3) {
@@ -264,21 +309,47 @@ struct UserDashboardView: View {
                                 }
                                 
                                 HStack {
-                                    Text("가천대역\n1번 출구")
-                                        .multilineTextAlignment(.center)
-                                        .font(.system(size: 20, weight: .bold))
-                                        .frame(width: 100)
-                                        .fixedSize(horizontal: false, vertical: true)
-                                    Text("AI관")
-                                        .multilineTextAlignment(.center)
-                                        .font(.system(size: 20, weight: .bold))
-                                        .frame(width: 100)
-                                        .fixedSize(horizontal: false, vertical: true)
-                                    Text("가천관")
-                                        .multilineTextAlignment(.center)
-                                        .font(.system(size: 20, weight: .bold))
-                                        .frame(width: 100)
-                                        .fixedSize(horizontal: false, vertical: true)
+                                    if topNodes.count > 0 {
+                                        Text(topNodes[0].nodeName)
+                                            .multilineTextAlignment(.center)
+                                            .font(.system(size: 20, weight: .bold))
+                                            .frame(width: 100)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    } else {
+                                        Text("No data")
+                                            .multilineTextAlignment(.center)
+                                            .font(.system(size: 20, weight: .bold))
+                                            .frame(width: 100)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }
+
+                                    if topNodes.count > 1 {
+                                        Text(topNodes[1].nodeName)
+                                            .multilineTextAlignment(.center)
+                                            .font(.system(size: 20, weight: .bold))
+                                            .frame(width: 100)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    } else {
+                                        Text("No data")
+                                            .multilineTextAlignment(.center)
+                                            .font(.system(size: 20, weight: .bold))
+                                            .frame(width: 100)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }
+
+                                    if topNodes.count > 2 {
+                                        Text(topNodes[2].nodeName)
+                                            .multilineTextAlignment(.center)
+                                            .font(.system(size: 20, weight: .bold))
+                                            .frame(width: 100)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    } else {
+                                        Text("No data")
+                                            .multilineTextAlignment(.center)
+                                            .font(.system(size: 20, weight: .bold))
+                                            .frame(width: 100)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }
                                 }
                                 .padding(.bottom, 13)
                             }
@@ -298,6 +369,7 @@ struct UserDashboardView: View {
         }
         .onAppear {
             getUserInfoInquiry()
+            getTopNodeList()
         }
         
         

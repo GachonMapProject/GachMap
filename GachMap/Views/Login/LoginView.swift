@@ -11,12 +11,12 @@ import CryptoKit
 
 struct LoginView: View {
     
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var hashedPassword: String = ""
     
-    @State private var loginStatus: Bool = false
-    @State private var isFull: Bool = false
     @State private var isActive: Bool = false // 계정 정보 확인 후 일치 시 다른 뷰로 넘어갈 때 사용
     @State private var notCorrectLogin: Bool = false
     
@@ -26,7 +26,7 @@ struct LoginView: View {
     @State private var showSignUpView: Bool = false
     @State private var showGuestInfoInputView: Bool = false
     
-    //@Binding var isLogin : Bool
+    
     
     // SHA-256 해시 생성 함수
     func sha256(_ string: String) -> String {
@@ -121,16 +121,15 @@ struct LoginView: View {
                             print("hashedPW: \(self.hashedPassword)")
                             
                             if username != "" && password != "" {
-                                isFull.toggle()
+                                // LoginRequest 객체 생성
+                                let param = LoginRequest(username: username, password: hashedPassword)
+                                
+                                postLoginData(parameter: param)
+                                
+                                username = ""
+                                password = ""
                             }
                             
-                            // LoginRequest 객체 생성
-                            let param = LoginRequest(username: username, password: hashedPassword)
-                            
-                            postLoginData(parameter: param)
-                            
-                            username = ""
-                            password = ""
                         }, label: {
                             HStack {
                                 Text("로그인")
@@ -153,7 +152,7 @@ struct LoginView: View {
                         
                     } // end of Login Button
                     
-                    NavigationLink("", isActive: $isActive) {
+                    NavigationLink("", isActive: $globalViewModel.isLogin) {
                         PrimaryView()
                             .navigationBarBackButtonHidden(true)
                     }
@@ -270,8 +269,10 @@ struct LoginView: View {
                         print("로그인 성공")
                         print("value.success: \(value.success)")
                         
-                        isActive = true
-                        //isLogin = true
+                        // NavigationLink 수정
+                        // isActive = true
+                        
+                        globalViewModel.isLogin = true
                         
                         if let value = value.data {
                             let userCode = Int64(value.userId)
@@ -286,7 +287,7 @@ struct LoginView: View {
                         print("로그인 실패")
                         print("value.message: \(value.message)")
 
-                        alertMessage = value.message ?? "알 수 없는 오류가 발생했습니다."
+                        alertMessage = value.message
                         showAlert = true
                         
                         print("showAlert: \(showAlert)")
@@ -305,4 +306,5 @@ struct LoginView: View {
 
 #Preview {
     PrimaryView()
+        .environmentObject(GlobalViewModel())
 }

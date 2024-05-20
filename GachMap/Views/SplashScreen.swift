@@ -46,4 +46,7 @@ struct SplashScreen: View {
 
 #Preview {
     SplashScreen()
+        .environmentObject(GlobalViewModel())
+        .environmentObject(NavigationController())
+        .environmentObject(CoreLocationEx())
 }

@@ -22,6 +22,7 @@
 		8B5369012BD37F5C007B8984 /* UserPasswordCheckRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369002BD37F5C007B8984 /* UserPasswordCheckRequest.swift */; };
 		8B5369032BD37F6D007B8984 /* UserPasswordCheckResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369022BD37F6D007B8984 /* UserPasswordCheckResponse.swift */; };
 		8B5369072BD38B55007B8984 /* UserIdInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5369062BD38B55007B8984 /* UserIdInjection.swift */; };
+		8B5BAA912BFB6AAD00038B76 /* TopNodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5BAA902BFB6AAD00038B76 /* TopNodeResponse.swift */; };
 		8B5BD2292BF50A7A009C238E /* ShowSafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5BD2282BF50A7A009C238E /* ShowSafariView.swift */; };
 		8B5BD22B2BF5DCBF009C238E /* middleArrow2.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 8B5BD22A2BF5DCBF009C238E /* middleArrow2.usdz */; };
 		8B831BDE2BCCEFF600A85973 /* GachMapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */; };
@@ -155,6 +156,7 @@
 		8B5369002BD37F5C007B8984 /* UserPasswordCheckRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordCheckRequest.swift; sourceTree = "<group>"; };
 		8B5369022BD37F6D007B8984 /* UserPasswordCheckResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordCheckResponse.swift; sourceTree = "<group>"; };
 		8B5369062BD38B55007B8984 /* UserIdInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdInjection.swift; sourceTree = "<group>"; };
+		8B5BAA902BFB6AAD00038B76 /* TopNodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNodeResponse.swift; sourceTree = "<group>"; };
 		8B5BD2282BF50A7A009C238E /* ShowSafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowSafariView.swift; sourceTree = "<group>"; };
 		8B5BD22A2BF5DCBF009C238E /* middleArrow2.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = middleArrow2.usdz; sourceTree = "<group>"; };
 		8B831BDA2BCCEFF600A85973 /* GachMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GachMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -372,10 +374,10 @@
 		8B831C062BCCF57700A85973 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				8BC86EDA2BE89B0F00051BF0 /* MapView */,
 				CBBE58712BF489B2003B55C4 /* NavControllerTest */,
 				CB8A6E352BF0E6E80039AC50 /* SatisfactionView */,
 				8B831C282BCCF60C00A85973 /* AR */,
-				8BC86EDA2BE89B0F00051BF0 /* MapView */,
 				CBED53B22BE2203A00DDFD0C /* ChoosePath */,
 				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
 				8BC86EAC2BDE628800051BF0 /* Search */,
@@ -432,6 +434,7 @@
 				8BC97A752BEB7A530021C544 /* SearchDetailResponse.swift */,
 				CB8A6E2F2BEF718E0039AC50 /* PathResponse.swift */,
 				CB8A6E332BF0BCA20039AC50 /* SatisfactionRequest.swift */,
+				8B5BAA902BFB6AAD00038B76 /* TopNodeResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -829,6 +832,7 @@
 				8BC97A722BEB75220021C544 /* RecentSearchCell.swift in Sources */,
 				CB0D26FC2BCE8EE500800459 /* EventDetailView.swift in Sources */,
 				8B831C432BCCF60C00A85973 /* BeantownButtons.swift in Sources */,
+				8B5BAA912BFB6AAD00038B76 /* TopNodeResponse.swift in Sources */,
 				8B5369012BD37F5C007B8984 /* UserPasswordCheckRequest.swift in Sources */,
 				CB4CE38E2BCD2F0D00E0611B /* WeatherView.swift in Sources */,
 				8B3159D72BD0419A0049CB5F /* PrivacyTermsView.swift in Sources */,
@@ -993,7 +997,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = X7TYNR98TC;
+				DEVELOPMENT_TEAM = XW6H6BYJ53;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
@@ -1012,7 +1016,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.F2Z.GachMap;
+				PRODUCT_BUNDLE_IDENTIFIER = com.F2Z.GachMap2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1031,7 +1035,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = X7TYNR98TC;
+				DEVELOPMENT_TEAM = XW6H6BYJ53;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
@@ -1050,7 +1054,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.F2Z.GachMap;
+				PRODUCT_BUNDLE_IDENTIFIER = com.F2Z.GachMap2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;

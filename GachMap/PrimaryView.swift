@@ -17,13 +17,11 @@ struct PrimaryView: View {
                 if let loginInfo = getLoginInfo() {
                     if loginInfo.userCode != nil || loginInfo.guestCode != nil {
                         ContentView()
-//                            .environmentObject(GlobalViewModel())
-//                            .environmentObject(CoreLocationEx())
                     } else {
                         LoginView()
                     }
                 } else {
-                    LoginView() //isLogin: $isLogin
+                    LoginView()
                 }
             }
         
@@ -99,4 +97,7 @@ struct PrimaryView: View {
 
 #Preview {
     PrimaryView()
+        .environmentObject(GlobalViewModel())
+        .environmentObject(NavigationController())
+        .environmentObject(CoreLocationEx())
 }

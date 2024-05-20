@@ -9,6 +9,8 @@ import SwiftUI
 import Alamofire
 
 struct ProfileTabView: View {
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    
     @State private var showNoticeWeb = false
     @State private var showFaqWeb = false
     private let noticeUrl = "https://gachgaja.notion.site/5e5222698b854281892b3e5559e4e1a3"
@@ -159,17 +161,17 @@ struct ProfileTabView: View {
                                 })
                                 .alert(isPresented: $showLogoutAlert) {
                                     Alert(title: Text("알림"), message: Text("로그아웃 하시겠습니까?"), primaryButton: .default(Text("예"), action: {
-                                        UserDefaults.standard.removeObject(forKey: "loginInfo"); isLogout = true
+                                        UserDefaults.standard.removeObject(forKey: "loginInfo"); globalViewModel.isLogin = false; isLogout = true
                                     }), secondaryButton: .cancel(Text("아니오")))
                                 }
                             }
                             .frame(width: UIScreen.main.bounds.width - 50)
                             .padding(.top)
                             // end of 닉네임, ID, 로그아웃 버튼
-                            
+
                             HStack {
                                 Button(action: {
-                                    showUsageListView = true
+                                    globalViewModel.showUsageListView = true
                                 }, label: {
                                     VStack(spacing: 10) {
                                         Image(systemName: "figure.walk")
@@ -183,7 +185,7 @@ struct ProfileTabView: View {
                                     .background(
                                         RoundedRectangle(cornerRadius: 10)
                                             .fill(.white))
-                                    .fullScreenCover(isPresented: $showUsageListView) {
+                                    .fullScreenCover(isPresented: $globalViewModel.showUsageListView) {
                                         UsageListView()
                                             .foregroundColor(.black)
                                             .presentationBackground(.thinMaterial)
@@ -457,7 +459,7 @@ struct ProfileTabView: View {
                             .padding(.bottom, 20)
                         })
                         .fullScreenCover(isPresented: $isLoginMove) {
-                            PrimaryView()
+                            LoginView()
                                 .navigationBarBackButtonHidden()
                         }
                     } // 전체 VStack
@@ -490,4 +492,5 @@ struct ProfileTabView: View {
 
 #Preview {
     ProfileTabView()
+        .environmentObject(GlobalViewModel())
 }

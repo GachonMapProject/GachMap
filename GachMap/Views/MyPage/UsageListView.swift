@@ -71,8 +71,7 @@ class UsageListViewModel: ObservableObject {
 }
 
 struct UsageListView: View {
-    
-    
+    @EnvironmentObject var globalViewModel: GlobalViewModel
     
     @StateObject private var viewModel = UsageListViewModel()
     
@@ -111,7 +110,11 @@ struct UsageListView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        self.presentationMode.wrappedValue.dismiss()
+                        // self.presentationMode.wrappedValue.dismiss()
+                        globalViewModel.showUsageListView = false
+//                        if globalViewModel.selectedTab == 1 {
+//                            globalViewModel.showSheet = true
+//                        }
                     }, label: {
                         Image(systemName: "xmark")
                             .font(.system(size: 12, weight: .bold))
