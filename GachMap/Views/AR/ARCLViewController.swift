@@ -229,7 +229,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         for point in midPoints {
 //            let arrow = placeArrow(xAngle: self.xAngle, yAngle: self.yAngle)
             let arrow = makeUsdzNode(fileName: "middleArrow2", scale : 0.003, middle: true)
-            let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.39)
+            let placeArrowLocation = CLLocation(coordinate: point.coordinate, altitude: point.altitude - 1.35)
             let arrowNode = LocationAnnotationNode(location: placeArrowLocation, node: arrow)
             arrowNode.constraints = nil
             arrowNode.name = ("\(index)-\(point.coordinate.latitude)")
@@ -277,27 +277,6 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         node.transform = transformationMatrix
         return node.position
     }
-    
-//    func placeArrow(xAngle: Float, yAngle: Float) -> SCNNode {
-//        print("placeArrow - xAngle :\(xAngle), yAngle: \(yAngle)")
-//        let textName = "⋀"
-//        
-//        // 텍스트 생성
-//        let text = SCNText(string: textName, extrusionDepth: 0.02)
-//        text.font = UIFont.systemFont(ofSize: 3) // 폰트 크기 및 두께 설정
-//        
-//        // 텍스트 머티리얼 설정 (흰색으로 변경)
-//        let material = SCNMaterial()
-//        material.diffuse.contents = UIColor.white
-//        text.firstMaterial = material
-//        
-//        // SCNNode 생성 및 텍스트 노드 추가
-//        let textNode = SCNNode(geometry: text)
-//        textNode.eulerAngles.x = .pi / 2 + xAngle
-//        textNode.eulerAngles.y = yAngle
-//        
-//        return textNode
-//    }
 
 
     
@@ -306,16 +285,20 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         let startVector = makeSCNVector(currnetLocation: currentLocation, location: start)  // 현재 노드 상대 좌표
         let endVector = makeSCNVector(currnetLocation: currentLocation, location: end)      // 다음 노드 상대 좌표
         
-        let length = startVector.distance(receiver: endVector)
+//        let length = startVector.distance(receiver: endVector)
+        let length = Float(start.distance(from: end))
         
        // 출발지와 목적지 간의 고도 차이 계산
         let altitudeDifference = Float(start.altitude - end.altitude)
+        
+        // 평면 거리 계산 (XY 평면에서의 거리)
+       let horizontalDistance = sqrt(pow(endVector.x - startVector.x, 2) + pow(endVector.z - startVector.z, 2))
         
 //        빗변 (hypotenuse)는 평면 거리 (length)와 고도 차이 (altitudeDifference)의 제곱합의 제곱근
         let hypotenuse = sqrt(pow(length, 2) + pow(altitudeDifference, 2))
        
        
-        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(length), chamferRadius: 0)
+        let box = SCNBox(width: 2, height: 0.1, length: CGFloat(horizontalDistance), chamferRadius: 0)
         box.firstMaterial?.diffuse.contents = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
         box.firstMaterial?.transparency = 0.9 // 투명도 (0.0(완전 투명)에서 1.0(완전 불투명))
         let node = SCNNode(geometry: box)
@@ -349,16 +332,29 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
         
 
         // 실릴더 기울기
-        let angle = acos(length / hypotenuse)
-        node.eulerAngles.x = Float(-angle)
-        xAngle = -angle
-
-        let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
-        let yAngle = atan(dirVector.x / dirVector.z)
-        print("placeBox - yAngle : \(yAngle)")
+//        let angle = acos(length / hypotenuse)
+//        node.eulerAngles.x = Float(-angle)
+//        xAngle = -angle
+//
+//        let dirVector = SCNVector3Make(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
+//        let yAngle = atan(dirVector.x / dirVector.z)
+//        print("placeBox - yAngle : \(yAngle)")
+//        self.yAngle = yAngle
+//       
+//       node.eulerAngles.y = yAngle
+        
+        // x축 회전 각도 계산 (고도 차이와 평면 거리 간의 각도)
+        let xAngle = atan2(altitudeDifference, horizontalDistance)
+        node.eulerAngles.x = xAngle
+        self.xAngle = xAngle
+        
+        // 방향 벡터 계산 (출발지와 목적지 간의 벡터)
+        let directionVector = SCNVector3(endVector.x - startVector.x, endVector.y - startVector.y, endVector.z - startVector.z)
+        
+        // y축 회전 각도 계산 (방향 벡터의 x와 z 좌표를 사용)
+        let yAngle = atan2(directionVector.x, directionVector.z)
+        node.eulerAngles.y = yAngle
         self.yAngle = yAngle
-       
-       node.eulerAngles.y = yAngle
 
 
        return node
