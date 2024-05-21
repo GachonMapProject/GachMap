@@ -161,7 +161,7 @@ struct ProfileTabView: View {
                                 })
                                 .alert(isPresented: $showLogoutAlert) {
                                     Alert(title: Text("알림"), message: Text("로그아웃 하시겠습니까?"), primaryButton: .default(Text("예"), action: {
-                                        UserDefaults.standard.removeObject(forKey: "loginInfo"); globalViewModel.isLogin = false; isLogout = true
+                                        UserDefaults.standard.removeObject(forKey: "loginInfo"); globalViewModel.isLogin = false; globalViewModel.selectedTab = 1
                                     }), secondaryButton: .cancel(Text("아니오")))
                                 }
                             }
@@ -415,10 +415,10 @@ struct ProfileTabView: View {
    
                     } // 전체 내용 VStack
                     
-                    NavigationLink("", isActive: $isLogout) {
-                        PrimaryView()
-                            .navigationBarBackButtonHidden(true)
-                    }
+//                    NavigationLink("", isActive: $isLogout) {
+//                        PrimaryView()
+//                            .navigationBarBackButtonHidden(true)
+//                    }
 
                 } else {
                     // 게스트
@@ -443,7 +443,7 @@ struct ProfileTabView: View {
                         Button(action: {
                             UserDefaults.standard.removeObject(forKey: "loginInfo")
                             
-                            isLoginMove = true
+                            globalViewModel.isLogin = false
                         }, label: {
                             HStack {
                                 Text("로그인")
@@ -458,10 +458,10 @@ struct ProfileTabView: View {
                             )
                             .padding(.bottom, 20)
                         })
-                        .fullScreenCover(isPresented: $isLoginMove) {
-                            LoginView()
-                                .navigationBarBackButtonHidden()
-                        }
+//                        .fullScreenCover(isPresented: $isLoginMove) {
+//                            LoginView()
+//                                .navigationBarBackButtonHidden()
+//                        }
                     } // 전체 VStack
                     .padding(.top, 50)
                     .padding(.bottom, 90)

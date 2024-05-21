@@ -157,4 +157,5 @@ struct EventCardView : View {
 
 #Preview {
     EventTabView()
+        .environmentObject(GlobalViewModel())
 }

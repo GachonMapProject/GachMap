@@ -93,7 +93,7 @@ struct UsageListView: View {
                     .frame(maxHeight: .infinity)
                 } else {
                     ScrollView {
-                        ForEach(viewModel.usages, id: \.historyId) { usages in
+                        ForEach(viewModel.usages.reversed(), id: \.historyId) { usages in
                             UsageListCell(usages: usages)
                                 .frame(width: UIScreen.main.bounds.width)
                                 .padding(.top, 10)

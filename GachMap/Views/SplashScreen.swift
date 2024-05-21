@@ -11,6 +11,7 @@ struct SplashScreen: View {
     @State private var isActive = false
     @State private var size = 0.8
     @State private var opacity = 0.5
+    @EnvironmentObject var globalViewModel : GlobalViewModel
     
     var body: some View {
         if isActive {
@@ -32,6 +33,11 @@ struct SplashScreen: View {
                     }
             }
             .onAppear {
+                if let loginInfo = globalViewModel.getLoginInfo(){
+                    if loginInfo.userCode != nil || loginInfo.guestCode != nil{
+                        globalViewModel.isLogin = true
+                    }
+                }
                 // 일정 시간 후에 메인 화면으로 전환
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     withAnimation {

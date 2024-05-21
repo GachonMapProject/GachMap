@@ -44,6 +44,8 @@ struct GuestInfoInputView: View {
     @State private var isOn2: Bool = false
     @State private var isOn3: Bool = false
     
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    
     // 하단 버튼 활성화용 함수
     func isButtonEnabled() -> Bool {
         return userBirth != 0 &&
@@ -351,7 +353,7 @@ struct GuestInfoInputView: View {
                     switch activeGuestInfoInputAlert {
                     case .ok:
                         return Alert(title: Text("알림"), message: Text(alertMessage),
-                                     dismissButton: .default(Text("확인"), action: { guestInfoEnd = true }))
+                                     dismissButton: .default(Text("확인"), action: { globalViewModel.isLogin = true; globalViewModel.selectedTab = 1 }))
                         
                     case .error:
                         return Alert(title: Text("오류"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
@@ -360,10 +362,10 @@ struct GuestInfoInputView: View {
                 }
                 // end of 같이 가기 Button
                 
-                NavigationLink("", isActive: $guestInfoEnd) {
-                    PrimaryView()
-                        .navigationBarBackButtonHidden(true)
-                }
+//                NavigationLink("", isActive: $guestInfoEnd) {
+//                    PrimaryView()
+//                        .navigationBarBackButtonHidden(true)
+//                }
             } // end of VStack (버튼용)
             
             .toolbar {
