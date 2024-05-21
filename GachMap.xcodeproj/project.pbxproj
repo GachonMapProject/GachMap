@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B2E203E2BFC5A2C00E909D5 /* RouteFindProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E203D2BFC5A2C00E909D5 /* RouteFindProgressView.swift */; };
 		8B3159D12BCFE7190049CB5F /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D02BCFE7190049CB5F /* SignUpView.swift */; };
 		8B3159D52BD041500049CB5F /* ServiceTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D42BD041500049CB5F /* ServiceTermsView.swift */; };
 		8B3159D72BD0419A0049CB5F /* PrivacyTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3159D62BD0419A0049CB5F /* PrivacyTermsView.swift */; };
@@ -146,6 +147,7 @@
 
 /* Begin PBXFileReference section */
 		65239D12FC5FBC7B8F89AA67 /* Pods-GachMap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GachMap.debug.xcconfig"; path = "Target Support Files/Pods-GachMap/Pods-GachMap.debug.xcconfig"; sourceTree = "<group>"; };
+		8B2E203D2BFC5A2C00E909D5 /* RouteFindProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteFindProgressView.swift; sourceTree = "<group>"; };
 		8B3159D02BCFE7190049CB5F /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		8B3159D42BD041500049CB5F /* ServiceTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceTermsView.swift; sourceTree = "<group>"; };
 		8B3159D62BD0419A0049CB5F /* PrivacyTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyTermsView.swift; sourceTree = "<group>"; };
@@ -399,6 +401,7 @@
 				8B831C722BCE0AB300A85973 /* UserDashboardView.swift */,
 				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
 				8B3159D82BD0F53F0049CB5F /* MyPage */,
+				8B2E203D2BFC5A2C00E909D5 /* RouteFindProgressView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -801,6 +804,7 @@
 				8B5BD2292BF50A7A009C238E /* ShowSafariView.swift in Sources */,
 				8B831C0C2BCCF57700A85973 /* EventTabView.swift in Sources */,
 				CB2E456E2BD4DF38009DB796 /* ARCLViewController.swift in Sources */,
+				8B2E203E2BFC5A2C00E909D5 /* RouteFindProgressView.swift in Sources */,
 				CB0A6AC42BF776B2006F2F23 /* ARCampusWrapperView.swift in Sources */,
 				CB4EF61D2BCFA07C00BDC73A /* BuildingDetailView.swift in Sources */,
 				8BC86ECD2BE124C200051BF0 /* InquireListCell.swift in Sources */,

@@ -30,6 +30,7 @@ class GlobalViewModel: ObservableObject {
     @Published var longitude : Double = 0.0
     @Published var altitude : Double = 0.0  
     
+
     // 날씨 데이터 저장
     @Published var temp: Double = 0.0
     @Published var rainPrecipitation: Double = 0.0
@@ -51,7 +52,7 @@ class GlobalViewModel: ObservableObject {
             }
         }
     }
-    
+
     func getLoginInfo() -> LoginInfo? {
         if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
            let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {

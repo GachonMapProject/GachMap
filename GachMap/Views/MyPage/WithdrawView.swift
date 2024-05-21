@@ -13,6 +13,7 @@ enum ActiveExitAlert {
 }
 
 struct WithdrawView: View {
+    @EnvironmentObject var globalViewModel: GlobalViewModel
     
     @Binding var showWithdrawView: Bool
     
@@ -99,14 +100,14 @@ struct WithdrawView: View {
                     case .exit:
                         return Alert(title: Text("탈퇴하시겠습니까?"), message: Text("회원 탈퇴 시 현재까지 제공되던\n개인 맞춤 소요시간 데이터가 삭제됩니다."), primaryButton: .default(Text("예"), action: { deleteUserRequest() }) , secondaryButton: .cancel(Text("아니오")))
                     case .withdraw:
-                        return Alert(title: Text("알림"), message: Text(exitAlertMessage), dismissButton: .default(Text("확인"), action: { UserDefaults.standard.removeObject(forKey: "loginInfo"); isWithdraw = true }))
+                        return Alert(title: Text("알림"), message: Text(exitAlertMessage), dismissButton: .default(Text("확인"), action: { UserDefaults.standard.removeObject(forKey: "loginInfo"); globalViewModel.isLogin = false }))
                     }
                 }
                 
-                NavigationLink("", isActive: $isWithdraw) {
-                    PrimaryView()
-                        .navigationBarBackButtonHidden(true)
-                }
+//                NavigationLink("", isActive: $isWithdraw) {
+//                    PrimaryView()
+//                        .navigationBarBackButtonHidden(true)
+//                }
                 
             }
             .toolbar {

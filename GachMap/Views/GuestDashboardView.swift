@@ -35,7 +35,7 @@ struct GuestDashboardView: View {
                     Button(action: {
                         UserDefaults.standard.removeObject(forKey: "loginInfo")
                         
-                        isLoginMove = true
+                        globalViewModel.isLogin = false
                     }, label: {
                         VStack(spacing: 5) {
                             Image(systemName: "iphone.and.arrow.forward")
@@ -49,10 +49,10 @@ struct GuestDashboardView: View {
                             RoundedRectangle(cornerRadius: 7)
                                 .fill(.gachonBlue))
                     })
-                    .fullScreenCover(isPresented: $isLoginMove) {
-                        PrimaryView()
-                            .navigationBarBackButtonHidden()
-                    }
+//                    .fullScreenCover(isPresented: $isLoginMove) {
+//                        PrimaryView()
+//                            .navigationBarBackButtonHidden()
+//                    }
                 }
                 .padding(EdgeInsets(top: 0, leading: 17, bottom: 0, trailing: 17))
                 
