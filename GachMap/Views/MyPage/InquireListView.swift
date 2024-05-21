@@ -92,7 +92,7 @@ struct InquireListView: View {
                     .frame(maxHeight: .infinity)
                 } else {
                     ScrollView {
-                        ForEach(viewModel.inquiries, id: \.inquiryId) { inquiry in
+                        ForEach(viewModel.inquiries.reversed(), id: \.inquiryId) { inquiry in
                             InquireListCell(inquiry: inquiry)
                         }
                     }

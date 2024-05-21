@@ -8,22 +8,53 @@
 import SwiftUI
 
 struct PrimaryView: View {
-    // @State private var loginInfo: LoginInfo? = nil
-    //@State var isLogin = false
+    @EnvironmentObject var globalViewModel: GlobalViewModel
+    // isLogin
 
     
     var body: some View {
-            Group {
-                if let loginInfo = getLoginInfo() {
-                    if loginInfo.userCode != nil || loginInfo.guestCode != nil {
-                        ContentView()
-                    } else {
-                        LoginView()
-                    }
-                } else {
-                    LoginView()
-                }
-            }
+        if globalViewModel.isLogin {
+            ContentView()
+        }
+        else {
+            LoginView()
+        }
+//        if let loginInfo = globalViewModel.getLoginInfo() {
+//            
+//            if loginInfo.userCode != nil || loginInfo.guestCode != nil {
+////                globalViewModel.isLogin = true
+//                // 뭔가로 로그인을 한 상태
+//                if globalViewModel.isLogin == true {
+//                    ContentView()
+//                }
+//            }
+//        } else {
+//            LoginView()
+//        }
+//        
+//        if globalViewModel.isLogin == true {
+//            if let loginInfo = globalViewModel.getLoginInfo() {
+//                if loginInfo.userCode != nil || loginInfo.guestCode != nil {
+//                    ContentView()
+//                } else {
+//                    LoginView()
+//                }
+//            }
+//        } else {
+//            LoginView()
+//        }
+        
+//        Group {
+//            if let loginInfo = getLoginInfo() {
+//                if loginInfo.userCode != nil || loginInfo.guestCode != nil {
+//                    ContentView()
+//                } else {
+//                    LoginView()
+//                }
+//            } else {
+//                LoginView()
+//            }
+//        }
         
         
         
@@ -81,17 +112,17 @@ struct PrimaryView: View {
         
     } // end of body
     
-    private func getLoginInfo() -> LoginInfo? {
-        if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
-           let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
-            print("loginInfo.userCode: \(String(describing: loginInfo.userCode))")
-            print("loginInfo.guestCode: \(String(describing: loginInfo.guestCode))")
-            return loginInfo
-        } else {
-            print("Login Info not found in UserDefaults")
-            return nil
-        }
-    }
+//    private func getLoginInfo() -> LoginInfo? {
+//        if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
+//           let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
+//            print("loginInfo.userCode: \(String(describing: loginInfo.userCode))")
+//            print("loginInfo.guestCode: \(String(describing: loginInfo.guestCode))")
+//            return loginInfo
+//        } else {
+//            print("Login Info not found in UserDefaults")
+//            return nil
+//        }
+//    }
     
 } // end of View
 

@@ -152,10 +152,10 @@ struct LoginView: View {
                         
                     } // end of Login Button
                     
-                    NavigationLink("", isActive: $globalViewModel.isLogin) {
-                        PrimaryView()
-                            .navigationBarBackButtonHidden(true)
-                    }
+//                    NavigationLink("", isActive: $globalViewModel.isLogin) {
+//                        PrimaryView()
+//                            .navigationBarBackButtonHidden(true)
+//                    }
                         
                 } // end of Login Section VStack
                 
@@ -273,6 +273,8 @@ struct LoginView: View {
                         // isActive = true
                         
                         globalViewModel.isLogin = true
+                        globalViewModel.selectedTab = 1
+//                        globalViewModel.showSheet = true
                         
                         if let value = value.data {
                             let userCode = Int64(value.userId)

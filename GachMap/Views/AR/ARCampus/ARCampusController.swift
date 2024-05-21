@@ -130,7 +130,7 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
             print("distance : \(distance)")
 
             // 현재 위치로부터 500미터 이하만 보여주기
-            if distance < 500 {
+            if distance < 300 {
                 let originalAltitude = info.placeAltitude + (info.buildingHeight ?? 0) // 건물 높이 추가
                 let updatedAltitude = originalAltitude + difAltitude // 고도 수정 + 위치 추가해야 함
 
@@ -176,23 +176,30 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
         AF.request(url, method: .get).responseImage { response in
             switch response.result {
             case .success(let image):
-                // 이미지 크기를 최적화합니다.
-                let targetWidth: CGFloat = 2000
-                let scale = targetWidth / image.size.width
-                let targetHeight = image.size.height * scale
-
-                UIGraphicsBeginImageContextWithOptions(CGSize(width: targetWidth, height: targetHeight), false, 0.0)
-                image.draw(in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
-                let newImage = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
-
-//                 이미지를 캐시에 저장합니다.
-                if let newImage = newImage {
-                    self.imageCache.add(image, withIdentifier: url.absoluteString)
-                }
-                self.imageCache.add(image, withIdentifier: url.absoluteString)
+//                // 이미지 크기를 최적화합니다.(원본)
+//                let targetWidth: CGFloat = 2000
+//                let scale = targetWidth / image.size.width
+//                let targetHeight = image.size.height * scale
+//
+//                UIGraphicsBeginImageContextWithOptions(CGSize(width: targetWidth, height: targetHeight), false, 0.0)
+//                image.draw(in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
+//                let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//                UIGraphicsEndImageContext()
+//
+////                 이미지를 캐시에 저장합니다.
+//                if let newImage = newImage {
+//                    self.imageCache.add(image, withIdentifier: url.absoluteString)
+//                }
+//                self.imageCache.add(image, withIdentifier: url.absoluteString)
+//                
+//                completion(newImage)
                 
-                completion(newImage)
+                // 4o
+                let targetSize = CGSize(width: 2000, height: image.size.height * (2000 / image.size.width))
+                let scaledImage = image.af.imageAspectScaled(toFill: targetSize)
+                self.imageCache.add(scaledImage, withIdentifier: url.absoluteString)
+                completion(scaledImage)
+                
             case .failure(let error):
                 print(error)
                 completion(nil)

@@ -29,4 +29,16 @@ class GlobalViewModel: ObservableObject {
     @Published var latitude : Double = 0.0
     @Published var longitude : Double = 0.0
     @Published var altitude : Double = 0.0  
+    
+    func getLoginInfo() -> LoginInfo? {
+        if let savedData = UserDefaults.standard.data(forKey: "loginInfo"),
+           let loginInfo = try? JSONDecoder().decode(LoginInfo.self, from: savedData) {
+            print("loginInfo.userCode: \(String(describing: loginInfo.userCode))")
+            print("loginInfo.guestCode: \(String(describing: loginInfo.guestCode))")
+            return loginInfo
+        } else {
+            print("Login Info not found in UserDefaults")
+            return nil
+        }
+    }
 }
