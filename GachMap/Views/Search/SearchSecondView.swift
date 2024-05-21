@@ -50,6 +50,13 @@ struct SearchSecondView: View {
     var longitude : Double?
     var altitude : Double?
     
+    let weatherData = WeatherData()
+    @State var temp = 0.0
+    @State var rainPrecipitation = 0.0
+    @State var rainPrecipitationProbability = 0
+    
+    @State var serverAlert = false
+    
     
     var body: some View {
         if !goPathView{
@@ -68,6 +75,11 @@ struct SearchSecondView: View {
                     })
                     
                     Spacer()
+                        .alert(isPresented: $serverAlert) {
+                            Alert(title: Text("알림"), message: Text("서버 연결에 실패했습니다."),
+                                  dismissButton: .default(Text("확인")){
+                            })
+                        }
                     
                     if globalViewModel.showSearchView == true {
                         // 검색창 종료 버튼
@@ -198,27 +210,26 @@ struct SearchSecondView: View {
                                 print("도착 placeId: \(endPlaceId)")
                                 if let location = coreLocation.location {
                                     self.globalViewModel.destination = endSearchText
+                                    let loginInfo = globalViewModel.getLoginInfo()
                                       
                                     if startSearchText == "현재 위치" {
-                                        var param = PathRequest(isDepartures: true)
+                                        var param = PathRequest(isDepartures: true, temperature: globalViewModel.temp, precipitation : globalViewModel.rainPrecipitation, precipitationProbability: rainPrecipitationProbability )
                                         if latitude != nil {
-                                            param = PathRequest(latitude: latitude, longitude: longitude, altitude: altitude, isDepartures: true)
+                                            param = PathRequest(latitude: latitude, longitude: longitude, altitude: altitude, isDepartures: false, userId: loginInfo?.userCode,guestId : loginInfo?.guestCode,temperature: globalViewModel.temp, precipitation : globalViewModel.rainPrecipitation, precipitationProbability: rainPrecipitationProbability)
                                         } else{
-                                            param = PathRequest(placeId : endPlaceId ?? 0, isDepartures: true)
+                                            param = PathRequest(placeId : endPlaceId ?? 0, isDepartures: false, userId: loginInfo?.userCode,guestId : loginInfo?.guestCode,temperature: globalViewModel.temp, precipitation : globalViewModel.rainPrecipitation, precipitationProbability: rainPrecipitationProbability )
                                         }
                                        
                                         print("param : \(param)")
                                         postPath(location : location, parameters: param)
                                     } else if endSearchText == "현재 위치"{
-                                        let param = PathRequest(latitude: latitude, longitude: longitude, altitude: altitude, placeId: endPlaceId ?? 0, isDepartures: false)
+                                        let param = PathRequest(latitude: latitude, longitude: longitude, altitude: altitude, placeId: endPlaceId ?? 0, isDepartures: true,userId: loginInfo?.userCode,guestId : loginInfo?.guestCode, temperature: globalViewModel.temp, precipitation : globalViewModel.rainPrecipitation, precipitationProbability: rainPrecipitationProbability )
                                         print("param : \(param)")
                                         postPath(location : location, parameters: param)
                                     } else{
-                                        getPath(departure: startPlaceId ?? 0, arrival: endPlaceId ?? 0)
+                                        let param = PathRequest( isDepartures: true,userId: loginInfo?.userCode,guestId : loginInfo?.guestCode, temperature: globalViewModel.temp, precipitation : globalViewModel.rainPrecipitation, precipitationProbability: rainPrecipitationProbability)
+                                        getPath(departure: startPlaceId ?? 0, arrival: endPlaceId ?? 0, parameters: param)
                                     }
-                                    
-                                    
-                                  
                                 }
 
                                 
@@ -365,14 +376,14 @@ struct SearchSecondView: View {
     }
     
     // 현재위치 x
-    func getPath(departure : Int, arrival : Int) {
+    func getPath(departure : Int, arrival : Int, parameters : PathRequest) {
         guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/route?departures=\(departure)&arrivals=\(arrival)")
         else {
             print("Invalid URL")
             return
         }
         
-        AF.request(url, method: .get)
+        AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default)
             .validate()
             .responseDecodable(of: PathResponse.self) { response in
                 print("URL : \(url)")
@@ -407,6 +418,7 @@ struct SearchSecondView: View {
     // 현재위치 o
     func postPath(location : CLLocation, parameters : PathRequest) {
 
+        
         guard let url = URL(string: "http://ceprj.gachon.ac.kr:60002/map/route-now?latitude=\(location.coordinate.latitude)&longitude=\(location.coordinate.longitude)&altitude=\(location.altitude)")
         else {
             print("Invalid URL")
@@ -437,6 +449,7 @@ struct SearchSecondView: View {
                     print("서버 연결 실패")
                     print(url)
                     print("Error: \(error.localizedDescription)")
+                    serverAlert = true
                 }
             }
     }

@@ -191,10 +191,10 @@ struct ARMainView: View {
                                 }
                             }
                             
-                            Text(String(format: "남은 거리: %.2f", distance ?? 0.0))
-                            Text("다음 인덱스 : \(nextNodeObject.nextIndex)")
-                            Text("측정 시간 : \(timer.seconds)")
-                            Text("시간 리스트 : \(String(describing: timeList))")
+//                            Text(String(format: "남은 거리: %.2f", distance ?? 0.0))
+//                            Text("다음 인덱스 : \(nextNodeObject.nextIndex)")
+//                            Text("측정 시간 : \(timer.seconds)")
+//                            Text("시간 리스트 : \(String(describing: timeList))")
                         } // end of if !isEnd
                         else{
                             // 안내 종료 버튼 누르면 실행됨 (만족도 조사 뷰로 변경해야 됨)
