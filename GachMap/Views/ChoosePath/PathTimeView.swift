@@ -61,7 +61,7 @@ struct PathTimeView: View {
                     
    
                 HStack(alignment: .lastTextBaseline, spacing : 2){
-                    Text(time == nil ? "-" : String(time ?? 0))
+                    Text(time == nil ? "-" : String(format: "%.0f", round(Double(time ?? 0) / 60)))
                         .font(.system(size: 33))
                         .foregroundStyle(time != nil ? .black : Color(red: 0.5137, green: 0.5137, blue: 0.5137))
                         .bold()

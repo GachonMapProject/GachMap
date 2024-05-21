@@ -118,7 +118,7 @@ struct SatisfactionView: View {
             } // end of VStack
             .frame(width: width * 0.9)
             .alert(isPresented: $submit) {
-                Alert(title: Text("만족도 조사"), message: Text(message),
+                Alert(title: Text("만족도 조사"), message: Text("서비스를 이용해주셔서 감사합니다."),
                       dismissButton: .default(Text("확인")){
                         dismiss()
                 })
