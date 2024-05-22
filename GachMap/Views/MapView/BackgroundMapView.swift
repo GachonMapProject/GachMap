@@ -99,7 +99,7 @@ struct BackgroundMapView : View {
                         }
                         selectedPlaceId = location[0].markerData.placeId
                         selectedPlaceName = location[0].markerData.placeName
-                        selectedPlaceSummary = location[0].markerData.placeSummary
+                        selectedPlaceSummary = location[0].markerData.placeSummary ?? ""
                         selectedImagePath = location[0].markerData.mainImagePath ?? ""
                         showSheet = false
                         globalViewModel.showDetailView = true

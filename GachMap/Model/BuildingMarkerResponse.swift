@@ -18,7 +18,7 @@ struct BuildingMarkerData: Decodable {
     var placeName: String
     var placeLatitude: Double
     var placeLongitude: Double
-    var placeSummary : String
+    var placeSummary : String?
     var mainImagePath : String?
     var placeId: Int
 }
