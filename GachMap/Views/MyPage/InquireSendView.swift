@@ -22,7 +22,7 @@ struct InquireSendView: View {
     @State private var loginInfo: LoginInfo? = nil
     
     @State private var showEscapeAlert: Bool = false
-    @State private var selectedCategory: String = ""
+    @State private var selectedCategory: String = "지점 문의"
     @State private var inquireTitle: String = ""
     @State private var inquireDetail: String = ""
     
