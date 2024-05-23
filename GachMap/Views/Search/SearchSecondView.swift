@@ -331,8 +331,7 @@ struct SearchSecondView: View {
                     }
                 } // end of VStack
                 if connectingSever {
-                    VStack {
-                        Spacer()
+                    ZStack {
                         Color.black.opacity(0.4)
                             .edgesIgnoringSafeArea(.all)
                         
@@ -436,6 +435,7 @@ struct SearchSecondView: View {
                     } else {
                         print("지정 위치 경로 가져오기 실패")
                         showSamePathAlert = true
+                        connectingSever = false
 
                     }
                     
@@ -445,6 +445,8 @@ struct SearchSecondView: View {
                     //                            {"success":false,"property":400,"message":"출발지와 도착지가 같습니다.","data":null}
                     print(url)
                     print("Error: \(error.localizedDescription)")
+                    connectingSever = false
+                    serverAlert = true
                 }
             }
     }
@@ -471,10 +473,12 @@ struct SearchSecondView: View {
                         print("현재위치 - 경로 가져오기 성공")
                         paths = value.data
                         goPathView = true
+                        connectingSever = false
 
                     } else {
                         print("현재위치 - 경로 가져오기 실패")
                         showSamePathAlert = true
+                        connectingSever = false
 
                     }
                     
@@ -483,6 +487,7 @@ struct SearchSecondView: View {
                     print("서버 연결 실패")
                     print(url)
                     print("Error: \(error.localizedDescription)")
+                    connectingSever = false
                     serverAlert = true
                 }
             }
