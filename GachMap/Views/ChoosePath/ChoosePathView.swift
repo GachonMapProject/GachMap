@@ -110,8 +110,8 @@ struct ChoosePathView: View {
                             
                             Button(action: {
                                 // dismiss()
-                                if globalViewModel.showDetailView == true {
-                                    globalViewModel.showDetailView.toggle()
+                                if globalViewModel.showDetailView {
+                                    globalViewModel.showDetailView = false
                                 } else {
                                     globalViewModel.showSearchView = false
                                 }
