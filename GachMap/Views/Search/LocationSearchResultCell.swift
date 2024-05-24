@@ -115,7 +115,7 @@ struct LocationSearchResultCell: View {
                                     }
                                     
                                     // 요약 정보
-                                    if (result.placeSummary != "\n") {
+                                    if (result.placeSummary != "\n" && result.placeSummary != "") {
                                         HStack {
                                             Text(result.placeSummary)
                                                 .font(.subheadline)
