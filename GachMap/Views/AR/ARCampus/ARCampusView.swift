@@ -11,6 +11,7 @@ import CoreLocation
 
 struct ARCampusView: View {
     @EnvironmentObject var coreLocation : CoreLocationEx
+    @EnvironmentObject var nextNodeObject : NextNodeObject
     @Environment(\.dismiss) private var dismiss
     @State var ARInfo: [ARInfo]? = nil
     
@@ -98,12 +99,19 @@ struct ARCampusView: View {
                     if ARInfo != nil {
                         
                         ZStack(alignment: .topTrailing) {
-                            ARCampusWrapperView(ARInfo: ARInfo ?? [])
-                                .edgesIgnoringSafeArea(.all)
-                                .onAppear(){
-                                    checkSecondTime?.invalidate()
-                                    checkTime?.invalidate()
+                            
+                            ZStack {
+                                ARCampusWrapperView(ARInfo: ARInfo ?? [])
+                                    .edgesIgnoringSafeArea(.all)
+                                    .onAppear(){
+                                        checkSecondTime?.invalidate()
+                                        checkTime?.invalidate()
+                                    }
+                                if !nextNodeObject.isARReady {
+                                    ProgressAlertView(isARRoading: true)
                                 }
+                            }
+                           
                             
                             HStack {
                                 Button(){

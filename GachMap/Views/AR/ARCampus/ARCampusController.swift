@@ -27,8 +27,9 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
     
     var nearAltitude : Double
     let ARInfo : [ARInfo]
+    var nextNodeObject : NextNodeObject
     
-    init(ARInfo : [ARInfo]){
+    init(ARInfo : [ARInfo], nextNodeObject : NextNodeObject){
         guard ARInfo.count > 1 else {
                fatalError("ARInfo array must contain at least two elements.")
            }
@@ -36,6 +37,7 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
         // Assign the ARInfo array excluding the first element
         self.ARInfo = Array(ARInfo[1...])
         self.nearAltitude = ARInfo[0].placeAltitude
+        self.nextNodeObject = nextNodeObject
         super.init(nibName: nil, bundle: nil)
         
         
@@ -83,6 +85,7 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
          sceneLocationView?.removeAllNodes()
          sceneLocationView?.pause()
+        self.nextNodeObject.isARReady = false
          super.viewWillDisappear(animated)
      }
     
@@ -157,6 +160,7 @@ class ARCampusController: UIViewController, ARSCNViewDelegate {
             print("All nodes added")
             nodes.map{self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: $0)}
             self.sceneLocationView?.run()    // SceneLocationView 시작
+            self.nextNodeObject.isARReady = true
         }
     }
 

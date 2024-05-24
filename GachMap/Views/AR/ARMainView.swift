@@ -123,7 +123,13 @@ struct ARMainView: View {
                             if !onlyMap{    // 지도만 이용 상태변수
                                 ZStack(alignment: .topTrailing){
                                     VStack(spacing : 0){
-                                        ARCLViewControllerWrapper(path: path, rotationList : rotationList ?? [], ARInfo: ARInfo ?? [])
+                                        ZStack{
+                                            ARCLViewControllerWrapper(path: path, rotationList : rotationList ?? [], ARInfo: ARInfo ?? [])
+                                            if !nextNodeObject.isARReady {
+                                                ProgressAlertView(isARRoading: true)
+                                            }
+                                        }
+                                      
                                         AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }.edgesIgnoringSafeArea(.all)
                                     

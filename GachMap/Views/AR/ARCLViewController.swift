@@ -90,6 +90,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
          sceneLocationView?.removeAllNodes()
          sceneLocationView?.pause()
+         nextNodeObject.isARReady = false
          super.viewWillDisappear(animated)
      }
     
@@ -196,6 +197,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             print("All nodes added")
             nodes.map{self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: $0)}
             self.sceneLocationView?.run()    // SceneLocationView 시작
+            self.nextNodeObject.isARReady = true
         }
         
     } // end of addNodes()

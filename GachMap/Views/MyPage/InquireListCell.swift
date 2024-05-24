@@ -108,7 +108,7 @@ struct InquireListCell: View {
                 .contentShape(.capsule)
                 .background(
                     Capsule()
-                        .fill(.gachonBlue))
+                        .fill(inquiry.inquiryProgress ? .gachonBlue : .gray.opacity(0.5)))
                 
                 Image(systemName: "chevron.right")
                     .foregroundColor(.gray)

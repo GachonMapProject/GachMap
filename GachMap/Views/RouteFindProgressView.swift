@@ -8,42 +8,43 @@
 import SwiftUI
 import Combine
 
-class ProgressViewModel: ObservableObject {
-    @Published var isShowingProgress: Bool = false
-}
-
-
-struct RouteFindProgressView: View {
-    @StateObject private var progressViewModel = ProgressViewModel()
-    
-    var body: some View {
-        ZStack {
-            VStack {
-                Button(action: {
-                    progressViewModel.isShowingProgress = true
-                    // Simulate a network request or some task
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        progressViewModel.isShowingProgress = false
-                    }
-                }) {
-                    Text("Show Progress")
-                }
-            }
-            
-            if progressViewModel.isShowingProgress {
-                ProgressAlertView()
-            }
-        }
-        .environmentObject(progressViewModel)
-    }
-}
+//class ProgressViewModel: ObservableObject {
+//    @Published var isShowingProgress: Bool = false
+//}
+//
+//
+//struct RouteFindProgressView: View {
+//    @StateObject private var progressViewModel = ProgressViewModel()
+//    
+//    var body: some View {
+//        ZStack {
+//            VStack {
+//                Button(action: {
+//                    progressViewModel.isShowingProgress = true
+//                    // Simulate a network request or some task
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                        progressViewModel.isShowingProgress = false
+//                    }
+//                }) {
+//                    Text("Show Progress")
+//                }
+//            }
+//            
+//            if progressViewModel.isShowingProgress {
+//                ProgressAlertView()
+//            }
+//        }
+//        .environmentObject(progressViewModel)
+//    }
+//}
 
 struct ProgressAlertView: View {
-    @EnvironmentObject var progressViewModel: ProgressViewModel
+//    @EnvironmentObject var progressViewModel: ProgressViewModel
+    var isARRoading : Bool
     
     var body: some View {
         ZStack {
-            Color.black.opacity(0.4)
+            Color.black.opacity(isARRoading ? 1 : 0.4)
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
@@ -52,7 +53,7 @@ struct ProgressAlertView: View {
                     .scaleEffect(1.5)
                     .padding()
                 
-                Text("경로 탐색 중")
+                Text(isARRoading ? "AR 준비 중" : "경로 탐색 중")
                     .foregroundColor(.black)
             }
             .frame(width: 200, height: 180)
@@ -63,6 +64,6 @@ struct ProgressAlertView: View {
     }
 }
 
-#Preview {
-    RouteFindProgressView()
-}
+//#Preview {
+//    ProgressAlertView()
+//}

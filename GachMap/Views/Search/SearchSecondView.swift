@@ -331,27 +331,8 @@ struct SearchSecondView: View {
                     }
                 } // end of VStack
                 if connectingSever {
-                    ZStack {
-                        Color.black.opacity(0.4)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                        VStack {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .black))
-                                .scaleEffect(1.5)
-                                .padding()
-                            
-                            Text("경로 탐색 중")
-                                .foregroundColor(.black)
-                        }
-                        .frame(width: 200, height: 180)
-                        .background(Color(UIColor.systemGray6))
-                        .cornerRadius(15)
-                        .shadow(radius: 10)
-                        
-                        }
-                        Spacer()
-                    }
+                    ProgressAlertView(isARRoading: false)
+                }
             } // 전체 ZStack
             .onAppear {
                 if !getStartSearchText.isEmpty {
