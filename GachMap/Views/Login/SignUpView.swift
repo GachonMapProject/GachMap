@@ -575,28 +575,30 @@ struct SignUpView: View {
     
 } // end of View
     
-    struct xMark : View {
-        var body: some View {
-            Image(systemName: "xmark.circle.fill")
-                .foregroundColor(.red)
-        }
+struct xMark : View {
+    var body: some View {
+        Image(systemName: "xmark.circle.fill")
+            .foregroundColor(.red)
     }
-    
-    struct checkMark : View {
-        var body: some View {
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundColor(.green)
+}
+
+struct checkMark : View {
+    var body: some View {
+        Image(systemName: "checkmark.circle.fill")
+            .foregroundColor(.green)
     }
 }
 
     
-    #Preview {
-        PrimaryView()
+#Preview {
+    PrimaryView()
+        .environmentObject(GlobalViewModel())
+        .environmentObject(CoreLocationEx())
+}
+
+// 특수문자 키
+extension CharacterSet {
+    static var specialCharacters: CharacterSet {
+        return CharacterSet(charactersIn: "!@#$%^&*()-_=+[{]}|;:'\",<.>/?")
     }
-    
-    // 특수문자 키
-    extension CharacterSet {
-        static var specialCharacters: CharacterSet {
-            return CharacterSet(charactersIn: "!@#$%^&*()-_=+[{]}|;:'\",<.>/?")
-        }
-    }
+}

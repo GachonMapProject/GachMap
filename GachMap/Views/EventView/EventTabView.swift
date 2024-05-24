@@ -174,5 +174,6 @@ struct ViewOffsetKey: PreferenceKey {
 
 #Preview {
     EventTabView()
+        .environmentObject(GlobalViewModel())
 }
 

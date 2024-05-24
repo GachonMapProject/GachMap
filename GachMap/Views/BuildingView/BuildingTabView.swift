@@ -44,28 +44,47 @@ struct BuildingTabView: View {
                         Text("캠퍼스 맵 데이터가 없습니다.")
                     }
             } else {
-                List(selection: $selection) {
-                    Section(header: Text(titles[0])) {
-                        ForEach(buildingList.indices) { index in
-                            NavigationLink(destination: BuildingDetailView(buildingCode: buildingList[index].placeId), label:{
-                                HStack {
-                                    Image("gachonMark")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 30, height: 30)
-                                        .padding(.trailing, 8)
-                                    
-                                    Text(buildingList[index].placeName)
-                                }
-                            })
-                            
-                        }
+                VStack {
+                    VStack {
+                        Image("CampusMapTitle")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: UIScreen.main.bounds.width - 50, alignment: .leading)
+                            .frame(height: 32)
+                            .padding(.top, 21)
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 15)
+                    .background(
+                        LinearGradient(gradient: Gradient(colors: [.gachonBlue2,. gachonBlue]), startPoint: .top, endPoint: .bottom)
+                    )
+                    
+                    List(selection: $selection) {
+                        Section(header: Text(titles[0])) {
+                            ForEach(buildingList.indices) { index in
+                                NavigationLink(destination: BuildingDetailView(buildingCode: buildingList[index].placeId), label:{
+                                    HStack {
+                                        Image("gachonMark")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 30, height: 30)
+                                            .padding(.trailing, 5)
+                                        
+                                        Text(buildingList[index].placeName)
+                                    }
+                                })
+                                
+                            }
+                        }
+                    } // end of List
                 }
-                .navigationTitle("캠퍼스 맵")
-
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(UIColor.systemGray6))
+                //.navigationTitle("캠퍼스 맵")
             }
+            
         } // end of NavigationStack
+        
             
             
 //            .searchable(
