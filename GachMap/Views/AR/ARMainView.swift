@@ -26,8 +26,7 @@ struct ARMainView: View {
     @State private var trueNorthAlertOn = false
     @State private var checkTime: Timer? // AR init 후 시간 체크
     @State private var selectedTrueNorth = false
-    
-    @State private var showGPSAlertBool = false
+
     @State var ARInfo: [ARInfo]? = nil
     
     
@@ -51,6 +50,11 @@ struct ARMainView: View {
 //    @State var timeList = [Int]()
     
     @State var showTrueNorthAlert = true
+    @State var showEndAlert = false
+    @State var showReloadAlert = false
+    @State var showServerAlert = false
+    @State var showGPSAlert = false
+    @State var showGPSAlertBool = false
     
     
     var body: some View {
@@ -61,6 +65,15 @@ struct ARMainView: View {
                         ProgressView()
                             .onAppear(){
                                 getARCampus()
+                            }
+                            .alert(isPresented: $showServerAlert) {
+                                Alert(
+                                    title: Text("오류"),
+                                    message: Text("서버 연결에 실패했습니다."),
+                                    dismissButton: .default(Text("확인")) {
+                                        dismiss()
+                                    }
+                                )
                             }
                             .alert(isPresented: $showTrueNorthAlert) {
                                 Alert(
@@ -114,16 +127,53 @@ struct ARMainView: View {
                             .onAppear {
                                 // 타이머 시작
                                 checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
-                                    showGPSAlert()
+//                                    showGPSAlert()
+                                    showGPSAlertBool = true
+                                    showGPSAlert = true
                                 }
                             }
+                            .actionSheet(isPresented: $showGPSAlert) {
+                                 ActionSheet(
+                                     title: Text("알림"),
+                                     message: Text("GPS 신호가 불안정합니다. \n실내 혹은 높은 건물 주변은 \nGPS 신호가 불안정 할 수 있습니다."),
+                                     buttons: [
+                                         .default(Text("재시도")) {
+                                             showGPSAlertBool = false
+                                             showGPSAlert = false
+                                             self.checkTime?.invalidate()
+                                             self.checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
+//                                                 showGPSAlert()
+                                                 showGPSAlert = true
+                                             }
+                                         },
+                                         .default(Text("지도만 이용")) {
+                                             self.checkSecondTime?.invalidate()
+                                             self.checkTime?.invalidate()
+                                             isARViewReady = true
+                                             isARViewVisible = false
+                                             rotationList = checkRotation.checkRotation(currentLocation: coreLocation.location!, path: path)
+                                             onlyMap = true
+                                         },
+                                         .cancel(Text("취소")) {
+                                             self.checkSecondTime?.invalidate()
+                                             self.checkTime?.invalidate()
+                                             isAROn = false
+                                         }
+                                     ]
+                                 )
+                             }
                     }
                     else {
                         if !isEnd { // 안내 종료 상태변수
                             if !onlyMap{    // 지도만 이용 상태변수
                                 ZStack(alignment: .topTrailing){
                                     VStack(spacing : 0){
-                                        ARCLViewControllerWrapper(path: path, rotationList : rotationList ?? [], ARInfo: ARInfo ?? [])
+                                        ZStack{
+                                            ARCLViewControllerWrapper(path: path, rotationList : rotationList ?? [], ARInfo: ARInfo ?? [])
+                                            if !nextNodeObject.isARReady {
+                                                ProgressAlertView(isARRoading: true)
+                                            }
+                                        }
                                         AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     }.edgesIgnoringSafeArea(.all)
                                     
@@ -134,7 +184,8 @@ struct ARMainView: View {
                                     HStack {
                                         if isARViewVisible{
                                             Button(){
-                                                ReloadButtonAlert()
+//                                                ReloadButtonAlert()
+                                                showReloadAlert = true
                                             } label: {
                                                 HStack{
                                                     Image(systemName: "gobackward")
@@ -147,9 +198,20 @@ struct ARMainView: View {
                                                 .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
                                                 
                                             }
+                                            .alert(isPresented: $showReloadAlert) {
+                                                Alert(
+                                                    title: Text("AR 재로드"),
+                                                    message: Text("AR을 재로드 하시겠습니까?"),
+                                                    primaryButton: .destructive(Text("확인")) {
+                                                        isARViewReady = false
+                                                    },
+                                                    secondaryButton: .cancel(Text("취소"))
+                                                )
+                                            }
                                         }
                                         Button(){
-                                            EndButtonAlert()
+//                                            EndButtonAlert()
+                                            showEndAlert = true
                                         } label: {
                                             HStack{
                                                 Image(systemName: "xmark.circle")
@@ -162,6 +224,18 @@ struct ARMainView: View {
                                             .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
                                             
                                         }
+                                        .alert(isPresented: $showEndAlert) {
+                                             Alert(
+                                                 title: Text("안내 종료"),
+                                                 message: Text("경로 안내를 종료하시겠습니까?"),
+                                                 primaryButton: .destructive(Text("확인")) {
+                                                     timer.stopTimer() // 안내 종료 누르면 타이머 stop
+                                                     nextNodeObject.nextIndex = 0
+                                                     isEnd = true      // 확인을 눌렀을 때의 처리: 다음 페이지로 이동
+                                                 },
+                                                 secondaryButton: .cancel(Text("취소"))
+                                             )
+                                         }
                                     }
                                     .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: isARViewVisible ? 10 : 55))
                                 }
@@ -175,7 +249,8 @@ struct ARMainView: View {
                                     AppleMapView(path: path, isARViewVisible: $isARViewVisible, rotationList: rotationList!, onlyMap: onlyMap, coreLocation: coreLocation)
                                     
                                     Button(){
-                                        EndButtonAlert()
+//                                        EndButtonAlert()
+                                        showEndAlert = true
                                     } label: {
                                         HStack{
                                             Image(systemName: "xmark.circle")
@@ -188,6 +263,18 @@ struct ARMainView: View {
                                         .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
                                         .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 10))
                                     }
+                                    .alert(isPresented: $showEndAlert) {
+                                         Alert(
+                                             title: Text("안내 종료"),
+                                             message: Text("경로 안내를 종료하시겠습니까?"),
+                                             primaryButton: .destructive(Text("확인")) {
+                                                 timer.stopTimer() // 안내 종료 누르면 타이머 stop
+                                                 nextNodeObject.nextIndex = 0
+                                                 isEnd = true      // 확인을 눌렀을 때의 처리: 다음 페이지로 이동
+                                             },
+                                             secondaryButton: .cancel(Text("취소"))
+                                         )
+                                     }
                                 }
                             }
                             
@@ -201,6 +288,7 @@ struct ARMainView: View {
                             SatisfactionView(departures: departures, arrivals: arrivals, timeList: timeList)
                         }
                     }
+
                 }
                 
   
@@ -221,109 +309,56 @@ struct ARMainView: View {
     }
     
     // GPS 알림
-    func showGPSAlert() {
-        showGPSAlertBool = true
-        let alert = UIAlertController(title: "알림", message: "GPS 신호가 불안정합니다. \n실내 혹은 높은 건물 주변은 \nGPS 신호가 불안정 할 수 있습니다.", preferredStyle: .actionSheet)
-        
-        alert.addAction(UIAlertAction(title: "재시도", style: .default) { _ in
-            // '재시도' 버튼을 누르면 타이머를 다시 시작하고 초기화를 시도합니다.
-            showGPSAlertBool = false
-            self.checkTime?.invalidate()
-            self.checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
-                showGPSAlert()
-            }
-        })
-        
-        alert.addAction(UIAlertAction(title: "지도만 이용", style: .default){ _ in
-            self.checkSecondTime?.invalidate()
-            self.checkTime?.invalidate()
-            isARViewReady = true
-            isARViewVisible = false
-            rotationList = checkRotation.checkRotation(currentLocation: coreLocation.location!, path: path)
-            onlyMap = true
-        })
-                        
-        
-        alert.addAction(UIAlertAction(title: "취소", style: .cancel) { _ in
-            // '취소' 버튼을 누르면 이전 화면으로 이동합니다.
-            self.checkSecondTime?.invalidate()
-            self.checkTime?.invalidate()
-            
-//            self.isAROn = false  // 이전 화면으로 돌아감
-//            dismiss()
-            isAROn = false
-            
-        })
-        
-        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
-    }
+//    func showGPSAlert() {
+//        showGPSAlertBool = true
+//        let alert = UIAlertController(title: "알림", message: "GPS 신호가 불안정합니다. \n실내 혹은 높은 건물 주변은 \nGPS 신호가 불안정 할 수 있습니다.", preferredStyle: .actionSheet)
+//        
+//        alert.addAction(UIAlertAction(title: "재시도", style: .default) { _ in
+//            // '재시도' 버튼을 누르면 타이머를 다시 시작하고 초기화를 시도합니다.
+//            showGPSAlertBool = false
+//            self.checkTime?.invalidate()
+//            self.checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
+//                showGPSAlert()
+//            }
+//        })
+//        
+//        alert.addAction(UIAlertAction(title: "지도만 이용", style: .default){ _ in
+//            self.checkSecondTime?.invalidate()
+//            self.checkTime?.invalidate()
+//            isARViewReady = true
+//            isARViewVisible = false
+//            rotationList = checkRotation.checkRotation(currentLocation: coreLocation.location!, path: path)
+//            onlyMap = true
+//        })
+//                        
+//        
+//        alert.addAction(UIAlertAction(title: "취소", style: .cancel) { _ in
+//            // '취소' 버튼을 누르면 이전 화면으로 이동합니다.
+//            self.checkSecondTime?.invalidate()
+//            self.checkTime?.invalidate()
+//            
+////            self.isAROn = false  // 이전 화면으로 돌아감
+////            dismiss()
+//            isAROn = false
+//            
+//        })
+//        
+//        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+//    }
     
-    func EndButtonAlert(){
-        // 버튼을 눌렀을 때 경고 창 표시
-            let alert = UIAlertController(title: "안내 종료", message: "경로 안내를 종료하시겠습니까?", preferredStyle: .alert)
-            
-            // 확인 액션 추가
-            alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
-                timer.stopTimer() // 안내 종료 누르면 타이머 stop
-                nextNodeObject.nextIndex = 0
-                isEnd = true      // 확인을 눌렀을 때의 처리: 다음 페이지로 이동
-            })
-            
-            // 취소 액션 추가
-            alert.addAction(UIAlertAction(title: "취소", style: .cancel))
-            
-            // 경고 창을 현재 화면에 표시
-            UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
-    }
     
-    func ReloadButtonAlert(){
-        // 버튼을 눌렀을 때 경고 창 표시
-            let alert = UIAlertController(title: "AR 재로드", message: "AR을 재로드 하시겠습니까?", preferredStyle: .alert)
-            
-            // 확인 액션 추가
-            alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
-               isARViewReady = false
-            })
-            
-            // 취소 액션 추가
-            alert.addAction(UIAlertAction(title: "취소", style: .cancel))
-            
-            // 경고 창을 현재 화면에 표시
-            UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
-    }
-    
-    // 진북 알림
-    func trueNorthAlert(){
-        // 버튼을 눌렀을 때 경고 창 표시
-        let alert = UIAlertController(title: "진북 설정", message: "나침반을 진북으로 설정하면\n향상된 AR 서비스를 이용하실 수 있습니다.", preferredStyle: .alert)
-        
-        // 확인 액션 추가
-        alert.addAction(UIAlertAction(title: "확인", style: .default){ _ in
-            trueNorthAlertOn = true
-        })
-        
-        // 이동 액션 추가
-        alert.addAction(UIAlertAction(title: "설정으로 이동", style: .default) { _ in
-            selectedTrueNorth = true
-            openSettings()
-        })
-            
-        // 경고 창을 현재 화면에 표시
-        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
-    }
-    
-    func ServerAlert(){
-        // 버튼을 눌렀을 때 경고 창 표시
-        let alert = UIAlertController(title: "오류", message: "서버 연결에 실패했습니다.", preferredStyle: .alert)
-            
-        // 확인 액션 추가
-        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-                dismiss()
-            })
-
-        // 경고 창을 현재 화면에 표시
-        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
-    }
+//    func ServerAlert(){
+//        // 버튼을 눌렀을 때 경고 창 표시
+//        let alert = UIAlertController(title: "오류", message: "서버 연결에 실패했습니다.", preferredStyle: .alert)
+//            
+//        // 확인 액션 추가
+//        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+//                dismiss()
+//            })
+//
+//        // 경고 창을 현재 화면에 표시
+//        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+//    }
 
     private func openSettings() {
         if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
@@ -366,7 +401,7 @@ struct ARMainView: View {
         }
         else{
             // 목적지에 도착하면 timer.stopTimer()
-            EndButtonAlert()
+            showEndAlert = true
             timer.stopTimer()
         }
     }   // end of checkDistance()
@@ -415,13 +450,15 @@ struct ARMainView: View {
                         ARInfo = data
                     } else {
                         print("nilData")
-                        ServerAlert()
+//                        ServerAlert()
+                        showServerAlert = true
                     }
                     
                 case .failure(let error):
                     // 에러 응답 처리
                     print("Error: \(error.localizedDescription)")
-                    ServerAlert()
+//                    ServerAlert()
+                    showServerAlert = true
                 }
             }
     }

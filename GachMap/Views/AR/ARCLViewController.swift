@@ -90,6 +90,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
          sceneLocationView?.removeAllNodes()
          sceneLocationView?.pause()
+         nextNodeObject.isARReady = false
          super.viewWillDisappear(animated)
      }
     
@@ -169,7 +170,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             print("distance : \(distance)")
 
             // 현재 위치로부터 500미터 이하만 보여주기
-            if distance < 500 {
+            if distance < 300 {
                 let originalAltitude = info.placeAltitude + (info.buildingHeight ?? 0) // 건물 높이 추가
                 let updatedAltitude = originalAltitude + difAltitude // 고도 수정 + 위치 추가해야 함
 
@@ -196,6 +197,7 @@ class ARCLViewController: UIViewController, ARSCNViewDelegate {
             print("All nodes added")
             nodes.map{self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: $0)}
             self.sceneLocationView?.run()    // SceneLocationView 시작
+            self.nextNodeObject.isARReady = true
         }
         
     } // end of addNodes()

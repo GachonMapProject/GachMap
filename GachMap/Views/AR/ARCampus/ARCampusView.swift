@@ -11,6 +11,7 @@ import CoreLocation
 
 struct ARCampusView: View {
     @EnvironmentObject var coreLocation : CoreLocationEx
+    @EnvironmentObject var nextNodeObject : NextNodeObject
     @Environment(\.dismiss) private var dismiss
     @State var ARInfo: [ARInfo]? = nil
     
@@ -24,12 +25,12 @@ struct ARCampusView: View {
     @State private var checkTime: Timer? // AR init 후 시간 체크
     @State private var checkSecondTime: Timer?
     @State var checkSecond = 0
-    @State private var showGPSAlertBool = false
     
-//    @State private var showGPSAlert = false
-//    @State private var showReloadAlert = false
-//    @State private var showServerErrorAlert = false
-    @State private var showTrueNorthAlert = true
+    @State var showGPSAlertBool = false
+    @State var showGPSAlert = false
+    @State var showReloadAlert = false
+    @State var showServerAlert = false
+    @State var showTrueNorthAlert = false
 
     
     var body: some View {
@@ -37,6 +38,9 @@ struct ARCampusView: View {
 //            if !trueNorthAlertOn {
 //                if !selectedTrueNorth {
 //                    ProgressView()
+//                        .onAppear(){
+//                            getARCampus()
+//                        }
 //                        .alert(isPresented: $showTrueNorthAlert) {
 //                            Alert(
 //                                title: Text("진북 설정"),
@@ -85,29 +89,64 @@ struct ARCampusView: View {
                                 checkSecond += 1
                             }
                         }
+                        .alert(isPresented: $showServerAlert) {
+                            Alert(
+                                title: Text("오류"),
+                                message: Text("서버 연결에 실패했습니다."),
+                                dismissButton: .default(Text("확인")) {
+                                    dismiss()
+                                }
+                            )
+                        }
+                        .alert(isPresented: $showGPSAlert) {
+                             Alert(
+                                 title: Text("알림"),
+                                 message: Text("GPS 신호가 불안정합니다. \n실내 혹은 높은 건물 주변은 \nGPS 신호가 불안정 할 수 있습니다."),
+                                 primaryButton: .default(Text("재시도")) {
+                                     showGPSAlertBool = false
+                                     self.checkTime?.invalidate()
+                                     self.checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
+                                         showGPSAlertBool = true
+                                     }
+                                 },
+                                 secondaryButton: .default(Text("취소")) {
+                                     self.checkSecondTime?.invalidate()
+                                     self.checkTime?.invalidate()
+                                     dismiss()
+                                 }
+                             )
+                         }
                     ProgressView("GPS 신호를 찾고 있습니다.")
                         .onAppear {
                             // 타이머 시작
                             checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
-                                GPSAlert()
-//                                showGPSAlert = true
+//                                GPSAlert()
+                                showGPSAlertBool = true
+                                showGPSAlert = true
                             }
                         }
-                }
+                    
+                } // end of if !isARViewReady
                 else {
                     if ARInfo != nil {
-                        
                         ZStack(alignment: .topTrailing) {
-                            ARCampusWrapperView(ARInfo: ARInfo ?? [])
-                                .edgesIgnoringSafeArea(.all)
-                                .onAppear(){
-                                    checkSecondTime?.invalidate()
-                                    checkTime?.invalidate()
+                            ZStack {
+                                ARCampusWrapperView(ARInfo: ARInfo ?? [])
+                                    .edgesIgnoringSafeArea(.all)
+                                    .onAppear(){
+                                        checkSecondTime?.invalidate()
+                                        checkTime?.invalidate()
+                                    }
+                                if !nextNodeObject.isARReady {
+                                    ProgressAlertView(isARRoading: true)
                                 }
-                            
+                            }
+                           
                             HStack {
                                 Button(){
-                                    ReloadButtonAlert()
+//                                    ReloadButtonAlert()
+                                    showReloadAlert = true
+                                    print("showReloadAlert : \(showReloadAlert)")
                                 } label: {
                                     HStack{
                                         Image(systemName: "gobackward")
@@ -120,6 +159,17 @@ struct ARCampusView: View {
                                     .cornerRadius(15) // 둥글게 만들기 위한 코너 반지름 설정
                                     
                                 }
+                                .alert(isPresented: $showReloadAlert) {
+                                    Alert(
+                                        title: Text("AR 재로드"),
+                                        message: Text("AR을 재로드 하시겠습니까?"),
+                                        primaryButton: .destructive(Text("확인")) {
+                                            isARViewReady = false
+                                        },
+                                        secondaryButton: .cancel(Text("취소"))
+                                    )
+                                }
+     
                                 
                                 Button(action: {
                                     dismiss()
@@ -137,6 +187,7 @@ struct ARCampusView: View {
                             }
                             .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 20))
                         } // end of ZStack
+
                     } // end of if ARInfo != nil
                 }
 //            } // end of if !trueNorthAlertOn else
@@ -175,69 +226,73 @@ struct ARCampusView: View {
                     if let data = value.data {
                         print(data)
                         print("getARCampus() - AR 리스트 가져오기 성공")
+                        showTrueNorthAlert = true
                         ARInfo = data
+                        
                     } else {
                         print("nilData")
-                        ServerAlert()
+                        showServerAlert = true
+//                        ServerAlert()
                     }
                     
                 case .failure(let error):
                     // 에러 응답 처리
                     print("Error: \(error.localizedDescription)")
-                    ServerAlert()
+//                    ServerAlert()
+                    showServerAlert = true
                 }
             }
     }
-    
-    func ReloadButtonAlert(){
-        // 버튼을 눌렀을 때 경고 창 표시
-            let alert = UIAlertController(title: "AR 재로드", message: "AR을 재로드 하시겠습니까?", preferredStyle: .alert)
-            
-            // 확인 액션 추가
-            alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
-               isARViewReady = false
-            })
-            
-            // 취소 액션 추가
-            alert.addAction(UIAlertAction(title: "취소", style: .cancel))
-            
-            // 경고 창을 현재 화면에 표시
-            UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
-    }
-    
-    func ServerAlert(){
-        // 버튼을 눌렀을 때 경고 창 표시
-        let alert = UIAlertController(title: "오류", message: "서버 연결에 실패했습니다.", preferredStyle: .alert)
-            
-        // 확인 액션 추가
-        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
-                dismiss()
-            })
-
-        // 경고 창을 현재 화면에 표시
-        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
-    }
-    
-    // 진북 알림
-    func trueNorthAlert(){
-        // 버튼을 눌렀을 때 경고 창 표시
-        let alert = UIAlertController(title: "진북 설정", message: "나침반을 진북으로 설정하면\n향상된 AR 서비스를 이용하실 수 있습니다.", preferredStyle: .alert)
-        
-        // 확인 액션 추가
-        alert.addAction(UIAlertAction(title: "확인", style: .default){ _ in
-            trueNorthAlertOn = true
-        })
-        
-        // 이동 액션 추가
-        alert.addAction(UIAlertAction(title: "설정으로 이동", style: .default) { _ in
-            selectedTrueNorth = true
-            openSettings()
-        })
-            
-        // 경고 창을 현재 화면에 표시
-        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
-    }
-        
+//    
+//    func ReloadButtonAlert(){
+//        // 버튼을 눌렀을 때 경고 창 표시
+//            let alert = UIAlertController(title: "AR 재로드", message: "AR을 재로드 하시겠습니까?", preferredStyle: .alert)
+//            
+//            // 확인 액션 추가
+//            alert.addAction(UIAlertAction(title: "확인", style: .destructive) { _ in
+//               isARViewReady = false
+//            })
+//            
+//            // 취소 액션 추가
+//            alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+//            
+//            // 경고 창을 현재 화면에 표시
+//            UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+//    }
+//    
+//    func ServerAlert(){
+//        // 버튼을 눌렀을 때 경고 창 표시
+//        let alert = UIAlertController(title: "오류", message: "서버 연결에 실패했습니다.", preferredStyle: .alert)
+//            
+//        // 확인 액션 추가
+//        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+//                dismiss()
+//            })
+//
+//        // 경고 창을 현재 화면에 표시
+//        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+//    }
+//    
+//    // 진북 알림
+//    func trueNorthAlert(){
+//        // 버튼을 눌렀을 때 경고 창 표시
+//        let alert = UIAlertController(title: "진북 설정", message: "나침반을 진북으로 설정하면\n향상된 AR 서비스를 이용하실 수 있습니다.", preferredStyle: .alert)
+//        
+//        // 확인 액션 추가
+//        alert.addAction(UIAlertAction(title: "확인", style: .default){ _ in
+//            trueNorthAlertOn = true
+//        })
+//        
+//        // 이동 액션 추가
+//        alert.addAction(UIAlertAction(title: "설정으로 이동", style: .default) { _ in
+//            selectedTrueNorth = true
+//            openSettings()
+//        })
+//            
+//        // 경고 창을 현재 화면에 표시
+//        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+//    }
+//        
     func openSettings() {
         if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsURL)
@@ -245,30 +300,30 @@ struct ARCampusView: View {
     }
     
     // GPS 알림
-    func GPSAlert() {
-        showGPSAlertBool = true
-        let alert = UIAlertController(title: "알림", message: "GPS 신호가 불안정합니다. \n실내 혹은 높은 건물 주변은 \nGPS 신호가 불안정 할 수 있습니다.", preferredStyle: .alert)
-        
-        alert.addAction(UIAlertAction(title: "재시도", style: .default) { _ in
-            // '재시도' 버튼을 누르면 타이머를 다시 시작하고 초기화를 시도합니다.
-            showGPSAlertBool = false
-            self.checkTime?.invalidate()
-            self.checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
-                GPSAlert()
-            }
-        })
-        
-        alert.addAction(UIAlertAction(title: "취소", style: .cancel) { _ in
-            // '취소' 버튼을 누르면 이전 화면으로 이동합니다.
-            self.checkSecondTime?.invalidate()
-            self.checkTime?.invalidate()
-            dismiss()
-
-            
-        })
-        
-        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
-    }
+//    func GPSAlert() {
+//        showGPSAlertBool = true
+//        let alert = UIAlertController(title: "알림", message: "GPS 신호가 불안정합니다. \n실내 혹은 높은 건물 주변은 \nGPS 신호가 불안정 할 수 있습니다.", preferredStyle: .alert)
+//        
+//        alert.addAction(UIAlertAction(title: "재시도", style: .default) { _ in
+//            // '재시도' 버튼을 누르면 타이머를 다시 시작하고 초기화를 시도합니다.
+//            showGPSAlertBool = false
+//            self.checkTime?.invalidate()
+//            self.checkTime = Timer.scheduledTimer(withTimeInterval: intervalTime, repeats: false) { _ in
+//                GPSAlert()
+//            }
+//        })
+//        
+//        alert.addAction(UIAlertAction(title: "취소", style: .cancel) { _ in
+//            // '취소' 버튼을 누르면 이전 화면으로 이동합니다.
+//            self.checkSecondTime?.invalidate()
+//            self.checkTime?.invalidate()
+//            dismiss()
+//
+//            
+//        })
+//        
+//        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: nil)
+//    }
         
     func checkLocationAccuracy() {
         // Check location accuracy
