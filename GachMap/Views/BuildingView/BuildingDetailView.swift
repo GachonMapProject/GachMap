@@ -144,18 +144,21 @@ struct BuildingDetailView: View {
                                 buildingFloorInfoDict[floor.buildingFloor] = [floor.buildingFloorInfo]
                             }
                         }
-                    
-                    // B로 시작하지 않는 키들을 정렬
-                    let nonBKeys = buildingFloorInfoDict.keys.filter { !$0.starts(with: "B") }.sorted(by: >)
+                        
+                        let nonBKeys = buildingFloorInfoDict.keys.filter { !$0.starts(with: "B") }.sorted { lhs, rhs in
+                            let lhsValue = Int(lhs.filter("0123456789".contains)) ?? 0
+                            let rhsValue = Int(rhs.filter("0123456789".contains)) ?? 0
+                            return lhsValue > rhsValue
+                        }
 
-                    // B로 시작하는 키들을 정렬
-                    let bKeys = buildingFloorInfoDict.keys.filter { $0.starts(with: "B") }.sorted()
-                    
-                    // 두 배열을 합침
-                    sortedKeys = nonBKeys + bKeys
+                        let bKeys = buildingFloorInfoDict.keys.filter { $0.starts(with: "B") }.sorted { lhs, rhs in
+                            let lhsValue = Int(lhs.filter("0123456789".contains)) ?? 0
+                            let rhsValue = Int(rhs.filter("0123456789".contains)) ?? 0
+                            return lhsValue < rhsValue
+                        }
+                        
+                        sortedKeys = nonBKeys + bKeys
 
-                    
-                    
                         mainImagePath = data.mainImagePath
                         region = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: data.placeLatitude, longitude: data.placeLongitude), latitudinalMeters: 250, longitudinalMeters: 250))
                     
