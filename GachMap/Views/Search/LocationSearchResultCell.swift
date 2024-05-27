@@ -99,11 +99,13 @@ struct LocationSearchResultCell: View {
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 3, trailing: 20))
                     
                     ScrollView {
-                        ForEach(viewModel.searchResults, id: \.placeId) { result in
+                        ForEach(viewModel.searchResults.indices, id: \.self) { index in
+                            
+                            let result = viewModel.searchResults[index]
                             
                             Button(action: {
                                 self.selectPlaceId = result.placeId
-                                                self.triggerNavigation = true
+                                self.triggerNavigation = true
                             }, label: {
                                 VStack(alignment: .leading) {
                                     HStack {

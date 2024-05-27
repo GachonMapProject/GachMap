@@ -19,8 +19,8 @@ struct EventCardView : View {
     @State var locationAlert = false
     @State var serverAlert = false  // 서버 통신 실패 알림
     
+    @State private var isLoading: Bool = false
 
-    
     init(event: EventList) {
         self.event = event
         self.eventDetail = [EventDetail(eventLocationId: 0, eventName: "", eventLatitude: 0, eventLongitude: 0, eventAltitude: 0, eventId: 0, eventPlaceName: "")]
@@ -117,6 +117,7 @@ struct EventCardView : View {
     }
     
     func getEventDetail(eventId : Int){
+        isLoading = true
         // API 요청을 보낼 URL 생성
 //        /src/admin/event/{eventId}
         
@@ -131,6 +132,7 @@ struct EventCardView : View {
         AF.request(url, method: .get)
             .validate()
             .responseDecodable(of: EventDetailResponse.self) { response in
+                isLoading = false
                 // 에러 처리
                 switch response.result {
                     case .success(let value):
