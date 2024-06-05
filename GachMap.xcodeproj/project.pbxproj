@@ -1033,6 +1033,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Gach.가자";
 				INFOPLIST_KEY_NSCameraUsageDescription = "AR 서비스를 위해 카메라 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "내비게이션 서비스를 위해 위치 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "내비게이션 서비스를 위해 위치 권한이 필요합니다.";
@@ -1071,6 +1072,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Gach.가자";
 				INFOPLIST_KEY_NSCameraUsageDescription = "AR 서비스를 위해 카메라 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "내비게이션 서비스를 위해 위치 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "내비게이션 서비스를 위해 위치 권한이 필요합니다.";
