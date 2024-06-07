@@ -347,6 +347,7 @@
 				CBBE586C2BF2656D003B55C4 /* ObservableObject */,
 				8B831C102BCCF60C00A85973 /* Struct */,
 				8B831C062BCCF57700A85973 /* Views */,
+				CBBE58712BF489B2003B55C4 /* NavControllerTest */,
 				8B831BE12BCCEFF700A85973 /* Assets.xcassets */,
 				8B831BE32BCCEFF700A85973 /* Preview Content */,
 			);
@@ -378,20 +379,18 @@
 			isa = PBXGroup;
 			children = (
 				8BC86EDA2BE89B0F00051BF0 /* MapView */,
-				CBBE58712BF489B2003B55C4 /* NavControllerTest */,
+				CB4EF61B2BCFA06600BDC73A /* BuildingView */,
+				CB0D26F82BCE8EA200800459 /* EventView */,
+				8B3159D82BD0F53F0049CB5F /* MyPage */,
 				CB8A6E352BF0E6E80039AC50 /* SatisfactionView */,
 				8B831C282BCCF60C00A85973 /* AR */,
 				CBED53B22BE2203A00DDFD0C /* ChoosePath */,
-				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
 				8BC86EAC2BDE628800051BF0 /* Search */,
-				CB4EF61B2BCFA06600BDC73A /* BuildingView */,
-				CB0D26F82BCE8EA200800459 /* EventView */,
 				CB4CE38F2BCD3F3500E0611B /* Weather */,
 				8B831C002BCCF57700A85973 /* Login */,
 				8B831C022BCCF57700A85973 /* DashboardView.swift */,
 				8B831C722BCE0AB300A85973 /* UserDashboardView.swift */,
 				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
-				8B3159D82BD0F53F0049CB5F /* MyPage */,
 				8B2E203D2BFC5A2C00E909D5 /* RouteFindProgressView.swift */,
 			);
 			path = Views;
@@ -588,6 +587,7 @@
 				8B831BDD2BCCEFF600A85973 /* GachMapApp.swift */,
 				8B831C4A2BCD46DF00A85973 /* PrimaryView.swift */,
 				8B831BDF2BCCEFF600A85973 /* ContentView.swift */,
+				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
