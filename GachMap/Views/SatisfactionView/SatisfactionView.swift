@@ -154,7 +154,7 @@ struct SatisfactionView: View {
         // Alamofire를 사용하여 POST 요청 생성
         AF.request(url, method: .post, parameters: parameter, encoder: JSONParameterEncoder.default)
             .validate()
-            .responseDecodable(of: LoginResponse.self) { response in
+            .responseDecodable(of: SatisfactionResponse.self) { response in
             // 서버 연결 여부
             switch response.result {
                 case .success(let value):

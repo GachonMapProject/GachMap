@@ -127,7 +127,6 @@ struct PathTimeView: View {
                             .bold()
                     }
                     .padding(EdgeInsets(top: 0, leading: 8, bottom: 10, trailing: 8))
-                    
                 }
             }
             
