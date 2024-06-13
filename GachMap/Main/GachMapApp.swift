@@ -26,6 +26,7 @@ struct GachMapApp: App {
 //                .environmentObject(globalViewModel)
 //                .environmentObject(coreLocation)
         }
+        
     }
 }
 
