@@ -388,7 +388,9 @@
 				8BC86EAC2BDE628800051BF0 /* Search */,
 				CB4CE38F2BCD3F3500E0611B /* Weather */,
 				8B831C002BCCF57700A85973 /* Login */,
-				CB6BEA1D2C1449FE0094E2BF /* DashBoardView */,
+				8B831C022BCCF57700A85973 /* DashboardView.swift */,
+				8B831C722BCE0AB300A85973 /* UserDashboardView.swift */,
+				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
 				8B2E203D2BFC5A2C00E909D5 /* RouteFindProgressView.swift */,
 			);
 			path = Views;
@@ -588,16 +590,6 @@
 				8B831C482BCD3F4D00A85973 /* SplashScreen.swift */,
 			);
 			path = Main;
-			sourceTree = "<group>";
-		};
-		CB6BEA1D2C1449FE0094E2BF /* DashBoardView */ = {
-			isa = PBXGroup;
-			children = (
-				8B831C022BCCF57700A85973 /* DashboardView.swift */,
-				8B831C722BCE0AB300A85973 /* UserDashboardView.swift */,
-				8B831C702BCE0A9200A85973 /* GuestDashboardView.swift */,
-			);
-			path = DashBoardView;
 			sourceTree = "<group>";
 		};
 		CB8A6E352BF0E6E80039AC50 /* SatisfactionView */ = {
