@@ -242,6 +242,7 @@
 		CB2E45762BD4E1A6009DB796 /* CLLocationCoordinate2D+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Extension.swift"; sourceTree = "<group>"; };
 		CB2E45782BD4E1B6009DB796 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		CB2E457A2BD4E28F009DB796 /* ARCLViewControllerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCLViewControllerWrapper.swift; sourceTree = "<group>"; };
+		CB45E61A2C1B2AAC0055072A /* Location.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Location.gpx; sourceTree = "<group>"; };
 		CB4CE38D2BCD2F0D00E0611B /* WeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
 		CB4CE3902BCD3F4600E0611B /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		CB4CE3922BCD3F9C00E0611B /* ConvertGrid_GPS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertGrid_GPS.swift; sourceTree = "<group>"; };
@@ -350,6 +351,7 @@
 				CBBE58712BF489B2003B55C4 /* NavControllerTest */,
 				8B831BE12BCCEFF700A85973 /* Assets.xcassets */,
 				8B831BE32BCCEFF700A85973 /* Preview Content */,
+				CB45E61A2C1B2AAC0055072A /* Location.gpx */,
 			);
 			path = GachMap;
 			sourceTree = "<group>";
@@ -1033,7 +1035,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = XW6H6BYJ53;
+				DEVELOPMENT_TEAM = X7TYNR98TC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
@@ -1072,7 +1074,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GachMap/Preview Content\"";
-				DEVELOPMENT_TEAM = XW6H6BYJ53;
+				DEVELOPMENT_TEAM = X7TYNR98TC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GachMap/Info.plist;
