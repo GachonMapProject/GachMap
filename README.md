@@ -14,6 +14,7 @@
 ![행사탭](https://github.com/user-attachments/assets/2181b84c-7fb2-4f73-ae42-e566cae6a878)
 ![마이페이지](https://github.com/user-attachments/assets/0517d189-7872-4f4c-a6d9-44cbcca6497f)
 ![경로](https://github.com/user-attachments/assets/b50d2cca-d792-4f82-a698-62f3f532a412)
+![AR](https://github.com/user-attachments/assets/e5f0b9a0-9ca1-478b-9488-021069812ea8)
 ![내비게이션](https://github.com/user-attachments/assets/39e45b06-46da-4d1f-a3ea-65f9a214dc1e)
 
 ## 목차
