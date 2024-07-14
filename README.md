@@ -12,23 +12,24 @@
   - [1.2. 프로젝트 설명](#프로젝트-설명)
   - [1.3. 프로젝트 기능(사용자)](#프로젝트-기능(사용자))
   - [1.4. 프로젝트 기능(관리자)](#프로젝트-기능(관리자))
-- [2. 개발 환경](#개발-환경)
-- [3. 개발 기간 및 산출물](#개발-기간-및-산출물 )
-- [4. 시연 영상](#시연-영상)
-  - [4.1. 카테고리 별 건물 위치 확인](#카테고리-별-건물-위치-확인)
-  - [4.2. 건물 별 상세 정보 확인](#건물-별-상세-정보-확인)
-  - [4.3. 건물 별 상세 정보 확인](#건물-별-상세-정보-확인)
-  - [4.4. 검색 기능](#검색-기능)
-  - [4.5. 행사 정보 및 위치 확인](#행사-정보-및-위치-확인)
-  - [4.6. 경로 조회 및 경로 별 AI 소요시간 확인 기능](#경로-조회-및-경로-별-AI-소요시간-확인-기능)
-  - [4.7. AR 내비게이션](#AR-내비게이션)
-- [5. 팀원 소개](#팀원-구성)
+- [2. 팀원 소개](#팀원-구성)
+- [3. 개발 환경](#개발-환경)
+- [4. 개발 기간 및 산출물](#개발-기간-및-산출물 )
+- [5. 시연 영상](#시연-영상)
+  - [5.1. 카테고리 별 건물 위치 확인](#카테고리-별-건물-위치-확인)
+  - [5.2. 건물 별 상세 정보 확인](#건물-별-상세-정보-확인)
+  - [5.3. 건물 별 상세 정보 확인](#건물-별-상세-정보-확인)
+  - [5.4. 검색 기능](#검색-기능)
+  - [5.5. 행사 정보 및 위치 확인](#행사-정보-및-위치-확인)
+  - [5.6. 경로 조회 및 경로 별 AI 소요시간 확인 기능](#경로-조회-및-경로-별-AI-소요시간-확인-기능)
+  - [5.7. AR 내비게이션](#AR-내비게이션)
 
 
 
 
 
-## 📖 프로젝트 소개
+
+## 프로젝트 소개
 <img width="984" alt="Gach가자" src="https://github.com/user-attachments/assets/ae35f453-2a60-4e32-8461-ced1bc44a661">
 
 ### 프로젝트 배경
@@ -82,8 +83,17 @@
 - 로그
 
 
+## 팀원 구성
 
-## 🛠️ 개발 환경
+| **Design / Mobile** | **Mobile / AR** | **Frontend / AI** | **Backend** |
+| :------: |  :------: | :------: | :------: |
+| **원웅주** | **이수현** | **노명준** | **김민서** |
+| [<img src="https://avatars.githubusercontent.com/u/157135564?v=4" height=150 width=150> <br/> @wwj0313](https://github.com/wwj0313) | [<img src="https://avatars.githubusercontent.com/u/105594739?v=4" height=150 width=150> <br/> @LeeeeSuHyeon](https://github.com/LeeeeSuHyeon) | [<img src="https://avatars.githubusercontent.com/u/126738583?v=4" height=150 width=150> <br/> @mxxxjun](https://github.com/mxxxjun) | [<img src="https://avatars.githubusercontent.com/u/44363238?v=4" height=150 width=150> <br/> @hurrayPersimmon](https://github.com/hurrayPersimmon) |
+
+
+
+
+## 개발 환경
 
 - Front : HTML/CSS/JS, Thymeleaf
 - Back-end : Spring4, Spring Boot
@@ -97,7 +107,7 @@
 
 
 
-## ⏱️ 개발 기간 및 산출물 
+## 개발 기간 및 산출물 
 
 ### 2024.03 ~ 2024.06.07
 * 요구 분석 (제안서) : 03/05 ~ 03/19
@@ -106,7 +116,7 @@
 * 완료 단계 (완료 보고서) : 05/21 ~ 06/07
 
 
-## 🎥 시연 영상
+## 시연 영상
 
 ### 카테고리 별 건물 위치 확인 
 ![카테고리 별 위치 확인](https://github.com/user-attachments/assets/44f0e33e-5fa4-45c9-859c-3d88796915be) 
@@ -138,11 +148,3 @@
 ![AR 내비게이션](https://github.com/user-attachments/assets/aa9b8fbc-faf2-4a7d-afcf-463fc220e4d2)
 
 ----
-
-
-## 💁‍♂️ 팀원 구성
-
-| **Design / Mobile** | **Mobile / AR** | **Frontend / AI** | **Backend** |
-| :------: |  :------: | :------: | :------: |
-| **원웅주** | **이수현** | **노명준** | **김민서** |
-| [<img src="https://avatars.githubusercontent.com/u/157135564?v=4" height=150 width=150> <br/> @wwj0313](https://github.com/wwj0313) | [<img src="https://avatars.githubusercontent.com/u/105594739?v=4" height=150 width=150> <br/> @LeeeeSuHyeon](https://github.com/LeeeeSuHyeon) | [<img src="https://avatars.githubusercontent.com/u/126738583?v=4" height=150 width=150> <br/> @mxxxjun](https://github.com/mxxxjun) | [<img src="https://avatars.githubusercontent.com/u/44363238?v=4" height=150 width=150> <br/> @hurrayPersimmon](https://github.com/hurrayPersimmon) |
