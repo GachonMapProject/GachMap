@@ -2,9 +2,19 @@
 
 ## 가천대학교 교내 AR 내비게이션 서비스 'Gach.가자'
 ----
+
 > 가천인의 시간을 가치있게, Gach.가자
 > 
-> 👉 https://apps.apple.com/kr/app/gach-%EA%B0%80%EC%9E%90/id6504272608 
+> 👉 https://apps.apple.com/kr/app/gach-%EA%B0%80%EC%9E%90/id6504272608
+
+![로그인](https://github.com/user-attachments/assets/8e29ad31-00d2-4aa8-9928-f03856f51ebe)
+![카테고리](https://github.com/user-attachments/assets/671a91a0-a601-4337-810e-ad28c784710a)
+![대시보드](https://github.com/user-attachments/assets/faf8efa3-0e52-4be8-9628-a50ebbb6b090)
+![캠퍼스맵](https://github.com/user-attachments/assets/aa0fc9e0-09e1-445d-9b55-bdc22bb087fc)
+![행사탭](https://github.com/user-attachments/assets/2181b84c-7fb2-4f73-ae42-e566cae6a878)
+![마이페이지](https://github.com/user-attachments/assets/0517d189-7872-4f4c-a6d9-44cbcca6497f)
+![경로](https://github.com/user-attachments/assets/b50d2cca-d792-4f82-a698-62f3f532a412)
+![내비게이션](https://github.com/user-attachments/assets/39e45b06-46da-4d1f-a3ea-65f9a214dc1e)
 
 ## 목차
 - [1. 프로젝트 소개](#프로젝트-소개)
@@ -30,6 +40,8 @@
 
 
 ## 프로젝트 소개
+
+
 <img width="984" alt="Gach가자" src="https://github.com/user-attachments/assets/ae35f453-2a60-4e32-8461-ced1bc44a661">
 
 ### 프로젝트 배경
