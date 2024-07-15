@@ -34,6 +34,7 @@
   - [5.5. 행사 정보 및 위치 확인](#행사-정보-및-위치-확인)
   - [5.6. 경로 조회 및 경로 별 AI 소요시간 확인 기능](#경로-조회-및-경로-별-AI-소요시간-확인-기능)
   - [5.7. AR 내비게이션](#AR-내비게이션)
+- [6. AI 예측 소요시간 비교](#AI-예측-소요시간-비교)
 
 
 
@@ -161,3 +162,7 @@
 ![AR 내비게이션](https://github.com/user-attachments/assets/aa9b8fbc-faf2-4a7d-afcf-463fc220e4d2)
 
 ----
+
+## AI 예측 소요시간 비교
+<img width="864" alt="비교" src="https://github.com/user-attachments/assets/bfec24a6-12c7-47bd-a991-579442da0994">
+
