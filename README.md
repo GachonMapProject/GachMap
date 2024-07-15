@@ -8,7 +8,7 @@
 > 👉 https://apps.apple.com/kr/app/gach-%EA%B0%80%EC%9E%90/id6504272608
 
 ![로그인](https://github.com/user-attachments/assets/8e29ad31-00d2-4aa8-9928-f03856f51ebe)
-![회원가입](https://github.com/user-attachments/assets/782ce954-b901-4629-941d-1d3f8bb1347e)
+![회원가입](https://github.com/user-attachments/assets/def6a847-1c51-49c4-b7b4-6dee88a2fc64)
 ![카테고리](https://github.com/user-attachments/assets/671a91a0-a601-4337-810e-ad28c784710a)
 ![대시보드](https://github.com/user-attachments/assets/faf8efa3-0e52-4be8-9628-a50ebbb6b090)
 ![캠퍼스맵](https://github.com/user-attachments/assets/aa0fc9e0-09e1-445d-9b55-bdc22bb087fc)
